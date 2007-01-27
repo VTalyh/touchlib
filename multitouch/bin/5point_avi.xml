@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<screen scale="1.0000">
+    <point X="0.0" Y="0.0" />
+    <point X="60.0" Y="0.0" />
+    <point X="120.0" Y="0.0" />
+    <point X="180.0" Y="0.0" />
+    <point X="240.0" Y="0.0" />
+    <point X="0.0" Y="107.0" />
+    <point X="60.0" Y="107.0" />
+    <point X="120.0" Y="107.0" />
+    <point X="180.0" Y="107.0" />
+    <point X="240.0" Y="107.0" />
+    <point X="0.0" Y="214.0" />
+    <point X="60.0" Y="214.0" />
+    <point X="120.0" Y="214.0" />
+    <point X="180.0" Y="214.0" />
+    <point X="240.0" Y="214.0" />
+    <point X="0.0" Y="320.0" />
+    <point X="60.0" Y="320.0" />
+    <point X="120.0" Y="320.0" />
+    <point X="180.0" Y="320.0" />
+    <point X="240.0" Y="320.0" />
+</screen>
+<filtergraph>
+    <cvcapture label="capture1" >
+	<source value="../tests/hard-5point.avi" />
+    </cvcapture>
+    <mono label="mono2" />
+    <smooth label="smooth3" />
+    <backgroundremove label="background4" />
+    <brightnesscontrast label="bc5">
+        <brightness value="0.1" />
+        <contrast value="0.4" />
+    </brightnesscontrast>
+    <rectify label="rectify6">
+        <level value="25" />
+    </rectify>
+</filtergraph>

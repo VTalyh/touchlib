@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<screen scale="1.000000">
+    <point X="0.000000" Y="0.000000" />
+    <point X="60.000000" Y="0.000000" />
+    <point X="120.000000" Y="0.000000" />
+    <point X="180.000000" Y="0.000000" />
+    <point X="240.000000" Y="0.000000" />
+    <point X="0.000000" Y="107.000000" />
+    <point X="60.000000" Y="107.000000" />
+    <point X="120.000000" Y="107.000000" />
+    <point X="180.000000" Y="107.000000" />
+    <point X="240.000000" Y="107.000000" />
+    <point X="0.000000" Y="214.000000" />
+    <point X="60.000000" Y="214.000000" />
+    <point X="120.000000" Y="214.000000" />
+    <point X="180.000000" Y="214.000000" />
+    <point X="240.000000" Y="214.000000" />
+    <point X="0.000000" Y="320.000000" />
+    <point X="60.000000" Y="320.000000" />
+    <point X="120.000000" Y="320.000000" />
+    <point X="180.000000" Y="320.000000" />
+    <point X="240.000000" Y="320.000000" />
+</screen>
+<filtergraph>
+    <cvcapture label="capture1" >
+	<source value="../tests/simple-2point.avi" />
+    </cvcapture>
+    <mono label="mono2" />
+    <smooth label="smooth3" />
+    <backgroundremove label="background4" />
+    <brightnesscontrast label="bc5">
+        <brightness value="0.0980392" />
+        <contrast value="0.00392157" />
+    </brightnesscontrast>
+    <rectify label="rectify6">
+        <level value="25" />
+    </rectify>
+</filtergraph>

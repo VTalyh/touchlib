@@ -1,0 +1,77 @@
+
+#include <filter.h>
+#include <highgui.h>
+
+
+Filter::Filter(char* s)
+{
+
+    name = new std::string(s);
+	type = NULL;
+
+
+
+    // default is to not show filter output
+    show = false;
+
+	source = NULL;
+	destination = NULL;
+	chainedfilter = NULL;
+}
+
+
+Filter::~Filter()
+{
+    if( show )
+        cvDestroyWindow( name->c_str() );
+
+    if( destination )
+        cvReleaseImage(&destination);
+
+	if( type )
+		delete type;
+
+	delete name;
+}
+
+
+void Filter::showOutput(bool value)
+{
+    if( value && !show )
+    {
+        cvNamedWindow( name->c_str(), CV_WINDOW_AUTOSIZE );
+        show = true;
+    }
+    else if( !value && show )
+    {
+        cvDestroyWindow( name->c_str() );
+        show = false;
+    }
+}
+
+
+void Filter::process(IplImage* frame)
+{
+    source = frame;
+
+    // subclasses need to implement this abstract method.
+    this->kernel();
+
+	if( !destination )
+		return;
+
+    if( chainedfilter )
+        chainedfilter->process(destination);
+ 
+    if( show )
+	{
+		//printf("Show img\n");
+        cvShowImage(name->c_str(), destination); 
+	}
+}
+
+
+void Filter::connectTo(Filter* targetfilter)
+{
+    chainedfilter = targetfilter;
+}
