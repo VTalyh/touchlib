@@ -1,7 +1,7 @@
 #ifndef __TOUCHSCREEN_FILTER_DSVLCAPTURE__
 #define __TOUCHSCREEN_FILTER_DSVLCAPTURE__
 
-#include <Filter.h>
+#include <TouchlibFilter.h>
 
 #include <windows.h>
 #include <tchar.h>

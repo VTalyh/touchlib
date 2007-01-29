@@ -2,7 +2,7 @@
 #ifndef __TOUCHSCREEN_FILTER_RECTIFY__
 #define __TOUCHSCREEN_FILTER_RECTIFY__
 
-#include <Filter.h>
+#include <TouchlibFilter.h>
 
 #define DEFAULT_RECTIFYLEVEL 20
 

@@ -4,7 +4,7 @@
 #include "ITouchScreen.h"
 #include "CBlobTracker.h"
 #include "ITouchEvent.h"
-#include "Filter.h"
+#include "TouchlibFilter.h"
 #include <process.h>
 #include <windows.h>
 #include "ITouchListener.h"

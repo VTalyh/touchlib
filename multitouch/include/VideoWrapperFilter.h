@@ -1,7 +1,7 @@
 #ifndef __TOUCHSCREEN_FILTER_VIDEOWRAPPER__
 #define __TOUCHSCREEN_FILTER_VIDEOWRAPPER__
 
-#include <Filter.h>
+#include <TouchlibFilter.h>
 
 #include <windows.h>
 #include <tchar.h>

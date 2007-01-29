@@ -3,7 +3,7 @@
 #ifndef __TOUCHSCREEN_FILTER_CAPTURE__
 #define __TOUCHSCREEN_FILTER_CAPTURE__
 
-#include <Filter.h>
+#include <TouchlibFilter.h>
 
 #include <cv.h>
 #include <cxcore.h>

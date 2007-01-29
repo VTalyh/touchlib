@@ -2,7 +2,7 @@
 #ifndef __TOUCHLIB_FILTER_MONO__
 #define __TOUCHLIB_FILTER_MONO__
 
-#include <Filter.h>
+#include <TouchlibFilter.h>
 
 
 class TOUCHLIB_FILTER_EXPORT MonoFilter : public Filter

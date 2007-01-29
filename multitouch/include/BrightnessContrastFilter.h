@@ -3,7 +3,7 @@
 #ifndef __TOUCHLIB_FILTER_BRIGHTNESSCONTRAST__
 #define __TOUCHLIB_FILTER_BRIGHTNESSCONTRAST__
 
-#include <Filter.h>
+#include <TouchlibFilter.h>
 
 #define DEFAULT_BRIGHTNESS 0.0
 #define DEFAULT_CONTRAST 0.2

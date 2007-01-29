@@ -2,7 +2,7 @@
 #ifndef __TOUCHLIB_FILTER_RESIZE__
 #define __TOUCHLIB_FILTER_RESIZE__
 
-#include <Filter.h>
+#include <TouchlibFilter.h>
 
 #define DEFAULT_RESIZEWIDTH 480
 #define DEFAULT_RESIZEHEIGHT 640

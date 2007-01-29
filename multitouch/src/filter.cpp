@@ -1,5 +1,5 @@
 
-#include <filter.h>
+#include <TouchlibFilter.h>
 #include <highgui.h>
 
 

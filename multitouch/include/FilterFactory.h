@@ -6,7 +6,7 @@
 #include <string>
 #include <touchlib_platform.h>
 
-#include "Filter.h"
+#include "TouchlibFilter.h"
 
 class TOUCHLIB_FILTER_EXPORT FilterFactory
 {

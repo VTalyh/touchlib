@@ -317,10 +317,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\include\Filter.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\include\FilterFactory.h"
 					>
 				</File>
@@ -338,6 +334,10 @@
 				</File>
 				<File
 					RelativePath="..\..\include\SmoothingFilter.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\TouchlibFilter.h"
 					>
 				</File>
 				<File

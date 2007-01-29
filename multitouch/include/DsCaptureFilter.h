@@ -3,7 +3,7 @@
 #ifndef __TOUCHSCREEN_FILTER_DSCAPTURE__
 #define __TOUCHSCREEN_FILTER_DSCAPTURE__
 
-#include <Filter.h>
+#include <TouchlibFilter.h>
 
 #include <windows.h>
 #include <tchar.h>

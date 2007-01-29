@@ -2,7 +2,7 @@
 #ifndef __TOUCHLIB_FILTER_BACKGROUND__
 #define __TOUCHLIB_FILTER_BACKGROUND__
 
-#include <Filter.h>
+#include <TouchlibFilter.h>
 
 
 class TOUCHLIB_FILTER_EXPORT BackgroundFilter : public Filter
