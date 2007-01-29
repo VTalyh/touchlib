@@ -73,9 +73,9 @@ void CvCaptureFilter::setParameter(const char *name, const char *value)
 				capture = cvCaptureFromCAM( CV_CAP_ANY );
 				//cvSetCaptureProperty(capture, CV_CAP_PROP_FRAME_WIDTH, 640);
 				//cvSetCaptureProperty(capture, CV_CAP_PROP_FRAME_HEIGHT, 480);
-				cvSetCaptureProperty(capture, CV_CAP_PROP_FRAME_WIDTH_HEIGHT, 640480);
+				//cvSetCaptureProperty(capture, CV_CAP_PROP_FRAME_WIDTH_HEIGHT, 640480);
 
-				cvSetCaptureProperty(capture, CV_CAP_PROP_FPS, 30);
+				//cvSetCaptureProperty(capture, CV_CAP_PROP_FPS, 30);
 
 			}
 			else
