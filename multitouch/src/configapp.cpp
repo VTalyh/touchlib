@@ -196,26 +196,33 @@ public:
 		int i;
 		for(i=0; i<GRID_POINTS; i++)
 		{
-			// FIXME: highlight calibration step.. 
+
 			if(curcalib == i)
 				glutDrawPlus((screenpts[i].X*2.0f)-1.0f, (screenpts[i].Y*2.0f)-1.0f, 0.02, 1.0, 0.0, 0.0);
 			else
 				glutDrawPlus((screenpts[i].X*2.0f)-1.0f, (screenpts[i].Y*2.0f)-1.0f, 0.02, 0.0, 1.0, 0.0);
 		}
 
+/*
+//Draw the 'mapping' points (camera space)...
 		for(i=0; i<GRID_POINTS; i++)
 		{
 			if(curcalib == i)
-				glutDrawPlus((campts[i].X/300.0f)-1.0f, (campts[i].Y/300.0f)-1.0f, 0.02, 1.0, 1.0, 0.0);
+				glutDrawPlus((campts[i].X/300.0f)-1.0f, (campts[i].Y/300.0f)-1.0f, 0.02, 0.2, 0.2, 0.2);
 			else
-				glutDrawPlus((campts[i].X/300.0f)-1.0f, (campts[i].Y/300.0f)-1.0f, 0.02, 1.0, 0.0, 0.0);
+				glutDrawPlus((campts[i].X/300.0f)-1.0f, (campts[i].Y/300.0f)-1.0f, 0.02, 0.1, 0.1, 0.1);
 		}
+*/
 
-		std::map<int, FingerElement>::iterator iter;
-
-		for(iter=fingerList.begin(); iter != fingerList.end(); iter++)
+		// only draw fingers when not calibrating..
+		if(curcalib == -1)
 		{
-			iter->second.draw();
+			std::map<int, FingerElement>::iterator iter;
+
+			for(iter=fingerList.begin(); iter != fingerList.end(); iter++)
+			{
+				iter->second.draw();
+			}
 		}
 	}
 private:
@@ -363,7 +370,7 @@ int _tmain(int argc, char * argv[])
 		screen->pushFilter("smooth", "smooth3");
 		screen->pushFilter("backgroundremove", "background4");
 
-		screen->pushFilter("brightnesscontrast", "bc5");
+		//screen->pushFilter("brightnesscontrast", "bc5");
 		screen->pushFilter("rectify", "rectify6");
 
 		screen->setParameter("rectify6", "level", "25");
@@ -372,8 +379,10 @@ int _tmain(int argc, char * argv[])
 		//screen->setParameter("capture1", "source", "../tests/simple-2point.avi");
 		//screen->setParameter("capture1", "source", "../tests/hard-5point.avi");
 
-		screen->setParameter("bc5", "brightness", "0.1");
-		screen->setParameter("bc5", "contrast", "0.4");
+		screen->setParameter("background4", "threshold", "0");
+
+		//screen->setParameter("bc5", "brightness", "0.1");
+		//screen->setParameter("bc5", "contrast", "0.4");
 
 		screen->saveConfig("config.xml");
 	}
