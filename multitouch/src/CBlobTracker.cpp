@@ -416,12 +416,12 @@ void CBlobTracker::ProcessResults()
 	// FIXME: we could scale numcheck depending on how many blobs there are
 	// if we are tracking a lot of blobs, we could check less.. 
 	
-	numcheck = 5;
+	numcheck = 4;
 
 	if(prevsize < numcheck)
 		numcheck = prevsize;
 
-	if(numcheck <= 5 && extraIDs > 0)
+	if(numcheck <= 4 && extraIDs > 0)
 		numcheck += 1;
 
 	if(current.size() > 0)
@@ -494,7 +494,7 @@ void CBlobTracker::ProcessResults()
 			current[i].ID = currentID;
 
 			currentID ++;
-			if(currentID >= 65536)
+			if(currentID >= 65535)
 				currentID = 0;
 
 			doTouchEvent(current[i].getTouchData());

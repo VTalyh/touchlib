@@ -31,7 +31,7 @@ ITouchScreen *screen;
 #define ADDRESS "127.0.0.1"
 #define PORT 3333
 
-#define OUTPUT_BUFFER_SIZE 1024
+#define OUTPUT_BUFFER_SIZE 2048
 
 
 
@@ -108,48 +108,82 @@ public:
 
 		char buffer[OUTPUT_BUFFER_SIZE];
 		osc::OutboundPacketStream p( buffer, OUTPUT_BUFFER_SIZE );
-		std::map<int, TouchData>::iterator iter;	    
+		std::map<int, TouchData>::iterator iter1, iter2, iter_last;	    
 
 		if(fingerList.size() > 0)
 		{	    
+			//p << osc::BeginBundleImmediate;
 
-			p << osc::BeginBundleImmediate;
 
+			int scount = 0, acount = 0;
+			iter1=fingerList.begin();
+			
+			bool done=false;
 
-			for(iter=fingerList.begin(); iter != fingerList.end(); iter++)
+			while(!done)
 			{
-				TouchData d = (*iter).second;
-				float m = sqrtf((d.dX*d.dX) + (d.dY*d.dY));
-				p << osc::BeginMessage( "/tuio/2Dobj" ) << "set" << d.ID << (int)0 << d.X << d.Y << (float)0.0f 
-					<< d.dX << d.dY << (float)0.0f << m << (float)0.0f << osc::EndMessage;
+				p.Clear();
+				p << osc::BeginBundle();
+
+				for(; iter1 != fingerList.end(); iter1++)
+				{
+					TouchData d = (*iter1).second;
+					float m = sqrtf((d.dX*d.dX) + (d.dY*d.dY));
+					p << osc::BeginMessage( "/tuio/2Dcur" ) << "set" << d.ID << d.X << d.Y << d.dX << d.dY << m << osc::EndMessage;
+
+					scount ++;
+					if(scount >= 10)
+					{
+						scount = 0;
+						break;
+					}
+
+				}
+
+				if(iter1 == fingerList.end())
+					done = true;
+
+
+				p << osc::BeginMessage( "/tuio/2Dcur" );
+				p << "alive";
+				for(iter2=fingerList.begin(); iter2 != fingerList.end(); iter2++)
+				{
+					p << (*iter2).second.ID;
+				}
+				p << osc::EndMessage;
+
+				p << osc::BeginMessage( "/tuio/2Dcur" ) << "fseq" << frameSeq << osc::EndMessage;
+				p << osc::EndBundle;
+
+				printf("%d size. %d #fingers\n", p.Size(), fingerList.size());
+				frameSeq ++; 
+				if(p.IsReady())
+					transmitSocket->Send( p.Data(), p.Size() );
 			}
 
-			p << osc::BeginMessage( "/tuio/2Dobj" );
-			p << "alive";
-			for(iter=fingerList.begin(); iter != fingerList.end(); iter++)
-			{
-				p << (*iter).second.ID;
-			}	
-			p << osc::EndMessage;
 
-			p << osc::BeginMessage( "/tuio/2Dobj" ) << "fseq" << frameSeq << osc::EndMessage;
-			p << osc::EndBundle;
-
-		
-			frameSeq ++;
-			transmitSocket->Send( p.Data(), p.Size() );
 		} else {
-			p << osc::BeginBundleImmediate;
+			//p << osc::BeginBundleImmediate;
+			p.Clear();
+			p << osc::BeginBundle();
 
-			p << osc::BeginMessage( "/tuio/2Dobj" );
+			p << osc::BeginMessage( "/tuio/2Dcur" );
 			p << "alive";
 			p << osc::EndMessage;
 
-			p << osc::BeginMessage( "/tuio/2Dobj" ) << "fseq" << frameSeq << osc::EndMessage;
+			p << osc::BeginMessage( "/tuio/2Dcur" ) << "fseq" << frameSeq << osc::EndMessage;
+
 			p << osc::EndBundle;
 
+
+
 			frameSeq ++;
-			transmitSocket->Send( p.Data(), p.Size() );
+			printf("%d size\n", p.Size());
+
+			if(p.IsReady())
+				transmitSocket->Send( p.Data(), p.Size() );
+
+
 		}
 
 	}
