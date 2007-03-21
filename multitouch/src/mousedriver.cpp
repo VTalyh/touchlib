@@ -57,7 +57,7 @@ public:
 		aInput.mi.mouseData = 0;
 		aInput.mi.time = 0;
 		aInput.mi.dx = (data.X * 65535.0f);
-		aInput.mi.dy = ((1.0f - data.Y) * 65535.0f);
+		aInput.mi.dy = (data.Y * 65535.0f);
 
 		int aResult = SendInput(1, &aInput, sizeof(INPUT) );
 		
@@ -76,7 +76,7 @@ public:
 			aInput.mi.mouseData = 0;
 			aInput.mi.time = 0;
 			aInput.mi.dx = (data.X * 65536.0f);
-			aInput.mi.dy = ((1.0f - data.Y) * 65535.0f);
+			aInput.mi.dy = (data.Y * 65535.0f);
 
 			int aResult = SendInput(1, &aInput, sizeof(INPUT) );
 		

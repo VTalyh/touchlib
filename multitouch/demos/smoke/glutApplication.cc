@@ -197,13 +197,15 @@ void glutApplication::DrawField(void)
 			glEnd();
 		}
 	}
-
 }
 
 
 //! Notify that a finger has just been made active. 
 void glutApplication::fingerDown(TouchData data)
 {
+	data.Y = 1.0 - data.Y;
+	data.dY = -data.dY;
+
 	// choose random colour for this finger
 	RgbPixelFloat cf;
 	cf.r = (float) rand() / (RAND_MAX + 1);
@@ -220,6 +222,9 @@ void glutApplication::fingerDown(TouchData data)
 //! Notify that a finger has just been made active. 
 void glutApplication::fingerUpdate(TouchData data)
 {
+	data.Y = 1.0 - data.Y;
+	data.dY = -data.dY;
+
 	float X = data.X;
 	float Y =  data.Y;
 	float dX = data.dX;

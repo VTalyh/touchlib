@@ -379,14 +379,16 @@ void CTouchScreen::fingerDown(TouchData data)
 
 
 	cameraToScreenSpace(data.X, data.Y);
+// if(bCalibrating || (data.X != 0.0f) || (data.Y != 0.0f))
+	//{
+		e.data = data;
+		e.type = TOUCH_PRESS;
 
-	e.data = data;
-	e.type = TOUCH_PRESS;
+		e.data.dX = 0;
+		e.data.dY = 0;
 
-	e.data.dX = 0;
-	e.data.dY = 0;
-
-	eventList.push_back(e);
+		eventList.push_back(e);
+	//}
 }
 
 
@@ -425,14 +427,17 @@ void CTouchScreen::fingerUpdate(TouchData data)
 	cameraToScreenSpace(data.X, data.Y);
 	cameraToScreenSpace(tx, ty);
 
-	e.data = data;
-	e.type = TOUCH_UPDATE;
-	e.data.dX = tx - data.X;
-	e.data.dY = ty - data.Y;
+	//if((data.X != 0.0f) || (data.Y != 0.0f))
+	//{
+		e.data = data;
+		e.type = TOUCH_UPDATE;
+		e.data.dX = tx - data.X;
+		e.data.dY = ty - data.Y;
 
 
 
-	eventList.push_back(e);
+		eventList.push_back(e);
+	//}
 }
 
 

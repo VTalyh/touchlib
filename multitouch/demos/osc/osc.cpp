@@ -72,6 +72,7 @@ public:
 		c.b = 255;
 
 		fingerList[data.ID] = data;
+
 		
 		printf("Press detected: %f, %f\n", data.X, data.Y);
 
@@ -80,6 +81,7 @@ public:
 	//! Notify that a finger has moved 
 	virtual void fingerUpdate(TouchData data)
 	{
+
 		fingerList[data.ID] = data;
 
 
@@ -129,7 +131,7 @@ public:
 				{
 					TouchData d = (*iter1).second;
 					float m = sqrtf((d.dX*d.dX) + (d.dY*d.dY));
-					p << osc::BeginMessage( "/tuio/2Dcur" ) << "set" << d.ID << d.X << d.Y << d.dX << d.dY << m << osc::EndMessage;
+					p << osc::BeginMessage( "/tuio/2Dcur" ) << "set" << d.ID << d.X << d.Y << d.dX << d.dY << m << d.Area << osc::EndMessage;
 
 					scount ++;
 					if(scount >= 10)
@@ -137,7 +139,6 @@ public:
 						scount = 0;
 						break;
 					}
-
 				}
 
 				if(iter1 == fingerList.end())
@@ -155,7 +156,7 @@ public:
 				p << osc::BeginMessage( "/tuio/2Dcur" ) << "fseq" << frameSeq << osc::EndMessage;
 				p << osc::EndBundle;
 
-				printf("%d size. %d #fingers\n", p.Size(), fingerList.size());
+				//printf("%d size. %d #fingers\n", p.Size(), fingerList.size());
 				frameSeq ++; 
 				if(p.IsReady())
 					transmitSocket->Send( p.Data(), p.Size() );
@@ -175,10 +176,8 @@ public:
 
 			p << osc::EndBundle;
 
-
-
 			frameSeq ++;
-			printf("%d size\n", p.Size());
+			//printf("%d size\n", p.Size());
 
 			if(p.IsReady())
 				transmitSocket->Send( p.Data(), p.Size() );

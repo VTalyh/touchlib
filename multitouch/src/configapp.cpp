@@ -52,7 +52,7 @@ public:
 		float rad = sqrtf(data.Area) / 50.0;
 
 		float X = (data.X*2.0f) - 1.0;
-		float Y = (data.Y*2.0f) - 1.0;
+		float Y = ((1.0-data.Y)*2.0f) - 1.0;
 
 		if(configStep == 1)
 			glutDrawBox(X-rad, Y-rad, X+rad, Y+rad, (float)color.r/255.0f, (float)color.g/255.0f, (float)color.b/255.0f);
@@ -129,7 +129,7 @@ public:
 			aInput.mi.mouseData = 0;
 			aInput.mi.time = 0;
 			aInput.mi.dx = (data.X * 65535.0f);
-			aInput.mi.dy = ((1.0f - data.Y) * 65535.0f);
+			aInput.mi.dy = (data.Y * 65535.0f);
 
 			int aResult = SendInput(1, &aInput, sizeof(INPUT) );
 		}
@@ -150,7 +150,7 @@ public:
 			aInput.mi.mouseData = 0;
 			aInput.mi.time = 0;
 			aInput.mi.dx = (data.X * 65536.0f);
-			aInput.mi.dy = ((1.0f - data.Y) * 65535.0f);
+			aInput.mi.dy = (data.Y * 65535.0f);
 
 			int aResult = SendInput(1, &aInput, sizeof(INPUT) );
 		}
@@ -188,7 +188,10 @@ public:
 
 		float scale = screen->getScreenScale();
 
-		glutDrawBox(-(1.0f * (scale)), -(1.0f * (scale)), (1.0f * (scale)), (1.0f * (scale)), 0.0, 0.2, 0.0);
+		if(fingerList.size() > 0)
+			glutDrawBox(-(1.0f * (scale)), -(1.0f * (scale)), (1.0f * (scale)), (1.0f * (scale)), 1.0, 1.0, 1.0);
+		else
+			glutDrawBox(-(1.0f * (scale)), -(1.0f * (scale)), (1.0f * (scale)), (1.0f * (scale)), 0.0, 0.2, 0.0);
 
 		vector2df *screenpts = screen->getScreenPoints();
 		vector2df *campts = screen->getCameraPoints();
@@ -198,9 +201,9 @@ public:
 		{
 
 			if(curcalib == i)
-				glutDrawPlus((screenpts[i].X*2.0f)-1.0f, (screenpts[i].Y*2.0f)-1.0f, 0.02, 1.0, 0.0, 0.0);
+				glutDrawPlus((screenpts[i].X*2.0f)-1.0f, ((1.0-screenpts[i].Y)*2.0f)-1.0f, 0.02, 1.0, 0.0, 0.0);
 			else
-				glutDrawPlus((screenpts[i].X*2.0f)-1.0f, (screenpts[i].Y*2.0f)-1.0f, 0.02, 0.0, 1.0, 0.0);
+				glutDrawPlus((screenpts[i].X*2.0f)-1.0f, ((1.0-screenpts[i].Y)*2.0f)-1.0f, 0.02, 0.0, 1.0, 0.0);
 		}
 
 /*
