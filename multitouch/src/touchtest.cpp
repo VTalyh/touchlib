@@ -2,8 +2,9 @@
 #include <cxcore.h>
 #include <highgui.h>
 
+#ifdef WIN32
 #include <tchar.h>
-
+#endif
 
 #include "TouchScreenDevice.h"
 
@@ -101,8 +102,11 @@ private:
     IplImage *window_img;
 };
 
-
+#ifdef  WIN32
 int _tmain(int argc, _TCHAR* argv[])
+#else
+  int main(int argc, char ** argv)
+#endif
 {
 	// FIXME: in the future we will call a static method on TouchScreenDevice
 	// in order to get an ITouchScreen (singleton pattern) as opposed to directly

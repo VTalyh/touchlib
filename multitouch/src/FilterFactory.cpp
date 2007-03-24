@@ -1,9 +1,11 @@
 #include "FilterFactory.h"
 
 #include "CvCaptureFilter.h"
+#ifdef WIN32
 //#include "DsCaptureFilter.h"
 #include "VideoWrapperFilter.h"
 #include "DSVLCaptureFilter.h"
+#endif
 
 #include "BrightnessContrastFilter.h"
 #include "MonoFilter.h"
@@ -25,10 +27,12 @@ Filter *FilterFactory::createFilter(const char *type, const char *label)
 	if(strcmp(type, "cvcapture") == 0)
 	{
 		newFilter = (Filter *)new CvCaptureFilter((char*)label);
+#ifdef WIN32
 	} else if(strcmp(type, "vwcapture") == 0) {
 		newFilter = (Filter *)new VideoWrapperFilter((char*)label);
 	} else if(strcmp(type, "dsvlcapture") == 0) {
 		newFilter = (Filter *)new DSVLCaptureFilter((char*)label);
+#endif
 	} else if(strcmp(type, "mono") == 0) {
 		newFilter = (Filter *)new MonoFilter((char*)label);
 	} else if(strcmp(type, "rectify") == 0) {

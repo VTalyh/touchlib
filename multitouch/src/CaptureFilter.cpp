@@ -1,6 +1,5 @@
 
 #include <CaptureFilter.h>
-#include <windows.h>
 
 #include <cv.h>
 #include <cxcore.h>

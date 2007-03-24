@@ -1,13 +1,22 @@
 
 #include "CTouchScreen.h"
 #include "FilterFactory.h"
+#ifdef WIN32
 #include "process.h"
+#else
+#include <signal.h>
+#endif
 #include "tinyxml.h"
 
 using namespace touchlib;
 
+#ifdef WIN32
 HANDLE CTouchScreen::hThread = 0;
 HANDLE CTouchScreen::eventListMutex = 0;
+#else
+pthread_t CTouchScreen::hThread = 0;
+pthread_mutex_t CTouchScreen::eventListMutex = PTHREAD_MUTEX_INITIALIZER;
+#endif
 
 // FIXME: Maybe some of this calibration stuff should be moved to the config app
 // Let the config app collect the points and set them en-masse..?
@@ -18,7 +27,9 @@ CTouchScreen::CTouchScreen()
 
 	tracker.registerListener((ITouchListener *)this);
 
+#ifdef WIN32
 	eventListMutex = CreateMutex(NULL, 0, NULL);
+#endif
 
 	screenScale = 0.75;
 
@@ -59,10 +70,15 @@ CTouchScreen::CTouchScreen()
 CTouchScreen::~CTouchScreen()
 {
 	unsigned int i;
-
+#ifdef WIN32
 	if(hThread)
 		TerminateThread(hThread, 0);
-
+#else
+	if(hThread){
+		pthread_kill(hThread,15);
+		hThread = 0;
+	}
+#endif
 	for(i=0; i<filterChain.size(); i++)
 		delete filterChain[i];
 }
@@ -150,7 +166,7 @@ bool CTouchScreen::process()
 			{
 				//printf("Tracking 1\n");
 				tracker.findBlobs(frame, labelImg);
-
+#ifdef WIN32				
 				DWORD dw = WaitForSingleObject(eventListMutex, INFINITE);
 				//dw == WAIT_OBJECT_0
 				if(dw == WAIT_TIMEOUT || dw == WAIT_FAILED) {
@@ -166,12 +182,25 @@ bool CTouchScreen::process()
 
 					ReleaseMutex(eventListMutex);
 				}
+#else
+				int err;
+				if((err = pthread_mutex_lock(&eventListMutex)) != 0){
+					// some error occured
+					fprintf(stderr,"locking of mutex failed\n");
+				}else{
+					tracker.ProcessResults();
+					pthread_mutex_unlock(&eventListMutex);
+				}
+#endif
 
 			}
 			//return true;
 		}
-
+#ifdef WIN32
 		Sleep(16);
+#else
+		usleep(16*1000);
+#endif
 	}
 }
 
@@ -520,7 +549,7 @@ void CTouchScreen::cameraToScreenSpace(float &x, float &y)
 }
 
 
-void CTouchScreen::_processEntryPoint(void *obj)
+thread_function_return_t CTouchScreen::_processEntryPoint(void * obj)
 {
 	((CTouchScreen *)obj)->process();
 }
@@ -528,44 +557,57 @@ void CTouchScreen::_processEntryPoint(void *obj)
 
 void CTouchScreen::beginProcessing()
 {
+#ifdef WIN32
 	hThread = (HANDLE)_beginthread(_processEntryPoint, 0, this);
+#else
+	pthread_create(&hThread,0,_processEntryPoint,this);
+#endif
 }
 
 
 void CTouchScreen::getEvents()
 {
 	unsigned int i=0;
+
+#ifdef WIN32				
 	DWORD dw = WaitForSingleObject(eventListMutex, INFINITE);
-	
-	// dw == WAIT_OBJECT_0
+	//dw == WAIT_OBJECT_0
 	if(dw == WAIT_TIMEOUT || dw == WAIT_FAILED) {
 		// handle time-out error
 		//throw TimeoutExcp();
+		printf("Failed %d", dw);
 		return;
-
-	} else {
-
-		for(i=0; i<eventList.size(); i++)
+	} 
+#else
+	int err;
+	if((err = pthread_mutex_lock(&eventListMutex)) != 0){
+		// some error occured
+		fprintf(stderr,"locking of mutex failed\n");
+		return;
+	}
+#endif		
+	for(i=0; i<eventList.size(); i++)
 		{
 			switch(eventList[i].type)
-			{
-			case TOUCH_PRESS:
-				doTouchEvent(eventList[i].data);
-				break;
-			case TOUCH_RELEASE:
-				doUntouchEvent(eventList[i].data);
-				break;
-			case TOUCH_UPDATE:
-				doUpdateEvent(eventList[i].data);
-				break;
-			};
+				{
+				case TOUCH_PRESS:
+					doTouchEvent(eventList[i].data);
+					break;
+				case TOUCH_RELEASE:
+					doUntouchEvent(eventList[i].data);
+					break;
+				case TOUCH_UPDATE:
+					doUpdateEvent(eventList[i].data);
+					break;
+				};
 		}
-
-		eventList.clear();
-
-		ReleaseMutex(eventListMutex);
-	}
-
+	
+	eventList.clear();
+#ifdef WIN32
+	ReleaseMutex(eventListMutex);
+#else
+	pthread_mutex_unlock(&eventListMutex);
+#endif
 
 }
 

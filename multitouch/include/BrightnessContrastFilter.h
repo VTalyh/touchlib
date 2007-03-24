@@ -29,7 +29,7 @@ public:
 	virtual void showOutput(bool value);
 private:
 
-    void BrightnessContrastFilter::updateLUT( void );
+    void updateLUT( void );
 
     uchar lut[256*4];
 

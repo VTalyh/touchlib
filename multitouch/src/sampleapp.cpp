@@ -2,9 +2,6 @@
 #include <cxcore.h>
 #include <highgui.h>
 
-#include <tchar.h>
-
-
 #include "TouchScreenDevice.h"
 
 using namespace touchlib;
@@ -101,8 +98,11 @@ private:
     IplImage *window_img;
 };
 
-
+#ifdef WIN32
 int _tmain(int argc, _TCHAR* argv[])
+#else
+int main(int argc,char**argv)
+#endif
 {
 	// FIXME: in the future we will call a static method on TouchScreenDevice
 	// in order to get an ITouchScreen (singleton pattern) as opposed to directly
@@ -115,7 +115,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	char* configFileName = "config.xml";
 	if(!screen->loadConfig(configFileName))
 	{
-		screen->pushFilter("capture", "capture1");
+		screen->pushFilter("cvcapture", "capture1");
 		screen->pushFilter("mono", "mono2");
 		screen->pushFilter("smooth", "smooth3");
 		screen->pushFilter("backgroundremove", "background4");
@@ -125,8 +125,8 @@ int _tmain(int argc, _TCHAR* argv[])
 
 		screen->setParameter("rectify6", "level", "25");
 
-		//screen->setParameter("capture1", "source", "cam");
-		screen->setParameter("capture1", "source", "../tests/simple-2point.avi");
+		screen->setParameter("capture1", "source", "cam");
+		//screen->setParameter("capture1", "source", "../tests/simple-2point.avi");
 		//screen->setParameter("capture1", "source", "../tests/hard-5point.avi");
 
 		screen->setParameter("bc5", "brightness", "0.1");

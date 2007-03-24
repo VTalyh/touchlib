@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "vector2d.h"
-#include "image.h"
+#include "Image.h"
 #include "rect2d.h"
 #include <math.h>
 
@@ -149,7 +149,7 @@ namespace touchlib
 		void getBarycentricCoords(vector2d<T> pt, int tri_ind, float &bary_A, float &bary_B, float &bary_C)
 		{
 			vector2d<T> pt_local;
-			pt_local = p - position;
+			pt_local = pt - position;
 			pt_local.rotateBy(-rotation, vector2d<T>(0,0));
 			pt_local /= scale;
 

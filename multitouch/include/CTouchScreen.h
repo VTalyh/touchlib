@@ -5,10 +5,17 @@
 #include "CBlobTracker.h"
 #include "ITouchEvent.h"
 #include "TouchlibFilter.h"
+#ifdef WIN32
 #include <process.h>
 #include <windows.h>
+typedef void thread_function_return_t;
+#else
+typedef void* thread_function_return_t;
+#endif
 #include "ITouchListener.h"
 #include "mesh2d.h"
+
+
 
 #include <vector>
 
@@ -96,7 +103,7 @@ namespace touchlib
 
 //////////
 
-		static void _processEntryPoint(void *obj);
+		static thread_function_return_t _processEntryPoint(void*);
 
 		void cameraToScreenSpace(float &x, float &y);
 
@@ -116,8 +123,8 @@ namespace touchlib
 		bool debugMode;
 		bool volatile bTracking;
 
-		static HANDLE hThread;
-		static HANDLE eventListMutex;
+		static THREAD_HANDLE hThread;
+		static THREAD_MUTEX_HANDLE eventListMutex;
 
 		CBlobTracker tracker;
 

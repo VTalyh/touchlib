@@ -1,6 +1,5 @@
 
 #include <CvCaptureFilter.h>
-#include <windows.h>
 
 #include <cv.h>
 #include <cxcore.h>
@@ -8,7 +7,7 @@
 
 CvCapture * CvCaptureFilter::capture = 0;
 IplImage* CvCaptureFilter::acquiredImage = 0;
-HANDLE CvCaptureFilter::hThread = 0;
+THREAD_HANDLE CvCaptureFilter::hThread = 0;
 
 CvCaptureFilter::CvCaptureFilter(char* s) : Filter(s)
 {

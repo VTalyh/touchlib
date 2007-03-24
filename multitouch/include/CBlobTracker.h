@@ -6,7 +6,7 @@
 #include <vector2d.h>
 #include <rect2d.h>
 
-#include <image.h>
+#include <Image.h>
 #include <touchlib_platform.h>
 #include "ITouchListener.h"
 #include "TouchData.h"

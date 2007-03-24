@@ -222,7 +222,7 @@ namespace touchlib
 
 		static bool isOnSameSide(vector2d<T> p1, vector2d<T> p2, vector2d<T> a, vector2d<T> b)
 		{
-			vector2df ba = b - a;
+			vector2d<T> ba = b - a;
 
 			float cp1 = ba.crossProduct(p1-a);
 			float cp2 = ba.crossProduct(p2-a);

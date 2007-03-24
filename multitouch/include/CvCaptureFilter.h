@@ -8,7 +8,6 @@
 #include <cv.h>
 #include <cxcore.h>
 #include <highgui.h>
-#include <process.h>
 
 // FIXME: we should put this in a namespace
 
@@ -18,7 +17,7 @@ class TOUCHLIB_FILTER_EXPORT CvCaptureFilter : public Filter
 		static CvCapture* capture;
 		static void acquireImage(void *param);
 		static IplImage* acquiredImage;
-		static HANDLE hThread;
+		static THREAD_HANDLE hThread;
 		char source[255];
 	public:
 		CvCaptureFilter(char*);

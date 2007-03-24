@@ -1,19 +1,20 @@
+#ifdef WIN32
 #pragma once
 #define WIN32_LEAN_AND_MEAN 
 #define _WIN32_WINNT  0x0500
 
 #include <windows.h>
+#include <tchar.h>
+#pragma comment( lib, "glut32" )
+#pragma comment( lib, "user32" )
+#endif
 
 #include <cv.h>
 #include <cxcore.h>
 #include <highgui.h>
 #include <map>
 
-#include <tchar.h>
-
 #include "glut.h"
-#pragma comment( lib, "glut32" )
-#pragma comment( lib, "user32" )
 
 #include "TouchScreenDevice.h"
 #include "TouchData.h"
