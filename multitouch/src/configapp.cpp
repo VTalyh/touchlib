@@ -1,20 +1,25 @@
 #ifdef WIN32
-#pragma once
-#define WIN32_LEAN_AND_MEAN 
-#define _WIN32_WINNT  0x0500
+	#pragma once
+	#define WIN32_LEAN_AND_MEAN 
+	#define _WIN32_WINNT  0x0500
 
-#include <windows.h>
-#include <tchar.h>
-#pragma comment( lib, "glut32" )
-#pragma comment( lib, "user32" )
+	#include <windows.h>
+	#include <tchar.h>
+	
+	#include "glut.h"
+	
+	#pragma comment( lib, "glut32" )
+	#pragma comment( lib, "user32" )
+#elif defined(__APPLE__)
+	#include <GLUT/glut.h>
+#else
+	#include <GL/glut.h>
 #endif
 
 #include <cv.h>
 #include <cxcore.h>
 #include <highgui.h>
 #include <map>
-
-#include "glut.h"
 
 #include "TouchScreenDevice.h"
 #include "TouchData.h"
@@ -23,7 +28,9 @@ using namespace touchlib;
 
 #include <stdio.h>
 
-#include <cvcam.h>
+#ifdef WIN32
+	#include <cvcam.h>
+#endif
 
 void glutDrawBox(float x1, float y1, float x2, float y2, float r, float g, float b);
 void glutDrawPlus(float x1, float y1, float s, float r, float g, float b);
@@ -122,6 +129,7 @@ public:
 
 		if(curcalib == -1)
 		{
+#ifdef WIN32
 			INPUT aInput;
 
 			aInput.type = INPUT_MOUSE;
@@ -133,6 +141,7 @@ public:
 			aInput.mi.dy = (data.Y * 65535.0f);
 
 			int aResult = SendInput(1, &aInput, sizeof(INPUT) );
+#endif
 		}
 	}
 
@@ -143,6 +152,7 @@ public:
 
 		if(curcalib == -1)
 		{
+#ifdef WIN32
 			INPUT aInput;
 
 			aInput.type = INPUT_MOUSE;
@@ -154,6 +164,7 @@ public:
 			aInput.mi.dy = (data.Y * 65535.0f);
 
 			int aResult = SendInput(1, &aInput, sizeof(INPUT) );
+#endif
 		}
 	}
 
@@ -173,6 +184,7 @@ public:
 
 		if(curcalib == -1)
 		{
+#ifdef WIN32
 			INPUT aInput;
 
 			aInput.type = INPUT_MOUSE;
@@ -181,6 +193,7 @@ public:
 			aInput.mi.mouseData = 0;
 			aInput.mi.time = 0;
 			int aResult = SendInput(1, &aInput, sizeof(INPUT) );
+#endif
 		}
 	}
 
@@ -363,13 +376,21 @@ void startGLApp(int argc, char * argv[])
 	glutMainLoop();
 }
 
+#ifdef WIN32
 int _tmain(int argc, char * argv[])
+#else
+int main(int argc, char * argv[])
+#endif
 {
 	screen = TouchScreenDevice::getTouchScreen();
 
 	if(!screen->loadConfig("config.xml"))
 	{
+#ifdef WIN32
 		screen->pushFilter("dsvlcapture", "capture1");
+#else
+		screen->pushFilter("cvcapture", "capture1");
+#endif
 		screen->pushFilter("mono", "mono2");
 		screen->pushFilter("smooth", "smooth3");
 		screen->pushFilter("backgroundremove", "background4");
@@ -395,7 +416,7 @@ int _tmain(int argc, char * argv[])
 	// Note: Begin processing should only be called after the screen is set up
 
 	screen->beginProcessing();
-
+	
 	do
 	{
 

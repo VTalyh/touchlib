@@ -1,12 +1,8 @@
 
 #include "CTouchScreen.h"
 #include "FilterFactory.h"
-#ifdef WIN32
-#include "process.h"
-#else
-#include <signal.h>
-#endif
 #include "tinyxml.h"
+#include <highgui.h>
 
 using namespace touchlib;
 
@@ -29,6 +25,8 @@ CTouchScreen::CTouchScreen()
 
 #ifdef WIN32
 	eventListMutex = CreateMutex(NULL, 0, NULL);
+#else
+	pthread_mutex_init(&eventListMutex, NULL);
 #endif
 
 	screenScale = 0.75;
@@ -78,7 +76,10 @@ CTouchScreen::~CTouchScreen()
 		pthread_kill(hThread,15);
 		hThread = 0;
 	}
+	
+	pthread_mutex_destroy(&eventListMutex);
 #endif
+	
 	for(i=0; i<filterChain.size(); i++)
 		delete filterChain[i];
 }
@@ -548,8 +549,7 @@ void CTouchScreen::cameraToScreenSpace(float &x, float &y)
 
 }
 
-
-thread_function_return_t CTouchScreen::_processEntryPoint(void * obj)
+THREAD_RETURN_TYPE CTouchScreen::_processEntryPoint(void * obj)
 {
 	((CTouchScreen *)obj)->process();
 }

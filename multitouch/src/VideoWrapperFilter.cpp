@@ -4,7 +4,11 @@
 
 VideoWrapperFilter::VideoWrapperFilter(char *s) : Filter(s)
 {
+#if defined(_WIN32) || defined(WIN32) || defined(__WIN32__)
 	strcpy(videostring, "vc: 0 320 30 I420 1");
+#elif defined(__APPLE__)
+	strcpy(videostring, "qt: 0 640 30 rgb 0");
+#endif
 	g_hVideo = 0;
 
 	destination = NULL;

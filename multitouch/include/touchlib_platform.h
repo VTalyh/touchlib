@@ -17,13 +17,19 @@
 #include <tchar.h>
 #define THREAD_HANDLE HANDLE
 #define THREAD_MUTEX_HANDLE HANDLE
+#define THREAD_RETURN_TYPE void
+
+
 #else
+
+#include <signal.h>
 #    define TOUCHLIB_EXPORT
 #    define TOUCHLIB_CORE_EXPORT
 #    define TOUCHLIB_FILTER_EXPORT
 #    define strcmpi strcasecmp
 #define THREAD_HANDLE pthread_t
 #define THREAD_MUTEX_HANDLE pthread_mutex_t
+#define THREAD_RETURN_TYPE void*
 #define _TCHAR char
 #endif
 

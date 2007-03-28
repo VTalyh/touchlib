@@ -5,10 +5,13 @@
 #include <highgui.h>
 #include <map>
 
-#include <tchar.h>
+#include <glut.h>
 
-#include "glut.h"
-#pragma comment( lib, "glut32" )
+#ifdef WIN32
+	#include <tchar.h>
+	
+	#pragma comment( lib, "glut32" )
+#endif
 
 #include "TouchScreenDevice.h"
 #include "TouchData.h"
@@ -19,7 +22,10 @@ using namespace touchlib;
 
 #include <stdio.h>
 #include <string>
+
+#ifdef WIN32
 #include <cvcam.h>
+#endif
 
 #include <textures.h>
 
@@ -855,7 +861,11 @@ void startGLApp(int argc, char * argv[])
 	TouchScreenDevice::destroy();
 }
 
+#ifdef WIN32
 int _tmain(int argc, char * argv[])
+#else
+int main(int argc, char * argv[])
+#endif
 {
 
 	screen = TouchScreenDevice::getTouchScreen();

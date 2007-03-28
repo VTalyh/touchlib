@@ -12,7 +12,7 @@
 	http://www.dgp.utoronto.ca/people/stam/reality/Research/pub.html
 */
 
-#include <fluid2d.h>
+#include "fluid2d.h"
 #include <math.h>
 #include <iostream>
 

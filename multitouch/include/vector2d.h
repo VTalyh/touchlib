@@ -3,6 +3,7 @@
 
 
 #include <touchlib_platform.h>
+#include <math.h>
 
 namespace touchlib 
 {

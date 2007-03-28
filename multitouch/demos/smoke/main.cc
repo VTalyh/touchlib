@@ -1,5 +1,7 @@
 
-#include <tchar.h>
+#ifdef WIN32
+	#include <tchar.h>
+#endif
 #include <iostream>
 
 #include "glutMaster.h"
@@ -10,7 +12,11 @@
 
 GlutMaster* glutMaster;
 
+#ifdef WIN32
 int _tmain(int argc, _TCHAR* argv[])
+#else
+int main(int argc, char* argv[])
+#endif
 {
 	glutMaster = new GlutMaster();    
 

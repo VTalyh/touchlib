@@ -5,13 +5,6 @@
 #include "CBlobTracker.h"
 #include "ITouchEvent.h"
 #include "TouchlibFilter.h"
-#ifdef WIN32
-#include <process.h>
-#include <windows.h>
-typedef void thread_function_return_t;
-#else
-typedef void* thread_function_return_t;
-#endif
 #include "ITouchListener.h"
 #include "mesh2d.h"
 
@@ -103,7 +96,7 @@ namespace touchlib
 
 //////////
 
-		static thread_function_return_t _processEntryPoint(void*);
+		static THREAD_RETURN_TYPE _processEntryPoint(void*);
 
 		void cameraToScreenSpace(float &x, float &y);
 

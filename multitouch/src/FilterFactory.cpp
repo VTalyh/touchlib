@@ -2,9 +2,8 @@
 
 #include "CvCaptureFilter.h"
 #ifdef WIN32
-//#include "DsCaptureFilter.h"
-#include "VideoWrapperFilter.h"
-#include "DSVLCaptureFilter.h"
+	#include "VideoWrapperFilter.h"
+	#include "DSVLCaptureFilter.h"
 #endif
 
 #include "BrightnessContrastFilter.h"

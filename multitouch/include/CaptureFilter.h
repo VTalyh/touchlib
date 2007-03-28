@@ -8,7 +8,6 @@
 #include <cv.h>
 #include <cxcore.h>
 #include <highgui.h>
-#include <process.h>
 
 // FIXME: we should put this in a namespace
 

@@ -26,7 +26,7 @@ void COGLTexture::LoadFromFile(char *filename)
 	// FIXME: if(bInitialized) free memory.
 	printf("loading texture: %s\n", filename);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glGenTextures(1,&ID); 
+	glGenTextures(1,(GLuint*)&ID); 
 	glBindTexture( GL_TEXTURE_2D, ID);
 	Image = auxDIBImageLoadA( (const char*) filename );
 	if(!Image) 

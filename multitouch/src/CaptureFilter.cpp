@@ -1,13 +1,17 @@
 
 #include <CaptureFilter.h>
 
+#if defined(_WIN32) || defined(WIN32) || defined(__WIN32__)
+	#include <windows.h>
+#endif
+
 #include <cv.h>
 #include <cxcore.h>
 #include <highgui.h>
 
 CvCapture * CaptureFilter::capture = 0;
 IplImage* CaptureFilter::acquiredImage = 0;
-HANDLE CaptureFilter::hThread = 0;
+//HANDLE CaptureFilter::hThread = 0;
 
 CaptureFilter::CaptureFilter(char* s) : Filter(s)
 {

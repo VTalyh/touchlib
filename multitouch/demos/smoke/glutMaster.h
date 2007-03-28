@@ -16,7 +16,13 @@
 // included before glut to avoid C2381 error on Visual Studio 2005 (touchlib)
 #include <stdlib.h>
 
-#include "glut.h"
+#if defined(WIN32)
+#include <glut.h>
+#elif defined(__APPLE__)
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 #include "glutWindow.h"
 
 #define MAX_NUMBER_OF_WINDOWS 256 

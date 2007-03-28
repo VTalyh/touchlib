@@ -24,10 +24,10 @@ public:
 
 	void CallBackDisplayFunc(void);
 	void CallBackKeyboardFunc(unsigned char key, int x, int y);
-	void glutApplication::SetScreen(ITouchScreen* setScreen);
+	void SetScreen(ITouchScreen* setScreen);
 	void CallBackReshapeFunc(int w, int h);   
 	void CallBackIdleFunc(void);
-	void glutApplication::DrawField(void);
+	void DrawField(void);
 	void StartSpinning(GlutMaster * glutMaster);
 	void fingerDown(TouchData data);
 	void fingerUpdate(TouchData data);

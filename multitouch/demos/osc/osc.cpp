@@ -4,10 +4,11 @@
 // I have included a static LIB for oscpack in the lib dir, 
 // so if you are compiling with VC .NET then you don't need to compile oscpack.. 
 
+#ifdef WIN32
 #pragma once
 #define WIN32_LEAN_AND_MEAN 
 #define _WIN32_WINNT  0x0500
-
+#endif
 
 #include <map>
 #include <cv.h>

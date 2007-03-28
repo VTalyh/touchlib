@@ -3,11 +3,10 @@
 
 #include <TouchlibFilter.h>
 
-#include <windows.h>
-#include <tchar.h>
-#include <dshow.h>
-#include <streams.h>
-#include <process.h>
+#ifdef WIN32
+	#include <dshow.h>
+	#include <streams.h>
+#endif
 
 #include <VideoWrapper.h>
 
