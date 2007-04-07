@@ -1,6 +1,10 @@
 #ifndef __TOUCHLIB_CBLOBTRACKER__
 #define __TOUCHLIB_CBLOBTRACKER__
 
+// FIXME: add a blob reject rectangle.. have CTouchscreen set it..
+
+// rect2df box;
+
 #include <vector>
 #include <math.h>
 #include <vector2d.h>

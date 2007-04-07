@@ -132,13 +132,15 @@ public:
 				{
 					TouchData d = (*iter1).second;
 					float m = sqrtf((d.dX*d.dX) + (d.dY*d.dY));
-					p << osc::BeginMessage( "/tuio/2Dcur" ) << "set" << d.ID << d.X << d.Y << d.dX << d.dY << m << d.Area << osc::EndMessage;
+					if(!(d.X == 0 && d.Y == 0)) {
+						p << osc::BeginMessage( "/tuio/2Dcur" ) << "set" << d.ID << d.X << d.Y << d.dX << d.dY << m << d.Area << osc::EndMessage;
 
-					scount ++;
-					if(scount >= 10)
-					{
-						scount = 0;
-						break;
+						scount ++;
+						if(scount >= 10)
+						{
+							scount = 0;
+							break;
+						}
 					}
 				}
 
@@ -150,7 +152,10 @@ public:
 				p << "alive";
 				for(iter2=fingerList.begin(); iter2 != fingerList.end(); iter2++)
 				{
-					p << (*iter2).second.ID;
+					TouchData d = (*iter2).second;
+					if(!(d.X == 0 && d.Y == 0)) {
+						p << d.ID;
+					}
 				}
 				p << osc::EndMessage;
 

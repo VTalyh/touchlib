@@ -331,8 +331,8 @@ void CBlobTracker::ProcessResults()
 
 	// FIXME: filter out useless blobs (tiny).. 
 
-	if(numblobs > 8)		// only do first 16..
-		numblobs = 8;
+	if(numblobs > 24)
+		numblobs = 24;
 
 	for(i=0; i<numblobs; i++)
 	{
@@ -415,8 +415,15 @@ void CBlobTracker::ProcessResults()
 
 	// FIXME: we could scale numcheck depending on how many blobs there are
 	// if we are tracking a lot of blobs, we could check less.. 
-	
-	numcheck = 4;
+
+	if(cursize >= 10)
+		numcheck = 1;
+	else if(cursize >= 7)
+		numcheck = 2;
+	else if(cursize >= 5)
+		numcheck = 3;
+	else
+		numcheck = 4;
 
 	if(prevsize < numcheck)
 		numcheck = prevsize;
