@@ -27,6 +27,65 @@ CBlobTracker::CBlobTracker()
 {
 	currentID = 1;
 	extraIDs = 0;
+	contourBufferSize = 512;
+	contourBuffer = new CvPoint[contourBufferSize];
+}
+
+void CBlobTracker::findBlobs_contour(BwImage &img, BwImage &label_img)
+{
+
+	blobList.clear();
+	CvMemStorage* storage = cvCreateMemStorage(0);
+	CvSeq* cont = 0; 
+	CvPoint* PointArray;
+	CvPoint2D32f* PointArray2D32f;
+	CvBox2D32f box;
+	float halfx,halfy;
+	CBlob blob;
+	float temp;
+
+	cvFindContours( img.imgp, storage, &cont, sizeof(CvContour), CV_RETR_LIST, CV_CHAIN_APPROX_NONE );
+
+	for( ; cont != 0; cont = cont->h_next )	{
+		int count = cont->total; // This is number point in contour
+
+		// Number point must be more than or equal to 6 (for cvFitEllipse_32f).        
+		if( count < 6)
+			continue;
+
+		if(count > contourBufferSize){
+			// realloc
+			contourBufferSize = ((count/512)+1)*512;			
+			delete[] contourBuffer;
+			contourBuffer = new CvPoint[contourBufferSize];
+		}
+		
+		// Get contour point set.
+		cvCvtSeqToArray(cont, contourBuffer, CV_WHOLE_SEQ);
+
+		// do a nasty in place conversion. will fuck up if sizeof(int) != sizeof(float)
+		CvPoint * cp = (CvPoint*)contourBuffer;
+		CvPoint2D32f * cf = (CvPoint2D32f*)contourBuffer;		
+		for(int i=0; i<count; i++)
+		{
+			cf[i].x = (float)cp[i].x;
+			cf[i].y = (float)cp[i].y;
+		}
+			
+		// Fits ellipse to current contour.
+		cvFitEllipse(cf,count,&box);		
+		blob.center.X = box.center.x;
+		blob.center.Y = box.center.y;
+		halfx = box.size.width*0.5f;
+		halfy = box.size.height*0.5f;
+		blob.box.upperLeftCorner.set(box.center.x-halfx,box.center.y-halfy);
+		blob.box.lowerRightCorner.set(box.center.x+halfx,box.center.y+halfy);
+		blob.area = blob.box.getArea();
+		blobList.push_back(blob);
+
+	}
+	cvReleaseMemStorage(&storage);
+
 }
 
 void CBlobTracker::findBlobs(BwImage &img, BwImage &label_img)
@@ -331,8 +390,8 @@ void CBlobTracker::ProcessResults()
 
 	// FIXME: filter out useless blobs (tiny).. 
 
-	if(numblobs > 24)
-		numblobs = 24;
+	//if(numblobs > 8)		// only do first 16..
+	//	numblobs = 8;
 
 	for(i=0; i<numblobs; i++)
 	{
@@ -415,15 +474,8 @@ void CBlobTracker::ProcessResults()
 
 	// FIXME: we could scale numcheck depending on how many blobs there are
 	// if we are tracking a lot of blobs, we could check less.. 
-
-	if(cursize >= 10)
-		numcheck = 1;
-	else if(cursize >= 7)
-		numcheck = 2;
-	else if(cursize >= 5)
-		numcheck = 3;
-	else
-		numcheck = 4;
+	
+	numcheck = 4;
 
 	if(prevsize < numcheck)
 		numcheck = prevsize;

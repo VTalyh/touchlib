@@ -166,7 +166,7 @@ bool CTouchScreen::process()
 			if(bTracking == true)
 			{
 				//printf("Tracking 1\n");
-				tracker.findBlobs(frame, labelImg);
+				tracker.findBlobs_contour(frame, labelImg);
 #ifdef WIN32				
 				DWORD dw = WaitForSingleObject(eventListMutex, INFINITE);
 				//dw == WAIT_OBJECT_0

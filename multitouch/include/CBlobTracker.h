@@ -1,10 +1,6 @@
 #ifndef __TOUCHLIB_CBLOBTRACKER__
 #define __TOUCHLIB_CBLOBTRACKER__
 
-// FIXME: add a blob reject rectangle.. have CTouchscreen set it..
-
-// rect2df box;
-
 #include <vector>
 #include <math.h>
 #include <vector2d.h>
@@ -117,6 +113,7 @@ namespace touchlib
 	public:
 		CBlobTracker();
 		void findBlobs(BwImage &img, BwImage &label_img);
+		void findBlobs_contour(BwImage &img, BwImage &label_img);
 		void ProcessResults();
 
 		virtual bool getFingerInfo(int ID, TouchData *data);
@@ -136,6 +133,9 @@ namespace touchlib
 		int level;
 		CFinger *findFinger(int hist, int id);
 		float getError(CFinger &old, CFinger &cur);
+
+		CvPoint* contourBuffer;
+		int		 contourBufferSize;
 
 #ifdef WIN32
 #pragma warning( disable : 4251 )  // http://www.unknownroad.com/rtfm/VisualStudio/warningC4251.html
