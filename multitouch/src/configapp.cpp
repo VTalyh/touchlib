@@ -242,6 +242,12 @@ public:
 			}
 		}
 	}
+
+	void clearFingers()
+	{
+		fingerList.clear();
+	}
+
 private:
 	std::map<int, FingerElement> fingerList;
     RgbPixel colors[8];
@@ -279,6 +285,7 @@ void glutKeyboardCallback( unsigned char key, int x, int y )
     else if( key == 98)				// b = recapture background
 	{
 		screen->setParameter("background4", "capture", "");
+		app.clearFingers();
 	} else if( key == 32)				// space = next calibration step
 	{
 		screen->nextCalibrationStep();
@@ -428,6 +435,7 @@ int main(int argc, char * argv[])
         if( keypressed == 98)				// b = recapture background
 		{
 			screen->setParameter("background4", "capture", "");
+			app.clearFingers();
 		}
         if( keypressed == 114)				// r = auto rectify..
 		{

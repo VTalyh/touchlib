@@ -476,7 +476,7 @@ public:
 
 		fingerList[data.ID] = FingerElement(c, data);
 		
-		printf("Press detected: %f, %f\n", data.X, data.Y);
+		printf("Press detected: %f, %f\n", data.X, 1.0-data.Y);
 
 		//testObj.fingerDown(&fingerList[data.ID]);
 	}
@@ -486,8 +486,8 @@ public:
 	{
 		fingerList[data.ID].data = data;
 
-		vector2df pos(data.X, data.Y);
-		vector2df dir(data.dX, data.dY);
+		vector2df pos(data.X, 1.0-data.Y);
+		vector2df dir(data.dX, 1.0-data.dY);
 
 		pos *= 2.0;
 		pos -= vector2df(1.0, 1.0);
@@ -515,6 +515,11 @@ public:
 		}
 
 
+	}
+
+	void clearFingers()
+	{
+		fingerList.clear();
 	}
 
 	void resetBall()
@@ -617,6 +622,7 @@ void glutKeyboardCallback( unsigned char key, int x, int y )
     else if( key == 98)				// b = recapture background
 	{
 		screen->setParameter("background4", "capture", "");
+		app.clearFingers();
 	}
 }
 

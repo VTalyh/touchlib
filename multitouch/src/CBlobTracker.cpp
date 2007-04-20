@@ -445,9 +445,6 @@ void CBlobTracker::ProcessResults()
 		}
 	}
 
-
-
-
 	// Generate a matrix of all the possible choices
 	// If we know there were four points last time and 6 points this time then 2 ID's will be -1.
 	// then we will calculate the error and pick the matrix that has the lowest error
@@ -475,17 +472,26 @@ void CBlobTracker::ProcessResults()
 	// FIXME: we could scale numcheck depending on how many blobs there are
 	// if we are tracking a lot of blobs, we could check less.. 
 	
-	numcheck = 4;
+	//numcheck = 4;
+
+	if(cursize <= 4)
+		numcheck = 4;
+	else if(cursize <= 6)
+		numcheck = 3;
+	else if(cursize <= 8)
+		numcheck = 2;
+	else
+		numcheck = 1;
 
 	if(prevsize < numcheck)
 		numcheck = prevsize;
 
+	// FIXME: why does this need to be again?
 	if(numcheck <= 4 && extraIDs > 0)
 		numcheck += 1;
 
 	if(current.size() > 0)
 		permute2(0);
-
 
 
 	int num_results = matrix.size();

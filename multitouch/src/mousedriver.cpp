@@ -85,8 +85,6 @@ public:
 	//! A finger is no longer active..
 	virtual void fingerUp(TouchData data)
 	{
-
-
 		INPUT aInput;
 
 		aInput.type = INPUT_MOUSE;
@@ -97,7 +95,6 @@ public:
 		int aResult = SendInput(1, &aInput, sizeof(INPUT) );
 
 	}
-
 
 private:
 	//std::map<int, FingerElement> fingerList;
@@ -154,6 +151,7 @@ int _tmain(int argc, char * argv[])
         if( keypressed == 98)				// b = recapture background
 		{
 			screen->setParameter("background4", "capture", "");
+			//app.clearFingers();
 		}
         if( keypressed == 114)				// r = auto rectify..
 		{

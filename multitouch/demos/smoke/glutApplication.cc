@@ -70,7 +70,7 @@ void glutApplication::CallBackKeyboardFunc(unsigned char key, int x, int y)
 	case 'v': drawvelocities = 1 - drawvelocities; break;
 	case 'c': drawfingers = 1 - drawfingers; break;
 	case 'q': exit(1); break;
-	case 'b': screen->setParameter("background4", "capture", ""); break;  // fixme: this is hackish and failure prone
+	case 'b': screen->setParameter("background4", "capture", ""); fingermap.clear(); break;  // fixme: this is hackish and failure prone
 	case 'f': glutFullScreen(); break;
 	}
 }

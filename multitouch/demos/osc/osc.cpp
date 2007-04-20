@@ -49,9 +49,7 @@ public:
 
 	OSCApp()
 	{
-		transmitSocket = new UdpTransmitSocket( IpEndpointName( ADDRESS, PORT ) );
-	    
-
+		transmitSocket = NULL;
 
 		frameSeq = 0;
 
@@ -62,7 +60,13 @@ public:
 		delete transmitSocket;
 	}
 
-
+	// Set IP and Port with commandline parameters
+	void connectSocket(std::string ip_address, int port)
+	{			
+		transmitSocket = new UdpTransmitSocket( IpEndpointName( ip_address.c_str(), port ) );
+		printf("using ip:%s port:%i\n\n", ip_address.c_str(), port);
+		frameSeq = 0;
+	}
 
 	//! Notify that a finger has just been made active. 
 	virtual void fingerDown(TouchData data)
@@ -107,6 +111,9 @@ public:
 
 	void frame()
 	{
+		if(!transmitSocket)
+			return;
+
 		// send update messages..
 
 		char buffer[OUTPUT_BUFFER_SIZE];
@@ -193,6 +200,11 @@ public:
 
 	}
 
+	void clearFingers()
+	{
+		fingerList.clear();
+	}
+
 private:
 	UdpTransmitSocket *transmitSocket;
 
@@ -211,6 +223,20 @@ bool ok=true;
 
 int main(int argc, char * argv[])
 {
+	std::string ip_address = ADDRESS;
+	int port = PORT;
+
+	// Check if command arguments are specified
+	if (argc == 3)
+	{			
+		// Convert parsed values
+		ip_address = argv[1];
+		port = (int)strtol (argv[2], NULL, 0);	
+	}
+	
+	// Set ip and port
+	app.connectSocket(ip_address, port);
+
 	screen = TouchScreenDevice::getTouchScreen();
 	//screen->setDebugMode(false);
 	if(!screen->loadConfig("config.xml"))
@@ -249,6 +275,8 @@ int main(int argc, char * argv[])
         if( keypressed == 98)				// b = recapture background
 		{
 			screen->setParameter("background4", "capture", "");
+			app.clearFingers();
+			
 		}
         if( keypressed == 114)				// r = auto rectify..
 		{
