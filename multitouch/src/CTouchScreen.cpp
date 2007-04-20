@@ -356,7 +356,17 @@ void CTouchScreen::pushFilter(const char *type, const char *label)
 	
 	if(newfilt)
 	{
-		newfilt->showOutput(debugMode);
+		// lets tile all the output windows nicely
+		unsigned int n = filterChain.size();
+
+		// FIXME: we are assuming 1024 x 768 screen res. We should
+		// have a cross platform way to get the current screen res.
+
+		// also we are assuming a camera res of 320x200..
+		int num_per_row = 1024 / 320;
+		int i = n % num_per_row;
+		int j = n / num_per_row;
+		newfilt->showOutput(debugMode, i*320, j * 200);
 
 		if(filterChain.size() > 0)
 			filterChain.back()->connectTo(newfilt);

@@ -494,7 +494,7 @@ void CBlobTracker::ProcessResults()
 		permute2(0);
 
 
-	int num_results = matrix.size();
+	unsigned int num_results = matrix.size();
 
 	//if(cursize > 0)
 		//printf("matrix size: %d\n", num_results);

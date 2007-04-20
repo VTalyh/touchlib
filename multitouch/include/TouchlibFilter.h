@@ -23,7 +23,7 @@ public:
     virtual void kernel() = 0;
     void connectTo(Filter* chainedfilter);
     IplImage* getOutput() { return destination; }
-    virtual void showOutput(bool value);
+    virtual void showOutput(bool value, int windowx=0, int windowy=0);
 	virtual void getParameters(ParameterMap& pMap) { };
 	virtual void setParameter(const char *param, const char *value) { };
 	const char* getType() { return type->c_str(); };

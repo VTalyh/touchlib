@@ -26,10 +26,10 @@ namespace touchlib
     // 3. This notice may not be removed or altered from any source distribution.
 
 
-	const float  GRAD_PI = 180.0 / 3.14159;
-	const float  GRAD_PI2 = 3.14159 / 180.0;
-	const float  PI = 3.14159;
-	const float  ROUNDING_ERROR = 0.0001;
+	const float  GRAD_PI = 180.0f / 3.14159f;
+	const float  GRAD_PI2 = 3.14159f / 180.0f;
+	const float  PI = 3.14159f;
+	const float  ROUNDING_ERROR = 0.0001f;
 
 
 	template <class T>

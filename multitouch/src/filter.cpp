@@ -35,11 +35,13 @@ Filter::~Filter()
 }
 
 
-void Filter::showOutput(bool value)
+void Filter::showOutput(bool value, int windowx, int windowy)
 {
     if( value && !show )
     {
         cvNamedWindow( name->c_str(), CV_WINDOW_AUTOSIZE );
+
+		cvMoveWindow(name->c_str(), windowx, windowy);
         show = true;
     }
     else if( !value && show )

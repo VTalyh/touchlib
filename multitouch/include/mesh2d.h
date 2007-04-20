@@ -32,7 +32,7 @@ namespace touchlib
 			position = vector2d<T>(0,0);
 			offset = vector2d<T>(0,0);
 			rotation = 0;
-			scale = vector2df(0.1, 0.1);
+			scale = vector2df(0.1f, 0.1f);
 		};
 		~mesh2d()
 		{
@@ -297,8 +297,8 @@ namespace touchlib
 		{
 			angles.clear();
 
-			unsigned int i, j;
-			int tri_inds = triangles.size();
+			unsigned int i;
+			unsigned int tri_inds = triangles.size();
 
 			for(i=0; i<tri_inds; i+=3)
 			{
@@ -357,7 +357,7 @@ namespace touchlib
 			std::vector<int> num_tris;		// the number of triangles that an edge forms.. 1 or 2
 
 			unsigned int i, j;
-			int tri_inds = triangles.size();
+			unsigned int tri_inds = triangles.size();
 
 
 			for(i=0; i<tri_inds; i+=3)
