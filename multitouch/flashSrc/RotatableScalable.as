@@ -4,11 +4,11 @@
 	import whitenoise.*;
 	import flash.geom.*;
 	
-	public class RotatableScalable extends MovieClip
+	public dynamic class RotatableScalable extends MovieClip
 	{
 		private var blobs:Array;		// blobs we are currently interacting with
 		private var GRAD_PI:Number = 180.0 / 3.14159;
-		private var state:String;
+		public var state:String;
 		private var curScale:Number;
 		private var curAngle:Number;
 		private var curPosition:Point = new Point(0,0);
@@ -22,8 +22,10 @@
 		public var noScale = false;
 		public var noRotate = false;		
 		
-		private var dx:Number;
-		private var dy:Number;		
+		public var dX:Number;
+		public var dY:Number;		
+		public var dAng:Number;
+		public var dcoef:Number = 0.5;
 		public function RotatableScalable()
 		{
 			state = "none";
@@ -36,6 +38,10 @@
 			this.addEventListener(TUIOEvent.RollOutEvent, this.rollOutHandler);												
 			this.addEventListener(Event.ENTER_FRAME, this.update);
 			
+			dX = 0;
+			dY = 0;
+			
+			dAng = 0;
 		}
 		
 		function addBlob(id:Number, origX:Number, origY:Number)
@@ -105,7 +111,19 @@
 						curPosition.x = x;
 						curPosition.y = y;					
 						
-						blob1 = blobs[0];					
+						blob1 = blobs[0];		
+						
+						var tuioobj1 = TUIO.getObjectById(blob1.id);
+						
+						// if not found, then it must have died..
+						if(tuioobj1)
+						{						
+							var curPt1 = parent.globalToLocal(new Point(tuioobj1.x, tuioobj1.y));
+							
+							blob1.origX = curPt1.x;
+							blob1.origY = curPt1.y;
+						}
+						
 					}
 					if(blobs.length >= 2) {
 						state = "rotatescale";
@@ -207,6 +225,10 @@
 					return 180.0+Math.atan(-Y/-X) * GRAD_PI;
 		} 
 		
+		public function released(dx:Number, dy:Number, dang:Number)
+		{
+		}
+		
 		private function update(e:Event)
 		{
 
@@ -237,8 +259,13 @@
 				x = curPosition.x + (curPt.x - (blob1.origX ));		
 				y = curPosition.y + (curPt.y - (blob1.origY ));
 				
-				dx = x - oldX;
-				dy = y - oldY;				
+				dX *= dcoef;
+				dY *= dcoef;						
+				dAng *= dcoef;
+				dX += x - oldX;
+				dY += y - oldY;		
+				
+
 				
 			} else if(state == "rotatescale")
 			{
@@ -307,7 +334,7 @@
 				curLine = curLine.subtract(curPt2);
 				
 				var ang2 = getAngleTrig(curLine.x, curLine.y);
-				
+				var oldAngle = rotation;
 				if(!noRotate)
 					rotation = curAngle + (ang2 - ang1);
 				
@@ -320,12 +347,27 @@
 				x = curPosition.x + (curCenter.x - centerOrig.x);
 				y = curPosition.y + (curCenter.y - centerOrig.y);				
 				
-				dx = x - oldX;
-				dy = y - oldY;
+				
+				dX *= dcoef;
+				dY *= dcoef;		
+				dAng *= dcoef;				
+				
+				dX += x - oldX;
+				dY += y - oldY;
+				
+				dAng += rotation - oldAngle;
+				
+				
+		
 
 			} else {
-				dx = 0;
-				dy = 0;
+				if(dX != 0 || dY != 0)
+				{
+					this.released(dX, dY, dAng);
+					dX = 0;
+					dY = 0;
+					dAng = 0;
+				}
 			}
 			
 
