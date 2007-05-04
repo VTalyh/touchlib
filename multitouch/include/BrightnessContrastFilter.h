@@ -26,7 +26,7 @@ public:
 	virtual void getParameters(ParameterMap& pMap);
 	virtual void setParameter(const char *name, const char *value);
 
-	virtual void showOutput(bool value);
+	virtual void showOutput(bool value, int windowx, int windowy);
 private:
 
     void updateLUT( void );

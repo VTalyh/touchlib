@@ -109,9 +109,9 @@ void BrightnessContrastFilter::updateLUT( void )
 
 
 
-void BrightnessContrastFilter::showOutput(bool value)
+void BrightnessContrastFilter::showOutput(bool value, int windowx, int windowy)
 {
-	Filter::showOutput(value);
+	Filter::showOutput(value, windowx, windowy);
 
 	if(value)
 	{

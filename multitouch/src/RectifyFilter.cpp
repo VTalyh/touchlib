@@ -39,9 +39,9 @@ void RectifyFilter::setParameter(const char *name, const char *value)
 	
 }
 
-void RectifyFilter::showOutput(bool value)
+void RectifyFilter::showOutput(bool value, int windowx, int windowy)
 {
-	Filter::showOutput(value);
+	Filter::showOutput(value, windowx, windowy);
 
 	if(value)
 	{

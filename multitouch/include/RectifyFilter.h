@@ -22,7 +22,7 @@ public:
     unsigned int getLevel(void) {return level;}
 
 
-	virtual void showOutput(bool value);
+	virtual void showOutput(bool value, int windowx, int windowy);
 
 private:
 	bool bAutoSet;

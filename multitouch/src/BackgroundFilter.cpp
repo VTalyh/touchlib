@@ -41,9 +41,9 @@ void BackgroundFilter::setParameter(const char *name, const char *value)
 }
 
 
-void BackgroundFilter::showOutput(bool value)
+void BackgroundFilter::showOutput(bool value, int windowx, int windowy)
 {
-	Filter::showOutput(value);
+	Filter::showOutput(value, windowx, windowy);
 
 	if(value)
 	{
