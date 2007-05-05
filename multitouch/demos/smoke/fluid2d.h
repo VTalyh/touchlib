@@ -16,11 +16,7 @@
 #ifndef __FLUID2D__
 #define __FLUID2D__
 
-#ifdef WIN32
 #include <rfftw.h>
-#else
-#include <drfftw.h>
-#endif
 
 class Fluid2D
 {

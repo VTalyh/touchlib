@@ -208,9 +208,10 @@ void glutApplication::fingerDown(TouchData data)
 
 	// choose random colour for this finger
 	RgbPixelFloat cf;
-	cf.r = (float) rand() / (RAND_MAX + 1);
-	cf.g = (float) rand() / (RAND_MAX + 1);
-	cf.b = (float) rand() / (RAND_MAX + 1);
+	const float div = 1.0 / (RAND_MAX);	
+	cf.r = (float) rand() * div;
+	cf.g = (float) rand() * div;
+	cf.b = (float) rand() * div;
 	colormap[data.ID] = cf;
 
 	// store event
