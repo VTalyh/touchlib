@@ -27,8 +27,6 @@ CBlobTracker::CBlobTracker()
 {
 	currentID = 1;
 	extraIDs = 0;
-	contourBufferSize = 512;
-	contourBuffer = new CvPoint[contourBufferSize];
 }
 
 void CBlobTracker::findBlobs_contour(BwImage &img, BwImage &label_img)
@@ -37,8 +35,6 @@ void CBlobTracker::findBlobs_contour(BwImage &img, BwImage &label_img)
 	blobList.clear();
 	CvMemStorage* storage = cvCreateMemStorage(0);
 	CvSeq* cont = 0; 
-	CvPoint* PointArray;
-	CvPoint2D32f* PointArray2D32f;
 	CvBox2D32f box;
 	float halfx,halfy;
 	CBlob blob;
@@ -53,27 +49,8 @@ void CBlobTracker::findBlobs_contour(BwImage &img, BwImage &label_img)
 		if( count < 6)
 			continue;
 
-		if(count > contourBufferSize){
-			// realloc
-			contourBufferSize = ((count/512)+1)*512;			
-			delete[] contourBuffer;
-			contourBuffer = new CvPoint[contourBufferSize];
-		}
-		
-		// Get contour point set.
-		cvCvtSeqToArray(cont, contourBuffer, CV_WHOLE_SEQ);
-
-		// do a nasty in place conversion. will fuck up if sizeof(int) != sizeof(float)
-		CvPoint * cp = (CvPoint*)contourBuffer;
-		CvPoint2D32f * cf = (CvPoint2D32f*)contourBuffer;		
-		for(int i=0; i<count; i++)
-		{
-			cf[i].x = (float)cp[i].x;
-			cf[i].y = (float)cp[i].y;
-		}
-			
 		// Fits ellipse to current contour.
-		cvFitEllipse(cf,count,&box);		
+		box = cvFitEllipse2(cont);		
 		blob.center.X = box.center.x;
 		blob.center.Y = box.center.y;
 		halfx = box.size.width*0.5f;

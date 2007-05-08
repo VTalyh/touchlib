@@ -134,9 +134,6 @@ namespace touchlib
 		CFinger *findFinger(int hist, int id);
 		float getError(CFinger &old, CFinger &cur);
 
-		CvPoint* contourBuffer;
-		int		 contourBufferSize;
-
 #ifdef WIN32
 #pragma warning( disable : 4251 )  // http://www.unknownroad.com/rtfm/VisualStudio/warningC4251.html
 #endif
