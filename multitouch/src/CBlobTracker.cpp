@@ -546,23 +546,20 @@ void CBlobTracker::ProcessResults()
 	}
 
 	// if a blob disappeared this frame, send a finger up event
-	if(cursize < prevsize)
+	for(i=0; i<prevsize; i++)		// for each one in the last frame, see if it still exists in the new frame.
 	{
-		for(i=0; i<prevsize; i++)		// for each one in the last frame, see if it still exists in the new frame.
+		bool found = false;
+		for(j=0; j<cursize; j++)
 		{
-			bool found = false;
-			for(j=0; j<cursize; j++)
+			if(current[j].ID == (*prev)[i].ID)
 			{
-				if(current[j].ID == (*prev)[i].ID)
-				{
-					found = true;
-					break;
-				}
+				found = true;
+				break;
 			}
-
-			if(!found)
-				doUntouchEvent((*prev)[i].getTouchData());
 		}
+
+		if(!found)
+			doUntouchEvent((*prev)[i].getTouchData());
 	}
 }
 

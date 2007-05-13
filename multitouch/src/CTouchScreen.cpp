@@ -512,8 +512,6 @@ int CTouchScreen::findTriangleWithin(vector2df pt)
 // Transforms a camera space coordinate into a screen space coord
 void CTouchScreen::cameraToScreenSpace(float &x, float &y)
 {
-	// Reference: http://www.cescg.org/CESCG97/olearnik/txmap.htm
-	// FIXME: these could be precalculated.
 
 	vector2df pt(x, y);
 	int t = findTriangleWithin(pt);
