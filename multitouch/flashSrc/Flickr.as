@@ -27,7 +27,7 @@ package
 
 	import flash.util.trace;		
 
-	public class Flickr
+	public class Flickr extends MovieClip
 	{
 		// Class properties
 		private var index:int = 0;		
