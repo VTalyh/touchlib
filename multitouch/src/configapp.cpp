@@ -6,7 +6,7 @@
 	#include <windows.h>
 	#include <tchar.h>
 	
-	#include "glut.h"
+	
 	
 	#pragma comment( lib, "glut32" )
 	#pragma comment( lib, "user32" )
@@ -23,7 +23,9 @@
 
 #include "TouchScreenDevice.h"
 #include "TouchData.h"
-
+#ifdef WIN32
+#include "glut.h"
+#endif
 using namespace touchlib;
 
 #include <stdio.h>
@@ -40,6 +42,8 @@ bool ok=true;
 ITouchScreen *screen;
 int configStep = 0;
 int curcalib = -1;
+bool captureBox = false;
+rect2df bBox(vector2df(0.0f,0.0f),vector2df(1.0f,1.0f));
 
 class FingerElement
 {
@@ -200,12 +204,36 @@ public:
 	void draw()
 	{
 
-		float scale = screen->getScreenScale();
+		if(captureBox){
+			if(fingerList.size() == 2){
+				std::map<int, FingerElement>::iterator iter = fingerList.begin();
+				FingerElement f = iter->second;
+				iter++;
+				FingerElement s = iter->second;
+				vector2df fv(f.data.X,f.data.Y);
+				vector2df sv(s.data.X,s.data.Y);
+				
+				if(fv.getLengthSQ() < sv.getLengthSQ())
+					bBox = rect2df(fv,sv);
+				else
+					bBox = rect2df(fv,sv);				
+			}
+			glutDrawBox(bBox.upperLeftCorner.X*2.0f - 1.0f,(1.0f-bBox.upperLeftCorner.Y)*2.0f - 1.0f,
+							bBox.lowerRightCorner.X*2.0f - 1.0f,(1.0f-bBox.lowerRightCorner.Y)*2.0f - 1.0f,
+							1.0,1.0,1.0);
+		}
+		
+		rect2df bbox = screen->getScreenBBox();
 
 		if(fingerList.size() > 0)
-			glutDrawBox(-(1.0f * (scale)), -(1.0f * (scale)), (1.0f * (scale)), (1.0f * (scale)), 1.0, 1.0, 1.0);
+			glutDrawBox(bbox.upperLeftCorner.X*2.0f - 1.0f,(1.0f-bbox.upperLeftCorner.Y)*2.0f - 1.0f,
+						bbox.lowerRightCorner.X*2.0f - 1.0f,(1.0f-bbox.lowerRightCorner.Y)*2.0f - 1.0f,
+						1.0,1.0,1.0);			
 		else
-			glutDrawBox(-(1.0f * (scale)), -(1.0f * (scale)), (1.0f * (scale)), (1.0f * (scale)), 0.0, 0.2, 0.0);
+			glutDrawBox(bbox.upperLeftCorner.X*2.0f - 1.0f,(1.0f-bbox.upperLeftCorner.Y)*2.0f - 1.0f,
+						bbox.lowerRightCorner.X*2.0f - 1.0f,(1.0f-bbox.lowerRightCorner.Y)*2.0f - 1.0f,
+						0.0, 0.2, 0.0);
+			
 
 		vector2df *screenpts = screen->getScreenPoints();
 		vector2df *campts = screen->getCameraPoints();
@@ -264,15 +292,63 @@ void glutKeyboardUpCallback( unsigned char key, int x, int y )
     keystate[key] = false;
 }
 
+void glutSpecialUp(int key, int x, int y)
+{
+	   printf( "keyup=%i\n", key );
+}
+void glutSpecialDown(int key, int x, int y)
+{
+	   printf( "keydn=%i\n", key );
+	   if(captureBox){
+		   bool resize;
+		   float incf = 0.005;		   
+		   int mod = glutGetModifiers();
+		   resize = (mod & GLUT_ACTIVE_CTRL) == GLUT_ACTIVE_CTRL;
+		   if(mod & GLUT_ACTIVE_SHIFT)
+			   incf = 0.1;
+		   vector2df inc;
+		   switch(key){
+				case GLUT_KEY_UP:				   
+					inc = vector2df(0.0,-incf);
+				break;
+				case GLUT_KEY_DOWN:				   
+					inc = vector2df(0.0,incf);
+				break;
+				case GLUT_KEY_LEFT:				   
+					inc = vector2df(-incf,0.0);
+				break;
+				case GLUT_KEY_RIGHT:				   
+					inc = vector2df(incf,0.0);
+				break;
+				default:
+					return;
+		   }		   
+		   bBox.upperLeftCorner += inc;
+		   if(!resize)
+			   bBox.lowerRightCorner += inc;   
+	   }
+}
 
 void glutKeyboardCallback( unsigned char key, int x, int y )
 {
     printf( "keydn=%i\n", key );
     keystate[key] = true;
 
+	if(key == 120)          // x
+	{
+		printf("bounding box\n");
+		if(!captureBox){
+			screen->setScreenBBox(rect2df(vector2df(0.0f,0.0f),vector2df(1.0f,1.0f)));
+			bBox = rect2df(vector2df(0.0f,0.0f),vector2df(1.0f,1.0f));
+			captureBox = true;
+		}else{
+			captureBox = false;
+			screen->setScreenBBox(bBox);			
+		}		
+	}
 	if(key == 99)			// c
 	{
-		printf("Calibrate");
+		printf("Calibrate\n");
 		screen->beginCalibration();
 		curcalib = 0;
 	} else if(key == 27)			// esc
@@ -372,12 +448,14 @@ void startGLApp(int argc, char * argv[])
 
 	// setup callbacks
 	glutKeyboardFunc( glutKeyboardCallback );
+	glutSpecialFunc( glutSpecialDown);
 	glutKeyboardUpFunc( glutKeyboardUpCallback );
+	glutSpecialUpFunc(glutSpecialUp);
 	glutDisplayFunc( glutDisplayCallback );
 
 	configStep = 1;
 
-
+	screen->setParameter("background4", "capture", "");
 
 	// enter main loop
 	glutMainLoop();
@@ -440,9 +518,8 @@ int main(int argc, char * argv[])
         if( keypressed == 114)				// r = auto rectify..
 		{
 			screen->setParameter("rectify6", "level", "auto");
-		}
-
-        if( keypressed == 13)				// enter = calibrate position
+		}		
+        if( keypressed == 13 || keypressed == 10)				// enter = calibrate position
 		{
 			startGLApp(argc, argv);
 		}

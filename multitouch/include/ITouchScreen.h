@@ -59,9 +59,11 @@ namespace touchlib
 
 		//!
 		virtual float getScreenScale() = 0;
+		virtual rect2df getScreenBBox() = 0;
 
 		//! access calibration data.. this may get refactored.
 		virtual void setScreenScale(float s) = 0;
+		virtual void setScreenBBox(rect2df & bbox) = 0;
 
 		virtual vector2df *getScreenPoints() = 0;
 		virtual vector2df *getCameraPoints() = 0;

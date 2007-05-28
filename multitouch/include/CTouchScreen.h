@@ -72,9 +72,13 @@ namespace touchlib
 		virtual void nextCalibrationStep();
 
 		//! 
-		virtual float getScreenScale() { return screenScale; };
+		virtual float getScreenScale();
+		virtual rect2df getScreenBBox() { return screenBB; };
+
 
 		virtual void setScreenScale(float s);
+		virtual void setScreenBBox(rect2df & bbox);
+
 
 		virtual vector2df *getScreenPoints() { return screenPoints; };
 		virtual vector2df *getCameraPoints() { return cameraPoints; };
@@ -124,8 +128,6 @@ namespace touchlib
 		bool bCalibrating;		
 		int calibrationStep;
 
-		float screenScale;
-
 
 #ifdef WIN32
 #pragma warning( disable : 4251 )  // http://www.unknownroad.com/rtfm/VisualStudio/warningC4251.html
@@ -140,6 +142,7 @@ namespace touchlib
 		vector2df cameraPoints[GRID_POINTS];		// GRID_X * GRID_Y
 		int triangles[GRID_INDICES];				// GRID_X * GRID_Y * 2t * 3i indices for the points
 
+		rect2df screenBB;
 		mesh2df screenMesh;
 
 		std::vector<Filter *> filterChain;

@@ -18,8 +18,10 @@
 #define THREAD_HANDLE HANDLE
 #define THREAD_MUTEX_HANDLE HANDLE
 #define THREAD_RETURN_TYPE void
+#define SLEEP(x) Sleep(x)
 
-
+// get rid of the annoying potentially unsafe string function warning
+#pragma warning( disable : 4996 )
 #else
 
 #include <signal.h>
@@ -31,6 +33,7 @@
 #define THREAD_MUTEX_HANDLE pthread_mutex_t
 #define THREAD_RETURN_TYPE void*
 #define _TCHAR char
+#define SLEEP(x) usleep(x*1000)
 #endif
 
 #endif // __TOUCHLIB_PLATFORM__

@@ -29,8 +29,7 @@ CTouchScreen::CTouchScreen()
 	pthread_mutex_init(&eventListMutex, NULL);
 #endif
 
-	screenScale = 0.75;
-
+	screenBB = rect2df(vector2df(0.0f, 0.0f), vector2df(1.0f, 1.0f));
 	initScreenPoints();
 	initCameraPoints();
 
@@ -90,15 +89,16 @@ void CTouchScreen::initScreenPoints()
 
 	int i,j;
 
-	float offs = ((1.0-screenScale)*0.5);
-
-	printf("offs %f\n", offs);
-
+	vector2df xd(screenBB.lowerRightCorner.X-screenBB.upperLeftCorner.X,0.0f);
+	vector2df yd(0.0f, screenBB.lowerRightCorner.Y-screenBB.upperLeftCorner.Y);
+	xd /= (float) GRID_X;
+	yd /= (float) GRID_Y;
+	
 	for(j=0; j<=GRID_Y; j++)
 	{
 		for(i=0; i<=GRID_X; i++)
-		{
-			screenPoints[p] = (vector2df((float)i / (float)GRID_X, (float)j / (float)GRID_Y) * screenScale) + vector2df(offs, offs);
+		{			
+			screenPoints[p] = screenBB.upperLeftCorner + xd*i + yd*j;			
 			printf("(%d, %d) = (%f, %f)\n", i, j, screenPoints[p].X, screenPoints[p].Y);
 			p++;
 		}
@@ -125,7 +125,25 @@ void CTouchScreen::initCameraPoints()
 
 void CTouchScreen::setScreenScale(float s)
 {
-	screenScale = s;
+	// legacy
+	float offset = (1.0f - s)*0.5f;
+	screenBB = rect2df(vector2df(offset,offset),vector2df(1.0f-offset,1.0f-offset));
+	initScreenPoints();
+}
+
+float CTouchScreen::getScreenScale()
+{
+	// legacy, take the minimum scale value that fits inside the bounding box
+	float minValL = MIN(screenBB.lowerRightCorner.X,screenBB.lowerRightCorner.Y);
+	minValL = 1.0f - minValL;
+	float minValU = MAX(screenBB.upperLeftCorner.X,screenBB.upperLeftCorner.Y);
+	float minVal = MIN(minValL,minValU);
+	return 1.0f - (2.0f * minVal);	
+}
+
+void CTouchScreen::setScreenBBox(rect2df &box)
+{
+	screenBB = box;
 	initScreenPoints();
 }
 
@@ -197,11 +215,7 @@ bool CTouchScreen::process()
 			}
 			//return true;
 		}
-#ifdef WIN32
-		Sleep(16);
-#else
-		usleep(16*1000);
-#endif
+		SLEEP(16);
 	}
 }
 
@@ -225,16 +239,24 @@ void CTouchScreen::saveConfig(const char* filename)
 	TiXmlDeclaration* decl = new TiXmlDeclaration("1.0", "", "");
 	doc.LinkEndChild(decl);
 
-	TiXmlElement* screenRoot = new TiXmlElement("screen");
-
+	
+	
 
 	char sztmp[50];
-	sprintf(sztmp, "%f", screenScale);
 
-	screenRoot->SetAttribute("scale", sztmp);
+	TiXmlElement* bbelement = new TiXmlElement("bbox");
+	sprintf(sztmp, "%f", screenBB.upperLeftCorner.X);
+	bbelement->SetAttribute("ulX", sztmp);	
+	sprintf(sztmp, "%f", screenBB.upperLeftCorner.Y);
+	bbelement->SetAttribute("ulY", sztmp);	
+	sprintf(sztmp, "%f", screenBB.lowerRightCorner.X);
+	bbelement->SetAttribute("lrX", sztmp);	
+	sprintf(sztmp, "%f", screenBB.lowerRightCorner.Y);
+	bbelement->SetAttribute("lrY", sztmp);	
+	doc.LinkEndChild(bbelement);
 
+	TiXmlElement* screenRoot = new TiXmlElement("screen");
 	doc.LinkEndChild(screenRoot);
-
 	int i;
 
 	for(i=0; i<GRID_POINTS; i++)
@@ -247,6 +269,7 @@ void CTouchScreen::saveConfig(const char* filename)
 		element->SetAttribute("Y", sztmp);
 		screenRoot->LinkEndChild(element);
 	}
+	
 
 	TiXmlElement* fgRoot = new TiXmlElement("filtergraph");
 	doc.LinkEndChild(fgRoot);
@@ -280,9 +303,17 @@ bool CTouchScreen::loadConfig(const char* filename)
 	if(!doc.LoadFile())
 		return false;
 
-	TiXmlElement* screenRoot = doc.FirstChildElement("screen");
 
-	setScreenScale(atof(screenRoot->Attribute("scale")));
+	TiXmlElement* bboxRoot = doc.FirstChildElement("bbox");
+	if(bboxRoot){
+				rect2df bb(vector2df(atof(bboxRoot->Attribute("ulX")),atof(bboxRoot->Attribute("ulY"))),
+				vector2df(atof(bboxRoot->Attribute("lrX")),atof(bboxRoot->Attribute("lrY"))));
+		setScreenBBox(bb);
+	}else{
+		setScreenScale(1.0f);
+	}
+
+	TiXmlElement* screenRoot = doc.FirstChildElement("screen");
 
 	printf("Reading camera points\n");
 	if(screenRoot)

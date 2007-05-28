@@ -891,6 +891,9 @@ int main(int argc, char * argv[])
 		screen->saveConfig("config.xml");
 	}
 
+	SLEEP(2000);
+	screen->setParameter("background4", "capture", "");
+	
 	screen->registerListener((ITouchListener *)&app);
 
 	// Note: Begin processing should only be called after the screen is set up
