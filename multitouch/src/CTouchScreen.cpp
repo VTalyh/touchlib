@@ -306,8 +306,9 @@ bool CTouchScreen::loadConfig(const char* filename)
 
 	TiXmlElement* bboxRoot = doc.FirstChildElement("bbox");
 	if(bboxRoot){
-				rect2df bb(vector2df(atof(bboxRoot->Attribute("ulX")),atof(bboxRoot->Attribute("ulY"))),
-				vector2df(atof(bboxRoot->Attribute("lrX")),atof(bboxRoot->Attribute("lrY"))));
+		vector2df ul(atof(bboxRoot->Attribute("ulX")),atof(bboxRoot->Attribute("ulY")));
+		vector2df lr(atof(bboxRoot->Attribute("lrX")),atof(bboxRoot->Attribute("lrY")));
+		rect2df bb(ul,lr);
 		setScreenBBox(bb);
 	}else{
 		setScreenScale(1.0f);
