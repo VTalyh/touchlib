@@ -338,7 +338,8 @@ void glutKeyboardCallback( unsigned char key, int x, int y )
 	{
 		printf("bounding box\n");
 		if(!captureBox){
-			screen->setScreenBBox(rect2df(vector2df(0.0f,0.0f),vector2df(1.0f,1.0f)));
+			rect2df bb(vector2df(0.0f,0.0f),vector2df(1.0f,1.0f));
+			screen->setScreenBBox(bb);
 			bBox = rect2df(vector2df(0.0f,0.0f),vector2df(1.0f,1.0f));
 			captureBox = true;
 		}else{
