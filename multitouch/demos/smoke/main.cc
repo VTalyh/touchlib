@@ -1,6 +1,7 @@
 
 #ifdef WIN32
 	#include <tchar.h>
+	#include <AtlConv.h>
 #endif
 #include <iostream>
 
@@ -20,9 +21,8 @@ int main(int argc, char* argv[])
 {
 	glutMaster = new GlutMaster();    
 
-	ITouchScreen* screen = TouchScreenDevice::getTouchScreen();
-
-	if( argc == 2 && screen->loadConfig((const char*) argv[1]) )
+	ITouchScreen* screen = TouchScreenDevice::getTouchScreen();	
+	if( argc == 2 && screen->loadConfig((const char *) argv[1] ))
 		std::cout << "Loaded configuration file " << argv[1] << std::endl;
 	else if( screen->loadConfig("config.xml") )
 		std::cout << "Loaded default configuration file config.xml" << std::endl;
@@ -44,6 +44,10 @@ int main(int argc, char* argv[])
 
 		screen->saveConfig("config.xml");
 	}
+
+	SLEEP(2000);
+	screen->setParameter("background4", "mask", (char*)screen->getCameraPoints());
+	screen->setParameter("background4", "capture", "");
 
 	int meshsize = 50;
 	float timestep = 0.5;

@@ -1,4 +1,5 @@
-
+#include <ITouchScreen.h>
+#include <vector2d.h>
 #include <BackgroundFilter.h>
 #include <Image.h>
 #include <highgui.h>
@@ -12,6 +13,9 @@
 BackgroundFilter::BackgroundFilter(char* s) : Filter(s)
 {
 	reference = NULL;
+	mask = NULL;
+	polyMask = NULL;
+	nPolyMask = 0;
 	recapture = false;
 	count = -1;
 	updateThreshold = DEFAULT_UPDATE_THRESH;
@@ -37,7 +41,10 @@ void BackgroundFilter::setParameter(const char *name, const char *value)
 	{
 		updateThreshold = (int) atof(value);
 		cvSetTrackbarPos("threshold", this->name->c_str(), updateThreshold);
-	}
+	} else if(strcmp(name, "mask") == 0)
+	{
+		setMask((touchlib::vector2df*)value,GRID_X+1,GRID_Y+1);		
+	} 
 }
 
 
@@ -78,9 +85,20 @@ void BackgroundFilter::kernel()
 		else
 			reference = cvCloneImage(source);
 
+		if(!mask){
+			mask = cvCreateImage(cvSize(reference->width,reference->height), reference->depth, 1);
+			mask->origin = reference->origin;  // same vertical flip as reference
+			cvSet(mask,cvScalar(0,0,0));
+		}
+		if(nPolyMask){
+			cvSet(mask,cvScalar(255,255,255));			
+			cvFillConvexPoly(mask, polyMask,nPolyMask,cvScalar(0,0,0));
+		}
+		cvAdd(reference,mask,reference);
 		recapture = false;
 	}
 
+#ifdef ADAPTIVE_BACKGROUND
 	touchlib::BwImage imgSrc(source), imgRef(reference);
 
 	int x, y;
@@ -126,7 +144,7 @@ void BackgroundFilter::kernel()
 
 	if(currentRow >= h)
 		currentRow = 0;
-
+#endif
 	// destination = source-reference
 	cvSub(source, reference, destination);
 
@@ -134,4 +152,35 @@ void BackgroundFilter::kernel()
 
 	*/
 
+}
+
+void BackgroundFilter::setMask(void * vaPoints, int xGrid, int yGrid)
+{
+	touchlib::vector2df * aPoints = (touchlib::vector2df*)vaPoints;
+	if(polyMask)
+		delete[] polyMask;
+	polyMask = new CvPoint[2*(xGrid + yGrid - 2)];
+	int count = 0;
+	// top side
+	for(int i = 0 ; i < xGrid; i++){
+		polyMask[count].x = aPoints[i].X;
+		polyMask[count++].y = aPoints[i].Y;
+	}
+	// right side
+	for(int i = 2;i<yGrid;i++){
+		polyMask[count].x = aPoints[i*xGrid -1].X;
+		polyMask[count++].y = aPoints[i*xGrid -1].Y;
+	}
+	// bottom side
+	for(int i = xGrid-1 ; i >= 0; i--){
+		polyMask[count].x = aPoints[i + (yGrid-1)* xGrid].X;
+		polyMask[count++].y = aPoints[i + (yGrid-1)* xGrid].Y;
+	}
+	// left side
+	for(int i = yGrid-2 ; i > 0; i--){
+		polyMask[count].x = aPoints[i * xGrid].X;
+		polyMask[count++].y = aPoints[i * xGrid].Y;
+	}
+	nPolyMask = count;
+	recapture = true;
 }

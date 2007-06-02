@@ -17,6 +17,8 @@ public:
 	virtual void setParameter(const char *name, const char *value);
 
 	virtual void showOutput(bool value, int windowx, int windowy);
+	void setMask(void *aPoints,int xRes, int yRes);
+
 private:
 	bool recapture;
 	IplImage* reference;
@@ -24,7 +26,9 @@ private:
 	int updateThreshold;		// anything above this threshold is considered a 'press' and not part of the background
 	int count;
 	int currentRow;
-
+	IplImage* mask;
+	CvPoint * polyMask;
+	int nPolyMask;
 };
 
 #endif // __TOUCHLIB_FILTER_BACKGROUND__
