@@ -30,7 +30,7 @@ package whitenoise {
 		static var bInitialized = false;
 
 
-		public static function init (s:DisplayObject, host:String, port:Number, wd:int = 800, ht:int = 600)
+		public static function init (s:DisplayObjectContainer, host:String, port:Number, wd:int = 800, ht:int = 600)
 		{
 			if(bInitialized)
 				return;
@@ -137,7 +137,7 @@ package whitenoise {
 			{
 				if(node.ARGUMENT[0] && node.ARGUMENT[0].@VALUE == "alive")
 				{
-					for each(obj1 in objectArray)
+					for each (var obj1:TUIOObject in objectArray)
 					{
 						obj1.isAlive = false;
 					}
