@@ -1,3 +1,6 @@
+
+#include <stdio.h>
+
 #ifdef WIN32
 	#pragma once
 	#define WIN32_LEAN_AND_MEAN 
@@ -28,7 +31,7 @@
 #endif
 using namespace touchlib;
 
-#include <stdio.h>
+
 
 #ifdef WIN32
 	#include <cvcam.h>

@@ -12,6 +12,8 @@
 #include "SmoothingFilter.h"
 #include "BackgroundFilter.h"
 #include "ResizeFilter.h"
+#include "HighpassFilter.h"
+#include "InvertFilter.h"
 
 
 FilterFactory::FilterFactory()
@@ -36,6 +38,10 @@ Filter *FilterFactory::createFilter(const char *type, const char *label)
 		newFilter = (Filter *)new MonoFilter((char*)label);
 	} else if(strcmp(type, "rectify") == 0) {
 		newFilter = (Filter *)new RectifyFilter((char*)label);
+	} else if(strcmp(type, "highpass") == 0) {
+		newFilter = (Filter *)new HighpassFilter((char*)label);
+	} else if(strcmp(type, "invert") == 0) {
+		newFilter = (Filter *)new InvertFilter((char*)label);
 	} else if(strcmp(type, "smooth") == 0) {
 		newFilter = (Filter *)new SmoothingFilter((char*)label);
 	} else if(strcmp(type, "brightnesscontrast") == 0) {

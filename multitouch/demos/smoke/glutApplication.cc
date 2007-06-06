@@ -3,10 +3,9 @@
 // Adapted from the public domain glutMaster source written by George Stetten and Korin Crawford
 // http://www.stetten.com/george/glutmaster/glutmaster.html
 
-
+#include <stdlib.h>
 #include "glutApplication.h"
 #include <iostream>
-#include <stdlib.h>
 #include <math.h>
   
 

@@ -231,6 +231,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\HighpassFilter.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\InvertFilter.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\MonoFilter.cpp"
 					>
 				</File>
@@ -318,6 +326,14 @@
 				</File>
 				<File
 					RelativePath="..\..\include\FilterFactory.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\HighpassFilter.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\InvertFilter.h"
 					>
 				</File>
 				<File
