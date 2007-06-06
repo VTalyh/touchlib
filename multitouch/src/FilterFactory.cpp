@@ -14,6 +14,7 @@
 #include "ResizeFilter.h"
 #include "HighpassFilter.h"
 #include "InvertFilter.h"
+#include "ScalerFilter.h"
 
 
 FilterFactory::FilterFactory()
@@ -42,6 +43,8 @@ Filter *FilterFactory::createFilter(const char *type, const char *label)
 		newFilter = (Filter *)new HighpassFilter((char*)label);
 	} else if(strcmp(type, "invert") == 0) {
 		newFilter = (Filter *)new InvertFilter((char*)label);
+	} else if(strcmp(type, "scaler") == 0) {
+		newFilter = (Filter *)new ScalerFilter((char*)label);
 	} else if(strcmp(type, "smooth") == 0) {
 		newFilter = (Filter *)new SmoothingFilter((char*)label);
 	} else if(strcmp(type, "brightnesscontrast") == 0) {

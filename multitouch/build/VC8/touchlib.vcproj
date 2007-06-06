@@ -251,6 +251,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\ScalerFilter.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\SmoothingFilter.cpp"
 					>
 				</File>
@@ -346,6 +350,10 @@
 				</File>
 				<File
 					RelativePath="..\..\include\ResizeFilter.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\ScalerFilter.h"
 					>
 				</File>
 				<File

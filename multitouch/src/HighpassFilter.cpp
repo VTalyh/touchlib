@@ -78,7 +78,9 @@ void HighpassFilter::kernel()
    
 	cvSmooth( source, blurred, CV_GAUSSIAN, 13, 13, 0, 0 );
 	cvSub(source, blurred, destination);
+
 	cvSmooth( destination, destination, CV_GAUSSIAN, 13, 13, 0, 0 );
+	cvMul(destination, destination, destination, 0.15);
 
 	// load src
 	//cvFilter2D( source, destination, filtermat1, cvPoint(-1,-1) );
