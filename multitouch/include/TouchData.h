@@ -4,12 +4,19 @@
 struct TouchData
 {
 	int ID;
+	int tagID;
 	float X;
 	float Y;
-	float Area;
+
+	float height;
+	float width;
+	float angle;
+
+	float area;
+
 	float dX;
 	float dY;
-	float dArea;
+
 };
 
 #endif

@@ -286,10 +286,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\touchlib.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\include\touchlib_platform.h"
 				>
 			</File>

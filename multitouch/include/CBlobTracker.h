@@ -31,7 +31,10 @@ namespace touchlib
 		vector2df center;
 		float area;
 		rect2df box;
+		float angle;
 		float weight;
+
+		int tagID;		// for fiducal markers. 0 = regular touchpoint.
 	};
 
 
@@ -86,10 +89,15 @@ namespace touchlib
 			data.ID = ID;
 			data.X = center.X;
 			data.Y = center.Y;
-			data.Area = area;
+
+			data.angle = angle;
+
+			//data.Area = area;
+
 			data.dX = delta.X;
 			data.dY = delta.Y;
-			data.dArea = deltaArea;
+
+			data.tagID = tagID;
 
 			return data;
 		};

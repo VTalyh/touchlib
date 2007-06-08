@@ -57,7 +57,7 @@ public:
 	TouchData data;
 	void draw()
 	{
-		float rad = sqrtf(data.Area) / 500.0;
+		float rad = 10;
 
 		float X = (data.X*2.0f) - 1.0;
 		float Y = (data.Y*2.0f) - 1.0;
@@ -788,8 +788,6 @@ void glutMouseCallback(int button, int state, int x, int y)
 			mouseY = tmp.Y = 1.0 - ((float)y / (float)screenHeight);
 			tmp.dX = 0;
 			tmp.dY = 0;
-			tmp.Area = 100;
-			tmp.dArea = 0;
 			tmp.ID = 1;
 			app.fingerDown(tmp);
 
@@ -802,8 +800,7 @@ void glutMouseCallback(int button, int state, int x, int y)
 			mouseY = tmp.Y = 1.0 - ((float)y / (float)screenHeight);
 			tmp.dX = 0;
 			tmp.dY = 0;
-			tmp.Area = 100;
-			tmp.dArea = 0;
+
 			tmp.ID = 1;
 			app.fingerUp(tmp);
 		}
@@ -823,8 +820,7 @@ void glutMouseMoveCallback(int x, int y)
 	mouseX = tmp.X;
 	mouseY = tmp.Y;
 
-	tmp.Area = 100;
-	tmp.dArea = 0;
+
 	tmp.ID = 1;
 	app.fingerUpdate(tmp);
 

@@ -29,6 +29,49 @@ CBlobTracker::CBlobTracker()
 	extraIDs = 0;
 }
 
+// stolen from opencv - squares.c sample
+// helper function:
+// finds a cosine of angle between vectors
+// from pt0->pt1 and from pt0->pt2 
+double cosAngle( CvPoint* pt1, CvPoint* pt2, CvPoint* pt0 )
+{
+    double dx1 = pt1->x - pt0->x;
+    double dy1 = pt1->y - pt0->y;
+    double dx2 = pt2->x - pt0->x;
+    double dy2 = pt2->y - pt0->y;
+    return (dx1*dx2 + dy1*dy2)/sqrt((dx1*dx1 + dy1*dy1)*(dx2*dx2 + dy2*dy2) + 1e-10);
+}
+
+// check out the number of children at each level some how to calculate a blob tag. 
+// there can be a max of 9 squares at each level.. 
+unsigned int getTag(CvSeq *curCont, int level=0)
+{
+
+	unsigned int num = 0;
+	unsigned int sum = 0;
+
+	if(level > 5)
+		return 0;
+
+	for( ; curCont != 0; curCont = curCont->h_next )	
+	{
+		num ++;
+
+		if(curCont->v_next)
+			sum += getTag(curCont->v_next, level+1);
+
+		if(num > 9)
+			return 9;
+
+	}
+
+	sum += num * (int)powf(10.0, level);
+
+	return sum;
+
+}
+
+
 void CBlobTracker::findBlobs_contour(BwImage &img, BwImage &label_img)
 {
 
@@ -39,28 +82,113 @@ void CBlobTracker::findBlobs_contour(BwImage &img, BwImage &label_img)
 	float halfx,halfy;
 	CBlob blob;
 	float temp;
+	CvSeq *result;
+    //CvSeq *squares = cvCreateSeq( 0, sizeof(CvSeq), sizeof(CvPoint), storage );
 
-	cvFindContours( img.imgp, storage, &cont, sizeof(CvContour), CV_RETR_LIST, CV_CHAIN_APPROX_NONE );
+	double s, t;
+	unsigned int i;
+
+	bool isSquare = false;
+
+	cvFindContours( img.imgp, storage, &cont, sizeof(CvContour), CV_RETR_TREE, CV_CHAIN_APPROX_NONE );
 
 	for( ; cont != 0; cont = cont->h_next )	{
 		int count = cont->total; // This is number point in contour
 
-		// Number point must be more than or equal to 6 (for cvFitEllipse_32f).        
-		if( count < 6)
-			continue;
+		// First we check to see if this contour looks like a square.. 
+		isSquare = false;
+        result = cvApproxPoly( cont, sizeof(CvContour), storage,
+            CV_POLY_APPROX_DP, cvContourPerimeter(cont)*0.02, 0 );
 
-		// Fits ellipse to current contour.
-		box = cvFitEllipse2(cont);		
-		blob.center.X = box.center.x;
-		blob.center.Y = box.center.y;
-		halfx = box.size.width*0.5f;
-		halfy = box.size.height*0.5f;
-		blob.box.upperLeftCorner.set(box.center.x-halfx,box.center.y-halfy);
-		blob.box.lowerRightCorner.set(box.center.x+halfx,box.center.y+halfy);
-		blob.area = blob.box.getArea();
-		blobList.push_back(blob);
+        if( result->total == 4 &&
+            fabs(cvContourArea(result,CV_WHOLE_SEQ)) > 1000 &&
+            cvCheckContourConvexity(result) )
+        {
+			s = 0;
+            
+            for( i = 0; i < 5; i++ )
+            {
+                // find minimum angle between joint
+                // edges (maximum of cosine)
+                if( i >= 2 )
+                {
+                    t = fabs(cosAngle(
+                    (CvPoint*)cvGetSeqElem( result, i ),
+                    (CvPoint*)cvGetSeqElem( result, i-2 ),
+                    (CvPoint*)cvGetSeqElem( result, i-1 )));
+                    s = s > t ? s : t;
+                }
+            }
+            
+            // if cosines of all angles are small
+            // (all angles are ~90 degree) then this is a square.. 
+            if( s < 0.5 )
+			{
+	
 
-	}
+				box = cvMinAreaRect2(cont, storage);		
+				blob.center.X = box.center.x;
+				blob.center.Y = box.center.y;
+				blob.angle = box.angle;
+
+				halfx = box.size.width*0.5f;
+				halfy = box.size.height*0.5f;
+				blob.box.upperLeftCorner.set(box.center.x-halfx,box.center.y-halfy);
+				blob.box.lowerRightCorner.set(box.center.x+halfx,box.center.y+halfy);
+
+				blob.area = blob.box.getArea();
+
+				// FIXME: it might be nice if we could get the actual weight.. 
+				// It also might be nice to find the weighted center..
+
+				blob.weight = 0;
+
+
+				// use v_next.. 
+
+				if(cont->v_next)
+					blob.tagID = getTag(cont->v_next);
+
+				printf("Square Detected %d\n", blob.tagID);
+
+				blobList.push_back(blob);
+
+				isSquare = true;
+			}
+		}
+
+		// fallback, if it's a regular blob.
+		if(!isSquare)
+		{
+			// Number point must be more than or equal to 6 (for cvFitEllipse_32f).    
+			if( count >= 6)
+			{
+				// Fits ellipse to current contour.
+				box = cvFitEllipse2(cont);	
+			} else {
+				box = cvMinAreaRect2(cont, storage);		
+			}
+			blob.center.X = box.center.x;
+			blob.center.Y = box.center.y;
+			blob.angle = box.angle;
+
+			halfx = box.size.width*0.5f;
+			halfy = box.size.height*0.5f;
+			blob.box.upperLeftCorner.set(box.center.x-halfx,box.center.y-halfy);
+			blob.box.lowerRightCorner.set(box.center.x+halfx,box.center.y+halfy);
+
+			blob.area = blob.box.getArea();
+
+			// FIXME: it might be nice if we could get the actual weight.. 
+			// It also might be nice to
+			blob.weight = 0;
+			blob.tagID = 0;
+
+			blobList.push_back(blob);				
+		}
+
+	}		// end cont for loop
+
 	cvReleaseMemStorage(&storage);
 
 }
@@ -235,6 +363,7 @@ void CBlobTracker::findBlobs(BwImage &img, BwImage &label_img)
 				tempblobs[label].box.addPoint(pos);
 				tempblobs[label].center += pos * (float)img[y][x];
 				tempblobs[label].weight += img[y][x];
+				tempblobs[label].tagID = 0;
 			}
 		}
 		pos.Y = (float) y;

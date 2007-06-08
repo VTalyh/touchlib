@@ -11,7 +11,6 @@ ScalerFilter::ScalerFilter(char* s) : Filter(s)
 
 }
 
-
 ScalerFilter::~ScalerFilter()
 {
 }
@@ -35,7 +34,6 @@ void ScalerFilter::setParameter(const char *name, const char *value)
 			cvSetTrackbarPos("level", this->name->c_str(), level);
 		}
 	}
-	
 }
 
 void ScalerFilter::showOutput(bool value, int windowx, int windowy)
