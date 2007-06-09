@@ -64,7 +64,8 @@ public:
 	TouchData data;
 	void draw()
 	{
-		float rad = (data.height + data.width) / 2.0;
+		float rad = 0.05;
+			//(data.height + data.width) / 2.0;
 
 		float X = (data.X*2.0f) - 1.0;
 		float Y = ((1.0-data.Y)*2.0f) - 1.0;
