@@ -21,5 +21,5 @@ void SmoothingFilter::kernel()
         destination->origin = source->origin;  // same vertical flip as source
     }
 
-	cvSmooth( source, destination, CV_GAUSSIAN, 3, 3);		//CV_BLUR
+	cvSmooth( source, destination, CV_MEDIAN, 5, 5);		//CV_BLUR
 }

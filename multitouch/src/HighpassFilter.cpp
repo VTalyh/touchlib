@@ -21,7 +21,7 @@ HighpassFilter::HighpassFilter(char* s) : Filter(s)
 
 	cvSet2D( filtermat1, 2, 0, cvRealScalar(-1) );
 	cvSet2D( filtermat1, 2, 1, cvRealScalar(-1) );
-	cvSet2D( filtermat1, 2, 2, cvRealScalar(20) );
+	cvSet2D( filtermat1, 2, 2, cvRealScalar(10) );
 	cvSet2D( filtermat1, 2, 3, cvRealScalar(-1) );
 	cvSet2D( filtermat1, 2, 4, cvRealScalar(-1) );
 
@@ -76,11 +76,16 @@ void HighpassFilter::kernel()
 		outra2->origin = source->origin;
     }
    
-	cvSmooth( source, blurred, CV_GAUSSIAN, 13, 13, 0, 0 );
-	cvSub(source, blurred, destination);
+	cvConvertScale( source, outra );
+	//CV_MEDIAN
+	cvSmooth( outra, outra2, CV_GAUSSIAN, 13, 13, 0, 0 );
+	cvSub(outra, outra2, outra2);
 
+	cvConvertScale( outra2, destination, 16.0,  0);
 	cvSmooth( destination, destination, CV_GAUSSIAN, 13, 13, 0, 0 );
-	cvMul(destination, destination, destination, 0.15);
+
+
+	//cvMul(destination, destination, destination, 0.15);
 
 	// load src
 	//cvFilter2D( source, destination, filtermat1, cvPoint(-1,-1) );
