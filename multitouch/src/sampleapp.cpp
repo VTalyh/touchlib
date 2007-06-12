@@ -62,7 +62,7 @@ public:
 	//! Notify that a finger has just been made active. 
 	virtual void fingerDown(TouchData data)
 	{
-		float rad = sqrtf(data.Area)/2;
+		float rad = sqrtf(data.area)/2;
 		float X = data.X*640;
 		float Y = data.Y*480;
 		cvLine( window_img, cvPoint(X, Y), cvPoint(X,Y), CV_RGB(255, 0, 0), 4, 8, 0 );
@@ -74,7 +74,7 @@ public:
 	{
 		RgbPixel p = colors[data.ID % 8];
 
-		float rad = sqrtf(data.Area)/2;
+		float rad = sqrtf(data.area)/2;
 		float X = data.X*640;
 		float Y = data.Y*480;
 
