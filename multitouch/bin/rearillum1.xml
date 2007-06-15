@@ -31,8 +31,11 @@
     <backgroundremove label="background4">
         <threshold value="0" />
     </backgroundremove>
-    <highpass label="highpass" />
+    <highpass label="highpass">
+        <filter value="6" />
+        <scale value="32" />
+    </highpass>
     <rectify label="rectify6">
-        <level value="33" />
+        <level value="59" />
     </rectify>
 </filtergraph>

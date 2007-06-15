@@ -17,22 +17,16 @@ ScalerFilter::~ScalerFilter()
 
 void ScalerFilter::getParameters(ParameterMap& pMap)
 {
-	pMap[std::string("level")] = bAutoSet ? std::string("auto") : toString(level);
+	pMap[std::string("level")] = toString(level);
 }
 
 void ScalerFilter::setParameter(const char *name, const char *value)
 {
 	if(strcmp(name, "level") == 0)
 	{
-		if(strcmp(value, "auto") == 0)
-		{
-			bAutoSet = true;
-			printf("Auto set\n");
-		} else
-		{
+
 			level = (int) atof(value);
 			cvSetTrackbarPos("level", this->name->c_str(), level);
-		}
 	}
 }
 

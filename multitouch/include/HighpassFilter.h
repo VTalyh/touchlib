@@ -7,20 +7,31 @@
 
 class TOUCHLIB_FILTER_EXPORT HighpassFilter : public Filter
 {
-
 public:
 
     HighpassFilter(char*);
     ~HighpassFilter();
     void kernel();
 
+
+	virtual void getParameters(ParameterMap& pMap);
+	virtual void setParameter(const char *name, const char *value);
+	virtual void showOutput(bool value, int windowx, int windowy);
+
 private:
-	IplImage* blurred;
+	int filterLevel;
+	int filterLevel_slider;
+
+	int scale;
+	int scale_slider;
+
+	IplConvKernel* element;
+	IplConvKernel* element2;
+
 	IplImage* outra;
 	IplImage* outra2;
-	CvMat* filtermat1;
-	CvMat* filtermat2;
 
+	bool noErodeDialate;
 };
 
 #endif // __TOUCHSCREEN_FILTER_HIGHPASS__

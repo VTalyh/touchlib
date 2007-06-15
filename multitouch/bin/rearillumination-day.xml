@@ -31,12 +31,12 @@
     <backgroundremove label="background4">
         <threshold value="0" />
     </backgroundremove>
-    <highpass label="highpass" />
-    <brightnesscontrast label="bc6">
-        <brightness value="1" />
-        <contrast value="0.87451" />
-    </brightnesscontrast>
+    <highpass label="highpass">
+        <filter value="10" />
+        <mode value="1" />
+        <scale value="2" />
+    </highpass>
     <rectify label="rectify6">
-        <level value="74" />
+        <level value="58" />
     </rectify>
 </filtergraph>

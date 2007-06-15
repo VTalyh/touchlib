@@ -1,73 +1,85 @@
-
 #include <HighpassFilter.h>
-
+#include <highgui.h>
 
 HighpassFilter::HighpassFilter(char* s) : Filter(s)
 {
-	
-	filtermat1 = cvCreateMat(5,5,CV_32FC1);
+    element = cvCreateStructuringElementEx( 3, 3, 0, 0, CV_SHAPE_ELLIPSE, 0 );
+    element2 = cvCreateStructuringElementEx( 5, 5, 2, 2, CV_SHAPE_ELLIPSE, 0 );
 
-	cvSet2D( filtermat1, 0, 0, cvRealScalar(-0.5) );
-	cvSet2D( filtermat1, 0, 1, cvRealScalar(0) );
-	cvSet2D( filtermat1, 0, 2, cvRealScalar(-0.5) );
-	cvSet2D( filtermat1, 0, 3, cvRealScalar(0) );
-	cvSet2D( filtermat1, 0, 4, cvRealScalar(-0.5) );
+	filterLevel = 5;
+	filterLevel_slider = filterLevel;
 
-	cvSet2D( filtermat1, 1, 0, cvRealScalar(-0.5) );
-	cvSet2D( filtermat1, 1, 1, cvRealScalar(-1) );
-	cvSet2D( filtermat1, 1, 2, cvRealScalar(-1) );
-	cvSet2D( filtermat1, 1, 3, cvRealScalar(-1) );
-	cvSet2D( filtermat1, 1, 4, cvRealScalar(-0.5) );
+	scale = 32;
+	scale_slider = scale;
 
-	cvSet2D( filtermat1, 2, 0, cvRealScalar(-1) );
-	cvSet2D( filtermat1, 2, 1, cvRealScalar(-1) );
-	cvSet2D( filtermat1, 2, 2, cvRealScalar(10) );
-	cvSet2D( filtermat1, 2, 3, cvRealScalar(-1) );
-	cvSet2D( filtermat1, 2, 4, cvRealScalar(-1) );
-
-	cvSet2D( filtermat1, 3, 0, cvRealScalar(-0.5) );
-	cvSet2D( filtermat1, 3, 1, cvRealScalar(-1) );
-	cvSet2D( filtermat1, 3, 2, cvRealScalar(-1) );
-	cvSet2D( filtermat1, 3, 3, cvRealScalar(-1) );
-	cvSet2D( filtermat1, 3, 4, cvRealScalar(-0.5) );
-
-	cvSet2D( filtermat1, 4, 0, cvRealScalar(-0.5) );
-	cvSet2D( filtermat1, 4, 1, cvRealScalar(0) );
-	cvSet2D( filtermat1, 4, 2, cvRealScalar(-0.5) );
-	cvSet2D( filtermat1, 4, 3, cvRealScalar(0) );
-	cvSet2D( filtermat1, 4, 4, cvRealScalar(-0.5) );
-
-	
-
-/*
-	cvSet2D( filtermat1, 0, 0, cvRealScalar(1) );
-	cvSet2D( filtermat1, 0, 1, cvRealScalar(1) );
-	cvSet2D( filtermat1, 0, 2, cvRealScalar(1) );
-	cvSet2D( filtermat1, 1, 0, cvRealScalar(1) );
-	cvSet2D( filtermat1, 1, 1, cvRealScalar(1) );
-	cvSet2D( filtermat1, 1, 2, cvRealScalar(1) );
-	cvSet2D( filtermat1, 2, 0, cvRealScalar(1) );
-	cvSet2D( filtermat1, 2, 1, cvRealScalar(1) );
-	cvSet2D( filtermat1, 2, 2, cvRealScalar(1) );
-	*/
+	noErodeDialate = false;
 }
 
 
 HighpassFilter::~HighpassFilter()
 {
+    cvReleaseStructuringElement(&element);
+    cvReleaseStructuringElement(&element2);
+}
+
+
+void HighpassFilter::getParameters(ParameterMap& pMap)
+{
+	pMap[std::string("filter")] = toString(filterLevel);
+	pMap[std::string("scale")] = toString(scale);
+
+	if(noErodeDialate)
+		pMap[std::string("mode")] = "1";
+}
+
+
+void HighpassFilter::setParameter(const char *name, const char *value)
+{
+	if(strcmp(name, "filter") == 0)
+	{
+		filterLevel = (int) atof(value);
+		cvSetTrackbarPos("filter", this->name->c_str(), filterLevel);
+	}
+
+	if(strcmp(name, "scale") == 0)
+	{
+		scale = (int) atof(value);
+		cvSetTrackbarPos("scale", this->name->c_str(), scale);
+	}
+
+	if(strcmp(name, "mode") == 0)
+	{
+		if(strcmp(value, "1") == 0)
+		{
+			noErodeDialate = true;
+
+		}
+	}
+}
+
+// Create toolbars
+void HighpassFilter::showOutput(bool value, int windowx, int windowy)
+{
+	Filter::showOutput(value, windowx, windowy);
+
+	if(value)
+	{
+		cvCreateTrackbar( "filter", name->c_str(), &filterLevel_slider, 12, NULL);
+		cvCreateTrackbar( "scale", name->c_str(), &scale_slider, 48, NULL);
+	}
 }
 
 void HighpassFilter::kernel()
 {
+
+	filterLevel = filterLevel_slider;
+	scale = scale_slider;
 	
     // derived class responsible for allocating storage for filtered image
     if( !destination )
     {
         destination = cvCreateImage(cvGetSize(source), source->depth, source->nChannels);
         destination->origin = source->origin;  // same vertical flip as source
-
-        blurred = cvCreateImage(cvGetSize(source), source->depth, source->nChannels);
-        blurred->origin = source->origin;  // same vertical flip as source
 
 		outra = cvCreateImage( cvGetSize(source), IPL_DEPTH_16S, 1 );
 		outra->origin = source->origin;
@@ -78,30 +90,24 @@ void HighpassFilter::kernel()
    
 	cvConvertScale( source, outra );
 	//CV_MEDIAN
-	cvSmooth( outra, outra2, CV_GAUSSIAN, 13, 13, 0, 0 );
+	cvSmooth( outra, outra2, CV_GAUSSIAN, (filterLevel*2) + 3, (filterLevel*2) + 3, 0, 0 );
+
 	cvSub(outra, outra2, outra2);
 
-	cvConvertScale( outra2, destination, 16.0,  0);
-	cvSmooth( destination, destination, CV_GAUSSIAN, 13, 13, 0, 0 );
+	if(noErodeDialate)
+	{
+		cvConvertScale( outra2, destination, ((double)scale+1.0),  0);
+	    cvErode(destination,destination,element,1);
+		cvSmooth( destination, destination, CV_GAUSSIAN, 11, 11, 0, 0 );
+	    cvDilate(destination,destination,element,1);
+	} else {
+		cvConvertScale( outra2, destination, ((double)scale+1.0),  32);
+	    cvErode(destination,destination,element,2);
+		cvSmooth( destination, destination, CV_GAUSSIAN, 7, 7, 0, 0 );
+	    cvDilate(destination,destination,element2,1);
+	    cvDilate(destination,destination,element,1);
+	}
 
-
-	//cvMul(destination, destination, destination, 0.15);
-
-	// load src
-	//cvFilter2D( source, destination, filtermat1, cvPoint(-1,-1) );
-
-	//cvSobel( destination, outra, 1, 0, 1);
-	//cvSobel( source, outra2, 0, 1, 1);
-    //cvSmooth( gray, edge, CV_BLUR, 3, 3, 0, 0 );
-	//cvCanny(source, destination, 32,32, 3);
-	//cvNot(
-	//cvSub(outra, outra2, outra);
-	//cvConvertScale( outra, destination );
-
-    //cvSmooth( destination, destination, CV_BLUR, 3, 3, 0, 0 );
-
-
-	//cvFilter2D( destination, destination, filtermat1, cvPoint(-1,-1) );
 }
 
 
