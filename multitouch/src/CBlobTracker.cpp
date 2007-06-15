@@ -27,6 +27,10 @@ CBlobTracker::CBlobTracker()
 {
 	currentID = 1;
 	extraIDs = 0;
+
+	reject_distance_threshold = 100;
+	reject_min_area = 5;
+	reject_max_area = 200;
 }
 
 // stolen from opencv - squares.c sample
@@ -68,7 +72,6 @@ unsigned int getTag(CvSeq *curCont, int level=0)
 	sum += num * (int)powf(10.0, level);
 
 	return sum;
-
 }
 
 
@@ -184,7 +187,8 @@ void CBlobTracker::findBlobs_contour(BwImage &img, BwImage &label_img)
 			blob.weight = 0;
 			blob.tagID = 0;
 
-			blobList.push_back(blob);				
+			if(blob.area >= reject_min_area)
+				blobList.push_back(blob);				
 		}
 
 	}		// end cont for loop
@@ -343,8 +347,6 @@ void CBlobTracker::findBlobs(BwImage &img, BwImage &label_img)
 		}
 	}
 	*/
-	
-
 
 	std::map<int, CBlob> tempblobs;
 
@@ -368,8 +370,6 @@ void CBlobTracker::findBlobs(BwImage &img, BwImage &label_img)
 		}
 		pos.Y = (float) y;
 	}
-
-
 
 	std::map<int, touchlib::CBlob>::iterator iter;
 	std::map<int, touchlib::CBlob>::iterator iter2;
@@ -414,10 +414,6 @@ void CBlobTracker::findBlobs(BwImage &img, BwImage &label_img)
 		}
 	}
 	*/
-	
-
-
-
 }
 
 
@@ -496,9 +492,6 @@ void CBlobTracker::ProcessResults()
 
 	// FIXME: filter out useless blobs (tiny).. 
 
-	//if(numblobs > 8)		// only do first 16..
-	//	numblobs = 8;
-
 	for(i=0; i<numblobs; i++)
 	{
 		current.push_back(CFinger(blobList[i]));
@@ -559,7 +552,6 @@ void CBlobTracker::ProcessResults()
 	// to remedy, we will assume that the chosen ID is going to be from one of the top 4 closest points.
 	// this will eliminate possiblities that shouldn't lead to an optimal solution.
 
-
 	ids.clear();
 
 	//map<int, int> idmap;
@@ -593,7 +585,7 @@ void CBlobTracker::ProcessResults()
 		numcheck = prevsize;
 
 	// FIXME: why does this need to be again?
-	if(numcheck <= 4 && extraIDs > 0)
+	if(numcheck <= 1 && extraIDs > 0)
 		numcheck += 1;
 
 	if(current.size() > 0)
@@ -709,18 +701,16 @@ inline void CBlobTracker::permute2(int start)
   {
 	  for(int i=0; i<numcheck; i++)
 	  {
-		  if(i == (numcheck-1) && extraIDs > 0)
+		  if((i == (numcheck-1) && extraIDs > 0) || current[start].error > reject_distance_threshold)
 		  {
 			ids[start] = -1;		// new ID
 			if(checkValidNew(start))
 				permute2(start+1);
 
 		  } else {
-
 			ids[start] = current[start].closest[i];
 			if(checkValid(start))
 				permute2(start+1);
-
 		  }
 	  }
   }
@@ -743,7 +733,6 @@ inline bool CBlobTracker::checkValidNew(int start)
 	return true;
 }
 
-
 inline bool CBlobTracker::checkValid(int start)
 {
 
@@ -753,7 +742,6 @@ inline bool CBlobTracker::checkValid(int start)
 	  if(ids[i] == ids[start])
 		  return false;
 	}
-
 
   return true;
 }
@@ -797,7 +785,6 @@ bool CBlobTracker::getFingerInfo(int ID, TouchData *data)
 	return false;
 }
 
-
 CFinger *CBlobTracker::findFinger(int hist, int id)
 {
 	for(unsigned int i=0; i<history[hist].size(); i++)
@@ -821,7 +808,6 @@ float CBlobTracker::getError(CFinger &old, CFinger &cur)
 	return (float) dev.getLength();
 
 }
-
 
 void CBlobTracker::registerListener(ITouchListener *listener)
 {
@@ -848,7 +834,6 @@ void CBlobTracker::doUpdateEvent(TouchData data)
 	}
 }
 
-
 void CBlobTracker::doUntouchEvent(TouchData data)
 {
 	unsigned int i;
@@ -857,12 +842,3 @@ void CBlobTracker::doUntouchEvent(TouchData data)
 		listenerList[i]->fingerUp(data);
 	}
 }
-
-/*
-		rect<int> bbox = labelBox[equivalences[i].from];
-		for(x=bbox.upperLeftCorner.X; x<bbox.lowerRightCorner.X; x++)
-		{
-			for(y=bbox.upperLeftCorner.Y; y<=bbox.lowerRightCorner.Y; y++)
-			{
-
-			*/

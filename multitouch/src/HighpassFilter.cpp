@@ -22,7 +22,6 @@ HighpassFilter::~HighpassFilter()
     cvReleaseStructuringElement(&element2);
 }
 
-
 void HighpassFilter::getParameters(ParameterMap& pMap)
 {
 	pMap[std::string("filter")] = toString(filterLevel);

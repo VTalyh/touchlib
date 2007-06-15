@@ -46,8 +46,6 @@ namespace touchlib
 		int y;
 	};
 
-
-
     //////////////
 
 	class TOUCHLIB_CORE_EXPORT CFinger : public CBlob
@@ -149,6 +147,10 @@ namespace touchlib
 		int currentID;
 		int extraIDs;
 		int numcheck;
+
+		int reject_distance_threshold;
+		int reject_min_area;
+		int reject_max_area;
 
 		std::vector<std::vector<int> > matrix;
 		std::vector<int> ids;
