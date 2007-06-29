@@ -141,7 +141,7 @@ public:
 					float m = sqrtf((d.dX*d.dX) + (d.dY*d.dY));
 					float area = d.area;
 					if(!(d.X == 0 && d.Y == 0)) {
-						p << osc::BeginMessage( "/tuio/2Dcur" ) << "set" << d.ID << d.X << d.Y << d.dX << d.dY << m << area << osc::EndMessage;
+						p << osc::BeginMessage( "/tuio/2Dcur" ) << "set" << d.ID << d.X << d.Y << d.dX << d.dY << m << osc::EndMessage;
 
 						scount ++;
 						if(scount >= 10)
