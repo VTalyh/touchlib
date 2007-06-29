@@ -17,9 +17,15 @@ public:
     void kernel();
     ~ResizeFilter();
 
+	virtual void getParameters(ParameterMap& pMap);
+	virtual void setParameter(const char *name, const char *value);
+
 private:
 	IplImage* reference;
 	bool ownsImage;
+
+	int sizeX;
+	int sizeY;
 
 };
 

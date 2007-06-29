@@ -1,3 +1,15 @@
+/*
+	
+	Touchlib
+
+	An open-source library for Multitouch input using computer vision techniques.
+
+	Please see:
+
+	http://www.whitenoiseaudio.com/blog/
+	http://www.nuigroup.com/wiki/Touchlib
+	http://www.nuigroup.com/
+*/
 
 #include "CTouchScreen.h"
 #include "FilterFactory.h"
