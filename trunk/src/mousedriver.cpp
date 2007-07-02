@@ -166,7 +166,7 @@ int _tmain(int argc, char * argv[])
 		}
 
   		screen->getEvents();
-		Sleep(16);
+		SLEEP(16);
 
 	} while( ok );
 	cvDestroyWindow( "mywindow" );

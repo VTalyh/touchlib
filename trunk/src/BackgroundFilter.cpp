@@ -43,7 +43,10 @@ void BackgroundFilter::setParameter(const char *name, const char *value)
 		cvSetTrackbarPos("threshold", this->name->c_str(), updateThreshold);
 	} else if(strcmp(name, "mask") == 0)
 	{
-		setMask((touchlib::vector2df*)value,GRID_X+1,GRID_Y+1);		
+		if(value)
+			setMask((touchlib::vector2df*)value,GRID_X+1,GRID_Y+1);	
+		else
+			clearMask();
 	} 
 }
 
@@ -182,5 +185,17 @@ void BackgroundFilter::setMask(void * vaPoints, int xGrid, int yGrid)
 		polyMask[count++].y = aPoints[i * xGrid].Y;
 	}
 	nPolyMask = count;
+	recapture = true;
+}
+
+// deletes an old mask and tells kernel func to recapture
+void BackgroundFilter::clearMask()
+{
+	if(polyMask){
+		delete[] polyMask;
+		polyMask = NULL;
+	}
+	if(mask)
+		cvSet(mask,cvScalar(0,0,0));
 	recapture = true;
 }

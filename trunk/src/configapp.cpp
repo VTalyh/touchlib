@@ -767,6 +767,8 @@ int main(int argc, char * argv[])
 	// Note: Begin processing should only be called after the screen is set up
 
 	screen->beginProcessing();
+	// kill any mask that might be present
+	screen->setParameter(backgroundLabel, "mask", NULL);
 	
 	do
 	{
