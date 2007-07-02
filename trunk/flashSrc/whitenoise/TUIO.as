@@ -235,7 +235,7 @@ package whitenoise {
 							var X = Number(node.ARGUMENT[4].@VALUE);
 							var Y = Number(node.ARGUMENT[5].@VALUE);
 							var m = node.ARGUMENT[6].@VALUE;
-							var area = node.ARGUMENT[7].@VALUE;							
+							//var area = node.ARGUMENT[7].@VALUE;							
 							
 							var stagePoint:Point = new Point(x,y);					
 							var displayObjArray:Array = thestage.stage.getObjectsUnderPoint(stagePoint);
@@ -253,7 +253,7 @@ package whitenoise {
 							if(tuioobj == null)
 							{
 								tuioobj = new TUIOObject("2Dcur", id, x, y, X, Y, -1, 0, dobj);
-								tuioobj.area = area;
+								//tuioobj.area = area;
 								thestage.addChild(tuioobj.spr);								
 								objectArray.push(tuioobj);
 							} else {
@@ -261,7 +261,7 @@ package whitenoise {
 								tuioobj.spr.y = y;
 								tuioobj.x = x;
 								tuioobj.y = y;
-								tuioobj.area = area;								
+								//tuioobj.area = area;								
 								tuioobj.dX = X;
 								tuioobj.dY = Y;
 								
