@@ -9,8 +9,6 @@
 	#include <windows.h>
 	#include <tchar.h>
 	
-	
-	
 	#pragma comment( lib, "glut32" )
 	#pragma comment( lib, "user32" )
 #elif defined(__APPLE__)
@@ -31,14 +29,20 @@
 #endif
 using namespace touchlib;
 
-
+#include <time.h>
 
 #ifdef WIN32
 	#include <cvcam.h>
 #endif
 
+void glutDrawText(GLfloat x, GLfloat y, char *text);
+void glutDrawTexturedBox(float x1, float y1, float x2, float y2, int txtId);
 void glutDrawBox(float x1, float y1, float x2, float y2, float r, float g, float b);
-void glutDrawPlus(float x1, float y1, float s, float r, float g, float b);
+void glutDrawPlus(float x1, float y1, float s, float r, float g, float b, float ang);
+void glutDrawMarker(float x1, float y1, float s, float r, float g, float b, float ang);
+void glutPrepTexture(IplImage *image, int id);
+void glutRenderIplImage(int x, int y, IplImage *image);
+void printGLError(char *hdr);
 
 static bool keystate[256];
 bool ok=true;
@@ -46,7 +50,14 @@ ITouchScreen *screen;
 int configStep = 0;
 int curcalib = -1;
 bool captureBox = false;
+bool showHelp = true;
+int viewFilterStage = 0;
+GLuint glTxtTble[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 rect2df bBox(vector2df(0.0f,0.0f),vector2df(1.0f,1.0f));
+rect2df previewBox(vector2df(0.0f,0.0f),vector2df(0.15f,0.25f));
+static float rotAng = 0.0f;
+
+std::string backgroundLabel;
 
 class FingerElement
 {
@@ -117,6 +128,8 @@ public:
         size.width = 640;
         size.height = 640;
 
+		m_lastPress = time(0);
+
 		// Create named window in which the captured images will be presented
 		cvNamedWindow( "mywindow", CV_WINDOW_AUTOSIZE );
         window_img = cvCreateImage(size, 8, 3);
@@ -179,6 +192,17 @@ public:
 	//! A finger is no longer active..
 	virtual void fingerUp(TouchData data)
 	{
+		if(curcalib != -1){			
+			time_t now = time(0);
+			if((now-m_lastPress)>0){
+				m_lastPress = now;
+				screen->nextCalibrationStep();
+				curcalib ++;
+				if(curcalib >= GRID_POINTS){
+					curcalib = -1;					
+				}
+			}
+		}
 		std::map<int, FingerElement>::iterator iter;
 
 		for(iter=fingerList.begin(); iter != fingerList.end(); iter++)
@@ -207,7 +231,18 @@ public:
 
 	void draw()
 	{
-
+		rotAng += 0.1;
+		if (rotAng > 90.0)
+			rotAng = 0;
+		
+		glutPrepTexture(screen->getFilterImage(viewFilterStage), viewFilterStage);
+		glutDrawTexturedBox(previewBox.upperLeftCorner.X*2.0f - 1.0f,(1.0f-previewBox.upperLeftCorner.Y)*2.0f - 1.0f,
+							previewBox.lowerRightCorner.X*2.0f - 1.0f,(1.0f-previewBox.lowerRightCorner.Y)*2.0f - 1.0f,
+							viewFilterStage);
+		glutDrawBox(previewBox.upperLeftCorner.X*2.0f - 1.0f,(1.0f-previewBox.upperLeftCorner.Y)*2.0f - 1.0f,
+							previewBox.lowerRightCorner.X*2.0f - 1.0f,(1.0f-previewBox.lowerRightCorner.Y)*2.0f - 1.0f,
+							1.0, 0.0, 0.0);
+//		glutRenderIplImage(0, 0, screen->getFilterImage(viewFilterStage));
 		if(captureBox){
 			if(fingerList.size() == 2){
 				std::map<int, FingerElement>::iterator iter = fingerList.begin();
@@ -225,6 +260,20 @@ public:
 			glutDrawBox(bBox.upperLeftCorner.X*2.0f - 1.0f,(1.0f-bBox.upperLeftCorner.Y)*2.0f - 1.0f,
 							bBox.lowerRightCorner.X*2.0f - 1.0f,(1.0f-bBox.lowerRightCorner.Y)*2.0f - 1.0f,
 							1.0,1.0,1.0);
+			glutDrawText(-0.5,0.05, "Press Arrows to move capture box.");
+			glutDrawText(-0.5,0.0, "Press [Ctrl]+Arrows to size capture window.");
+			glutDrawText(-0.5,-0.05, "Pressing [Shift] in combination makes adjustments in larger increments.");
+		} else if (showHelp && (curcalib == -1)) {
+			glutDrawText(-0.5,0.15, "Press '1'-'0' to view the output of each filter in the filter chain.");
+			glutDrawText(-0.5,0.10, "Press 'C' to begin calibration.");
+			glutDrawText(-0.5,0.05, "Press 'B' to recapture the background filter.");
+			glutDrawText(-0.5,0.0, "Press 'X' to adjust the capture bounding box.");
+			glutDrawText(-0.5,-0.05, "Press 'H' to toggle the help display.");
+			glutDrawText(-0.5,-0.15, "Press Arrows to move preview window.");
+			glutDrawText(-0.5,-0.20, "Press Ctrl+Arrows to size preview window.");
+			glutDrawText(-0.5,-0.25, "Pressing [Shift] in combination makes adjustments in larger increments.");
+		} else if (curcalib >= 0) {
+			glutDrawText(-0.5,0.0, "Touch glowing cross. Repeat for each calibration point. Pressing 'R' returns to the last point.");
 		}
 		
 		rect2df bbox = screen->getScreenBBox();
@@ -247,9 +296,9 @@ public:
 		{
 
 			if(curcalib == i)
-				glutDrawPlus((screenpts[i].X*2.0f)-1.0f, ((1.0-screenpts[i].Y)*2.0f)-1.0f, 0.02, 1.0, 0.0, 0.0);
-			else
-				glutDrawPlus((screenpts[i].X*2.0f)-1.0f, ((1.0-screenpts[i].Y)*2.0f)-1.0f, 0.02, 0.0, 1.0, 0.0);
+				glutDrawMarker((screenpts[i].X*2.0f)-1.0f, ((1.0-screenpts[i].Y)*2.0f)-1.0f, 0.05, 1.0, 0.0, 0.0, rotAng);
+//			else
+				glutDrawPlus((screenpts[i].X*2.0f)-1.0f, ((1.0-screenpts[i].Y)*2.0f)-1.0f, 0.02, 0.0, 1.0, 0.0, 0.0);
 		}
 
 /*
@@ -284,6 +333,7 @@ private:
 	std::map<int, FingerElement> fingerList;
     RgbPixel colors[8];
     IplImage *window_img;
+	time_t m_lastPress;
 };
 
 
@@ -303,34 +353,42 @@ void glutSpecialUp(int key, int x, int y)
 void glutSpecialDown(int key, int x, int y)
 {
 	   printf( "keydn=%i\n", key );
-	   if(captureBox){
-		   bool resize;
-		   float incf = 0.005;		   
-		   int mod = glutGetModifiers();
-		   resize = (mod & GLUT_ACTIVE_CTRL) == GLUT_ACTIVE_CTRL;
-		   if(mod & GLUT_ACTIVE_SHIFT)
-			   incf = 0.1;
-		   vector2df inc;
-		   switch(key){
-				case GLUT_KEY_UP:				   
-					inc = vector2df(0.0,-incf);
-				break;
-				case GLUT_KEY_DOWN:				   
-					inc = vector2df(0.0,incf);
-				break;
-				case GLUT_KEY_LEFT:				   
-					inc = vector2df(-incf,0.0);
-				break;
-				case GLUT_KEY_RIGHT:				   
-					inc = vector2df(incf,0.0);
-				break;
-				default:
-					return;
-		   }		   
+	   bool resize;
+	   float incf = 0.005;		   
+	   int mod = glutGetModifiers();
+	   resize = (mod & GLUT_ACTIVE_CTRL) == GLUT_ACTIVE_CTRL;
+	   if(mod & GLUT_ACTIVE_SHIFT)
+		   incf = 0.1;
+	   vector2df inc;
+	   
+	   switch(key){
+			case GLUT_KEY_UP:				   
+				inc = vector2df(0.0,-incf);
+			break;
+			case GLUT_KEY_DOWN:				   
+				inc = vector2df(0.0,incf);
+			break;
+			case GLUT_KEY_LEFT:				   
+				inc = vector2df(-incf,0.0);
+			break;
+			case GLUT_KEY_RIGHT:				   
+				inc = vector2df(incf,0.0);
+			break;
+			default:
+				return;
+	   }		   
+	   if(captureBox) {
 		   bBox.upperLeftCorner += inc;
 		   if(!resize)
-			   bBox.lowerRightCorner += inc;   
-	   }
+			   bBox.lowerRightCorner += inc;
+			   
+			printf("bBox: [%f,%f]x[%f,%f]\n", bBox.upperLeftCorner.X, bBox.upperLeftCorner.Y, bBox.lowerRightCorner.X, bBox.lowerRightCorner.Y);			
+	   } else {
+		   previewBox.upperLeftCorner += inc;
+		   if(!resize)
+			   previewBox.lowerRightCorner += inc;
+			printf("previewBox: [%f,%f]x[%f,%f]\n", previewBox.upperLeftCorner.X, previewBox.upperLeftCorner.Y, previewBox.lowerRightCorner.X, previewBox.lowerRightCorner.Y);			
+	   }   
 }
 
 void glutKeyboardCallback( unsigned char key, int x, int y )
@@ -365,7 +423,7 @@ void glutKeyboardCallback( unsigned char key, int x, int y )
 	}
     else if( key == 98)				// b = recapture background
 	{
-		screen->setParameter("background4", "capture", "");
+		screen->setParameter(backgroundLabel, "capture", "");
 		app.clearFingers();
 	} else if( key == 32)				// space = next calibration step
 	{
@@ -374,12 +432,37 @@ void glutKeyboardCallback( unsigned char key, int x, int y )
 		if(curcalib >= GRID_POINTS)
 			curcalib = -1;
 	}
+	if (key == 114 )		// r = revert calib
+	{
+		screen->revertCalibrationStep();
+		curcalib --;
+		if (curcalib<0){
+			curcalib = 0;
+		}
+	}
+	if (key >= 49 && key <= 57)
+	{
+		viewFilterStage = key - 49;
+		printf("Setting viewFilterStage = %d\n", viewFilterStage);
+	}
+	
+}
+
+void glutDrawText(GLfloat x, GLfloat y, char *text)
+{
+    char *p;
+    
+    glRasterPos2f(x, y);
+    for (p = text; *p; p++)
+    	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, *p);
 }
 
 void glutDrawBox(float x1, float y1, float x2, float y2, float r, float g, float b)
 {
-	glBegin(GL_LINE_STRIP);
 	glLineWidth(2.0);
+	
+	printGLError("glutDrawBox (Pre-glBegin)");
+	glBegin(GL_LINE_STRIP);
 	glColor3f(r, g, b);
 
 	glVertex2f(x1,y1);
@@ -393,47 +476,208 @@ void glutDrawBox(float x1, float y1, float x2, float y2, float r, float g, float
 	glVertex2f(x1,y1);
 
 	glEnd();
-
+	printGLError("glutDrawBox (Post-glEnd)");
 }
 
-void glutDrawPlus(float x1, float y1, float s, float r, float g, float b)
+void glutDrawTexturedBox(float x1, float y1, float x2, float y2, int txtId)
 {
-	glBegin(GL_LINES);
+	GLuint id = glTxtTble[txtId];
+	if (id == 0)
+		return;
+		
+	//glLineWidth(2.0);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, id);
+	
+	printGLError("glutDrawTexturedBox (Pre-glBegin)");
+	glBegin(GL_QUADS);
+	
+	glTexCoord2f(1.0, 0.0);
+	glVertex2f(x1,y1);
+	
+	glTexCoord2f(0.0, 0.0);
+	glVertex2f(x2,y1);
+
+	glTexCoord2f(0.0, 1.0);
+	glVertex2f(x2,y2);
+	
+	glTexCoord2f(1.0, 1.0);
+	glVertex2f(x1,y2);
+
+	glEnd();
+	printGLError("glutDrawTexturedBox (Post-glEnd)");
+	glDisable(GL_TEXTURE_2D);
+}
+
+void glutDrawPlus(float x1, float y1, float s, float r, float g, float b, float ang)
+{
 	glLineWidth(2.0);
+	printGLError("glutDrawPlus (Pre-glBegin)");
+	
+	glPushMatrix();
+	glLoadIdentity();
+	glTranslatef(x1, y1, 0.0);
+	glScalef(s, s, s);
+	glRotatef(ang, 0.0, 0.0, 1.0);
+	
+	glBegin(GL_LINES);
 
 	float sx = s;
 	float sy = s;
 
+	glColor3f(r, g, b);
+	glVertex2f(0.0, -1.0); //glVertex2f(x1,y1-sy);
+	glColor3f(r, g, b);
+	glVertex2f(0.0, 1.0); //glVertex2f(x1,y1+sy);
 
 	glColor3f(r, g, b);
-	glVertex2f(x1,y1-sy);
+	glVertex2f(-1.0, 0.0); //glVertex2f(x1-sx,y1);
 	glColor3f(r, g, b);
-	glVertex2f(x1,y1+sy);
-
-	glColor3f(r, g, b);
-	glVertex2f(x1-sx,y1);
-	glColor3f(r, g, b);
-	glVertex2f(x1+sx,y1);
+	glVertex2f(1.0, 0.0); // glVertex2f(x1+sx,y1);
 
 	glEnd();
+	glPopMatrix();
+	
+	printGLError("glutDrawPlus (Post-glEnd)");
+}
 
+void glutDrawMarker(float x1, float y1, float s, float r, float g, float b, float ang)
+{
+	glLineWidth(2.0);
+	printGLError("glutDrawPlus (Pre-glBegin)");
+	
+	glPushMatrix();
+	glLoadIdentity();
+	glTranslatef(x1, y1, 0.0);
+	glScalef(s, s, s);
+	glRotatef(ang, 0.0, 0.0, 1.0);
+	
+	glBegin(GL_TRIANGLES);
+
+	float sx = s;
+	float sy = s;
+
+	// upper-left
+	glColor3f(r, g, b);
+	glVertex2f(-0.5, 0.5);
+	glColor3f(r, g, b);
+	glVertex2f(-1.0, 0.5);
+	glColor3f(r, g, b);
+	glVertex2f(-0.5, 1.0);
+
+	// upper-right
+	glColor3f(r, g, b);
+	glVertex2f(0.5, 0.5);
+	glColor3f(r, g, b);
+	glVertex2f(1.0, 0.5);
+	glColor3f(r, g, b);
+	glVertex2f(0.5, 1.0);
+
+	// lower-right
+	glColor3f(r, g, b);
+	glVertex2f(0.5, -0.5);
+	glColor3f(r, g, b);
+	glVertex2f(1.0, -0.5);
+	glColor3f(r, g, b);
+	glVertex2f(0.5, -1.0);
+
+	// lower-left
+	glColor3f(r, g, b);
+	glVertex2f(-0.5, -0.5);
+	glColor3f(r, g, b);
+	glVertex2f(-0.5, -1.0);
+	glColor3f(r, g, b);
+	glVertex2f(-1.0, -0.5);
+
+
+	glEnd();
+	glPopMatrix();
+	
+	printGLError("glutDrawPlus (Post-glEnd)");
+}
+
+void glutPrepTexture(IplImage *image, int i) {
+	GLint  internalFormat;
+	GLenum format, type, formats[5] = { 0, GL_RED, 0, GL_RGB, GL_RGBA };
+	GLuint id;
+	// IplImage *image;
+
+	if (image == 0)
+		return;
+/*		
+    image = cvCreateImage(cvSize(256,256), orig->depth, orig->nChannels);
+    image->origin = orig->origin;  // same vertical flip as source
+	cvResize(orig, image, CV_INTER_LINEAR);
+		*/
+	id = glTxtTble[i];	
+	if (id == 0) {
+		glGenTextures(1, &id);
+		glTxtTble[i] = id;
+	}
+	
+	glBindTexture(GL_TEXTURE_2D, id);
+	printGLError("glutPrepTexture (Post-glBindTexture)");
+   
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+	
+	type = ( image->depth == IPL_DEPTH_8U ? GL_UNSIGNED_BYTE : GL_BYTE );
+	internalFormat = image->nChannels;
+	format = formats[image->nChannels];
+	
+	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, image->width, image->height, 0, format, type, image->imageData);
+	printGLError("glutPrepTexture (Post-glTexImage2D)");
+}
+
+void glutRenderIplImage(int x, int y, IplImage *image) {
+	GLint  internalFormat;
+	GLenum format, type, formats[5] = { 0, GL_RED, 0, GL_RGB, GL_RGBA };
+	GLuint id;
+
+	if (image == 0)
+		return;
+	
+	type = ( image->depth == IPL_DEPTH_8U ? GL_UNSIGNED_BYTE : GL_BYTE );
+	internalFormat = image->nChannels;
+	format = formats[image->nChannels];
+	
+	if (image->origin == IPL_ORIGIN_BL) {
+		image = cvCreateImage(cvSize(image->width,image->height), image->depth, image->nChannels);
+	    image->origin = IPL_ORIGIN_BL;
+		cvFlip(image, 0, 1);
+	}
+
+	glRasterPos2i(x, y);
+	glDrawPixels(image->width, image->height, format, type, image->imageData);  
+	printGLError("glutRenderIplImage");
 }
 
 void glutDisplayCallback( void )
 {
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-
+	
 	glutDrawBox(-1,1,1,-1, 1.0, 1.0, 1.0);
+	printGLError("glutDisplayCallback (Post-glutDrawBox)");
+	
 	screen->getEvents();
+
+	printGLError("glutDisplayCallback (Pre-draw)");
+	
 	app.draw();
+	
+	printGLError("glutDisplayCallback (Post-draw)");
 
 	glFlush();
 	glutSwapBuffers();
 
 	glutPostRedisplay();
+	
+	printGLError("glutDisplayCallback (Final)");
 }
 
 void startGLApp(int argc, char * argv[])
@@ -444,13 +688,21 @@ void startGLApp(int argc, char * argv[])
 
 	// set RGBA mode with double and depth buffers
 	glutInitDisplayMode( GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE );
-
+	
+	glutCreateWindow("root");
+	glutFullScreen();
+	
+	//glEnable(GL_CULL_FACE);
+	//glEnable(GL_DEPTH_TEST);
+	//glDepthMask(GL_TRUE);
+	
+	printGLError("startGLApp");
+	
+	// start fullscreen game mode using
 	// 640x480, 16bit pixel depth, 60Hz refresh rate
-	glutGameModeString( "800x600:16@60" );
-
-	// start fullscreen game mode
-	glutEnterGameMode();
-
+	//glutGameModeString( "800x600:16@60" );
+	//glutEnterGameMode();
+	
 	// setup callbacks
 	glutKeyboardFunc( glutKeyboardCallback );
 	glutSpecialFunc( glutSpecialDown);
@@ -460,10 +712,18 @@ void startGLApp(int argc, char * argv[])
 
 	configStep = 1;
 
-	screen->setParameter("background4", "capture", "");
+	screen->setParameter(backgroundLabel, "capture", "");
 
 	// enter main loop
 	glutMainLoop();
+}
+
+void printGLError(char *hdr) {
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR) {
+		printf("%s: %s\n", hdr, gluErrorString(err));
+		exit(0);
+	}
 }
 
 #ifdef WIN32
@@ -476,32 +736,33 @@ int main(int argc, char * argv[])
 
 	if(!screen->loadConfig("config.xml"))
 	{
+		std::string label;
 #ifdef WIN32
-		screen->pushFilter("dsvlcapture", "capture1");
+		label = screen->pushFilter("dsvlcapture");
 #else
-		screen->pushFilter("cvcapture", "capture1");
+		label = screen->pushFilter("cvcapture");
 #endif
-		screen->pushFilter("mono", "mono2");
-		screen->pushFilter("smooth", "smooth3");
-		screen->pushFilter("backgroundremove", "background4");
+		screen->setParameter(label, "source", "cam");
+		//screen->setParameter(label, "source", "../tests/simple-2point.avi");
+		//screen->setParameter(label, "source", "../tests/hard-5point.avi");
 
-		//screen->pushFilter("brightnesscontrast", "bc5");
-		screen->pushFilter("rectify", "rectify6");
+		screen->pushFilter("mono");
+		screen->pushFilter("smooth");
+		label = screen->pushFilter("backgroundremove");
+		screen->setParameter(label, "threshold", "0");
 
-		screen->setParameter("rectify6", "level", "25");
+		//label = screen->pushFilter("brightnesscontrast");
+		//screen->setParameter(label, "brightness", "0.1");
+		//screen->setParameter(label, "contrast", "0.4");
 
-		screen->setParameter("capture1", "source", "cam");
-		//screen->setParameter("capture1", "source", "../tests/simple-2point.avi");
-		//screen->setParameter("capture1", "source", "../tests/hard-5point.avi");
-
-		screen->setParameter("background4", "threshold", "0");
-
-		//screen->setParameter("bc5", "brightness", "0.1");
-		//screen->setParameter("bc5", "contrast", "0.4");
+		label = screen->pushFilter("rectify");
+		screen->setParameter(label, "level", "25");
 
 		screen->saveConfig("config.xml");
 	}
 
+	std::string recLabel = screen->findFirstFilter("rectify");
+	backgroundLabel = screen->findFirstFilter("backgroundremove");
 	screen->registerListener((ITouchListener *)&app);
 	// Note: Begin processing should only be called after the screen is set up
 
@@ -517,12 +778,12 @@ int main(int argc, char * argv[])
         if( keypressed == 27) break;		// ESC = quit
         if( keypressed == 98)				// b = recapture background
 		{
-			screen->setParameter("background4", "capture", "");
+			screen->setParameter(backgroundLabel, "capture", "");
 			app.clearFingers();
 		}
         if( keypressed == 114)				// r = auto rectify..
 		{
-			screen->setParameter("rectify6", "level", "auto");
+			screen->setParameter(recLabel, "level", "auto");
 		}		
         if( keypressed == 13 || keypressed == 10)				// enter = calibrate position
 		{

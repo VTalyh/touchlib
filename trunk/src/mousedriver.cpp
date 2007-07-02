@@ -111,33 +111,40 @@ int _tmain(int argc, char * argv[])
 	cvNamedWindow( "mywindow", CV_WINDOW_AUTOSIZE );
 
 	screen->setDebugMode(false);
+	std::string recLabel,bgLabel;
 	if(!screen->loadConfig("config.xml"))
 	{
-		screen->pushFilter("dsvlcapture", "capture1");
-		screen->pushFilter("mono", "mono2");
-		screen->pushFilter("smooth", "smooth3");
-		screen->pushFilter("backgroundremove", "background4");
+		std::string capLabel = screen->pushFilter("dsvlcapture");
+		screen->pushFilter("mono");
+		screen->pushFilter("smooth");
+		bgLabel = screen->pushFilter("backgroundremove");
 
-		screen->pushFilter("brightnesscontrast", "bc5");
-		screen->pushFilter("rectify", "rectify6");
+		std::string bcLabel = screen->pushFilter("brightnesscontrast");
+		recLabel = screen->pushFilter("rectify");
 
-		screen->setParameter("rectify6", "level", "25");
+		screen->setParameter(recLabel, "level", "25");
 
-		screen->setParameter("capture1", "source", "cam");
+		screen->setParameter(capLabel, "source", "cam");
 		//screen->setParameter("capture1", "source", "../tests/simple-2point.avi");
 		//screen->setParameter("capture1", "source", "../tests/hard-5point.avi");
 
-		screen->setParameter("bc5", "brightness", "0.1");
-		screen->setParameter("bc5", "contrast", "0.4");
+		screen->setParameter(bcLabel, "brightness", "0.1");
+		screen->setParameter(bcLabel, "contrast", "0.4");
 
 		screen->saveConfig("config.xml");
+	}else{
+		recLabel = screen->findFirstFilter("rectify");				
+		bgLabel = screen->findFirstFilter("backgroundremove");		
 	}
 
 	screen->registerListener((ITouchListener *)&app);
 	// Note: Begin processing should only be called after the screen is set up
 
 	screen->beginProcessing();
-	Sleep(2000);
+	
+	SLEEP(1000);
+	screen->setParameter(bgLabel, "mask", (char*)screen->getCameraPoints());
+	screen->setParameter(bgLabel, "capture", "");
 	screen->beginTracking();
 
 	do
@@ -150,12 +157,12 @@ int _tmain(int argc, char * argv[])
         if( keypressed == 27) break;		// ESC = quit
         if( keypressed == 98)				// b = recapture background
 		{
-			screen->setParameter("background4", "capture", "");
+			screen->setParameter(bgLabel, "capture", "");
 			//app.clearFingers();
 		}
         if( keypressed == 114)				// r = auto rectify..
 		{
-			screen->setParameter("rectify6", "level", "auto");
+			screen->setParameter(recLabel, "level", "auto");
 		}
 
   		screen->getEvents();

@@ -36,6 +36,7 @@ void glutDrawMesh(mesh2df &mesh, COGLTexture &texture);
 
 static bool keystate[256];
 ITouchScreen *screen;
+std::string backgroundLabel;
 
 int screenWidth=1278, screenHeight=1024;
 
@@ -620,9 +621,13 @@ void glutKeyboardCallback( unsigned char key, int x, int y )
 		exit(1);
 	}
     else if( key == 98)				// b = recapture background
-	{
-		screen->setParameter("background4", "capture", "");
-		app.clearFingers();
+	{		
+		if(backgroundLabel.size() == 0){
+				printf("ERROR: no background filter defined\n");
+		}else{
+			screen->setParameter(backgroundLabel, "capture", "");
+			app.clearFingers();
+		}
 	}
 }
 
@@ -874,21 +879,26 @@ int main(int argc, char * argv[])
 	screen->setDebugMode(false);
 	if(!screen->loadConfig("config.xml"))
 	{
-		screen->pushFilter("dsvlcapture", "capture1");
-		screen->pushFilter("mono", "mono2");
-		screen->pushFilter("smooth", "smooth3");
-		screen->pushFilter("backgroundremove", "background4");
-		screen->pushFilter("brightnesscontrast", "bc5");
-		screen->pushFilter("rectify", "rectify6");
-		screen->setParameter("rectify6", "level", "25");
-		screen->setParameter("capture1", "source", "cam");
-		screen->setParameter("bc5", "brightness", "0.1");
-		screen->setParameter("bc5", "contrast", "0.4");
+		std::string label;
+		label = screen->pushFilter("dsvlcapture");
+		screen->setParameter(label, "source", "cam");
+		screen->pushFilter("mono");
+		screen->pushFilter("smooth");
+		screen->pushFilter("backgroundremove");
+		label = screen->pushFilter("brightnesscontrast");
+		screen->setParameter(label, "brightness", "0.1");
+		screen->setParameter(label, "contrast", "0.4");
+		label = screen->pushFilter("rectify");
+		screen->setParameter(label, "level", "25");
+				
 		screen->saveConfig("config.xml");
 	}
 
-	SLEEP(2000);
-	screen->setParameter("background4", "capture", "");
+	backgroundLabel = screen->findFirstFilter("backgroundremove");		
+	
+	SLEEP(1000);
+	screen->setParameter(backgroundLabel, "mask", (char*)screen->getCameraPoints());
+	screen->setParameter(backgroundLabel, "capture", "");
 	
 	screen->registerListener((ITouchListener *)&app);
 

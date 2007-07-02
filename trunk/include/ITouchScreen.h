@@ -7,6 +7,7 @@
 #include "Image.h"
 #include "vector2d.h"
 #include "mesh2d.h"
+#include <list>
 
 namespace touchlib
 {
@@ -31,7 +32,13 @@ namespace touchlib
 		virtual void getRawImage(char **img, int &width, int &height) = 0;
 
 		//! add a new filter on the end of the chain
-		virtual void pushFilter(const char *type, const char *label) = 0;
+		virtual std::string pushFilter(const char *type, const char * label = 0) = 0;
+
+		//! find instances of filters in the chain
+		virtual std::list<std::string> findFilters(const char *type) = 0;
+
+		//! find first instance of a filter in the chain
+		virtual std::string findFirstFilter(const char * type) = 0;
 
 		//! load the filter graph from file
 		virtual bool loadConfig(const char* filename) = 0;
@@ -40,7 +47,12 @@ namespace touchlib
 		virtual void saveConfig(const char* filename) = 0;
 
 		//! set a filter parameter
-		virtual void setParameter(char *label, char *param, char *value) = 0;
+		virtual void setParameter(std::string & label, char *param, char *value) = 0;
+
+		// get an image from the filter chain
+		virtual IplImage* getFilterImage(std::string & label) = 0;
+		virtual IplImage* getFilterImage(int step) = 0;
+
 
 		//! start the processing and video capturing
 		virtual void beginProcessing() = 0;
@@ -56,6 +68,9 @@ namespace touchlib
 
 		//! goes to the next step
 		virtual void nextCalibrationStep() = 0;
+
+		//! return to the last step
+		virtual void revertCalibrationStep() = 0;
 
 		//!
 		virtual float getScreenScale() = 0;

@@ -242,25 +242,33 @@ int main(int argc, char * argv[])
 	//screen->setDebugMode(false);
 	if(!screen->loadConfig("config.xml"))
 	{
-		screen->pushFilter("dsvlcapture", "capture1");
-		screen->pushFilter("mono", "mono2");
-		screen->pushFilter("smooth", "smooth3");
-		screen->pushFilter("backgroundremove", "background4");
+		std::string label;
+		label = screen->pushFilter("dsvlcapture");
+		screen->setParameter(label, "source", "cam");
+		screen->pushFilter("mono");
+		screen->pushFilter("smooth");
+		screen->pushFilter("backgroundremove");
 
-		screen->pushFilter("brightnesscontrast", "bc5");
-		screen->pushFilter("rectify", "rectify6");
+		label = screen->pushFilter("brightnesscontrast");
+		screen->setParameter(label, "brightness", "0.1");
+		screen->setParameter(label, "contrast", "0.4");
+		label = screen->pushFilter("rectify");
 
-		screen->setParameter("rectify6", "level", "25");
-
-		screen->setParameter("capture1", "source", "cam");
-		screen->setParameter("bc5", "brightness", "0.1");
-		screen->setParameter("bc5", "contrast", "0.4");
+		screen->setParameter(label, "level", "25");
+		
+		
 
 		screen->saveConfig("config.xml");
 	}
 
+	std::string bgLabel = screen->findFirstFilter("backgroundremove");
+	std::string recLabel = screen->findFirstFilter("rectify");
 	screen->registerListener((ITouchListener *)&app);
 	// Note: Begin processing should only be called after the screen is set up
+
+	SLEEP(1000);
+	screen->setParameter(bgLabel, "mask", (char*)screen->getCameraPoints());
+	screen->setParameter(bgLabel, "capture", "");
 
 	screen->beginProcessing();
 	screen->beginTracking();
@@ -275,13 +283,13 @@ int main(int argc, char * argv[])
         if( keypressed == 27) break;		// ESC = quit
         if( keypressed == 98)				// b = recapture background
 		{
-			screen->setParameter("background4", "capture", "");
+			screen->setParameter(bgLabel, "capture", "");
 			app.clearFingers();
 			
 		}
         if( keypressed == 114)				// r = auto rectify..
 		{
-			screen->setParameter("rectify6", "level", "auto");
+			screen->setParameter(recLabel, "level", "auto");
 		}
 
 		screen->getEvents();

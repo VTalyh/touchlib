@@ -44,7 +44,13 @@ namespace touchlib
 		virtual void getRawImage(char **img, int &width, int &height);
 
 		// add a new filter on the end of the chain
-		virtual void pushFilter(const char *type, const char *label);
+		virtual std::string pushFilter(const char *type, const char * label = 0);
+
+		//! find instances of filters in the chain
+		virtual std::list<std::string> findFilters(const char *type);
+
+		//! find first instance of a filter in the chain
+		virtual std::string findFirstFilter(const char * type);
 
 		//! load the filter graph from file
 		virtual bool loadConfig(const char* filename);
@@ -53,7 +59,7 @@ namespace touchlib
 		virtual void saveConfig(const char* filename);
 
 		// set a filter parameter
-		virtual void setParameter(char *label, char *param, char *value);
+		virtual void setParameter(std::string & label, char *param, char *value);
 
 		// start the processing and video capturing
 		virtual void beginProcessing();
@@ -71,6 +77,9 @@ namespace touchlib
 		//! goes to the next step
 		virtual void nextCalibrationStep();
 
+		//! return to the last step
+		virtual void revertCalibrationStep();
+
 		//! 
 		virtual float getScreenScale();
 		virtual rect2df getScreenBBox() { return screenBB; };
@@ -85,6 +94,10 @@ namespace touchlib
 
 		// start the processing and video capturing
 		virtual void beginTracking() { bTracking = true; };
+
+		// get an image from the filter chain
+		virtual IplImage* getFilterImage(std::string & label);
+		virtual IplImage* getFilterImage(int step);
 
 
 // ITouchListener
@@ -146,6 +159,7 @@ namespace touchlib
 		mesh2df screenMesh;
 
 		std::vector<Filter *> filterChain;
+		std::map<std::string,Filter*> filterMap;
 		std::vector<ITouchListener *> listenerList;
 		std::vector<ITouchEvent> eventList;
 

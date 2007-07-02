@@ -53,6 +53,7 @@ private:
 	typedef std::map<int, TouchData> FingerMap;
 	FingerMap fingermap;
 
+	std::string bgLabel;
 };
 
 

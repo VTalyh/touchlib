@@ -117,22 +117,45 @@ void CTouchScreen::initScreenPoints()
 	}
 }
 
-// FIXME: camera resolution shouldn't be hard coded.. We should query the capture filter for it. ?
-// Also note: This doesn't really matter since this is just the initial values. When you 
-// calibrate the touchpad the proper resolution values will go into cameraPoints..
 void CTouchScreen::initCameraPoints()
 {
 	int p = 0;
+	
+	float cw = 640.0, ch = 480.0; // defaults if no frame is available
+	// try and get a frame from the filter stack, and we'll use that as our frame size
+	if(filterChain.size() > 0) {
+		filterChain[0]->process(NULL);
+		IplImage *output = filterChain.back()->getOutput();
+		
+		cw = (float)output->width;
+		ch = (float)output->height;
+	}
 
 	int i,j;
 	for(j=0; j<=GRID_Y; j++)
 	{
 		for(i=0; i<=GRID_X; i++)
 		{
-			cameraPoints[p] = vector2df((i * 640.0f) / (float)GRID_X, (j*480.0f) / (float)GRID_Y);
+			cameraPoints[p] = vector2df((i * cw) / (float)GRID_X, (j * ch) / (float)GRID_Y);
 			p++;
 		}
 	}
+}
+
+
+IplImage* CTouchScreen::getFilterImage(std::string & label)
+{
+	std::map<std::string,Filter*>::iterator iter = filterMap.find(label);
+	if(iter == filterMap.end())
+		return NULL;
+	return iter->second->getOutput();	
+}
+
+IplImage* CTouchScreen::getFilterImage(int step)
+{
+	step = step >= filterChain.size() ? filterChain.size()-1:step;
+	step = step < 0? 0:step;
+	return filterChain[step]->getOutput();	
 }
 
 void CTouchScreen::setScreenScale(float s)
@@ -373,35 +396,56 @@ bool CTouchScreen::loadConfig(const char* filename)
 	return true;
 }
 
-
-
-void CTouchScreen::setParameter(char *label, char *param, char *value)
+std::list<std::string> CTouchScreen::findFilters(const char * type)
 {
-	unsigned int i;
-	unsigned int nfilters = (unsigned int) filterChain.size();
-
-	for(i=0; i<nfilters; i++)
-	{
-		if(strcmp(filterChain[i]->getName(), label) == 0)
-		{
-			filterChain[i]->setParameter(param, value);
-			return;
+	std::list<std::string> filters;
+	for(std::vector<Filter*>::iterator iter = filterChain.begin();iter!=filterChain.end();iter++){
+		if(!strcmp((*iter)->getType(),type)){
+			filters.push_back(std::string((*iter)->getName()));
 		}
 	}
+	return filters;
 }
 
-void CTouchScreen::pushFilter(const char *type, const char *label)
+std::string CTouchScreen::findFirstFilter(const char * type)
 {
+	std::string filter;
+	for(std::vector<Filter*>::iterator iter = filterChain.begin();iter!=filterChain.end();iter++){
+		if(!strcmp((*iter)->getType(),type)){
+			filter = (*iter)->getName();
+			break;
+		}
+	}
+	return filter;
+}
 
-	// I was thinking of dropping the 'label' param and just automatically
-	// using type + filterChain.size().  Could change the return value of
-	// this method from void to the created name as a std::string.  (futnuh)
-	Filter *newfilt = FilterFactory::createFilter(type, label);
+void CTouchScreen::setParameter(std::string & label, char *param, char *value)
+{
+	std::map<std::string,Filter*>::iterator iter = filterMap.find(label);
+	if(iter == filterMap.end())
+		return;
+	iter->second->setParameter(param, value);	
+}
+
+std::string CTouchScreen::pushFilter(const char *type, const char * inlabel)
+{
+	std::string label;
+	unsigned int n = filterChain.size();
+	if(inlabel){
+		label = inlabel;
+	}else{	
+		label = type;
+		// ugly, but a pain with safe functions because of windows function names
+		char buffer[20];
+		sprintf(buffer,"%d",n);
+		label += buffer;
+	}
+	Filter *newfilt = FilterFactory::createFilter(type, label.c_str());
 	
 	if(newfilt)
 	{
 		// lets tile all the output windows nicely
-		unsigned int n = filterChain.size();
+	
 
 		// FIXME: we are assuming 1024 x 768 screen res. We should
 		// have a cross platform way to get the current screen res.
@@ -416,7 +460,10 @@ void CTouchScreen::pushFilter(const char *type, const char *label)
 			filterChain.back()->connectTo(newfilt);
 
 		filterChain.push_back(newfilt);
+		filterMap.insert(std::make_pair(label,newfilt));
+		return label;
 	}
+	return std::string();
 }
 
 
@@ -687,6 +734,18 @@ void CTouchScreen::nextCalibrationStep()
 	}
 }
 
+void CTouchScreen::revertCalibrationStep()
+{
+	if(bCalibrating)
+	{
+		calibrationStep--;
+		if(calibrationStep < 0)
+		{
+			calibrationStep = 0;
+		}
+	}
+}
+
 // Code graveyard:
 /*
 // Transforms a camera space coordinate into a screen space coord
@@ -742,6 +801,5 @@ void CTouchScreen::cameraToScreenSpace(float &x, float &y)
 
 	x = u;
 	y = v;
-
 }
 */
