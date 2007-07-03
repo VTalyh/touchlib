@@ -589,26 +589,25 @@ void glutDrawMarker(float x1, float y1, float s, float r, float g, float b, floa
 	glColor3f(r, g, b);
 	glVertex2f(-1.0, -0.5);
 
-
 	glEnd();
 	glPopMatrix();
 	
 	printGLError("glutDrawPlus (Post-glEnd)");
 }
 
-void glutPrepTexture(IplImage *image, int i) {
+void glutPrepTexture(IplImage *orig, int i) {
 	GLint  internalFormat;
 	GLenum format, type, formats[5] = { 0, GL_RED, 0, GL_RGB, GL_RGBA };
 	GLuint id;
-	// IplImage *image;
+	IplImage *image = 0;
 
-	if (image == 0)
+	if (orig == 0)
 		return;
-/*		
+		
     image = cvCreateImage(cvSize(256,256), orig->depth, orig->nChannels);
     image->origin = orig->origin;  // same vertical flip as source
 	cvResize(orig, image, CV_INTER_LINEAR);
-		*/
+		
 	id = glTxtTble[i];	
 	if (id == 0) {
 		glGenTextures(1, &id);
@@ -627,9 +626,12 @@ void glutPrepTexture(IplImage *image, int i) {
 	type = ( image->depth == IPL_DEPTH_8U ? GL_UNSIGNED_BYTE : GL_BYTE );
 	internalFormat = image->nChannels;
 	format = formats[image->nChannels];
+
 	
-	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, image->width, image->height, 0, format, type, image->imageData);
+	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, 256, 256, 0, format, type, image->imageData);
 	printGLError("glutPrepTexture (Post-glTexImage2D)");
+
+	cvReleaseImage(&image);
 }
 
 void glutRenderIplImage(int x, int y, IplImage *image) {

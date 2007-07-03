@@ -54,6 +54,8 @@ namespace touchlib
 		CFinger() 
 		{
 			ID = -1;
+			markedForDeletion = false;
+			framesLeft = 0;
 		}
 
 		CFinger(const CBlob &b)
@@ -102,11 +104,13 @@ namespace touchlib
 
 		int ID;
 
-
 		vector2df delta;
 		vector2df predictedPos;
 
 		float deltaArea;
+
+		bool markedForDeletion;
+		int framesLeft;
 
 		std::vector<float> error;
 		std::vector<int> closest;		// ID's of the closest points, sorted..
@@ -151,6 +155,7 @@ namespace touchlib
 		int reject_distance_threshold;
 		int reject_min_area;
 		int reject_max_area;
+		int ghost_frames;
 
 		std::vector<std::vector<int> > matrix;
 		std::vector<int> ids;

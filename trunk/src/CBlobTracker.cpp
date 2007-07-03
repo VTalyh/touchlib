@@ -13,8 +13,7 @@
 
 using namespace std;
 
-// FIXME: If there is a lot of background noise this function starts to 
-// take up tons of CPU.. 
+
 
 // FIXME: findFinger should search back a few frames just in case 
 
@@ -31,6 +30,8 @@ CBlobTracker::CBlobTracker()
 	reject_distance_threshold = 100;
 	reject_min_area = 5;
 	reject_max_area = 200;
+
+	ghost_frames = 2;
 }
 
 // stolen from opencv - squares.c sample
@@ -490,8 +491,6 @@ void CBlobTracker::ProcessResults()
 
 	unsigned int numblobs = (unsigned int) blobList.size();
 
-	// FIXME: filter out useless blobs (tiny).. 
-
 	for(i=0; i<numblobs; i++)
 	{
 		current.push_back(CFinger(blobList[i]));
@@ -570,8 +569,8 @@ void CBlobTracker::ProcessResults()
 	// FIXME: we could scale numcheck depending on how many blobs there are
 	// if we are tracking a lot of blobs, we could check less.. 
 	
-	//numcheck = 4;
-
+	numcheck = 8;
+/*
 	if(cursize <= 4)
 		numcheck = 4;
 	else if(cursize <= 6)
@@ -580,12 +579,12 @@ void CBlobTracker::ProcessResults()
 		numcheck = 2;
 	else
 		numcheck = 1;
-
+*/
 	if(prevsize < numcheck)
 		numcheck = prevsize;
 
 	// FIXME: why does this need to be again?
-	if(numcheck <= 1 && extraIDs > 0)
+	if(numcheck <= 2 && extraIDs > 0)
 		numcheck += 1;
 
 	if(current.size() > 0)
@@ -680,7 +679,25 @@ void CBlobTracker::ProcessResults()
 		}
 
 		if(!found)
+		{
 			doUntouchEvent((*prev)[i].getTouchData());
+/*
+			if((*prev)[i].markedForDeletion)
+			{
+				(*prev)[i].framesLeft -= 1;
+				if((*prev)[i].framesLeft <= 0)
+					doUntouchEvent((*prev)[i].getTouchData());
+				else
+					current.push_back((*prev)[i]);	// keep it around until framesleft = 0
+			} else
+			{
+				(*prev)[i].markedForDeletion = true;
+				(*prev)[i].framesLeft = ghost_frames;
+				current.push_back((*prev)[i]);	// keep it around until framesleft = 0
+			}
+*/
+		}
+
 	}
 }
 

@@ -34,7 +34,6 @@
 			clickgrabber.graphics.endFill();						
 			
 			this.addChild( clickgrabber );		
-			
 			this.addEventListener(Event.ENTER_FRAME, slide);			
 		}
 		
@@ -62,9 +61,14 @@
 					y += velY;
 					velY *= friction;						
 				}
-
 			}
 		}		
+		
+		public function addPhoto(sz:String)
+		{
+			var photo:Photo = new Photo( sz );
+			this.addChild(photo);
+		}
 		
 		
 	}

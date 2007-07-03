@@ -16,7 +16,10 @@ package whitenoise {
 		static var thestage:DisplayObject;
 		static var objectArray:Array;
 		static var idArray:Array;
-		public static var debugMode:Boolean = true;		
+		
+		// NOTE: You should set this to 'false' when you want to publish your final versions.
+		public static var debugMode:Boolean = false;		
+		
 		static var debugText:TextField;
 		static var recordedXML:XML;
 		static var bRecording:Boolean = true;
@@ -85,6 +88,9 @@ package whitenoise {
 					thestage.addEventListener(Event.ENTER_FRAME, frameUpdate);
 				 }
 				
+			} else {
+				recordedXML = <OSCPackets></OSCPackets>;
+				bRecording = false;
 			}
 			
 		}

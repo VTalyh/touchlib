@@ -316,8 +316,8 @@
 				if(newscale < 0.1) newscale = 0.1;
 				if(newscale < 0.1) newscale = 0.1;
 
-				if(newscale > 4.0) newscale = 4.0;
-				if(newscale > 4.0) newscale = 4.0;				
+				if(newscale > 2.0) newscale = 2.0;
+				if(newscale > 2.0) newscale = 2.0;				
 				
 				if(!noScale)
 				{

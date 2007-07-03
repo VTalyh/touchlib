@@ -55,10 +55,10 @@
 			addChild( photoLoader );	
 			addChild( clickgrabber );
 			
-            var filter:BitmapFilter = getShadowFilter();
-            var myFilters:Array = new Array();
-            myFilters.push(filter);
-            filters = myFilters;			
+//            var filter:BitmapFilter = getShadowFilter();
+//            var myFilters:Array = new Array();
+//            myFilters.push(filter);
+//            filters = myFilters;			
 			
 			this.addEventListener(Event.ENTER_FRAME, slide);
 			

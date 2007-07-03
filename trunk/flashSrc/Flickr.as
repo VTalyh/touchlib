@@ -43,10 +43,7 @@ package
 			allPics = new Array();
 			// Setup the UI and get initial data
 			fetch("recent");
-			
 		}
-		
-
 		
 		// Retrieve a set of data from Flickr
 		// Creates a RESTful request and loads data
