@@ -27,9 +27,9 @@ CBlobTracker::CBlobTracker()
 	currentID = 1;
 	extraIDs = 0;
 
-	reject_distance_threshold = 100;
+	reject_distance_threshold = 250;
 	reject_min_area = 5;
-	reject_max_area = 200;
+	reject_max_area = 1000;
 
 	ghost_frames = 2;
 }
@@ -94,7 +94,7 @@ void CBlobTracker::findBlobs_contour(BwImage &img, BwImage &label_img)
 
 	bool isSquare = false;
 
-	cvFindContours( img.imgp, storage, &cont, sizeof(CvContour), CV_RETR_TREE, CV_CHAIN_APPROX_NONE );
+	cvFindContours( img.imgp, storage, &cont, sizeof(CvContour), CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE );
 
 	for( ; cont != 0; cont = cont->h_next )	{
 		int count = cont->total; // This is number point in contour
@@ -569,8 +569,7 @@ void CBlobTracker::ProcessResults()
 	// FIXME: we could scale numcheck depending on how many blobs there are
 	// if we are tracking a lot of blobs, we could check less.. 
 	
-	numcheck = 8;
-/*
+
 	if(cursize <= 4)
 		numcheck = 4;
 	else if(cursize <= 6)
@@ -579,11 +578,10 @@ void CBlobTracker::ProcessResults()
 		numcheck = 2;
 	else
 		numcheck = 1;
-*/
+
 	if(prevsize < numcheck)
 		numcheck = prevsize;
 
-	// FIXME: why does this need to be again?
 	if(numcheck <= 2 && extraIDs > 0)
 		numcheck += 1;
 
@@ -680,8 +678,8 @@ void CBlobTracker::ProcessResults()
 
 		if(!found)
 		{
-			doUntouchEvent((*prev)[i].getTouchData());
-/*
+			//doUntouchEvent((*prev)[i].getTouchData());
+
 			if((*prev)[i].markedForDeletion)
 			{
 				(*prev)[i].framesLeft -= 1;
@@ -695,7 +693,7 @@ void CBlobTracker::ProcessResults()
 				(*prev)[i].framesLeft = ghost_frames;
 				current.push_back((*prev)[i]);	// keep it around until framesleft = 0
 			}
-*/
+
 		}
 
 	}
