@@ -16,7 +16,8 @@
 #ifndef __FLUID2D__
 #define __FLUID2D__
 
-#include <rfftw.h>
+#include "rfftw.h"
+#include "fftw.h"
 
 class Fluid2D
 {

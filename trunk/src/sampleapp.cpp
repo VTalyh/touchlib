@@ -122,15 +122,18 @@ int main(int argc,char**argv)
 
 		screen->pushFilter("brightnesscontrast", "bc5");
 		screen->pushFilter("rectify", "rectify6");
-
-		screen->setParameter("rectify6", "level", "25");
-
-		screen->setParameter("capture1", "source", "cam");
+		//I can't figure out a better way to pass in the string than to create
+		//a var first because the prototype is using a reference. Just passing
+		//a cstring fails on gcc  
+		std::string rectify6 = "rectify6";
+		screen->setParameter(rectify6, "level", "25");
+		std::string capture1 = "capture1";
+		screen->setParameter(capture1, "source", "cam");
 		//screen->setParameter("capture1", "source", "../tests/simple-2point.avi");
 		//screen->setParameter("capture1", "source", "../tests/hard-5point.avi");
-
-		screen->setParameter("bc5", "brightness", "0.1");
-		screen->setParameter("bc5", "contrast", "0.4");
+		std::string bc5 = "bc5";
+		screen->setParameter(bc5, "brightness", "0.1");
+		screen->setParameter(bc5, "contrast", "0.4");
 
 		screen->saveConfig(configFileName);
 	}
@@ -152,7 +155,8 @@ int main(int argc,char**argv)
 
         if( keypressed == 98)				// b = recapture background
 		{
-			screen->setParameter("background4", "capture", "");
+			std::string background4 = "background4";
+			screen->setParameter(background4, "capture", "");
 		}
 	} while( 1 );
 

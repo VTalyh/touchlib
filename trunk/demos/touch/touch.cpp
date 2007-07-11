@@ -86,12 +86,15 @@ int main(int argc, char * argv[])
 
 		screen->pushFilter("brightnesscontrast", "bc5");
 		screen->pushFilter("rectify", "rectify6");
-
-		screen->setParameter("rectify6", "level", "25");
-
-		screen->setParameter("capture1", "source", "cam");
-		screen->setParameter("bc5", "brightness", "0.1");
-		screen->setParameter("bc5", "contrast", "0.4");
+		
+		std::string rectify6 = "rectify6";
+		screen->setParameter(rectify6, "level", "25");
+		std::string capture1 = "capture1";
+		screen->setParameter(capture1, "source", "cam");
+		
+		std::string bc5 = "bc5";
+		screen->setParameter(bc5, "brightness", "0.1");
+		screen->setParameter(bc5, "contrast", "0.4");
 
 	}
 
@@ -100,7 +103,9 @@ int main(int argc, char * argv[])
 	//
 
 	 SLEEP(200);
-	 screen->setParameter("background4", "capture", "");
+	 
+	 std::string background4 = "background4";
+	 screen->setParameter(background4, "capture", "");
 
 
 	screen->beginProcessing();
@@ -116,12 +121,13 @@ int main(int argc, char * argv[])
         if( keypressed == 27) break;		// ESC = quit
         if( keypressed == 98)				// b = recapture background
 		{
-			screen->setParameter("background4", "capture", "");
+			screen->setParameter(background4, "capture", "");
 			
 		}
         if( keypressed == 114)				// r = auto rectify..
 		{
-			screen->setParameter("rectify6", "level", "auto");
+			std::string rectify6 = "rectify6";
+			screen->setParameter(rectify6, "level", "auto");
 		}
 
 		screen->getEvents();
