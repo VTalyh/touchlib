@@ -1,0 +1,5 @@
+#summary The coding style to be used.
+
+= Coding style guide =
+
+Put stuff about which coding style standard to use!
