@@ -27,7 +27,6 @@ pthread_mutex_t CTouchScreen::eventListMutex = PTHREAD_MUTEX_INITIALIZER;
 #endif
 
 // FIXME: Maybe some of this calibration stuff should be moved to the config app
-// Let the config app collect the points and set them en-masse..?
 
 CTouchScreen::CTouchScreen()
 {
@@ -40,6 +39,12 @@ CTouchScreen::CTouchScreen()
 #else
 	pthread_mutex_init(&eventListMutex, NULL);
 #endif
+
+	reject_distance_threshold = 250;
+	reject_min_dimension = 2;
+	reject_max_dimension = 250;
+
+	ghost_frames = 0;
 
 	screenBB = rect2df(vector2df(0.0f, 0.0f), vector2df(1.0f, 1.0f));
 	initScreenPoints();
@@ -274,10 +279,19 @@ void CTouchScreen::saveConfig(const char* filename)
 	TiXmlDeclaration* decl = new TiXmlDeclaration("1.0", "", "");
 	doc.LinkEndChild(decl);
 
-	
-	
 
 	char sztmp[50];
+
+	TiXmlElement* configElement = new TiXmlElement("blobconfig");
+	doc.LinkEndChild(configElement);	
+
+
+	configElement->SetAttribute("distanceThreshold", reject_distance_threshold);
+	configElement->SetAttribute("minDimension", reject_min_dimension);
+	configElement->SetAttribute("maxDimension", reject_max_dimension);
+	configElement->SetAttribute("ghostFrames", ghost_frames);
+
+
 
 	TiXmlElement* bbelement = new TiXmlElement("bbox");
 	sprintf(sztmp, "%f", screenBB.upperLeftCorner.X);
@@ -338,6 +352,16 @@ bool CTouchScreen::loadConfig(const char* filename)
 	if(!doc.LoadFile())
 		return false;
 
+	TiXmlElement* configElement = doc.FirstChildElement("blobconfig");
+	if(configElement){
+		configElement->Attribute("distanceThreshold", &reject_distance_threshold);
+		configElement->Attribute("minDimension", &reject_min_dimension);
+		configElement->Attribute("maxDimension", &reject_max_dimension);
+		configElement->Attribute("ghostFrames", &ghost_frames);
+	}
+
+	// set up some configuration variables
+	this->tracker.setup(reject_distance_threshold, reject_min_dimension, reject_max_dimension, ghost_frames);
 
 	TiXmlElement* bboxRoot = doc.FirstChildElement("bbox");
 	if(bboxRoot){

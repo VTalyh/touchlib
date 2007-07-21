@@ -27,11 +27,22 @@ CBlobTracker::CBlobTracker()
 	currentID = 1;
 	extraIDs = 0;
 
+	// note: CTouchscreen will set it's own defaults (and also read from the config file)
+	// so changing these here won't do much
 	reject_distance_threshold = 250;
-	reject_min_area = 5;
-	reject_max_area = 1000;
+	reject_min_dimension = 2;
+	reject_max_dimension = 250;
 
-	ghost_frames = 2;
+	ghost_frames = 0;
+}
+
+void CBlobTracker::setup(int r_dist, int r_min_dim, int r_max_dim, int g_frames)
+{
+	reject_distance_threshold = r_dist;
+	reject_min_dimension = r_min_dim;
+	reject_max_dimension = r_max_dim;
+
+	ghost_frames = g_frames;
 }
 
 // stolen from opencv - squares.c sample
@@ -188,8 +199,9 @@ void CBlobTracker::findBlobs_contour(BwImage &img, BwImage &label_img)
 			blob.weight = 0;
 			blob.tagID = 0;
 
-			if(blob.area >= reject_min_area)
-				blobList.push_back(blob);				
+			int h=blob.box.getHeight(), w=blob.box.getWidth();
+			if(w >= reject_min_dimension && h >= reject_min_dimension && w < reject_max_dimension && h < reject_max_dimension)
+				blobList.push_back(blob);
 		}
 
 	}		// end cont for loop
@@ -678,9 +690,12 @@ void CBlobTracker::ProcessResults()
 
 		if(!found)
 		{
-			//doUntouchEvent((*prev)[i].getTouchData());
+			
 
-			if((*prev)[i].markedForDeletion)
+			if(ghost_frames == 0)
+			{
+				doUntouchEvent((*prev)[i].getTouchData());
+			} else if((*prev)[i].markedForDeletion)
 			{
 				(*prev)[i].framesLeft -= 1;
 				if((*prev)[i].framesLeft <= 0)

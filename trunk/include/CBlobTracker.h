@@ -128,6 +128,7 @@ namespace touchlib
 
 		virtual bool getFingerInfo(int ID, TouchData *data);
 		virtual void registerListener(ITouchListener *listener);
+		void setup(int r_dist, int r_min_dim, int r_max_dim, int g_frames);
 
 	private:
 		void doTouchEvent(TouchData data);
@@ -144,6 +145,8 @@ namespace touchlib
 		CFinger *findFinger(int hist, int id);
 		float getError(CFinger &old, CFinger &cur);
 
+
+
 #ifdef WIN32
 #pragma warning( disable : 4251 )  // http://www.unknownroad.com/rtfm/VisualStudio/warningC4251.html
 #endif
@@ -153,8 +156,8 @@ namespace touchlib
 		int numcheck;
 
 		int reject_distance_threshold;
-		int reject_min_area;
-		int reject_max_area;
+		int reject_min_dimension;
+		int reject_max_dimension;
 		int ghost_frames;
 
 		std::vector<std::vector<int> > matrix;

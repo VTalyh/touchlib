@@ -149,6 +149,11 @@ namespace touchlib
 		BwImage frame;
 		BwImage labelImg;
 
+		int reject_distance_threshold;
+		int reject_min_dimension;
+		int reject_max_dimension;
+		int ghost_frames;
+
 		// FIXME: later we may consider a denser mesh, but for now we'll consider
 		// the simpler case.
 		vector2df screenPoints[GRID_POINTS];		// GRID_X * GRID_Y
