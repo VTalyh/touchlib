@@ -4,6 +4,7 @@
 #ifdef WIN32
 	#include "VideoWrapperFilter.h"
 	#include "DSVLCaptureFilter.h"
+	#include "CMUCapturefilter.h"
 #endif
 
 #include "BrightnessContrastFilter.h"
@@ -34,6 +35,8 @@ Filter *FilterFactory::createFilter(const char *type, const char *label)
 		newFilter = (Filter *)new VideoWrapperFilter((char*)label);
 	} else if(strcmp(type, "dsvlcapture") == 0) {
 		newFilter = (Filter *)new DSVLCaptureFilter((char*)label);
+	} else if(strcmp(type, "cmucapture") == 0) {
+		newFilter = (Filter *)new CMUCaptureFilter((char*)label);
 #endif
 	} else if(strcmp(type, "mono") == 0) {
 		newFilter = (Filter *)new MonoFilter((char*)label);
