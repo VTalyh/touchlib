@@ -17,8 +17,8 @@ package whitenoise {
 		static var objectArray:Array;
 		static var idArray:Array;
 		
-		// NOTE: You should set this to 'false' when you want to publish your final versions.
-		public static var debugMode:Boolean = false;		
+
+		public static var debugMode:Boolean;		
 		
 		static var debugText:TextField;
 		static var recordedXML:XML;
@@ -33,10 +33,11 @@ package whitenoise {
 		static var bInitialized = false;
 
 
-		public static function init (s:DisplayObjectContainer, host:String, port:Number, wd:int = 800, ht:int = 600)
+		public static function init (s:DisplayObjectContainer, host:String, port:Number, wd:int = 800, ht:int = 600, dbug:Boolean = false)
 		{
 			if(bInitialized)
 				return;
+			debugMode = dbug;
 			
 			bInitialized = true;
 			stagewidth = wd;
@@ -44,6 +45,9 @@ package whitenoise {
 			thestage = s;
 			objectArray = new Array();
 			idArray = new Array();
+			try
+			{
+			
 			FLOSCSocket = new XMLSocket();
 
             FLOSCSocket.addEventListener(Event.CLOSE, closeHandler);
@@ -52,8 +56,12 @@ package whitenoise {
             FLOSCSocket.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
             FLOSCSocket.addEventListener(ProgressEvent.PROGRESS, progressHandler);
             FLOSCSocket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
-			
+
 			FLOSCSocket.connect(host, port);			
+			
+			} catch (e)
+			{
+			}
 			
 			if(debugMode)
 			{
@@ -83,7 +91,7 @@ package whitenoise {
 				 {
 					xmlPlaybackLoader = new URLLoader();
 					xmlPlaybackLoader.addEventListener("complete", xmlPlaybackLoaded);
-					xmlPlaybackLoader.load(new URLRequest(xmlPlaybackURL));				 
+					xmlPlaybackLoader.load(new URLRequest(xmlPlaybackURL));
 			
 					thestage.addEventListener(Event.ENTER_FRAME, frameUpdate);
 				 }
@@ -93,6 +101,12 @@ package whitenoise {
 				bRecording = false;
 			}
 			
+		}
+		
+		private static function setDimensions(wd:int = 800, ht:int = 600)
+		{
+			stagewidth = wd;
+			stageheight = ht;			
 		}
 		
 		
@@ -128,18 +142,30 @@ package whitenoise {
 			return null;
 		}
 		
+		public static function listenForObject(id:Number, reciever:Object)
+		{
+			var tmpObj:TUIOObject = getObjectById(id);
+			
+			if(tmpObj)
+			{
+				tmpObj.addListener(reciever);				
+			}
+
+		}
+		
 		public static function processMessage(msg:XML)
 		{
 
 			var fseq:String;
-			for each(var node:XML in msg.MESSAGE)
+			var node:XML;
+			for each(node in msg.MESSAGE)
 			{
 				if(node.ARGUMENT[0] && node.ARGUMENT[0].@VALUE == "fseq")
 					fseq = node.ARGUMENT[1].@VALUE;					
 			}
 ///			trace("fseq = " + fseq);
 
-			for each(var node:XML in msg.MESSAGE)
+			for each(node in msg.MESSAGE)
 			{
 				if(node.ARGUMENT[0] && node.ARGUMENT[0].@VALUE == "alive")
 				{
@@ -164,13 +190,15 @@ package whitenoise {
 			}			
 			
 							
-			for each(var node:XML in msg.MESSAGE)
+			for each(node in msg.MESSAGE)
 			{
 				if(node.ARGUMENT[0])
 				{
+					var type:String;
+					
 					if(node.@NAME == "/tuio/2Dobj")
 					{
-						var type:String = node.ARGUMENT[0].@VALUE;				
+						type = node.ARGUMENT[0].@VALUE;				
 						if(type == "set")
 						{
 							var sID = node.ARGUMENT[1].@VALUE;
@@ -203,6 +231,7 @@ package whitenoise {
 								thestage.addChild(tuioobj.spr);
 								
 								objectArray.push(tuioobj);
+								tuioobj.notifyCreated();								
 							} else {
 								tuioobj.spr.x = x;
 								tuioobj.spr.y = y;								
@@ -212,6 +241,7 @@ package whitenoise {
 								tuioobj.dY = Y;
 								
 								tuioobj.setObjOver(dobj);
+								tuioobj.notifyMoved();								
 							}
 							
 							try
@@ -232,7 +262,7 @@ package whitenoise {
 					} else if(node.@NAME == "/tuio/2Dcur")
 					{
 //						trace("2dcur");
-						var type:String = node.ARGUMENT[0].@VALUE;				
+						type = node.ARGUMENT[0].@VALUE;				
 						if(type == "set")
 						{
 							var id = node.ARGUMENT[1].@VALUE;
@@ -262,6 +292,7 @@ package whitenoise {
 								//tuioobj.area = area;
 								thestage.addChild(tuioobj.spr);								
 								objectArray.push(tuioobj);
+								tuioobj.notifyCreated();
 							} else {
 								tuioobj.spr.x = x;
 								tuioobj.spr.y = y;
@@ -272,6 +303,7 @@ package whitenoise {
 								tuioobj.dY = Y;
 								
 								tuioobj.setObjOver(dobj);
+								tuioobj.notifyMoved();
 							}
 
 							try

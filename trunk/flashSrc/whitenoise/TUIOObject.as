@@ -1,4 +1,6 @@
-﻿// FIXME: need velocity
+﻿// Added: Listener functions which should greatly simplify dealing with TUIO events.. 
+
+// FIXME: need velocity
 
 package whitenoise {
 	import flash.events.*;
@@ -34,9 +36,12 @@ package whitenoise {
 		public var spr:Sprite;
 		
 		private var color:int;
+		
+		var aListeners:Array;
 
 		public function TUIOObject (cls:String, id:int, px:Number, py:Number, dx:Number, dy:Number, sid:int = -1, ang:Number = 0, o = null)
 		{
+			aListeners = new Array();
 			TUIOClass = cls;
 			ID = id;
 			x = px;
@@ -76,6 +81,13 @@ package whitenoise {
 			
 			trace("Start " + ID + ", " + sID + " (" + int(px) + "," + int(py) + ")");
 			
+
+			
+			isNew = true;
+		}
+		
+		public function notifyCreated()
+		{
 			if(obj)
 			{
 				try
@@ -90,9 +102,7 @@ package whitenoise {
 //					trace(obj.name);
 					obj = null;
 				}
-			}
-			
-			isNew = true;
+			}			
 		}
 		
 		public function setObjOver(o:DisplayObject)
@@ -125,16 +135,48 @@ package whitenoise {
 			}
 		}
 		
+		public function addListener(reciever:Object)
+		{
+			aListeners.push(reciever);
+		}
+		public function removeListener(reciever:Object)
+		{
+			for(var i:int = 0; i<aListeners.length; i++)
+			{
+				if(aListeners[i] == reciever)
+					aListeners.splice(i, 1);
+			}
+		}		
+		
 		public function kill()
 		{
 			trace("Die " + ID);			
+			var localPoint:Point;
+			
 			if(obj && obj.parent)
 			{				
-				var localPoint:Point = obj.parent.globalToLocal(new Point(x, y));				
+				localPoint = obj.parent.globalToLocal(new Point(x, y));				
 				obj.dispatchEvent(new TUIOEvent(TUIOEvent.RollOutEvent, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));				
 				obj.dispatchEvent(new TUIOEvent(TUIOEvent.UpEvent, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));									
 			}			
 			obj = null;
+			
+			for(var i:int=0; i<aListeners.length; i++)
+			{
+				localPoint = aListeners[i].parent.globalToLocal(new Point(x, y));				
+				aListeners[i].dispatchEvent(new TUIOEvent(TUIOEvent.UpEvent, true, false, x, y, localPoint.x, localPoint.y, aListeners[i], false,false,false, true, 0, TUIOClass, ID, sID, angle));								
+			}
+		}
+		
+		public function notifyMoved()
+		{
+			var localPoint:Point;
+			for(var i:int=0; i<aListeners.length; i++)
+			{
+				trace("Notify moved");
+				localPoint = aListeners[i].parent.globalToLocal(new Point(x, y));				
+				aListeners[i].dispatchEvent(new TUIOEvent(TUIOEvent.MoveEvent, true, false, x, y, localPoint.x, localPoint.y, aListeners[i], false,false,false, true, 0, TUIOClass, ID, sID, angle));								
+			}			
 		}
 	}
 }
