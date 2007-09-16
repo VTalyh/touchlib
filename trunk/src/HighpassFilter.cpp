@@ -37,13 +37,15 @@ void HighpassFilter::setParameter(const char *name, const char *value)
 	if(strcmp(name, "filter") == 0)
 	{
 		filterLevel = (int) atof(value);
-		cvSetTrackbarPos("filter", this->name->c_str(), filterLevel);
+		if(show)
+			cvSetTrackbarPos("filter", this->name->c_str(), filterLevel);
 	}
 
 	if(strcmp(name, "scale") == 0)
 	{
 		scale = (int) atof(value);
-		cvSetTrackbarPos("scale", this->name->c_str(), scale);
+		if(show)
+			cvSetTrackbarPos("scale", this->name->c_str(), scale);
 	}
 
 	if(strcmp(name, "mode") == 0)

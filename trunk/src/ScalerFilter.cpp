@@ -24,8 +24,8 @@ void ScalerFilter::setParameter(const char *name, const char *value)
 {
 	if(strcmp(name, "level") == 0)
 	{
-
-			level = (int) atof(value);
+		level = (int) atof(value);
+		if(show)
 			cvSetTrackbarPos("level", this->name->c_str(), level);
 	}
 }
