@@ -1,4 +1,4 @@
-ADD_LIBRARY(touchlib HighpassFilter.cpp InvertFilter.cpp ScalerFilter.cpp BackgroundFilter.cpp BrightnessContrastFilter.cpp CBlobTracker.cpp CTouchScreen.cpp CvCaptureFilter.cpp filter.cpp FilterFactory.cpp MonoFilter.cpp RectifyFilter.cpp ResizeFilter.cpp SmoothingFilter.cpp  TouchScreenDevice.cpp  )
+ADD_LIBRARY(touchlib SimpleHighpassFilter.cpp HighpassFilter.cpp InvertFilter.cpp ScalerFilter.cpp BackgroundFilter.cpp BrightnessContrastFilter.cpp CBlobTracker.cpp CTouchScreen.cpp CvCaptureFilter.cpp filter.cpp FilterFactory.cpp MonoFilter.cpp RectifyFilter.cpp ResizeFilter.cpp SmoothingFilter.cpp  TouchScreenDevice.cpp  )
 
 ADD_EXECUTABLE(sampleapp sampleapp.cpp)
 TARGET_LINK_LIBRARIES(sampleapp touchlib tinyxml ${OpenCV_LIBRARIES})
