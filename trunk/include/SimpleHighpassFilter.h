@@ -48,6 +48,8 @@ private:
 	int blurLevelSlider;
 	int noiseLevel;
 	int noiseLevelSlider;
+
+	IplImage *buffer;
 };
 
 #endif // __TOUCHSCREEN_FILTER_SIMPLE_HIGHPASS__

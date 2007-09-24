@@ -19,11 +19,15 @@ SimpleHighpassFilter::SimpleHighpassFilter(char *s) : Filter(s)
 
 	noiseLevel = DEFAULT_NOISE_LEVEL;
 	noiseLevelSlider = noiseLevel;
+
+	buffer = NULL;
 }
 
 
 SimpleHighpassFilter::~SimpleHighpassFilter()
 {
+	if (buffer != NULL)
+		cvReleaseImage(&buffer);
 }
 
 void SimpleHighpassFilter::getParameters(ParameterMap &pMap)
@@ -68,14 +72,18 @@ void SimpleHighpassFilter::kernel()
 		destination = cvCreateImage(cvGetSize(source), source->depth, source->nChannels);
 		destination->origin = source->origin;  // same vertical flip as source
 	}
+	if (buffer == NULL) {
+		buffer = cvCreateImage(cvGetSize(source), source->depth, source->nChannels);
+		buffer->origin = source->origin;
+	}
 
 	// create the unsharp mask using a linear average filter
 	int blurParameter = blurLevel*2+1;
-	cvSmooth(source, destination, CV_BLUR, blurParameter, blurParameter);
-	cvSub(source, destination, destination);
+	cvSmooth(source, buffer, CV_BLUR, blurParameter, blurParameter);
+	cvSub(source, buffer, buffer);
 
 	// filter out the noise using a median filter
 	int noiseParameter = noiseLevel*2+1;
-	cvSmooth(destination, destination, CV_MEDIAN, noiseParameter, noiseParameter);
+	cvSmooth(buffer, destination, CV_MEDIAN, noiseParameter, noiseParameter);
 }
 
