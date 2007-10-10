@@ -5,8 +5,13 @@
 // ----  initialization of non-integral constants  ----------------------------
 
 
-const char *SimpleHighpassFilter::TRACKBAR_LABEL_BLUR = "blur";
-const char *SimpleHighpassFilter::TRACKBAR_LABEL_NOISE = "noise";
+const char *SimpleHighpassFilter::TRACKBAR_LABEL_BLUR 		= "blur";
+const char *SimpleHighpassFilter::TRACKBAR_LABEL_NOISE_METHOD	= "noise method";
+const char *SimpleHighpassFilter::TRACKBAR_LABEL_NOISE		= "noise";
+
+const char *SimpleHighpassFilter::PARAMETER_BLUR		= "blur";
+const char *SimpleHighpassFilter::PARAMETER_NOISE_METHOD	= "noiseMethod";
+const char *SimpleHighpassFilter::PARAMETER_NOISE		= "noise";
 
 
 // ----  implementations  -----------------------------------------------------
@@ -16,6 +21,9 @@ SimpleHighpassFilter::SimpleHighpassFilter(char *s) : Filter(s)
 {
 	blurLevel = DEFAULT_BLUR_LEVEL;
 	blurLevelSlider = blurLevel;
+
+        noiseMethodSlider = DEFAULT_NOISE_METHOD;
+        setNoiseSmoothType(noiseMethodSlider);
 
 	noiseLevel = DEFAULT_NOISE_LEVEL;
 	noiseLevelSlider = noiseLevel;
@@ -32,22 +40,39 @@ SimpleHighpassFilter::~SimpleHighpassFilter()
 
 void SimpleHighpassFilter::getParameters(ParameterMap &pMap)
 {
-	pMap[std::string("blur")] = toString(blurLevel);
-	pMap[std::string("noise")] = toString(noiseLevel);
+	pMap[std::string(PARAMETER_BLUR)] = toString(blurLevel);
+	pMap[std::string(PARAMETER_NOISE_METHOD)] = toString(noiseSmoothType);
+	pMap[std::string(PARAMETER_NOISE)] = toString(noiseLevel);
 }
 
 void SimpleHighpassFilter::setParameter(const char *name, const char *value)
 {
-	if(strcmp(name, "blur") == 0) {
+	if (strcmp(name, PARAMETER_BLUR) == 0) {
 		blurLevel = (int) atof(value);
 		if (show)
 			cvSetTrackbarPos(TRACKBAR_LABEL_BLUR, this->name->c_str(), blurLevel);
-	}
+	} else if (strcmp(name, PARAMETER_NOISE_METHOD) == 0) {
+		int noiseMethod = atoi(value);
+		setNoiseSmoothType(noiseMethod);
 
-	if(strcmp(name, "noise") == 0) {
+		if (show)
+			cvSetTrackbarPos(TRACKBAR_LABEL_NOISE_METHOD, this->name->c_str(), noiseMethod);
+	} else if (strcmp(name, PARAMETER_NOISE) == 0) {
 		noiseLevel = (int) atof(value);
 		if (show)
 			cvSetTrackbarPos(TRACKBAR_LABEL_NOISE, this->name->c_str(), noiseLevel);
+	}
+}
+
+void SimpleHighpassFilter::setNoiseSmoothType(int noiseMethod)
+{
+	switch (noiseMethod) {
+        	case NOISE_METHOD_MEDIAN:
+                	noiseSmoothType = CV_MEDIAN;
+                        break;
+		case NOISE_METHOD_BLUR:
+                	noiseSmoothType = CV_BLUR;
+        		break;
 	}
 }
 
@@ -56,8 +81,9 @@ void SimpleHighpassFilter::showOutput(bool value, int windowx, int windowy)
 	Filter::showOutput(value, windowx, windowy);
 
 	if (value) {
-		cvCreateTrackbar(TRACKBAR_LABEL_BLUR, name->c_str(), &blurLevelSlider, 20, NULL);
-		cvCreateTrackbar(TRACKBAR_LABEL_NOISE, name->c_str(), &noiseLevelSlider, 20, NULL);
+		cvCreateTrackbar(TRACKBAR_LABEL_BLUR, name->c_str(), &blurLevelSlider, 60, NULL);
+		cvCreateTrackbar(TRACKBAR_LABEL_NOISE_METHOD, name->c_str(), &noiseMethodSlider, 1, NULL);
+		cvCreateTrackbar(TRACKBAR_LABEL_NOISE, name->c_str(), &noiseLevelSlider, 60, NULL);
 	}
 }
 
@@ -66,6 +92,7 @@ void SimpleHighpassFilter::kernel()
 	if (show) {
 		blurLevel = blurLevelSlider;
 		noiseLevel = noiseLevelSlider;
+		setNoiseSmoothType(noiseMethodSlider);
 	}
 	
 	if (destination == NULL) {
@@ -84,6 +111,6 @@ void SimpleHighpassFilter::kernel()
 
 	// filter out the noise using a median filter
 	int noiseParameter = noiseLevel*2+1;
-	cvSmooth(buffer, destination, CV_MEDIAN, noiseParameter, noiseParameter);
+	cvSmooth(buffer, destination, noiseSmoothType, noiseParameter, noiseParameter);
 }
 
