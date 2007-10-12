@@ -4,7 +4,7 @@
 
 // ----  initialization of non-integral constants  ----------------------------
 
-
+const float ThresholdFilter::DEFAULT_THRESHOLD = 0.10f;
 const char *ThresholdFilter::TRACKBAR_LABEL_MODE = "mode";
 const char *ThresholdFilter::TRACKBAR_LABEL_THRESHOLD = "level";
 
@@ -13,6 +13,7 @@ const char *ThresholdFilter::PARAMETER_THRESHOLD = "level";
 
 
 // ----  implementations  -----------------------------------------------------
+
 
 
 ThresholdFilter::ThresholdFilter(char *s) : Filter(s)
@@ -50,6 +51,9 @@ void ThresholdFilter::setParameter(const char *name, const char *value)
 	} else if (strcmp(name, PARAMETER_THRESHOLD) == 0) {
 		setMode(MODE_MANUAL);
 		threshold = atof(value);
+		if (threshold > 1.0f) {
+			threshold = 1.0f;
+		}
 
 		if (show) {
 			cvSetTrackbarPos(TRACKBAR_LABEL_MODE, this->name->c_str(), mode);
@@ -139,10 +143,8 @@ void ThresholdFilter::kernel()
 	
 			threshold = (localAverage + overallMax) * 0.5f;
 		}
-	}
 
-	if (show) {
-		if (isDynamic) {
+		if (show) {
 			int level = (int) (threshold * 255.0f);
 			if (level > 255) {
 				level = 255;
