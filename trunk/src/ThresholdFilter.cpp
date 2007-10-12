@@ -2,9 +2,12 @@
 #include <highgui.h>
 #include <Image.h>
 
+
 // ----  initialization of non-integral constants  ----------------------------
 
-const float ThresholdFilter::DEFAULT_THRESHOLD = 0.10f;
+
+const float ThresholdFilter::DEFAULT_THRESHOLD = 1.0f;
+
 const char *ThresholdFilter::TRACKBAR_LABEL_MODE = "mode";
 const char *ThresholdFilter::TRACKBAR_LABEL_THRESHOLD = "level";
 
@@ -68,7 +71,7 @@ void ThresholdFilter::setMode(int mode) {
 	switch (mode) {
 		case MODE_DYNAMIC:
 			isDynamic = true;
-			reinitDynamicStatisticsFrames = 0;
+			reinitDynamicStatisticsFrames = DEFAULT_REINIT_DYNAMIC_STATISTICS_FRAMES;
 			break;
 		case MODE_MANUAL:
 			isDynamic = false;
@@ -92,7 +95,9 @@ void ThresholdFilter::kernel()
 		if (!isDynamic) {
 			threshold = thresholdSlider / 255.0f;
 		}
-		setMode(modeSlider);
+		if (mode != modeSlider) {
+			setMode(modeSlider);
+		}
 	}
 
 	if (destination == NULL) {

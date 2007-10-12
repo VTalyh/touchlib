@@ -37,7 +37,7 @@ private:
 
 	static const float DEFAULT_THRESHOLD;
 
-	static const int DEFAULT_REINIT_DYNAMIC_STATISTICS_FRAMES = 30;	
+	static const int DEFAULT_REINIT_DYNAMIC_STATISTICS_FRAMES = 6;	
 	static const int DEFAULT_MODE = 0;	
 	static const int MODE_DYNAMIC = 1;
 	static const int MODE_MANUAL = 0;
