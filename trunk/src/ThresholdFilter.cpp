@@ -1,6 +1,5 @@
 #include <ThresholdFilter.h>
 #include <highgui.h>
-#include <Image.h>
 
 
 // ----  initialization of non-integral constants  ----------------------------
@@ -104,27 +103,28 @@ void ThresholdFilter::kernel()
 		destination = cvCreateImage(cvGetSize(source), source->depth, source->nChannels);
 		destination->origin = source->origin;  // same vertical flip as source
 	}
-
-	touchlib::BwImage src(source), dest(destination);
-
+	
 	float localMax = 0.0f;
 	float localAverage = 0.0f;
 
-	for (int y = 0; y < source->height; y++) {
-		for (int x = 0; x < source->width; x++) {
+	unsigned char *src = (unsigned char *) source->imageData;
+	unsigned char *srcEnd = src + source->imageSize;
+	unsigned char *dest = (unsigned char *) destination->imageData;
 
-			// did we reach a new local max?
-			float srcFloat = src[y][x] / 255.0f;
-			if (srcFloat > localMax)
-				localMax = srcFloat;
-			localAverage += srcFloat;
+	while (src < srcEnd) {
+		unsigned char pixel = *(src++);
+		
+		// did we reach a new local max?
+		float pixelFloat = pixel / 255.0f;
+		if (pixelFloat > localMax)
+			localMax = pixelFloat;
+		localAverage += pixelFloat;
 
-			// drop pixels below threshold
-			if (srcFloat < threshold)
-				dest[y][x] = 0;
-			else
-				dest[y][x] = src[y][x];
-		}
+		// drop pixels below threshold
+		if (pixelFloat < threshold)
+			*(dest++) = 0;
+		else
+			*(dest++) = pixel;
 	}
 
 	if (isDynamic) {
