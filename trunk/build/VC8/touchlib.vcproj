@@ -259,7 +259,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\SimpleHighpassFilter.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\SmoothingFilter.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\ThresholdFilter.cpp"
 					>
 				</File>
 				<File
@@ -361,7 +369,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\include\SimpleHighpassFilter.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\include\SmoothingFilter.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\ThresholdFilter.h"
 					>
 				</File>
 				<File
