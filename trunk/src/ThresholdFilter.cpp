@@ -66,6 +66,7 @@ void ThresholdFilter::setParameter(const char *name, const char *value)
 
 void ThresholdFilter::setMode(int mode) {
 	this->mode = mode;
+	modeSlider = mode;
 
 	switch (mode) {
 		case MODE_DYNAMIC:
