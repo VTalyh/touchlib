@@ -52,9 +52,24 @@ class TOUCHLIB_FILTER_EXPORT CMUCaptureFilter : public Filter
 		int mode;
 		int format;
 		int rate;
+		bool mono;
 		int Init();
 		std::string sMode,sRate,sVendor,sName;
 		LARGE_INTEGER lID;
+
+		// camera features
+		int sharpness;
+		int gain;
+		int brightness;
+		int exposure;
+		int whitebalanceL,whitebalanceH;
+		int hue;
+		int saturation;
+		int gamma;		
+
+		void setFeature(CAMERA_FEATURE id, int valueL, int valueH = 0);
+		bool getFeature(CAMERA_FEATURE id, int &valueL, int &valueH);
+
 	public:
 		CMUCaptureFilter(char*);
 		~CMUCaptureFilter();

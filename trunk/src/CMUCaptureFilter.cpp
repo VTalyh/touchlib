@@ -14,6 +14,17 @@ CMUCaptureFilter::CMUCaptureFilter(char* s) : Filter(s)
 	format = 0;
 	capture = NULL;
 	lID.QuadPart = 0;
+	mono = false;
+	sharpness = -2;
+	gain = -2;
+	brightness = -2;
+	exposure = -2;
+	whitebalanceL = -2;
+	whitebalanceH = -2;
+	hue = -2;
+	saturation = -2;
+	gamma = -2;
+
 }
 
 
@@ -45,11 +56,50 @@ void CMUCaptureFilter::getParameters(ParameterMap& pMap)
 		pMap[std::string("name")] = sName;
 	if(lID.QuadPart != 0)
 		pMap[std::string("uniqueID")] = toString(lID.HighPart)+ " " + toString(lID.LowPart);
+
+	// get all the weird stuff
+	int l,h;
+	if(getFeature(FEATURE_BRIGHTNESS,l,h))
+		pMap[std::string("brightness")] = toString(l);
+	if(getFeature(FEATURE_SHARPNESS,l,h))
+		pMap[std::string("sharpness")] = toString(l);
+	if(getFeature(FEATURE_WHITE_BALANCE,l,h)){
+		pMap[std::string("whitebalanceL")] = toString(l);
+		pMap[std::string("whitebalanceH")] = toString(h);
+	}
+	if(getFeature(FEATURE_HUE,l,h))
+		pMap[std::string("hue")] = toString(l);
+	if(getFeature(FEATURE_SATURATION,l,h))
+		pMap[std::string("saturation")] = toString(l);
+	if(getFeature(FEATURE_GAMMA,l,h))
+		pMap[std::string("gamma")] = toString(l);
+	if(getFeature(FEATURE_GAIN,l,h))
+		pMap[std::string("gain")] = toString(l);
+	if(getFeature(FEATURE_AUTO_EXPOSURE,l,h))
+		pMap[std::string("exposure")] = toString(l);
 }
 
 void CMUCaptureFilter::setParameter(const char *name, const char *value)
 {
-	if(strcmp(name,"vendor") == 0){
+	if(strcmp(name, "sharpness") == 0){
+		sharpness = atoi(value);
+	}else if(strcmp(name, "gain") == 0){
+		gain = atoi(value);
+	}else if(strcmp(name, "brightness") == 0){
+		brightness = atoi(value);
+	}else if(strcmp(name, "exposure") == 0){
+		exposure = atoi(value);
+	}else if(strcmp(name, "whitebalanceL") == 0){
+		whitebalanceL = atoi(value);
+	}else if(strcmp(name, "whitebalanceH") == 0){
+		whitebalanceH = atoi(value);
+	}else if(strcmp(name, "hue") == 0){
+		hue = atoi(value);
+	}else if(strcmp(name, "saturation") == 0){
+		saturation = atoi(value);
+	}else if(strcmp(name, "gamma") == 0){
+		gamma = atoi(value);
+	}else if(strcmp(name,"vendor") == 0){
 		sVendor = value;
 	}else if(strcmp(name,"name") == 0){
 		sName = value;
@@ -80,6 +130,7 @@ void CMUCaptureFilter::setParameter(const char *name, const char *value)
 		}else if(strcmp(value, CMU640x480mono ) == 0){
 			mode = 5;
 			format = 0;
+			mono = true;
 		}else if(strcmp(value, CMU640x480mono16 ) == 0){
 			mode = 6;
 			format = 0;
@@ -92,6 +143,7 @@ void CMUCaptureFilter::setParameter(const char *name, const char *value)
 		}else if(strcmp(value, CMU800x600mono ) == 0){
 			mode = 2;
 			format = 1;
+			mono = true;
 		}else if(strcmp(value, CMU1024x768yuv422 ) == 0){
 			mode = 3;
 			format = 1;
@@ -101,6 +153,7 @@ void CMUCaptureFilter::setParameter(const char *name, const char *value)
 		}else if(strcmp(value, CMU1024x768mono ) == 0){
 			mode = 5;
 			format = 1;
+			mono = true;
 		}else if(strcmp(value, CMU800x600mono16 ) == 0){
 			mode = 6;
 			format = 1;
@@ -116,6 +169,7 @@ void CMUCaptureFilter::setParameter(const char *name, const char *value)
 		}else if(strcmp(value, CMU1280x960mono ) == 0){
 			mode = 2;
 			format = 2;
+			mono = true;
 		}else if(strcmp(value, CMU1600x1200yuv422 ) == 0){
 			mode = 3;
 			format = 2;
@@ -125,6 +179,7 @@ void CMUCaptureFilter::setParameter(const char *name, const char *value)
 		}else if(strcmp(value, CMU1600x1200mono ) == 0){
 			mode = 5;
 			format = 2;
+			mono = true;
 		}else if(strcmp(value, CMU1280x960mono16 ) == 0){
 			mode = 6;
 			format = 2;
@@ -219,21 +274,51 @@ int CMUCaptureFilter::Init()
 	}
 	if(capture->InitCamera(true) != CAM_SUCCESS)
 		goto bailout;
+#ifdef _DEBUG
+	printf("CMU Camera init succeeded\n");
+#endif
 	if(capture->SetVideoMode(mode) != CAM_SUCCESS)
 		goto bailout;
+#ifdef _DEBUG
+	printf("CMU SetVideoMode succeeded, desired: %d, acquired: %d\n",mode,capture->GetVideoMode());
+#endif
 	if(capture->SetVideoFormat(format) != CAM_SUCCESS)
 		goto bailout;
+#ifdef _DEBUG
+	printf("CMU SetVideoFormat succeeded, desired: %d, acquired: %d\n",format,capture->GetVideoFormat());
+#endif
 	if(capture->SetVideoFrameRate(rate) != CAM_SUCCESS)
 		goto bailout;
+#ifdef _DEBUG
+	printf("CMU SetVideoFrameRate succeeded, desired: %d, acquired: %d\n",rate,capture->GetVideoFrameRate());
+#endif
 	capture->GetVideoFrameDimensions(&w,&h);
+#ifdef _DEBUG
+	printf("CMU VideoFrameDimensions: %d %d\n",w,h);
+#endif
 
 	CvSize size;
 	size.height = h;
 	size.width = w;
-	destination = cvCreateImage(size,IPL_DEPTH_8U, 3);
-	rawImage = cvCreateImage(size,IPL_DEPTH_8U, 3);
+	int channels = mono?1:3;
+	destination = cvCreateImage(size,IPL_DEPTH_8U, channels);
+	rawImage = cvCreateImage(size,IPL_DEPTH_8U, channels);
 	capture->StartImageAcquisition();
 
+	// grab some frames to clear out any junk
+	for(int i=0;i<10;i++)
+		capture->AcquireImageEx(true,0);
+
+	// set all the weird stuff
+	setFeature(FEATURE_BRIGHTNESS,brightness);
+	setFeature(FEATURE_SHARPNESS,sharpness);
+	setFeature(FEATURE_WHITE_BALANCE,whitebalanceL,whitebalanceH);
+	setFeature(FEATURE_HUE,hue);
+	setFeature(FEATURE_SATURATION,saturation);
+	setFeature(FEATURE_GAMMA,gamma);
+	setFeature(FEATURE_GAIN,gain);
+	setFeature(FEATURE_AUTO_EXPOSURE,exposure);	
+		
 	return CAM_SUCCESS;
 
 	bailout:
@@ -244,6 +329,45 @@ int CMUCaptureFilter::Init()
 	return CAM_ERROR;
 }
 
+void CMUCaptureFilter::setFeature(CAMERA_FEATURE id, int valueL, int valueH)
+{
+	if(valueL == -2)
+		return;
+
+	if(capture->HasFeature(id)){
+		C1394CameraControl *c = capture->GetCameraControl(id);
+		if(c){
+			if(valueL == -1){
+				c->SetAutoMode(true);
+			}else{
+				c->SetAutoMode(false);
+				c->SetValue(valueL,valueH);
+			}
+		}
+	}
+}
+
+
+bool CMUCaptureFilter::getFeature(CAMERA_FEATURE id, int &valueL, int &valueH)
+{
+	if(capture->HasFeature(id)){
+		C1394CameraControl *c = capture->GetCameraControl(id);
+		if(c){
+			valueH = 0;
+			if(c->StatusAutoMode()){
+				valueL = -1;
+			}else{
+				unsigned short l,h;
+				c->GetValue(&l,&h);
+				valueL = l;
+				valueH = h;
+			}
+			return true;
+		}
+	}
+	return false;
+}
+
 void CMUCaptureFilter::kernel()
 {
 	if(!capture){
@@ -252,12 +376,16 @@ void CMUCaptureFilter::kernel()
 	}
 	int dropped = 0;
 	if(capture->AcquireImageEx(true,&dropped) == CAM_SUCCESS){
-		if(flipRGB){			
-			capture->getRGB((unsigned char*)rawImage->imageData,rawImage->imageSize);
-			cvCvtColor(rawImage,destination,CV_RGB2BGR); 
+		if(mono){
+			unsigned long len = destination->imageSize;
+			memcpy(destination->imageData,capture->GetRawData(&len),len);
 		}else{
-			capture->getRGB((unsigned char*)destination->imageData,destination->imageSize);					
+			if(flipRGB){			
+				capture->getRGB((unsigned char*)rawImage->imageData,rawImage->imageSize);
+				cvCvtColor(rawImage,destination,CV_RGB2BGR); 
+			}else{				
+				capture->getRGB((unsigned char*)destination->imageData,destination->imageSize);					
+			}
 		}
 	}
-
 }
