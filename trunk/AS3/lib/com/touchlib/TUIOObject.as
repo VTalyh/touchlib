@@ -128,19 +128,20 @@ import flash.events.Event;
 		public function setObjOver(o:DisplayObject):void
 		{
 			try {
+				var localPoint:Point;
 				
 				if(obj == null)
 				{
 					obj = o;				
 					if(obj) 
 					{
-						var localPoint:Point = obj.parent.globalToLocal(new Point(x, y));				
+						localPoint = obj.parent.globalToLocal(new Point(x, y));				
 						obj.dispatchEvent(new TUIOEvent(TUIOEvent.RollOverEvent, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));					
 					}
 				} else if(obj != o) 
 				{
 					
-					var localPoint:Point = obj.parent.globalToLocal(new Point(x, y));								
+					localPoint = obj.parent.globalToLocal(new Point(x, y));								
 					obj.dispatchEvent(new TUIOEvent(TUIOEvent.RollOutEvent, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));
 					if(o)
 					{

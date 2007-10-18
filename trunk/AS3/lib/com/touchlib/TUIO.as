@@ -118,9 +118,6 @@ import flash.text.TextFormat;
 			stagewidth = wd;
 			stageheight = ht;			
 		}
-		
-		
-		
 
 		private static function xmlPlaybackLoaded(evt:Event):void
 		{
@@ -207,35 +204,53 @@ import flash.text.TextFormat;
 				{
 					var type:String;
 					
+					var sID:int;
+					var id:int;
+					var x:Number;
+					var y:Number;
+					var a:Number;
+					var X:Number;
+					var Y:Number;
+					var A:Number;
+					var m:Number;
+					var r:Number;					
+					
+					var objArray:Array;
+					var stagePoint:Point;
+					var displayObjArray:Array;
+					var dobj = null;					
+					
+					var tuioobj:Object;
+					
+					var localPoint:Point;
+					
 					if(node.@NAME == "/tuio/2Dobj")
 					{
 						type = node.ARGUMENT[0].@VALUE;				
 						if(type == "set")
 						{
-							var sID:int = node.ARGUMENT[1].@VALUE;
-							var id:int = node.ARGUMENT[2].@VALUE;
-							var x:Number = Number(node.ARGUMENT[3].@VALUE) * stagewidth;
-							var y:Number = Number(node.ARGUMENT[4].@VALUE) * stageheight;
-							var a:Number = Number(node.ARGUMENT[5].@VALUE);
-							var X:Number = Number(node.ARGUMENT[6].@VALUE);
-							var Y:Number = Number(node.ARGUMENT[7].@VALUE);
-							var A:Number = Number(node.ARGUMENT[8].@VALUE);
-							var m:Number = node.ARGUMENT[9].@VALUE;
-							var r:Number = node.ARGUMENT[10].@VALUE;
+							sID = node.ARGUMENT[1].@VALUE;
+							id = node.ARGUMENT[2].@VALUE;
+							x = Number(node.ARGUMENT[3].@VALUE) * stagewidth;
+							y = Number(node.ARGUMENT[4].@VALUE) * stageheight;
+							a = Number(node.ARGUMENT[5].@VALUE);
+							X = Number(node.ARGUMENT[6].@VALUE);
+							Y = Number(node.ARGUMENT[7].@VALUE);
+							A = Number(node.ARGUMENT[8].@VALUE);
+							m = node.ARGUMENT[9].@VALUE;
+							r = node.ARGUMENT[10].@VALUE;
 							
 							// send object update event..
 							
-							var objArray:Array = thestage.stage.getObjectsUnderPoint(new Point(x, y));
-							var stagePoint:Point = new Point(x,y);					
-							var displayObjArray:Array = thestage.stage.getObjectsUnderPoint(stagePoint);							
-							var dobj = null;
+							objArray = thestage.stage.getObjectsUnderPoint(new Point(x, y));
+							stagePoint = new Point(x,y);					
+							displayObjArray = thestage.stage.getObjectsUnderPoint(stagePoint);							
+							dobj = null;
 							
 //							if(displayObjArray.length > 0)								
 //								dobj = displayObjArray[displayObjArray.length-1];										
 
-							
-						
-							var tuioobj = getObjectById(id);
+							tuioobj = getObjectById(id);
 							if(tuioobj == null)
 							{
 								tuioobj = new TUIOObject("2Dobj", id, x, y, X, Y, sID, a, dobj);
@@ -260,7 +275,7 @@ import flash.text.TextFormat;
 								if(tuioobj.obj && tuioobj.obj.parent)
 								{							
 									
-									var localPoint:Point = tuioobj.obj.parent.globalToLocal(stagePoint);							
+									localPoint = tuioobj.obj.parent.globalToLocal(stagePoint);							
 									tuioobj.obj.dispatchEvent(new TUIOEvent(TUIOEvent.MoveEvent, true, false, x, y, localPoint.x, localPoint.y, tuioobj.obj, false,false,false, true, m, "2Dobj", id, sID, a));
 								}
 							} catch (e:Event)
@@ -276,17 +291,17 @@ import flash.text.TextFormat;
 						type = node.ARGUMENT[0].@VALUE;				
 						if(type == "set")
 						{
-							var id:int = node.ARGUMENT[1].@VALUE;
-							var x:Number = Number(node.ARGUMENT[2].@VALUE) * stagewidth;
-							var y:Number = Number(node.ARGUMENT[3].@VALUE) * stageheight;
-							var X:Number = Number(node.ARGUMENT[4].@VALUE);
-							var Y:Number = Number(node.ARGUMENT[5].@VALUE);
-							var m:Number = node.ARGUMENT[6].@VALUE;
+							id = node.ARGUMENT[1].@VALUE;
+							x = Number(node.ARGUMENT[2].@VALUE) * stagewidth;
+							y = Number(node.ARGUMENT[3].@VALUE) * stageheight;
+							X = Number(node.ARGUMENT[4].@VALUE);
+							Y = Number(node.ARGUMENT[5].@VALUE);
+							m = node.ARGUMENT[6].@VALUE;
 							//var area = node.ARGUMENT[7].@VALUE;							
 							
-							var stagePoint:Point = new Point(x,y);					
-							var displayObjArray:Array = thestage.stage.getObjectsUnderPoint(stagePoint);
-							var dobj = null;
+							stagePoint = new Point(x,y);					
+							displayObjArray = thestage.stage.getObjectsUnderPoint(stagePoint);
+							dobj = null;
 							if(displayObjArray.length > 0)								
 								dobj = displayObjArray[displayObjArray.length-1];							
 														
@@ -296,7 +311,7 @@ import flash.text.TextFormat;
 //								sztmp += (displayObjArray[i] is InteractiveObject) + ",";
 //							trace(sztmp);
 
-							var tuioobj = getObjectById(id);
+							tuioobj = getObjectById(id);
 							if(tuioobj == null)
 							{
 								tuioobj = new TUIOObject("2Dcur", id, x, y, X, Y, -1, 0, dobj);
@@ -321,7 +336,7 @@ import flash.text.TextFormat;
 							{
 								if(tuioobj.obj && tuioobj.obj.parent)
 								{							
-									var localPoint:Point = tuioobj.obj.parent.globalToLocal(stagePoint);							
+									localPoint = tuioobj.obj.parent.globalToLocal(stagePoint);							
 									tuioobj.obj.dispatchEvent(new TUIOEvent(TUIOEvent.MoveEvent, true, false, x, y, localPoint.x, localPoint.y, tuioobj.obj, false,false,false, true, m, "2Dobj", id, sID, a));
 								}
 							} catch (e:Event)
