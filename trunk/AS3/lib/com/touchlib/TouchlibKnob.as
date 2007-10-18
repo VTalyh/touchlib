@@ -24,8 +24,7 @@ package com.touchlib
 		private var gfxActiveGlow:Sprite;
 		private var knobValue:Number = 0.0;
 		private var isActive:Boolean = false;
-		private var gfxRadius:Number = 0;	
-		private var mouseActive:Boolean = false;
+		private var gfxRadius:Number = 0;
 
 		
 		private var activeX:Number;
@@ -38,6 +37,7 @@ package com.touchlib
 		private var maxValue:Number = 1.0;		
 		
 		private var indicatorText:TextField;
+		private var mouseActive:Boolean = false;
 		
 
 		public function TouchlibKnob(diam:Number)
@@ -45,11 +45,11 @@ package com.touchlib
 			gfxRadius = diam/2;
 
 			gfxIndicator = new Sprite();
-			gfxIndicator.graphics.beginFill(0x000000, 0.35);
-			gfxIndicator.graphics.moveTo(-0.01*gfxRadius, 0);
+			gfxIndicator.graphics.beginFill(0xFF0000, 0.5);
+			gfxIndicator.graphics.moveTo(-0.1*gfxRadius, 0);
 			gfxIndicator.graphics.lineTo(0, -gfxRadius);			
-			gfxIndicator.graphics.lineTo(0.01*gfxRadius, 0);						
-			gfxIndicator.graphics.lineTo(-0.01*gfxRadius, 0);			
+			gfxIndicator.graphics.lineTo(0.1*gfxRadius, 0);						
+			gfxIndicator.graphics.lineTo(-0.1*gfxRadius, 0);			
 			gfxIndicator.graphics.endFill();
 			gfxIndicator.x = gfxRadius;
 			gfxIndicator.y = gfxRadius;			
@@ -108,17 +108,21 @@ package com.touchlib
 			gfxActiveGlow.visible = true;			
 		}
 		
-		function setMinValue(v:Number)
+		public function hideLabel()
+		{
+			indicatorText.visible = false;
+		}
+		
+		public function setMinValue(v:Number)
 		{
 			// FIXME: add sanity checking
 			minValue = v;
 		}
 		
-		function setMaxValue(v:Number)
+		public function setMaxValue(v:Number)
 		{
 			maxValue = v;
 		}		
-		
 		
 		function knobStopDrag()
 		{
@@ -132,10 +136,10 @@ package com.touchlib
 		
 		public function setValue(f:Number)
 		{
-			if(f < 0)
-				f = 0.0;
-			if(f > 1.0)
-				f = 1.0;
+			if(f < minValue)
+				f = minValue;
+			if(f > maxValue)
+				f = maxValue;
 			knobValue = f;
 			
 			updateGraphics();
@@ -164,7 +168,6 @@ package com.touchlib
 				gfxActiveGlow.y = activeY;
 			}
 		}
-
 		
 		public function tuioDownEvent(e:TUIOEvent)
 		{		
