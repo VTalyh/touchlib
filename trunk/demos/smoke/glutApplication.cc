@@ -19,6 +19,7 @@ glutApplication::glutApplication(GlutMaster* setGlutMaster, int setWidth, int se
 	initPositionY = setInitPositionY;
 
 	screen = setScreen;
+
 	screen->registerListener((ITouchListener*)this);
 	bgLabel = screen->findFirstFilter("backgroundremove");		
 
@@ -92,6 +93,7 @@ void glutApplication::CallBackIdleFunc(void)
 	screen->getEvents();
 	fluid->Evolve();
 	CallBackDisplayFunc();
+	SLEEP(1);
 }
 
 

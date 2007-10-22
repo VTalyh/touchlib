@@ -510,8 +510,8 @@ void CBlobTracker::ProcessResults()
 
 	vector<CFinger> *prev = &history[history.size()-1];
 
-	unsigned int cursize = (unsigned int) current.size();
-	unsigned int prevsize = (unsigned int) (*prev).size();
+	const unsigned int cursize = (unsigned int) current.size();
+	const unsigned int prevsize = (unsigned int) (*prev).size();
 
 	// now figure out the 'error' for all the blobs in the current frame
 	// error is defined as the distance between the current frame blobs and the blobs
@@ -519,7 +519,7 @@ void CBlobTracker::ProcessResults()
 	// potentially error could encompass things like deviation from the predicted
 	// position, change in size, etc, but it's difficult to come up with a fair metric which 
 	// includes more than one axis. Simply optimizing for the least change in distance
-	// works well. 
+	// seems to work the best.
 
 	for(i=0; i<cursize; i++)
 	{
@@ -657,6 +657,17 @@ void CBlobTracker::ProcessResults()
 		//printf("Best index = %d\n", best_error_ndx);
 	}
 
+
+}
+
+void CBlobTracker::gatherEvents()
+{
+	vector<CFinger> *prev = &history[history.size()-1];
+
+	const unsigned int cursize = (unsigned int) current.size();
+	const unsigned int prevsize = (unsigned int) (*prev).size();
+	unsigned int i, j;
+
 	// assign ID's for any blobs that are new this frame (ones that didn't get 
 	// matched up with a blob from the previous frame).
 	for(i=0; i<cursize; i++)
@@ -710,7 +721,6 @@ void CBlobTracker::ProcessResults()
 			}
 
 		}
-
 	}
 }
 

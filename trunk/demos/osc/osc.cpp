@@ -239,7 +239,7 @@ int main(int argc, char * argv[])
 	app.connectSocket(ip_address, port);
 
 	screen = TouchScreenDevice::getTouchScreen();
-	//screen->setDebugMode(false);
+	screen->setDebugMode(false);
 	if(!screen->loadConfig("config.xml"))
 	{
 		std::string label;
@@ -255,9 +255,6 @@ int main(int argc, char * argv[])
 		label = screen->pushFilter("rectify");
 
 		screen->setParameter(label, "level", "25");
-		
-		
-
 		screen->saveConfig("config.xml");
 	}
 
@@ -272,21 +269,21 @@ int main(int argc, char * argv[])
 
 	screen->beginProcessing();
 	screen->beginTracking();
-
+    cvNamedWindow( "keyboard grabber", CV_WINDOW_AUTOSIZE );
 	do
 	{
-
-		int keypressed = cvWaitKey(32) & 255;
-
+		int keypressed = cvWaitKey(10) & 255;
+		
 		if(keypressed != 255 && keypressed > 0)
 			printf("KP: %d\n", keypressed);
+
         if( keypressed == 27) break;		// ESC = quit
         if( keypressed == 98)				// b = recapture background
 		{
 			screen->setParameter(bgLabel, "capture", "");
 			app.clearFingers();
-			
 		}
+
         if( keypressed == 114)				// r = auto rectify..
 		{
 			screen->setParameter(recLabel, "level", "auto");
@@ -295,6 +292,9 @@ int main(int argc, char * argv[])
 		screen->getEvents();
 
 		app.frame();
+
+		SLEEP(1);
+
 
 	} while( ok );
 

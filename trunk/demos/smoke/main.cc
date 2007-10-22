@@ -22,6 +22,7 @@ int main(int argc, char* argv[])
 	glutMaster = new GlutMaster();    
 
 	ITouchScreen* screen = TouchScreenDevice::getTouchScreen();	
+	screen->setDebugMode(false);
 	std::string bgLabel;
 	if( argc == 2 && screen->loadConfig((const char *) argv[1] ))
 		std::cout << "Loaded configuration file " << argv[1] << std::endl;

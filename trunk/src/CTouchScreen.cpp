@@ -225,6 +225,8 @@ bool CTouchScreen::process()
 			{
 				//printf("Tracking 1\n");
 				tracker.findBlobs_contour(frame, labelImg);
+				tracker.ProcessResults();
+
 #ifdef WIN32				
 				DWORD dw = WaitForSingleObject(eventListMutex, INFINITE);
 				//dw == WAIT_OBJECT_0
@@ -237,8 +239,7 @@ bool CTouchScreen::process()
 				else 
 				{
 					//printf("Tracking 2\n");
-					tracker.ProcessResults();
-
+					tracker.gatherEvents();
 					ReleaseMutex(eventListMutex);
 				}
 #else
@@ -247,18 +248,16 @@ bool CTouchScreen::process()
 					// some error occured
 					fprintf(stderr,"locking of mutex failed\n");
 				}else{
-					tracker.ProcessResults();
+					tracker.gatherEvents();
 					pthread_mutex_unlock(&eventListMutex);
 				}
 #endif
-
 			}
 			//return true;
 		}
-		SLEEP(16);
+		SLEEP(32);
 	}
 }
-
 
 
 void CTouchScreen::getRawImage(char **img, int &width, int &height)
@@ -682,6 +681,7 @@ void CTouchScreen::beginProcessing()
 {
 #ifdef WIN32
 	hThread = (HANDLE)_beginthread(_processEntryPoint, 0, this);
+	SetThreadPriority(hThread, THREAD_PRIORITY_ABOVE_NORMAL);
 #else
 	pthread_create(&hThread,0,_processEntryPoint,this);
 #endif
@@ -693,7 +693,7 @@ void CTouchScreen::getEvents()
 	unsigned int i=0;
 
 #ifdef WIN32				
-	DWORD dw = WaitForSingleObject(eventListMutex, INFINITE);
+	DWORD dw = WaitForSingleObject(eventListMutex, INFINITE);		// 
 	//dw == WAIT_OBJECT_0
 	if(dw == WAIT_TIMEOUT || dw == WAIT_FAILED) {
 		// handle time-out error
