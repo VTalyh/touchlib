@@ -125,6 +125,7 @@ namespace touchlib
 		void findBlobs(BwImage &img, BwImage &label_img);
 		void findBlobs_contour(BwImage &img, BwImage &label_img);
 		void ProcessResults();
+		void gatherEvents();
 
 		virtual bool getFingerInfo(int ID, TouchData *data);
 		virtual void registerListener(ITouchListener *listener);
