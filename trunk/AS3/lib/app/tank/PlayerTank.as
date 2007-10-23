@@ -159,7 +159,6 @@ package app.tank
 			if(reloadFramesLeft == 0)
 			{
 				var projectile:TankProjectile = new TankProjectile(tankAngle + mcTank.mcTurret.rotation, 20, this, mcMain);
-			trace("fire");				
 				projectile.x = mcTank.x;
 				projectile.y = mcTank.y;
 				mcMain.mcArena.addChild(projectile);			

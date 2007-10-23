@@ -48,7 +48,6 @@
 		
 		public function removeSelf()
 		{
-			trace("Remove");
 			parent.removeChild(this);
 			this.removeEventListener(Event.ENTER_FRAME, this.frameUpdate);
 			delete this;			
