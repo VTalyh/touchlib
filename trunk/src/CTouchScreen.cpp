@@ -45,6 +45,7 @@ CTouchScreen::CTouchScreen()
 	reject_max_dimension = 250;
 
 	ghost_frames = 0;
+	minimumDisplacementThreshold = CBlobTracker::DEFAULT_MINIMUM_DISPLACEMENT_THRESHOLD;
 
 	screenBB = rect2df(vector2df(0.0f, 0.0f), vector2df(1.0f, 1.0f));
 	initScreenPoints();
@@ -289,6 +290,8 @@ void CTouchScreen::saveConfig(const char* filename)
 	configElement->SetAttribute("minDimension", reject_min_dimension);
 	configElement->SetAttribute("maxDimension", reject_max_dimension);
 	configElement->SetAttribute("ghostFrames", ghost_frames);
+	sprintf(sztmp, "%f", minimumDisplacementThreshold);
+	configElement->SetAttribute("minDisplacementThreshold", sztmp);
 
 
 
@@ -357,10 +360,14 @@ bool CTouchScreen::loadConfig(const char* filename)
 		configElement->Attribute("minDimension", &reject_min_dimension);
 		configElement->Attribute("maxDimension", &reject_max_dimension);
 		configElement->Attribute("ghostFrames", &ghost_frames);
+
+		double temp;
+		configElement->Attribute("minDisplacementThreshold", &temp);
+		minimumDisplacementThreshold = (float) temp;
 	}
 
 	// set up some configuration variables
-	this->tracker.setup(reject_distance_threshold, reject_min_dimension, reject_max_dimension, ghost_frames);
+	this->tracker.setup(reject_distance_threshold, reject_min_dimension, reject_max_dimension, ghost_frames, minimumDisplacementThreshold);
 
 	TiXmlElement* bboxRoot = doc.FirstChildElement("bbox");
 	if(bboxRoot){

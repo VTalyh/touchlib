@@ -153,6 +153,7 @@ namespace touchlib
 		int reject_min_dimension;
 		int reject_max_dimension;
 		int ghost_frames;
+		float minimumDisplacementThreshold;
 
 		// FIXME: later we may consider a denser mesh, but for now we'll consider
 		// the simpler case.

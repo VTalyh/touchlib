@@ -19,6 +19,8 @@ using namespace std;
 
 using namespace touchlib;
 
+const float CBlobTracker::DEFAULT_MINIMUM_DISPLACEMENT_THRESHOLD = 2.0f;
+
 ///////////////////////////////////////////////////
 // blob detecting
 
@@ -33,16 +35,20 @@ CBlobTracker::CBlobTracker()
 	reject_min_dimension = 2;
 	reject_max_dimension = 250;
 
+	minimumDisplacementThreshold = DEFAULT_MINIMUM_DISPLACEMENT_THRESHOLD;
+
 	ghost_frames = 0;
 }
 
-void CBlobTracker::setup(int r_dist, int r_min_dim, int r_max_dim, int g_frames)
+void CBlobTracker::setup(int r_dist, int r_min_dim, int r_max_dim, int g_frames, float minimumDisplacementThreshold)
 {
 	reject_distance_threshold = r_dist;
 	reject_min_dimension = r_min_dim;
 	reject_max_dimension = r_max_dim;
 
 	ghost_frames = g_frames;
+
+	this->minimumDisplacementThreshold = minimumDisplacementThreshold;
 }
 
 // stolen from opencv - squares.c sample
@@ -199,7 +205,7 @@ void CBlobTracker::findBlobs_contour(BwImage &img, BwImage &label_img)
 			blob.weight = 0;
 			blob.tagID = 0;
 
-			int h=blob.box.getHeight(), w=blob.box.getWidth();
+			int h=(int)blob.box.getHeight(), w=(int)blob.box.getWidth();
 			if(w >= reject_min_dimension && h >= reject_min_dimension && w < reject_max_dimension && h < reject_max_dimension)
 				blobList.push_back(blob);
 		}
@@ -647,10 +653,12 @@ void CBlobTracker::ProcessResults()
 				current[i].delta = (current[i].center - oldfinger->center);
 				current[i].deltaArea = current[i].area - oldfinger->area;
 				current[i].predictedPos = current[i].center + current[i].delta;
+				current[i].displacement = oldfinger->displacement + current[i].delta;
 			} else {
 				current[i].delta = vector2df(0, 0);
 				current[i].deltaArea = 0;
 				current[i].predictedPos = current[i].center;
+				current[i].displacement = vector2df(0.0f, 0.0f);
 			}
 		}
 
@@ -682,7 +690,10 @@ void CBlobTracker::gatherEvents()
 
 			doTouchEvent(current[i].getTouchData());
 		} else {
-			doUpdateEvent(current[i].getTouchData());
+			if (current[i].displacement.getLength() >= minimumDisplacementThreshold) {
+				doUpdateEvent(current[i].getTouchData());
+				current[i].displacement = vector2df(0, 0);
+			}
 		}
 	}
 

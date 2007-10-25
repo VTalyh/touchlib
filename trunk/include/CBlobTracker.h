@@ -107,6 +107,8 @@ namespace touchlib
 		vector2df delta;
 		vector2df predictedPos;
 
+		vector2df displacement;
+
 		float deltaArea;
 
 		bool markedForDeletion;
@@ -121,6 +123,8 @@ namespace touchlib
 	class TOUCHLIB_EXPORT CBlobTracker 
 	{
 	public:
+                static const float DEFAULT_MINIMUM_DISPLACEMENT_THRESHOLD;
+
 		CBlobTracker();
 		void findBlobs(BwImage &img, BwImage &label_img);
 		void findBlobs_contour(BwImage &img, BwImage &label_img);
@@ -129,7 +133,7 @@ namespace touchlib
 
 		virtual bool getFingerInfo(int ID, TouchData *data);
 		virtual void registerListener(ITouchListener *listener);
-		void setup(int r_dist, int r_min_dim, int r_max_dim, int g_frames);
+		void setup(int r_dist, int r_min_dim, int r_max_dim, int g_frames, float minimumDisplacementThreshold);
 
 	private:
 		void doTouchEvent(TouchData data);
@@ -147,7 +151,6 @@ namespace touchlib
 		float getError(CFinger &old, CFinger &cur);
 
 
-
 #ifdef WIN32
 #pragma warning( disable : 4251 )  // http://www.unknownroad.com/rtfm/VisualStudio/warningC4251.html
 #endif
@@ -160,6 +163,8 @@ namespace touchlib
 		int reject_min_dimension;
 		int reject_max_dimension;
 		int ghost_frames;
+
+		float minimumDisplacementThreshold;
 
 		std::vector<std::vector<int> > matrix;
 		std::vector<int> ids;
