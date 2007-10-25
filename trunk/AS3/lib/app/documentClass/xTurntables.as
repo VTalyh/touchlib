@@ -8,7 +8,7 @@
 		public function Turntables() {
 		
 		trace("Ripples Initialized");
-		TUIO.init( this, 'localhost', 3000, 800, 600, '', true );
+		TUIO.init( this, 'localhost', 3000, '', true );
 
 		}
 	}

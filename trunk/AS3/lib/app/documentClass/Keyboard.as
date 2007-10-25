@@ -24,7 +24,7 @@ package app.documentClass
 			trace("Keyboard Initialized");
 
 			//Set TUIO Port
-			TUIO.init( this, 'localhost', 3000, 800, 600, '', true );
+			TUIO.init( this, 'localhost', 3000, '', true );
 			
 			//Create Natural Keys on stage (begin, keyAlpha, keyColor, gradAngle kWidth, kHeight, numKeys, natural, outline)
 			naturalKeys = new CreatingKeyboard(0, 1, 0xFFFFFF, 3/2*Math.PI,  stage.stageWidth , stage.stageHeight, 8, true, true);

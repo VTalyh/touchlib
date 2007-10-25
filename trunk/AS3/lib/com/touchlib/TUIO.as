@@ -42,7 +42,7 @@ import flash.text.TextFormat;
 		static var bInitialized = false;
 
 
-		public static function init (s:Sprite, host:String, port:Number, wd:int, ht:int, nXML:String, dbug:Boolean = true):void
+		public static function init (s:Sprite, host:String, port:Number, nXML:String, dbug:Boolean = true):void
 		{
 			xmlPlaybackURL = nXML; 
 			if(bInitialized)
@@ -50,24 +50,24 @@ import flash.text.TextFormat;
 			debugMode = dbug;
 			
 			bInitialized = true;
-			stagewidth = wd;
-			stageheight = ht;
+			stagewidth = s.stage.stageWidth;
+			stageheight = s.stage.stageHeight;
 			thestage = s;
 			objectArray = new Array();
 			idArray = new Array();
+			
 			try
 			{
-			
-			FLOSCSocket = new XMLSocket();
-
-            FLOSCSocket.addEventListener(Event.CLOSE, closeHandler);
-            FLOSCSocket.addEventListener(Event.CONNECT, connectHandler);
-            FLOSCSocket.addEventListener(DataEvent.DATA, dataHandler);
-            FLOSCSocket.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
-            FLOSCSocket.addEventListener(ProgressEvent.PROGRESS, progressHandler);
-            FLOSCSocket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
-
-			FLOSCSocket.connect(host, port);			
+				FLOSCSocket = new XMLSocket();
+	
+				FLOSCSocket.addEventListener(Event.CLOSE, closeHandler);
+				FLOSCSocket.addEventListener(Event.CONNECT, connectHandler);
+				FLOSCSocket.addEventListener(DataEvent.DATA, dataHandler);
+				FLOSCSocket.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+				FLOSCSocket.addEventListener(ProgressEvent.PROGRESS, progressHandler);
+				FLOSCSocket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+	
+				FLOSCSocket.connect(host, port);			
 			
 			} catch (e:Event)
 			{
@@ -105,7 +105,7 @@ import flash.text.TextFormat;
 			
 					thestage.addEventListener(Event.ENTER_FRAME, frameUpdate);
 				 }
-				
+
 			} else {
 				recordedXML = <OSCPackets></OSCPackets>;
 				bRecording = false;
@@ -133,8 +133,8 @@ import flash.text.TextFormat;
 
 				delete playbackXML.OSCPACKET[0];
 			}
-		}		
-		
+		}
+
 		public static function getObjectById(id:Number): TUIOObject
 		{
 			for(var i=0; i<objectArray.length; i++)
@@ -146,7 +146,6 @@ import flash.text.TextFormat;
 				}
 			}
 			//trace("Notfound");
-			
 			return null;
 		}
 		
@@ -352,9 +351,12 @@ import flash.text.TextFormat;
 			
 
 			if(debugMode)
+			{
 				DEBUG_TEXT.text = "";
 				DEBUG_TEXT.y = -2000;
 				DEBUG_TEXT.x = -2000;		
+			}
+			
 			for (var i=0; i<objectArray.length; i++ )
 			{
 				if(objectArray[i].isAlive == false)
@@ -366,10 +368,12 @@ import flash.text.TextFormat;
 
 				} else {
 					if(debugMode)
+					{
 						DEBUG_TEXT.appendText("  " + (i + 1) +" - " +objectArray[i].ID + "  X:" + int(objectArray[i].x) + "  Y:" + int(objectArray[i].y) + "  \n");
 						DEBUG_TEXT.x = stagewidth-160;
 						DEBUG_TEXT.y = 8;		
-						//trace(stagewidth);		
+					}
+					//trace(stagewidth);		
 				}
 			}
 		}

@@ -29,7 +29,7 @@ package app.tank
 			arenaWidth = mcArena.width;
 			arenaHeight = mcArena.height;
 			
-			TUIO.init( this, 'localhost', 3000, Capabilities.screenResolutionX, Capabilities.screenResolutionY, '', true );			// www/xml/test2.xml
+			TUIO.init( this, 'localhost', 3000, '', true );			// www/xml/test2.xml
 			
 			
 			var plyr:PlayerTank;
@@ -39,9 +39,9 @@ package app.tank
 			plyr.setTankPosition(50, arenaHeight/2, -90);
 			
 			plyr = new PlayerTank(this, 2);
-			playerArray.push(plyr);						
-			plyr.setUIPosition(275, 50, 180);			
-			plyr.setTankPosition(arenaWidth-50, arenaHeight/2, 90);						
+			playerArray.push(plyr);
+			plyr.setUIPosition(275, 50, 180);
+			plyr.setTankPosition(arenaWidth-50, arenaHeight/2, 90);	
 			
 			//player2 = new PlayerTank(this, 2);
 			//player2.setUILocation(100, 400, 0);			

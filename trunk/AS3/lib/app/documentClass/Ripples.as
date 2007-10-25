@@ -11,7 +11,7 @@
 		public function Ripples() {
 		
 		trace("Ripples Initialized");
-		TUIO.init( this, 'localhost', 3000, 800, 600, '', true );
+		TUIO.init( this, 'localhost', 3000, '', true );
 		var subobj = new RippleSurface();
 		this.addChild(subobj);
 
