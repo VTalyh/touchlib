@@ -752,7 +752,7 @@ inline void CBlobTracker::permute2(int start)
   {
 	  for(int i=0; i<numcheck; i++)
 	  {
-		  if((i == (numcheck-1) && extraIDs > 0) || current[start].error[i] > reject_distance_threshold)
+		  if((i == (numcheck-1) && extraIDs > 0) || current[start].error[current[start].closest[i]] > reject_distance_threshold)
 		  {
 			ids[start] = -1;		// new ID
 			if(checkValidNew(start))
