@@ -116,7 +116,7 @@
 						
 						blob1 = blobs[0];		
 						
-						var tuioobj1 = TUIO.getObjectById(blob1.id);
+						var tuioobj1:TUIOObject = TUIO.getObjectById(blob1.id);
 						
 						// if not found, then it must have died..
 						if(tuioobj1)
@@ -140,7 +140,7 @@
 						blob1 = blobs[0];								
 						blob2 = blobs[1];		
 						
-						var tuioobj1 = TUIO.getObjectById(blob1.id);
+						tuioobj1 = TUIO.getObjectById(blob1.id);
 						
 						// if not found, then it must have died..
 						if(tuioobj1)

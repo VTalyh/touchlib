@@ -40,16 +40,13 @@ package com.touchlib
 		private var activeX:Number;
 		private var activeY:Number;		
 		
-		private var wrappedComponent:Sprite;
+		private var wrappedComponent:InteractiveObject;
 
-		public function TouchlibWrapper(cmp:Sprite)
+		public function TouchlibWrapper(cmp:InteractiveObject)
 		{
 			wrappedComponent = cmp;
 			addChild(cmp);
 			
-
-
-
 			var blurfx:BlurFilter = new BlurFilter(10, 10, 1);
 			
 			gfxActiveGlow = new Sprite();
@@ -58,7 +55,6 @@ package com.touchlib
 			gfxActiveGlow.visible = false;
 			gfxActiveGlow.filters = [blurfx];
 			addChild(gfxActiveGlow);			
-
 
 			this.addEventListener(TUIOEvent.MoveEvent, this.tuioMoveHandler);			
 			this.addEventListener(TUIOEvent.DownEvent, this.tuioDownEvent);						
@@ -122,7 +118,11 @@ package com.touchlib
 			TUIO.listenForObject(e.ID, this);
 			touchStartDrag();			
 			
-			wrappedComponent.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_DOWN, true, false, localPt.x, localPt.y));
+			if(this.visible && wrappedComponent.visible)			
+			{
+				wrappedComponent.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_DOWN, true, false, localPt.x, localPt.y));
+			}
+				
 			e.stopPropagation();
 		}
 
@@ -132,9 +132,11 @@ package com.touchlib
 			var localPt:Point = globalToLocal(new Point(tuioobj.x, tuioobj.y));
 			
 			touchStopDrag();		
-			
-			wrappedComponent.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_UP, true, false, localPt.x, localPt.y));			
-			wrappedComponent.dispatchEvent(new MouseEvent(MouseEvent.CLICK, true, false, localPt.x, localPt.y));						
+			if(this.visible && wrappedComponent.visible)			
+			{
+				wrappedComponent.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_UP, true, false, localPt.x, localPt.y));			
+				wrappedComponent.dispatchEvent(new MouseEvent(MouseEvent.CLICK, true, false, localPt.x, localPt.y));						
+			}
 			e.stopPropagation();
 		}		
 
@@ -148,7 +150,10 @@ package com.touchlib
 				activeX = localPt.x;
 				activeY = localPt.y;
 				
-				wrappedComponent.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_MOVE, true, false, localPt.x, localPt.y));							
+				if(this.visible && wrappedComponent.visible)			
+				{
+					wrappedComponent.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_MOVE, true, false, localPt.x, localPt.y));							
+				}
 			}
 
 			e.stopPropagation();			

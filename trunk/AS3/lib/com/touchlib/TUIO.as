@@ -1,8 +1,8 @@
 ﻿// FIXME: need velocity
 
 package com.touchlib {
-import flash.display.Sprite;
-import flash.display.DisplayObject;
+import flash.display.*;
+
 import flash.events.DataEvent;
 import flash.events.Event;
 import flash.events.IOErrorEvent;
@@ -22,7 +22,7 @@ import flash.text.TextFormat;
 	public class TUIO
 	{
 		static var FLOSCSocket:XMLSocket;
-		static var thestage:Sprite;
+		static var thestage:DisplayObjectContainer;
 		static var objectArray:Array;
 		static var idArray:Array;
 		
@@ -52,7 +52,7 @@ import flash.text.TextFormat;
 			bInitialized = true;
 			stagewidth = s.stage.stageWidth;
 			stageheight = s.stage.stageHeight;
-			thestage = s;
+			thestage = s.stage;
 			objectArray = new Array();
 			idArray = new Array();
 			

@@ -99,7 +99,7 @@ import flash.events.Event;
 			}
 			
 			//trace("Start : " + ID + ", " + sID + " (" + int(px) + "," + int(py) + ")");
-			trace("Start : " + ID);
+			//trace("Start : " + ID);
 			
 
 			
@@ -113,7 +113,7 @@ import flash.events.Event;
 				try
 				{
 					var localPoint:Point = obj.parent.globalToLocal(new Point(x, y));				
-					trace("Down : " + localPoint.x + "," + localPoint.y);
+					//trace("Down : " + localPoint.x + "," + localPoint.y);
 					obj.dispatchEvent(new TUIOEvent(TUIOEvent.RollOverEvent, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));													
 					obj.dispatchEvent(new TUIOEvent(TUIOEvent.DownEvent, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));									
 				} catch (e:Event)
@@ -127,6 +127,9 @@ import flash.events.Event;
 		
 		public function setObjOver(o:DisplayObject):void
 		{
+			if(o == null)
+				return;
+				
 			try {
 				var localPoint:Point;
 				
@@ -171,7 +174,7 @@ import flash.events.Event;
 		
 		public function removeObject():void
 		{
-			trace("End : " + ID);			
+			//trace("End : " + ID);			
 			var localPoint:Point;
 			
 			if(obj && obj.parent)
@@ -194,7 +197,7 @@ import flash.events.Event;
 			var localPoint:Point;
 			for(var i:int=0; i<aListeners.length; i++)
 			{
-				trace("Notify moved");
+				//trace("Notify moved");
 				localPoint = aListeners[i].parent.globalToLocal(new Point(x, y));				
 				aListeners[i].dispatchEvent(new TUIOEvent(TUIOEvent.MoveEvent, true, false, x, y, localPoint.x, localPoint.y, aListeners[i], false,false,false, true, 0, TUIOClass, ID, sID, angle));								
 			}			
