@@ -1,4 +1,11 @@
-﻿package {
+﻿/*
+This class will take objects within a PhotoCanvas element and sort them according to pre-defined settings.
+
+Example: http://youtube.com/watch?v=zu7fNQYmzUs & http://oskope.com/
+
+*/
+
+package app{
 import com.touchlib.*;
 import app.*;
 import flash.display.*;
