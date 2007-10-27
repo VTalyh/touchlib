@@ -42,9 +42,9 @@ import flash.text.TextFormat;
 		static var bInitialized = false;
 
 
-		public static function init (s:Sprite, host:String, port:Number, nXML:String, dbug:Boolean = true):void
+		public static function init (s:Sprite, host:String, port:Number, debugXMLFile:String, dbug:Boolean = true):void
 		{
-			xmlPlaybackURL = nXML; 
+			xmlPlaybackURL = debugXMLFile; 
 			if(bInitialized)
 				return;
 			debugMode = dbug;

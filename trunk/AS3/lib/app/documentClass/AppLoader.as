@@ -34,7 +34,7 @@ package app.documentClass
 			selectedButton = null;
 			appButtons = new Array();
 			
-			TUIO.init( this, 'localhost', 3000, 'www/xml/test2.xml', true );
+			TUIO.init( this, 'localhost', 3000, '', false );
 			
 			xmlLoader = new URLLoader();
 			xmlLoader.addEventListener(Event.COMPLETE, this.xmlLoaded); 			

@@ -29,7 +29,7 @@ package app.tank
 			arenaWidth = mcArena.width;
 			arenaHeight = mcArena.height;
 			
-			TUIO.init( this, 'localhost', 3000, '', true );			// www/xml/test2.xml
+			TUIO.init( this, 'localhost', 3000, '', false );			// www/xml/test2.xml
 			
 			
 			var plyr:PlayerTank;
