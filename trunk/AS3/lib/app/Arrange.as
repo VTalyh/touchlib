@@ -22,7 +22,7 @@ public class Arrange extends Sprite
 		
 	public function Arrange()
 	{
-		//TUIO.init( this, 'localhost', 3000, Capabilities.screenResolutionX, Capabilities.screenResolutionY, '', true );	
+	
 		photos = new PhotoCanvas();
 		this.addChildAt(photos, 0);	
 
