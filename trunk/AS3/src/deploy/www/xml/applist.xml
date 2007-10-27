@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<apploader>
+	<categories>
+		<category name="games">
+			<apps>
+				<app>
+					<name>tank</name>
+					<body>2-4 players duke it out.</body>
+				</app>
+				<app>
+					<name>tangram</name>
+					<body>puzzles</body>
+				</app>
+			</apps>		
+		</category>
+		<category name="multimedia">
+			<apps>
+				<app>
+					<name>paint</name>
+					<body>paint colorful images</body>
+				</app>
+				<app>
+					<name>photo</name>
+					<body>Photo downloads random images from Flickr for you to explore.</body>
+				</app>
+				<app>
+					<name>keyboard</name>
+					<body>Play music, multitouch style</body>
+				</app>
+			</apps>				
+		</category>
+		
+		<category name="visualization">	
+		<apps>
+				<app>
+					<name>ripples</name>
+					<body>ripples for fun</body>
+				</app>	
+				<app>
+					<name>trace</name>
+					<body>visual tracer</body>
+				</app>
+			</apps>			
+		</category>
+	</categories>
+
+	
+</apploader>
