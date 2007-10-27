@@ -20,6 +20,9 @@ import flash.events.Event;
 		public var x:Number;
 		public var y:Number;
 		
+		public var oldX:Number;
+		public var oldY:Number;
+		
 		public var dX:Number;
 		public var dY:Number;				
 		
@@ -36,11 +39,9 @@ import flash.events.Event;
 		public var obj;
 		public var spr:Sprite;
 		
-		private var color:int;
+		public var aListeners:Array;
+		public var color:int;
 		
-		var aListeners:Array;
-		private var DEBUG_TEXT:TextField;
-
 		public function TUIOObject (cls:String, id:int, px:Number, py:Number, dx:Number, dy:Number, sid:int = -1, ang:Number = 0, o:Object = null)
 		{
 			aListeners = new Array();
@@ -48,48 +49,27 @@ import flash.events.Event;
 			ID = id;
 			x = px;
 			y = py;
+			oldX = px;
+			oldY = py;
 			dX = dx;
 			dY = dy;
 			sID = sid;
 			angle = ang;
-			isAlive = true;			
-
-			spr = new MovieClip();
-			spr.graphics.beginFill(0xFFFFFF , 0.5);					
-			spr.graphics.drawCircle(0,0,5);
-			spr.graphics.drawCircle(0,0,10);
-			spr.graphics.endFill();
-			spr.graphics.lineStyle(1, 0x000000, 1);	
-			spr.graphics.drawCircle(0,0,10);		
-			spr.graphics.drawCircle(0,0,11);		
-			spr.graphics.lineStyle(1, 0x000000, 1);			
-			spr.graphics.drawCircle(0,0,12);		
-			//spr.blendMode="invert";		
-			//var dropshadow:DropShadowFilter=new DropShadowFilter(0,90, 0xFFFFFF, 0.5, 20, 20);
-			//spr.filters=new Array(dropshadow);
+			isAlive = true;				
+			var c = int(Math.random() * 4);
+			
+			if(c == 0)
+				color = 0xff0000;
+			else if(c == 1)
+				color = 0x00ffff;
+			else if(c == 2)
+				color = 0x00ff00;				
+			else if(c == 3)
+				color = 0x0000ff;		
+				
+			spr = new TUIOCursor(ID.toString());			
 			spr.x = x;
 			spr.y = y;  			
-			
-			var format:TextFormat = new TextFormat();
-			DEBUG_TEXT = new TextField();
-        	format.font = "Verdana";
-     		format.color = 0xf0f0f0;
-        	format.size = 10;
-			DEBUG_TEXT.defaultTextFormat = format;
-			DEBUG_TEXT.autoSize = TextFieldAutoSize.LEFT;
-			DEBUG_TEXT.background = true;	
-			DEBUG_TEXT.backgroundColor = 0x000000;
-
-				
-			DEBUG_TEXT.border = true;	
-			DEBUG_TEXT.text = '';
-			DEBUG_TEXT.appendText('  '+(ID+1)+'  ');
-			//DEBUG_TEXT.appendText( 'var' + ID +"var"+ sID + " (x:" + int(x) + ", y:" + int(y) + ")");
-			
-			DEBUG_TEXT.x = 15;
-			DEBUG_TEXT.y = -8;  
-			spr.addChild(DEBUG_TEXT);
-			//DEBUG_TEXT.text = '';
 			
 			try {
  	 			obj = o;
@@ -100,8 +80,6 @@ import flash.events.Event;
 			
 			//trace("Start : " + ID + ", " + sID + " (" + int(px) + "," + int(py) + ")");
 			//trace("Start : " + ID);
-			
-
 			
 			isNew = true;
 		}
@@ -114,8 +92,8 @@ import flash.events.Event;
 				{
 					var localPoint:Point = obj.parent.globalToLocal(new Point(x, y));				
 					//trace("Down : " + localPoint.x + "," + localPoint.y);
-					obj.dispatchEvent(new TUIOEvent(TUIOEvent.RollOverEvent, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));													
-					obj.dispatchEvent(new TUIOEvent(TUIOEvent.DownEvent, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));									
+					obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_OVER, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));													
+					obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_DOWN, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));									
 				} catch (e:Event)
 				{
 						trace("Failed : " + e);
@@ -139,17 +117,17 @@ import flash.events.Event;
 					if(obj) 
 					{
 						localPoint = obj.parent.globalToLocal(new Point(x, y));				
-						obj.dispatchEvent(new TUIOEvent(TUIOEvent.RollOverEvent, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));					
+						obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_OVER, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));					
 					}
 				} else if(obj != o) 
 				{
 					
 					localPoint = obj.parent.globalToLocal(new Point(x, y));								
-					obj.dispatchEvent(new TUIOEvent(TUIOEvent.RollOutEvent, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));
+					obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_OUT, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));
 					if(o)
 					{
 						localPoint = obj.parent.globalToLocal(new Point(x, y));
-						o.dispatchEvent(new TUIOEvent(TUIOEvent.RollOverEvent, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));
+						o.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_OVER, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));
 					}
 					obj = o;								
 				}
@@ -180,15 +158,15 @@ import flash.events.Event;
 			if(obj && obj.parent)
 			{				
 				localPoint = obj.parent.globalToLocal(new Point(x, y));				
-				obj.dispatchEvent(new TUIOEvent(TUIOEvent.RollOutEvent, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));				
-				obj.dispatchEvent(new TUIOEvent(TUIOEvent.UpEvent, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));									
+				obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_OUT, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));				
+				obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_UP, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));									
 			}			
 			obj = null;
 			
 			for(var i:int=0; i<aListeners.length; i++)
 			{
 				localPoint = aListeners[i].parent.globalToLocal(new Point(x, y));				
-				aListeners[i].dispatchEvent(new TUIOEvent(TUIOEvent.UpEvent, true, false, x, y, localPoint.x, localPoint.y, aListeners[i], false,false,false, true, 0, TUIOClass, ID, sID, angle));								
+				aListeners[i].dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_UP, true, false, x, y, localPoint.x, localPoint.y, aListeners[i], false,false,false, true, 0, TUIOClass, ID, sID, angle));								
 			}
 		}
 		
@@ -199,7 +177,7 @@ import flash.events.Event;
 			{
 				//trace("Notify moved");
 				localPoint = aListeners[i].parent.globalToLocal(new Point(x, y));				
-				aListeners[i].dispatchEvent(new TUIOEvent(TUIOEvent.MoveEvent, true, false, x, y, localPoint.x, localPoint.y, aListeners[i], false,false,false, true, 0, TUIOClass, ID, sID, angle));								
+				aListeners[i].dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_MOVE, true, false, x, y, localPoint.x, localPoint.y, aListeners[i], false,false,false, true, 0, TUIOClass, ID, sID, angle));								
 			}			
 		}
 	}

@@ -94,7 +94,7 @@ import flash.text.TextFormat;
 				buttonSprite.graphics.lineStyle(2, 0x202020);
 				buttonSprite.graphics.beginFill(0xF80101,0.5);
 				buttonSprite.graphics.drawRoundRect(10, 10, 200, 200,6);				 
-				buttonSprite.addEventListener(TUIOEvent.DownEvent, stopRecording);				 
+				buttonSprite.addEventListener(TUIOEvent.TUIO_DOWN, stopRecording);				 
 				//thestage.addChild(buttonSprite);
 				 
 				 if(xmlPlaybackURL != "")
@@ -115,6 +115,7 @@ import flash.text.TextFormat;
 		
 		private static function setDimensions(wd:int = 800, ht:int = 600):void
 		{
+			//add onResize();
 			stagewidth = wd;
 			stageheight = ht;			
 		}
@@ -275,7 +276,7 @@ import flash.text.TextFormat;
 								{							
 									
 									localPoint = tuioobj.obj.parent.globalToLocal(stagePoint);							
-									tuioobj.obj.dispatchEvent(new TUIOEvent(TUIOEvent.MoveEvent, true, false, x, y, localPoint.x, localPoint.y, tuioobj.obj, false,false,false, true, m, "2Dobj", id, sID, a));
+									tuioobj.obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_MOVE, true, false, x, y, localPoint.x, localPoint.y, tuioobj.obj, false,false,false, true, m, "2Dobj", id, sID, a));
 								}
 							} catch (e:Event)
 							{
@@ -336,7 +337,7 @@ import flash.text.TextFormat;
 								if(tuioobj.obj && tuioobj.obj.parent)
 								{							
 									localPoint = tuioobj.obj.parent.globalToLocal(stagePoint);							
-									tuioobj.obj.dispatchEvent(new TUIOEvent(TUIOEvent.MoveEvent, true, false, x, y, localPoint.x, localPoint.y, tuioobj.obj, false,false,false, true, m, "2Dobj", id, sID, a));
+									tuioobj.obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_MOVE, true, false, x, y, localPoint.x, localPoint.y, tuioobj.obj, false,false,false, true, m, "2Dobj", id, sID, a));
 								}
 							} catch (e:Event)
 							{
