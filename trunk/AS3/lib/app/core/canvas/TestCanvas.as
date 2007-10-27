@@ -11,7 +11,7 @@
 	import flash.geom.*;		
 	import flash.text.*;
 	
-	public class PhotoCanvas extends RotatableScalable
+	public class TestCanvas extends RotatableScalable
 	{
 
 		
@@ -31,7 +31,7 @@
 		
 		
 		
-		function PhotoCanvas()
+		function TestCanvas()
 		{
 			bringToFront = false;			
 			//noScale = true;
