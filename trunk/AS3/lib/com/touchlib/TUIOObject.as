@@ -91,7 +91,8 @@ import flash.events.Event;
 				try
 				{
 					var localPoint:Point = obj.parent.globalToLocal(new Point(x, y));				
-					//trace("Down : " + localPoint.x + "," + localPoint.y);
+					//trace("Down : " + localPoint.x + "," + localPoint.y);					
+					//obj.dispatchEvent(new TUIOEvent(TUIOEvent.RollOverEvent, true, false, x, y, localPoint.x, localPoint.y, 0, 0, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));													
 					obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_OVER, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));													
 					obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_DOWN, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));									
 				} catch (e:Event)

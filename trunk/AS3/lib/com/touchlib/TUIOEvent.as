@@ -33,7 +33,9 @@ import flash.display.DisplayObject;
 			this.stageX = stageX;
 			this.stageY = stageY;
 			this.localX = localX;
-			this.localY = localY;
+			this.localY = localY;			
+			this.oldX = oldX;
+			this.oldY = oldY;
 			this.buttonDown = buttonDown;
 			this.relatedObject = relatedObject;
 
