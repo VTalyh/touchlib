@@ -664,12 +664,9 @@ void CTouchScreen::cameraToScreenSpace(float &x, float &y)
 		// A,pt,C
 		float area_B = (A.X - pt.X) * (A.Y - C.Y) - (A.Y - pt.Y) * (A.X - C.X);
 
-		// A,B,pt
-		float area_C = (A.X - B.X) * (A.Y - pt.Y) - (A.Y - B.Y) * (A.X - pt.X);
-
 		float bary_A = area_A / total_area;
 		float bary_B = area_B / total_area;
-		float bary_C = area_C / total_area;
+		float bary_C = 1.0f - bary_A - bary_B;	// bary_A + bary_B + bary_C = 1
 
 		vector2df sA = screenPoints[triangles[t+0]];
 		vector2df sB = screenPoints[triangles[t+1]];
