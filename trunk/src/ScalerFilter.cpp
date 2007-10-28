@@ -42,7 +42,10 @@ void ScalerFilter::showOutput(bool value, int windowx, int windowy)
 
 void ScalerFilter::kernel()
 {
-	level = level_slider;
+	if (show) {
+		level = level_slider;
+	}
+
     // derived class responsible for allocating storage for filtered image
     if( !destination )
     {
