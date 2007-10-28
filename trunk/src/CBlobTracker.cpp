@@ -199,7 +199,7 @@ void CBlobTracker::findBlobs_contour(BwImage &img, BwImage &label_img)
 			blob.box.lowerRightCorner.set(box.center.x+halfx,box.center.y+halfy);
 
 			blob.area = blob.box.getArea();
-
+			
 			// FIXME: it might be nice if we could get the actual weight.. 
 			// It also might be nice to
 			blob.weight = 0;
@@ -692,7 +692,7 @@ void CBlobTracker::gatherEvents()
 		} else {
 			if (current[i].displacement.getLength() >= minimumDisplacementThreshold) {
 				doUpdateEvent(current[i].getTouchData());
-				current[i].displacement = vector2df(0, 0);
+				current[i].displacement = vector2df(0.0f, 0.0f);
 			}
 		}
 	}

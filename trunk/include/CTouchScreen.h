@@ -116,6 +116,7 @@ namespace touchlib
 		static THREAD_RETURN_TYPE _processEntryPoint(void*);
 
 		void cameraToScreenSpace(float &x, float &y);
+		void transformDimension(float &width, float &height, float centerX, float centerY);
 
 		void initScreenPoints();
 		void initCameraPoints();

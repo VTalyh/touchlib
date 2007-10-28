@@ -64,6 +64,7 @@ namespace touchlib
 			center = b.center;
 			area = b.area;
 			box = b.box;
+			angle = b.angle;
 		}
 
 		int getLowestError()
@@ -91,8 +92,8 @@ namespace touchlib
 			data.Y = center.Y;
 
 			data.angle = angle;
-
-			//data.Area = area;
+			data.width = box.getWidth();
+			data.height = box.getHeight();
 
 			data.dX = delta.X;
 			data.dY = delta.Y;

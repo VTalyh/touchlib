@@ -526,30 +526,27 @@ void CTouchScreen::doUntouchEvent(TouchData data)
 	}
 }
 
-
 void CTouchScreen::fingerDown(TouchData data)
 {
 	CTouchEvent e;
 
-	if(bCalibrating)
-	{
+	if(bCalibrating) {
 		cameraPoints[calibrationStep] = vector2df(data.X, data.Y);
 		//printf("%d (%f, %f)\n", calibrationStep, data.X, data.Y);
-
 	}
 
+	transformDimension(data.width, data.height, data.X, data.Y);
+	data.area = data.width * data.height;
 
 	cameraToScreenSpace(data.X, data.Y);
-// if(bCalibrating || (data.X != 0.0f) || (data.Y != 0.0f))
-	//{
-		e.data = data;
-		e.type = TOUCH_PRESS;
+	
+	e.data = data;
+	e.type = TOUCH_PRESS;
 
-		e.data.dX = 0;
-		e.data.dY = 0;
+	e.data.dX = 0;
+	e.data.dY = 0;
 
-		eventList.push_back(e);
-	//}
+	eventList.push_back(e);
 }
 
 
@@ -562,6 +559,9 @@ void CTouchScreen::fingerUp(TouchData data)
 	tx = data.X + data.dX;
 	ty = data.Y + data.dY;
 
+	transformDimension(data.width, data.height, data.X, data.Y);
+	data.area = data.width * data.height;
+
 	cameraToScreenSpace(data.X, data.Y);
 	cameraToScreenSpace(tx, ty);
 
@@ -569,8 +569,6 @@ void CTouchScreen::fingerUp(TouchData data)
 	e.type = TOUCH_RELEASE;
 	e.data.dX = tx - data.X;
 	e.data.dY = ty - data.Y;
-
-
 
 	eventList.push_back(e);
 }
@@ -585,22 +583,37 @@ void CTouchScreen::fingerUpdate(TouchData data)
 	tx = data.X + data.dX;
 	ty = data.Y + data.dY;
 
+	transformDimension(data.width, data.height, data.X, data.Y);
+	data.area = data.width * data.height;
+
 	cameraToScreenSpace(data.X, data.Y);
 	cameraToScreenSpace(tx, ty);
 
-	//if((data.X != 0.0f) || (data.Y != 0.0f))
-	//{
-		e.data = data;
-		e.type = TOUCH_UPDATE;
-		e.data.dX = tx - data.X;
-		e.data.dY = ty - data.Y;
+	e.data = data;
+	e.type = TOUCH_UPDATE;
+	e.data.dX = tx - data.X;
+	e.data.dY = ty - data.Y;
 
-
-
-		eventList.push_back(e);
-	//}
+	eventList.push_back(e);
 }
 
+void CTouchScreen::transformDimension(float &width, float &height, float centerX, float centerY)
+{
+	// transform width/height
+        float halfX = width * 0.5f;
+        float halfY = height * 0.5f;
+
+        float ulX = centerX - halfX;
+        float ulY = centerY - halfY;
+        float lrX = centerX + halfX;
+        float lrY = centerY + halfY;
+
+        cameraToScreenSpace(ulX, ulY);
+        cameraToScreenSpace(lrX, lrY);
+
+        width = lrX - ulX;
+        height = lrY - ulY;
+}
 
 
 

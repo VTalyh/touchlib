@@ -75,14 +75,22 @@ public:
 	TouchData data;
 	void draw()
 	{
-		float rad = 0.05;
-			//(data.height + data.width) / 2.0;
+		if (configStep == 1) {
+			
+	                float X = (data.X*2.0f) - 1.0;
+        	        float Y = ((1.0-data.Y)*2.0f) - 1.0;
+			float halfX = data.width * 0.5f;
+			float halfY = data.height * 0.5f;
+			float ulX = X - halfX;
+			float ulY = Y - halfY;
+			float lrX = X + halfX;
+			float lrY = Y + halfY;
 
-		float X = (data.X*2.0f) - 1.0;
-		float Y = ((1.0-data.Y)*2.0f) - 1.0;
+			float rad = 0.005f;
 
-		if(configStep == 1)
-			glutDrawBox(X-rad, Y-rad, X+rad, Y+rad, (float)color.r/255.0f, (float)color.g/255.0f, (float)color.b/255.0f);
+			glutDrawBox(ulX-rad, ulY-rad, lrX+rad, lrY+rad, (float)color.r/255.0f, (float)color.g/255.0f, (float)color.b/255.0f);
+
+		}
 	}
 };
 
