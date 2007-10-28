@@ -60,7 +60,6 @@ private:
 	int mode;
 	int modeSlider;
 	
-	
 	// ----  private member functions  -------------------------------------------
 
 

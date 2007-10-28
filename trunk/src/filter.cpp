@@ -9,8 +9,6 @@ Filter::Filter(char* s)
     name = new std::string(s);
 	type = NULL;
 
-
-
     // default is to not show filter output
     show = false;
 
@@ -70,6 +68,7 @@ void Filter::process(IplImage* frame)
 		//printf("Show img\n");
         cvShowImage(name->c_str(), destination); 
 	}
+
 }
 
 
