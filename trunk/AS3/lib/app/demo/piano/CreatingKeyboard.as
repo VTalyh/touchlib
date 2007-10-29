@@ -46,7 +46,6 @@
 			noRotate = true;         //make it not rotate
 			noMove = true;           //make it not move
 			
-			
 			//This draws the border of the keyboard
 			if (outline == true){
 			
@@ -62,7 +61,6 @@
 			    //outlineBox.addEventListener(TUIOEvent.UpEvent, onupEvent);    // If not on border, turn Scaling/Rotating Off									
 				
 			}
-			
 			
 			//------------- Create all the key graphics ----This needs to be changed so it draws all graphics together-----//
 
@@ -110,6 +108,7 @@
 				key.addEventListener(TUIOEvent.TUIO_OUT, onKeyRelease); // if Finger rolls off key, go to onSpriteRelease function
 				key.addEventListener(TUIOEvent.TUIO_OVER, onKeyPress);  // if Finger rolls off key, go to onSpritePress function
 			}		
+			
 			
 			
 			//--------------------- Create black outlines for keys ----------------------//
