@@ -48,7 +48,7 @@ void ThresholdFilter::setParameter(const char *name, const char *value)
 		setMode(atoi(value));
 
 		if (show) {
-			cvSetTrackbarPos(TRACKBAR_LABEL_MODE, this->name->c_str(), mode);
+			cvSetTrackbarPos(TRACKBAR_LABEL_MODE, this->name.c_str(), mode);
 		}
 	} else if (strcmp(name, PARAMETER_THRESHOLD) == 0) {
 		setMode(MODE_MANUAL);
@@ -58,8 +58,8 @@ void ThresholdFilter::setParameter(const char *name, const char *value)
 		}
 
 		if (show) {
-			cvSetTrackbarPos(TRACKBAR_LABEL_MODE, this->name->c_str(), mode);
-			cvSetTrackbarPos(TRACKBAR_LABEL_THRESHOLD, this->name->c_str(), (int) (threshold * 255.0f));
+			cvSetTrackbarPos(TRACKBAR_LABEL_MODE, this->name.c_str(), mode);
+			cvSetTrackbarPos(TRACKBAR_LABEL_THRESHOLD, this->name.c_str(), (int) (threshold * 255.0f));
 		}
 	}
 }
@@ -84,8 +84,8 @@ void ThresholdFilter::showOutput(bool value, int windowx, int windowy)
 	Filter::showOutput(value, windowx, windowy);
 
 	if (show) {
-		cvCreateTrackbar(TRACKBAR_LABEL_MODE, name->c_str(), &modeSlider, 1, NULL);
-		cvCreateTrackbar(TRACKBAR_LABEL_THRESHOLD, name->c_str(), &thresholdSlider, 255, NULL);
+		cvCreateTrackbar(TRACKBAR_LABEL_MODE, name.c_str(), &modeSlider, 1, NULL);
+		cvCreateTrackbar(TRACKBAR_LABEL_THRESHOLD, name.c_str(), &thresholdSlider, 255, NULL);
 	}
 }
 
@@ -156,7 +156,7 @@ void ThresholdFilter::kernel()
 				level = 255;
 			}
 
-			cvSetTrackbarPos(TRACKBAR_LABEL_THRESHOLD, this->name->c_str(), level);
+			cvSetTrackbarPos(TRACKBAR_LABEL_THRESHOLD, this->name.c_str(), level);
 		}
 	}
 }

@@ -17,7 +17,7 @@ class TOUCHLIB_FILTER_EXPORT DSVLCaptureFilter : public Filter
 {
 	public:
 		DSVLCaptureFilter(char*);
-		~DSVLCaptureFilter();
+		virtual ~DSVLCaptureFilter();
 		bool isRunning();
 		void kernel();
 

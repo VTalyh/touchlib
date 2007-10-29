@@ -21,7 +21,7 @@ class TOUCHLIB_FILTER_EXPORT CvCaptureFilter : public Filter
 		char source[255];
 	public:
 		CvCaptureFilter(char*);
-		~CvCaptureFilter();
+		virtual ~CvCaptureFilter();
 		bool isRunning();
 		void kernel();
 

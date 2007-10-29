@@ -11,7 +11,7 @@ class TOUCHLIB_FILTER_EXPORT SmoothingFilter : public Filter
 public:
 
     SmoothingFilter(char*);
-    ~SmoothingFilter();
+    virtual ~SmoothingFilter();
     void kernel();
 
 };

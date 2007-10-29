@@ -42,7 +42,7 @@ class TOUCHLIB_FILTER_EXPORT DsCaptureFilter : public CBaseVideoRenderer, public
 
 	public:
 		DsCaptureFilter(char*);
-		~DsCaptureFilter();
+		virtual ~DsCaptureFilter();
 		bool isRunning();
 		void kernel();
 

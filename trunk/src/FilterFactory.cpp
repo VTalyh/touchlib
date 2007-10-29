@@ -65,6 +65,6 @@ Filter *FilterFactory::createFilter(const char *type, const char *label)
 		return NULL;
 	}
 
-	newFilter->type = new std::string(type);
+	newFilter->type = std::string(type);
 	return newFilter;
 }

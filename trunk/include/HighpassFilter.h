@@ -10,7 +10,7 @@ class TOUCHLIB_FILTER_EXPORT HighpassFilter : public Filter
 public:
 
     HighpassFilter(char*);
-    ~HighpassFilter();
+    virtual ~HighpassFilter();
     void kernel();
 
 

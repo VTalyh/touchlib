@@ -85,9 +85,12 @@ CTouchScreen::CTouchScreen()
 CTouchScreen::~CTouchScreen()
 {
 	unsigned int i;
+
 #ifdef WIN32
 	if(hThread)
 		TerminateThread(hThread, 0);
+
+	CloseHandle(eventListMutex);
 #else
 	if(hThread){
 		pthread_kill(hThread,15);
@@ -96,9 +99,13 @@ CTouchScreen::~CTouchScreen()
 	
 	pthread_mutex_destroy(&eventListMutex);
 #endif
+
+
 	
 	for(i=0; i<filterChain.size(); i++)
 		delete filterChain[i];
+
+		
 }
 
 void CTouchScreen::initScreenPoints()
@@ -202,6 +209,7 @@ void CTouchScreen::registerListener(ITouchListener *listener)
 
 bool CTouchScreen::process()
 {
+
 	while(1)
 	{
 
@@ -258,6 +266,7 @@ bool CTouchScreen::process()
 		}
 		SLEEP(32);
 	}
+
 }
 
 
@@ -698,7 +707,7 @@ void CTouchScreen::beginProcessing()
 {
 #ifdef WIN32
 	hThread = (HANDLE)_beginthread(_processEntryPoint, 0, this);
-	SetThreadPriority(hThread, THREAD_PRIORITY_ABOVE_NORMAL);
+	//SetThreadPriority(hThread, THREAD_PRIORITY_ABOVE_NORMAL);
 #else
 	pthread_create(&hThread,0,_processEntryPoint,this);
 #endif

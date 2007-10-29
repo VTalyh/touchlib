@@ -16,7 +16,7 @@ class TOUCHLIB_FILTER_EXPORT VideoWrapperFilter : public Filter
 {
 	public:
 		VideoWrapperFilter(char*);
-		~VideoWrapperFilter();
+		virtual ~VideoWrapperFilter();
 		bool isRunning();
 		void kernel();
 

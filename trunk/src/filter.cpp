@@ -6,8 +6,7 @@
 Filter::Filter(char* s)
 {
 
-    name = new std::string(s);
-	type = NULL;
+    name = std::string(s);
 
     // default is to not show filter output
     show = false;
@@ -21,15 +20,13 @@ Filter::Filter(char* s)
 Filter::~Filter()
 {
     if( show )
-        cvDestroyWindow( name->c_str() );
+        cvDestroyWindow( name.c_str() );
 
     if( destination )
         cvReleaseImage(&destination);
 
-	if( type )
-		delete type;
 
-	delete name;
+	
 }
 
 
@@ -37,14 +34,14 @@ void Filter::showOutput(bool value, int windowx, int windowy)
 {
     if( value && !show )
     {
-        cvNamedWindow( name->c_str(), CV_WINDOW_AUTOSIZE );
+        cvNamedWindow( name.c_str(), CV_WINDOW_AUTOSIZE );
 
-		cvMoveWindow(name->c_str(), windowx, windowy);
+		cvMoveWindow(name.c_str(), windowx, windowy);
         show = true;
     }
     else if( !value && show )
     {
-        cvDestroyWindow( name->c_str() );
+        cvDestroyWindow( name.c_str() );
         show = false;
     }
 }
@@ -66,7 +63,7 @@ void Filter::process(IplImage* frame)
     if( show )
 	{
 		//printf("Show img\n");
-        cvShowImage(name->c_str(), destination); 
+        cvShowImage(name.c_str(), destination); 
 	}
 
 }

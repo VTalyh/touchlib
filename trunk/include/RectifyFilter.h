@@ -13,7 +13,7 @@ public:
 
     RectifyFilter(char* name);
     void kernel();
-    ~RectifyFilter();
+    virtual ~RectifyFilter();
 
 	virtual void getParameters(ParameterMap& pMap);
 	virtual void setParameter(const char *name, const char *value);

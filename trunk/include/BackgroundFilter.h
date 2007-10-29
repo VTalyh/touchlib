@@ -12,7 +12,7 @@ public:
 
     BackgroundFilter(char* name);
     void kernel();
-    ~BackgroundFilter();
+    virtual ~BackgroundFilter();
 	virtual void getParameters(ParameterMap& pMap);
 	virtual void setParameter(const char *name, const char *value);
 

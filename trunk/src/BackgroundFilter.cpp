@@ -41,7 +41,7 @@ void BackgroundFilter::setParameter(const char *name, const char *value)
 	{
 		updateThreshold = (int) atof(value);
 		if(show)
-			cvSetTrackbarPos("threshold", this->name->c_str(), updateThreshold);
+			cvSetTrackbarPos("threshold", this->name.c_str(), updateThreshold);
 	} else if(strcmp(name, "mask") == 0)
 	{
 		if(value)
@@ -58,7 +58,7 @@ void BackgroundFilter::showOutput(bool value, int windowx, int windowy)
 
 	if(value)
 	{
-		cvCreateTrackbar( "threshold", name->c_str(), &updateThreshold, 255, NULL);
+		cvCreateTrackbar( "threshold", name.c_str(), &updateThreshold, 255, NULL);
 	}
 }
 

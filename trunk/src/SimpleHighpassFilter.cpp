@@ -50,17 +50,17 @@ void SimpleHighpassFilter::setParameter(const char *name, const char *value)
 	if (strcmp(name, PARAMETER_BLUR) == 0) {
 		blurLevel = (int) atof(value);
 		if (show)
-			cvSetTrackbarPos(TRACKBAR_LABEL_BLUR, this->name->c_str(), blurLevel);
+			cvSetTrackbarPos(TRACKBAR_LABEL_BLUR, this->name.c_str(), blurLevel);
 	} else if (strcmp(name, PARAMETER_NOISE_METHOD) == 0) {
 		int noiseMethod = atoi(value);
 		setNoiseSmoothType(noiseMethod);
 
 		if (show)
-			cvSetTrackbarPos(TRACKBAR_LABEL_NOISE_METHOD, this->name->c_str(), noiseMethod);
+			cvSetTrackbarPos(TRACKBAR_LABEL_NOISE_METHOD, this->name.c_str(), noiseMethod);
 	} else if (strcmp(name, PARAMETER_NOISE) == 0) {
 		noiseLevel = (int) atof(value);
 		if (show)
-			cvSetTrackbarPos(TRACKBAR_LABEL_NOISE, this->name->c_str(), noiseLevel);
+			cvSetTrackbarPos(TRACKBAR_LABEL_NOISE, this->name.c_str(), noiseLevel);
 	}
 }
 
@@ -81,6 +81,10 @@ void SimpleHighpassFilter::showOutput(bool value, int windowx, int windowy)
 	Filter::showOutput(value, windowx, windowy);
 
 	if (value) {
+		cvCreateTrackbar(TRACKBAR_LABEL_BLUR, name.c_str(), &blurLevelSlider, 60, NULL);
+		cvCreateTrackbar(TRACKBAR_LABEL_NOISE_METHOD, name.c_str(), &noiseMethodSlider, 1, NULL);
+		cvCreateTrackbar(TRACKBAR_LABEL_NOISE, name.c_str(), &noiseLevelSlider, 60, NULL);
+	}
 		cvCreateTrackbar(TRACKBAR_LABEL_BLUR, name->c_str(), &blurLevelSlider, 255, NULL);
 		cvCreateTrackbar(TRACKBAR_LABEL_NOISE_METHOD, name->c_str(), &noiseMethodSlider, 1, NULL);
 		cvCreateTrackbar(TRACKBAR_LABEL_NOISE, name->c_str(), &noiseLevelSlider, 255, NULL);

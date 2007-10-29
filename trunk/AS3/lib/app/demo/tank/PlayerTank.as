@@ -156,6 +156,7 @@ package app.demo.tank
 		
 		function fireFunc(e:Event)
 		{
+			trace("FIRE");
 			if(reloadFramesLeft == 0)
 			{
 				var projectile:TankProjectile = new TankProjectile(tankAngle + mcTank.mcTurret.rotation, 20, this, mcMain);

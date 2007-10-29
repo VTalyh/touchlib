@@ -11,7 +11,7 @@ class TOUCHLIB_FILTER_EXPORT InvertFilter : public Filter
 public:
 
     InvertFilter(char*);
-    ~InvertFilter();
+    virtual ~InvertFilter();
     void kernel();
 
 private:

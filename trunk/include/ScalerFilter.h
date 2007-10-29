@@ -13,7 +13,7 @@ public:
 
     ScalerFilter(char* name);
     void kernel();
-    ~ScalerFilter();
+    virtual ~ScalerFilter();
 
 	virtual void getParameters(ParameterMap& pMap);
 	virtual void setParameter(const char *name, const char *value);

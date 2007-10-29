@@ -12,7 +12,7 @@ public:
 
     MonoFilter(char* name);
     void kernel();
-    ~MonoFilter();
+    virtual ~MonoFilter();
 private:
 
 

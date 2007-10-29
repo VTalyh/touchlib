@@ -137,6 +137,7 @@ namespace touchlib
 		static THREAD_HANDLE hThread;
 		static THREAD_MUTEX_HANDLE eventListMutex;
 
+
 		CBlobTracker tracker;
 
 		bool bCalibrating;		

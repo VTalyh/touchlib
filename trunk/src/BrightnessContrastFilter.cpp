@@ -31,7 +31,7 @@ void BrightnessContrastFilter::setBrightness(float value)
 	updateLUT(); 
 	brightness_slider = (value * 128.0) + 128.0;
 	if(show)	
-		cvSetTrackbarPos("brightness", name->c_str(), brightness_slider);
+		cvSetTrackbarPos("brightness", name.c_str(), brightness_slider);
 }
 
 
@@ -41,7 +41,7 @@ void BrightnessContrastFilter::setContrast(float value)
 	updateLUT();
 	contrast_slider = (value * 128.0) + 128.0;
 	if(show)
-		cvSetTrackbarPos("contrast", name->c_str(), contrast_slider);
+		cvSetTrackbarPos("contrast", name.c_str(), contrast_slider);
 }
 
 
@@ -117,8 +117,8 @@ void BrightnessContrastFilter::showOutput(bool value, int windowx, int windowy)
 
 	if(value)
 	{
-		cvCreateTrackbar( "brightness", name->c_str(), &brightness_slider, 255, NULL);
-		cvCreateTrackbar( "contrast", name->c_str(), &contrast_slider, 255, NULL);
+		cvCreateTrackbar( "brightness", name.c_str(), &brightness_slider, 255, NULL);
+		cvCreateTrackbar( "contrast", name.c_str(), &contrast_slider, 255, NULL);
 
 	}
 }

@@ -19,6 +19,7 @@ class TOUCHLIB_FILTER_EXPORT Filter
 
 public:
     Filter(char* name);
+	virtual ~Filter();
     void process(IplImage* frame);
     virtual void kernel() = 0;
     void connectTo(Filter* chainedfilter);
@@ -26,9 +27,8 @@ public:
     virtual void showOutput(bool value, int windowx=0, int windowy=0);
 	virtual void getParameters(ParameterMap& pMap) { };
 	virtual void setParameter(const char *param, const char *value) { };
-	const char* getType() { return type->c_str(); };
-	const char* getName() { return name->c_str(); };
-	virtual ~Filter();
+	const char* getType() { return type.c_str(); };
+	const char* getName() { return name.c_str(); };
 
 
 protected:
@@ -36,8 +36,8 @@ protected:
     IplImage* source;
     IplImage* destination;
     Filter* chainedfilter;
-	std::string* type;
-    std::string* name;
+	std::string type;
+    std::string name;
 
 };
 

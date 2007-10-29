@@ -15,7 +15,7 @@ public:
 
     ResizeFilter(char* name);
     void kernel();
-    ~ResizeFilter();
+    virtual ~ResizeFilter();
 
 	virtual void getParameters(ParameterMap& pMap);
 	virtual void setParameter(const char *name, const char *value);
