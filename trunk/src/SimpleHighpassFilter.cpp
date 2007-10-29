@@ -81,14 +81,11 @@ void SimpleHighpassFilter::showOutput(bool value, int windowx, int windowy)
 	Filter::showOutput(value, windowx, windowy);
 
 	if (value) {
-		cvCreateTrackbar(TRACKBAR_LABEL_BLUR, name.c_str(), &blurLevelSlider, 60, NULL);
+		cvCreateTrackbar(TRACKBAR_LABEL_BLUR, name.c_str(), &blurLevelSlider, 255, NULL);
 		cvCreateTrackbar(TRACKBAR_LABEL_NOISE_METHOD, name.c_str(), &noiseMethodSlider, 1, NULL);
-		cvCreateTrackbar(TRACKBAR_LABEL_NOISE, name.c_str(), &noiseLevelSlider, 60, NULL);
+		cvCreateTrackbar(TRACKBAR_LABEL_NOISE, name.c_str(), &noiseLevelSlider, 255, NULL);
 	}
-		cvCreateTrackbar(TRACKBAR_LABEL_BLUR, name->c_str(), &blurLevelSlider, 255, NULL);
-		cvCreateTrackbar(TRACKBAR_LABEL_NOISE_METHOD, name->c_str(), &noiseMethodSlider, 1, NULL);
-		cvCreateTrackbar(TRACKBAR_LABEL_NOISE, name->c_str(), &noiseLevelSlider, 255, NULL);
-	}
+
 }
 
 void SimpleHighpassFilter::kernel()
