@@ -4,11 +4,11 @@
 		<category name="games">
 			<apps>
 				<app>
-					<name>tank</name>
+					<name>Tank</name>
 					<body>2-4 players duke it out.</body>
 				</app>
 				<app>
-					<name>tangram</name>
+					<name>Tangram</name>
 					<body>puzzles</body>
 				</app>
 			</apps>		
@@ -16,16 +16,20 @@
 		<category name="multimedia">
 			<apps>
 				<app>
-					<name>paint</name>
+					<name>Paint</name>
 					<body>paint colorful images</body>
 				</app>
 				<app>
-					<name>photo</name>
+					<name>Photo</name>
 					<body>Photo downloads random images from Flickr for you to explore.</body>
 				</app>
 				<app>
-					<name>piano</name>
+					<name>Piano</name>
 					<body>Play music, multitouch style</body>
+				</app>
+				<app>
+					<name>MusicalSquares</name>
+					<body>Interactive Musical Windchime</body>
 				</app>
 			</apps>				
 		</category>
@@ -33,11 +37,11 @@
 		<category name="visualization">	
 		<apps>
 				<app>
-					<name>ripples</name>
+					<name>Ripples</name>
 					<body>ripples for fun</body>
 				</app>	
 				<app>
-					<name>trace</name>
+					<name>Trace</name>
 					<body>visual tracer</body>
 				</app>
 			</apps>			
