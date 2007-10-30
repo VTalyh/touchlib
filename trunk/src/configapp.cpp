@@ -690,8 +690,17 @@ void glutDisplayCallback( void )
 	printGLError("glutDisplayCallback (Final)");
 }
 
-void startGLApp(int argc, char * argv[])
+void startGLApp(int argc, char *argv[])
 {
+	bool useGameMode = false;
+	if (argc > 1) {
+		if (strcmp(argv[1], "-g") == 0) {
+			argc--;
+			argv++;
+			useGameMode = true;
+		}
+	}
+
 	screen->beginTracking();
 
 	glutInit( &argc, argv );
@@ -699,8 +708,10 @@ void startGLApp(int argc, char * argv[])
 	// set RGBA mode with double and depth buffers
 	glutInitDisplayMode( GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE );
 	
-	glutCreateWindow("root");
-	glutFullScreen();
+	if (!useGameMode) {
+		glutCreateWindow("root");
+		glutFullScreen();
+	}
 	
 	//glEnable(GL_CULL_FACE);
 	//glEnable(GL_DEPTH_TEST);
@@ -708,11 +719,32 @@ void startGLApp(int argc, char * argv[])
 	
 	printGLError("startGLApp");
 	
-	// start fullscreen game mode using
-	// 640x480, 16bit pixel depth, 60Hz refresh rate
-	//glutGameModeString( "800x600:16@60" );
-	//glutEnterGameMode();
-	
+	if (useGameMode) {
+		// start fullscreen game mode using
+		// 640x480, 16bit pixel depth, 60Hz refresh rate
+		char *width = "640";
+		char *height = "480";
+		char *depth = "16";
+		char *freq = "60";
+		if (argc > 1) {
+			width = argv[1];
+			if (argc > 2) {
+				height = argv[2];
+				if (argc > 3) {
+					depth = argv[3];
+					if (argc > 4) {
+						freq = argv[4];
+					}
+				}
+			}
+		}
+
+		char s[256];
+		snprintf(s, sizeof(s), "%sx%s:%s@%s", width, height, depth, freq);
+		glutGameModeString(s);
+		glutEnterGameMode();
+	}	
+
 	// setup callbacks
 	glutKeyboardFunc( glutKeyboardCallback );
 	glutSpecialFunc( glutSpecialDown);
