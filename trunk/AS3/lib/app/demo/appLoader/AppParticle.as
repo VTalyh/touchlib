@@ -21,47 +21,85 @@
 		
 		private var history:Array;
 		
+		private var life:int = 0;
+		
 		function AppParticle()
 		{
+			history = new Array();
 			direction = int(Math.random()*8);
-			dirChangeCount = int(Math.random()*50);
-			upVec = new Point();
+			dirChangeCount = 0;
+			upVec = new Point(2, 0);
 			cursor = new Point(0,0);
+			history.push(new Point(cursor.x, cursor.y));			
 			addEventListener(Event.ENTER_FRAME, frameUpdate);
+			life = 100;
+
 		}
 		
-		function frameUpdate()
+		function frameUpdate(e:Event)
 		{
 			// FIXME: draw from last history point to cursor
-			
+			//this.graphics.lineStyle(1,0xffffff, 0.5, true);						
+			//this.graphics.moveTo(history[history.length-1].x, history[history.length-1].y);			
+			//this.graphics.moveTo(history[0].x, history[0].y);			
+			this.graphics.lineTo(cursor.x, cursor.y);
+
 			var m:Matrix = new Matrix();
 			m.rotate(direction * Math.PI / 4.0);
 			var delta:Point = m.transformPoint(upVec);
 			
-			cursor += delta;
+			cursor.x += delta.x;
+			cursor.y += delta.y;			
 
 			dirChangeCount -= 1;
+			
+			life -= 1;
+			
+
 			
 			if(dirChangeCount <= 0)
 			{
 				direction += int(Math.random()*4)-2;
-				dirChangeCount = int(Math.random()*50);
+				direction = direction % 8;
+				dirChangeCount = int(Math.random()*25) + 10;
 			
 				history.push(new Point(cursor.x, cursor.y));
 				
-				if(history.length >= 10)
+				if(history.length >= 4)
 				{
 					history.splice(0, 1);
 				}
 				
 				this.graphics.clear();
-				
+				this.graphics.moveTo(history[0].x, history[0].y);
+				this.graphics.lineStyle(4,0xffffff, 0.5, true);			
+				var colArray:Array = new Array();
+				colArray.push(0xffffff);
+				colArray.push(0x000000);
+				var alphaArray:Array = new Array();
+				alphaArray.push(100, 100);
+				var ratiosArray:Array = new Array();
+				ratiosArray.push(0);
+				ratiosArray.push(255);
+				var gm:Matrix = new Matrix();
+				gm.createGradientBox(200, 200, 0, 0,0);
+				this.graphics.lineGradientStyle(GradientType.RADIAL, colArray, alphaArray, ratiosArray, gm); 
 				for(var i:int =0; i<history.length; i++)
 				{
 					// FIXME: draw history.. 
+					this.graphics.lineTo(history[i].x, history[i].y);
+					
+					//trace("" + i + ":" + history[i].x + "," + history[i].y);
 				}
 			
 			}						
+			
+			if(life <= 0)
+			{
+				removeEventListener(Event.ENTER_FRAME, frameUpdate);				
+				this.parent.removeChild(this);
+				delete this;
+			}
 			
 			
 		}

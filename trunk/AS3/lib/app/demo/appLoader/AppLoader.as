@@ -61,20 +61,58 @@ package app.demo.appLoader
 
 			appLoader = new Loader();
 			addChild(appLoader);
-			/*
-			this.addEventListener(TUIOEvent.MoveEvent, this.tuioMoveHandler);			
-			this.addEventListener(TUIOEvent.DownEvent, this.tuioDownEvent);						
-			this.addEventListener(TUIOEvent.UpEvent, this.tuioUpEvent);									
-			this.addEventListener(TUIOEvent.RollOverEvent, this.tuioRollOverHandler);									
-			this.addEventListener(TUIOEvent.RollOutEvent, this.tuioRollOutHandler);			
+
+			this.addEventListener(TUIOEvent.TUIO_MOVE, this.tuioMoveHandler);			
+			this.addEventListener(TUIOEvent.TUIO_DOWN, this.tuioDownEvent);						
+			this.addEventListener(TUIOEvent.TUIO_UP, this.tuioUpEvent);									
+			this.addEventListener(TUIOEvent.TUIO_OVER, this.tuioRollOverHandler);									
+			this.addEventListener(TUIOEvent.TUIO_OUT, this.tuioRollOutHandler);			
 			
 			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler);									
 			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent);															
 			this.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpEvent);	
 			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOverHandler);
 			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOutHandler);
-*/
+
 		}
+		
+		function tuioMoveHandler(e:TUIOEvent)
+		{
+		}
+		function tuioDownEvent(e:TUIOEvent)
+		{
+		}
+		function tuioUpEvent(e:TUIOEvent)
+		{
+		}
+		function tuioRollOverHandler(e:TUIOEvent)
+		{
+		}		
+		function tuioRollOutHandler(e:TUIOEvent)
+		{
+		}				
+		
+		function mouseMoveHandler(e:MouseEvent)
+		{
+		}
+		function mouseDownEvent(e:MouseEvent)
+		{
+			var p:Sprite = new AppParticle();
+			p.x = this.mouseX;
+			p.y = this.mouseY;
+			addChild(p);
+			trace("Clicky " + this.mouseX + " " + this.mouseY);
+		}
+		function mouseUpEvent(e:MouseEvent)
+		{
+		}		
+		function mouseRollOverHandler(e:MouseEvent)
+		{
+		}
+		function mouseRollOutHandler(e:MouseEvent)
+		{
+		}		
+		
 		
 		public function loadClicked(e:MouseEvent)
 		{
