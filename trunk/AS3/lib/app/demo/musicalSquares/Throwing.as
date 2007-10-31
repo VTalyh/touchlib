@@ -25,7 +25,7 @@ package app.demo.musicalSquares
 		public var hitloop:Number;
 		public var thisState:String;
 
-
+		private var ballTween:Tween;
 
 		public function Throwing(size:Number, color:uint) {
 
@@ -148,7 +148,7 @@ package app.demo.musicalSquares
 		/////////////////////////////////////////////
 		public function doTween(throwBall) {
 
-			var ballTween = new Tween(this.getChildByName("throwBall"), "alpha", Regular.easeOut, 1, 0.15, 1, true);
+			ballTween = new Tween(this.getChildByName("throwBall"), "alpha", Regular.easeOut, 1, 0.15, 1, true);
 		}
 	}
 }
