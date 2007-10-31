@@ -30,7 +30,7 @@
 			this.x = 1600 * Math.random() - 800;
 			this.y = 1600 * Math.random() - 800;			
 			photoLoader = new Loader();
-			photoLoader.contentLoaderInfo.addEventListener( Event.COMPLETE, arrange );					
+			photoLoader.contentLoaderInfo.addEventListener( Event.COMPLETE, arrange, false, 0, true);					
 
 			
 			clickgrabber.graphics.beginFill(0xffffff, 0.1);
@@ -58,7 +58,7 @@
 //            myFilters.push(filter);
 //            filters = myFilters;			
 			
-			this.addEventListener(Event.ENTER_FRAME, slide);
+			this.addEventListener(Event.ENTER_FRAME, slide, false, 0, true);
 			
 			
 			// FIXME: I'd like to have some kind of status meter while it's downloading..

@@ -95,18 +95,18 @@ public class TUIO
 		if( TESTING_XML_URL != '' )
 		{
 			TESTING_XML_LOADER = new URLLoader();
-			TESTING_XML_LOADER.addEventListener( 'complete', testingXmlOnLoaded );
+			TESTING_XML_LOADER.addEventListener( 'complete', testingXmlOnLoaded , false, 0, true);
 			TESTING_XML_LOADER.load( new URLRequest( TESTING_XML_URL ) );				
 		} else
 		{
 			SOCKET = new XMLSocket();
 			
-			SOCKET.addEventListener( Event.CLOSE, closeHandler );
-			SOCKET.addEventListener( Event.CONNECT, connectHandler );
-			SOCKET.addEventListener( DataEvent.DATA, dataHandler );
-			SOCKET.addEventListener( IOErrorEvent.IO_ERROR, ioErrorHandler );
-			SOCKET.addEventListener( ProgressEvent.PROGRESS, progressHandler );
-			SOCKET.addEventListener( SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler );
+			SOCKET.addEventListener( Event.CLOSE, closeHandler, false, 0, true);
+			SOCKET.addEventListener( Event.CONNECT, connectHandler, false, 0, true );
+			SOCKET.addEventListener( DataEvent.DATA, dataHandler, false, 0, true );
+			SOCKET.addEventListener( IOErrorEvent.IO_ERROR, ioErrorHandler, false, 0, true );
+			SOCKET.addEventListener( ProgressEvent.PROGRESS, progressHandler, false, 0, true );
+			SOCKET.addEventListener( SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler, false, 0, true );
 			
 			SOCKET.connect( HOST, PORT );	
 		}					
@@ -148,7 +148,7 @@ public class TUIO
 		record_btn.graphics.lineStyle( 2, 0x202020 );
 		record_btn.graphics.beginFill( 0xF80101,0.5 );
 		record_btn.graphics.drawRoundRect( 10, 10, 200, 200, 6 );				 
-		record_btn.addEventListener( TUIOEvent.DOWN, stopRecording );
+		record_btn.addEventListener( TUIOEvent.DOWN, stopRecording, false, 0, true );
 		
 		STAGE.addChild( record_btn );
 	}
@@ -161,7 +161,7 @@ public class TUIO
 	{
 		TESTING_XML = new XML( e.target.data );
 		
-		STAGE.addEventListener( Event.ENTER_FRAME, updateFrame );
+		STAGE.addEventListener( Event.ENTER_FRAME, updateFrame, false, 0, true );
 	}
 
 	/**********************************************************

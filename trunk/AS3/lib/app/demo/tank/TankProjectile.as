@@ -27,7 +27,7 @@
 			
 			this.rotation = ang;
 			
-			this.addEventListener(Event.ENTER_FRAME, this.frameUpdate);					
+			this.addEventListener(Event.ENTER_FRAME, this.frameUpdate, false, 0, true);					
 		}
 
 		public function frameUpdate(e:Event)
@@ -49,7 +49,7 @@
 		public function removeSelf()
 		{
 			parent.removeChild(this);
-			this.removeEventListener(Event.ENTER_FRAME, this.frameUpdate);
+			this.removeEventListener(Event.ENTER_FRAME, this.frameUpdate, false, 0, true);
 			delete this;			
 		}
 	}

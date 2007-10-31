@@ -79,19 +79,19 @@ package app.core.element{
 			addChild(indicatorText);
 			
 
-			this.addEventListener(TUIOEvent.TUIO_MOVE, this.tuioMoveHandler);			
-			this.addEventListener(TUIOEvent.TUIO_DOWN, this.tuioDownEvent);						
-			this.addEventListener(TUIOEvent.TUIO_UP, this.tuioUpEvent);									
-			this.addEventListener(TUIOEvent.TUIO_OVER, this.tuioRollOverHandler);									
-			this.addEventListener(TUIOEvent.TUIO_OUT, this.tuioRollOutHandler);
+			this.addEventListener(TUIOEvent.TUIO_MOVE, this.tuioMoveHandler, false, 0, true);			
+			this.addEventListener(TUIOEvent.TUIO_DOWN, this.tuioDownEvent, false, 0, true);						
+			this.addEventListener(TUIOEvent.TUIO_UP, this.tuioUpEvent, false, 0, true);									
+			this.addEventListener(TUIOEvent.TUIO_OVER, this.tuioRollOverHandler, false, 0, true);									
+			this.addEventListener(TUIOEvent.TUIO_OUT, this.tuioRollOutHandler, false, 0, true);
 
-			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler);									
-			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent);															
-			this.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpEvent);	
-			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOverHandler);
-			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOutHandler);
+			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler, false, 0, true);									
+			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent, false, 0, true);															
+			this.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpEvent, false, 0, true);	
+			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOverHandler, false, 0, true);
+			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOutHandler, false, 0, true);
 			
-			this.addEventListener(Event.ENTER_FRAME, this.frameUpdate);			
+			this.addEventListener(Event.ENTER_FRAME, this.frameUpdate, false, 0, true);			
 			
 			updateGraphics();
 		}

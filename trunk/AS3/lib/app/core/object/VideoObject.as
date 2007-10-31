@@ -54,7 +54,7 @@
 			video1 = new Video();
 			video1.attachNetStream(stream1);
 
-			stream1.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
+			stream1.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus, false, 0, true);
 
 			video1.x = -video1.width/2;
 			video1.y = -video1.height/2;
@@ -123,8 +123,8 @@
 			pause_btn.visible = false;
 			
 			//this.addEventListener(Event.ENTER_FRAME, slide);
-			pause_btn.addEventListener(TUIOEvent.TUIO_DOWN, buttontouch);
-			play_btn.addEventListener(TUIOEvent.TUIO_DOWN, buttontouch);
+			pause_btn.addEventListener(TUIOEvent.TUIO_DOWN, buttontouch, false, 0, true);
+			play_btn.addEventListener(TUIOEvent.TUIO_DOWN, buttontouch, false, 0, true);
 																	  
 			// Pause video on add
 			stream1.seek(1);

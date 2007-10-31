@@ -60,7 +60,7 @@
 			// Add an event listener to get notified once data is loaded
 			// Start the request using the specified URL and variables
 			rest = new URLLoader();
-			rest.addEventListener( "complete", parse );
+			rest.addEventListener( "complete", parse , false, 0, true);
 			rest.load( request );
 		}
 		

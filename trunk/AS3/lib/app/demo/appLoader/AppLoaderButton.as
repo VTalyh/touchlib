@@ -19,18 +19,20 @@ package app.demo.appLoader
 		var apploader:AppLoader;
 		var buttonDown:Boolean;
 		var buttonLocked:Boolean;
-		
-		public var appDescription:String;
+
 
 		var setPosX:Number = 0;
 		var setPosY:Number = 0;
-		public var appName:String;
+		
+		public var appName:String;	
+		public var appDescription:String;
 		
 		function AppLoaderButton(app:AppLoader, appname:String, desc:String)
 		{			
 			apploader = app;
 			appName = appname;
 			appDescription = desc;
+			trace(appName + ":" + appDescription);
 			
 			buttonOverlay = new ButtonOverlay();
 			buttonImage = new Loader();
@@ -48,19 +50,19 @@ package app.demo.appLoader
 			addChild(buttonImage);
 			addChild(buttonOverlay);
 			
-			this.addEventListener(TUIOEvent.TUIO_MOVE, this.tuioMoveHandler);			
-			this.addEventListener(TUIOEvent.TUIO_DOWN, this.tuioDownEvent);						
-			this.addEventListener(TUIOEvent.TUIO_UP, this.tuioUpEvent);									
-			this.addEventListener(TUIOEvent.TUIO_OVER, this.tuioRollOverHandler);									
-			this.addEventListener(TUIOEvent.TUIO_OUT, this.tuioRollOutHandler);			
+			this.addEventListener(TUIOEvent.TUIO_MOVE, this.tuioMoveHandler, false, 0, true);			
+			this.addEventListener(TUIOEvent.TUIO_DOWN, this.tuioDownEvent, false, 0, true);						
+			this.addEventListener(TUIOEvent.TUIO_UP, this.tuioUpEvent, false, 0, true);									
+			this.addEventListener(TUIOEvent.TUIO_OVER, this.tuioRollOverHandler, false, 0, true);									
+			this.addEventListener(TUIOEvent.TUIO_OUT, this.tuioRollOutHandler, false, 0, true);			
 			
-			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler);									
-			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent);															
-			this.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpEvent);	
-			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOverHandler);
-			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOutHandler);
+			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler, false, 0, true);									
+			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent, false, 0, true);															
+			this.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpEvent, false, 0, true);	
+			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOverHandler, false, 0, true);
+			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOutHandler, false, 0, true);
 			
-			this.addEventListener(Event.ENTER_FRAME, this.frameUpdate);
+			this.addEventListener(Event.ENTER_FRAME, this.frameUpdate, false, 0, true);
 			
 		}
 		

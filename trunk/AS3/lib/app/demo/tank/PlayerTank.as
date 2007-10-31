@@ -88,7 +88,7 @@ package app.demo.tank
 	
 			fireButton = new Button();
 			fireButton.setSize(100, 50);
-			fireButton.addEventListener(MouseEvent.CLICK, fireFunc);
+			fireButton.addEventListener(MouseEvent.CLICK, fireFunc, false, 0, true);
 			fireButton.label = "FIRE";
 			
 			var tempobj:Wrapper = new Wrapper(fireButton);
@@ -131,7 +131,7 @@ package app.demo.tank
 			mcTank.name = "Player" + tankNum;
 			mcMain.mcArena.addChild(mcTank);
 			
-			mcMain.addEventListener(Event.ENTER_FRAME, this.frameUpdate);		
+			mcMain.addEventListener(Event.ENTER_FRAME, this.frameUpdate, false, 0, true);		
 		}
 		
 		function setUIPosition(xpos:Number, ypos:Number, rot:Number)

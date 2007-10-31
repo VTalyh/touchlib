@@ -51,19 +51,29 @@
 					square.velY = 1;
 					square.name = "ball" + i;
 					square.getChildByName("throwBall").alpha = .15;
-	
+
 					addChild(square);
 					squares.push(square);
 				}
 				
 				newSquares();				
-				addEventListener(Event.ENTER_FRAME, checkCollision);
+				addEventListener(Event.ENTER_FRAME, checkCollision, false, 0, true);
+				
+
 			}
-			
-			
-			
-			
-			
+
+			public function unload(e:Event)
+			{
+				trace("unloading..");
+				removeEventListener(Event.ENTER_FRAME, checkCollision);
+				for (var i:uint = 0; i < numSquares; i++) 
+				{
+					squares[i].unloadHandler(new Event(Event.UNLOAD));
+				}
+	
+				// remove squares too?
+			}
+
 			private function newSquares(){				
 				
 			for (var j:uint = 0; j < numSquares; j++) {				
@@ -76,7 +86,7 @@
 				staticSquare.name = "ball" + j;
 
 				addChild(staticSquare);
-				staticSquare.addEventListener(TUIOEvent.TUIO_DOWN, addSquare);				
+				staticSquare.addEventListener(TUIOEvent.TUIO_DOWN, addSquare, false, 0, true);				
 				}			
 				
 			for (var h:uint = 0; h < numSquares; h++) {				
@@ -89,9 +99,11 @@
 				staticSquare.name = "ball" + h;
 
 				addChild(staticSquare);
-				staticSquare.addEventListener(TUIOEvent.TUIO_DOWN, addSquare);				
+				staticSquare.addEventListener(TUIOEvent.TUIO_DOWN, addSquare, false, 0, true);				
 				}				
 			}
+			
+
 			
 			
 			private function addSquare(e:TUIOEvent):void {
@@ -110,7 +122,7 @@
 					square.getChildByName("throwBall").alpha = .15;	
 					addChild(square);
 					squares.push(square);				
-					addEventListener(Event.ENTER_FRAME, checkCollision);
+//					addEventListener(Event.ENTER_FRAME, checkCollision);
 					break;				
 				
 				case "ball1" :			
@@ -125,7 +137,7 @@
 					square.getChildByName("throwBall").alpha = .15;	
 					addChild(square);
 					squares.push(square);				
-					addEventListener(Event.ENTER_FRAME, checkCollision);
+//					addEventListener(Event.ENTER_FRAME, checkCollision);
 					break;	
 					
 				case "ball2" :			
@@ -140,7 +152,7 @@
 					square.getChildByName("throwBall").alpha = .15;	
 					addChild(square);
 					squares.push(square);				
-					addEventListener(Event.ENTER_FRAME, checkCollision);
+//					addEventListener(Event.ENTER_FRAME, checkCollision, false, 0, true);
 					break;	
 					
 				case "ball3" :			
@@ -155,7 +167,7 @@
 					square.getChildByName("throwBall").alpha = .15;	
 					addChild(square);
 					squares.push(square);				
-					addEventListener(Event.ENTER_FRAME, checkCollision);
+//					addEventListener(Event.ENTER_FRAME, checkCollision, false, 0, true);
 					break;
 					
 				case "ball4" :			
@@ -170,7 +182,7 @@
 					square.getChildByName("throwBall").alpha = .15;	
 					addChild(square);
 					squares.push(square);				
-					addEventListener(Event.ENTER_FRAME, checkCollision);
+//					addEventListener(Event.ENTER_FRAME, checkCollision, false, 0, true);
 					break;	
 					
 				case "ball5" :			
@@ -185,7 +197,7 @@
 					square.getChildByName("throwBall").alpha = .15;	
 					addChild(square);
 					squares.push(square);				
-					addEventListener(Event.ENTER_FRAME, checkCollision);
+//					addEventListener(Event.ENTER_FRAME, checkCollision);
 					break;	
 					
 				case "ball6" :			
@@ -200,7 +212,7 @@
 					square.getChildByName("throwBall").alpha = .15;	
 					addChild(square);
 					squares.push(square);				
-					addEventListener(Event.ENTER_FRAME, checkCollision);
+//					addEventListener(Event.ENTER_FRAME, checkCollision);
 					break;
 					
 				case "ball7" :			
@@ -215,7 +227,7 @@
 					square.getChildByName("throwBall").alpha = .15;	
 					addChild(square);
 					squares.push(square);				
-					addEventListener(Event.ENTER_FRAME, checkCollision);
+//					addEventListener(Event.ENTER_FRAME, checkCollision);
 					break;
 			}
 		}	
@@ -302,7 +314,7 @@
 						square.removeChildAt(0);
 					}
 					//remove eventlistener
-					square.removeEventListener(Event.ENTER_FRAME, checkCollision);
+					//square.removeEventListener(Event.ENTER_FRAME, checkCollision);
 					//kill ball
 					removeChild(square);
 				}

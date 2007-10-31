@@ -22,7 +22,7 @@
 
 			keyboard.load(new URLRequest("www/keyboard.swf"));
 			
-			keyboard.contentLoaderInfo.addEventListener( Event.COMPLETE, arrange );	
+			keyboard.contentLoaderInfo.addEventListener( Event.COMPLETE, arrange, false, 0, true );	
 			
 			this.addChild(keyboard);
 		}
@@ -31,25 +31,25 @@
 			var chars: String = 'qwertyuiopasdfghjklzxcvbnm';
 			var mc:MovieClip = keyboard.content;
 			for (var i:int = 0; i< chars.length; i++) {
-				mc['button'+chars.charAt(i).toString().toUpperCase()].addEventListener(TUIOEvent.TUIO_DOWN, this.DownKey);
+				mc['button'+chars.charAt(i).toString().toUpperCase()].addEventListener(TUIOEvent.TUIO_DOWN, this.DownKey, false, 0, true);
 				mc['button'+chars.charAt(i).toString().toUpperCase()].char = chars.charAt(i).toString();
 			}
 
-			mc['buttonDot'].addEventListener(TUIOEvent.TUIO_DOWN, this.DownKey);
+			mc['buttonDot'].addEventListener(TUIOEvent.TUIO_DOWN, this.DownKey, false, 0, true);
 			mc['buttonDot'].char = ".".toString();
 
-			mc['buttonComma'].addEventListener(TUIOEvent.TUIO_DOWN, this.DownKey);
+			mc['buttonComma'].addEventListener(TUIOEvent.TUIO_DOWN, this.DownKey, false, 0, true);
 			mc['buttonComma'].char = ",".toString();
 			
-			mc['buttonSpace'].addEventListener(TUIOEvent.TUIO_DOWN, this.DownKey);
+			mc['buttonSpace'].addEventListener(TUIOEvent.TUIO_DOWN, this.DownKey, false, 0, true);
 			mc['buttonSpace'].char = " ";
 			
-			mc['buttonBackSpace'].addEventListener(TUIOEvent.TUIO_DOWN, this.BackSpaceDown);
-			mc['buttonEnter'].addEventListener(TUIOEvent.TUIO_DOWN, this.EnterDown);
+			mc['buttonBackSpace'].addEventListener(TUIOEvent.TUIO_DOWN, this.BackSpaceDown, false, 0, true);
+			mc['buttonEnter'].addEventListener(TUIOEvent.TUIO_DOWN, this.EnterDown, false, 0, true);
 			
-			mc['buttonShift'].addEventListener(TUIOEvent.TUIO_DOWN, this.ShiftDown);
-			mc['buttonShift'].addEventListener(TUIOEvent.TUIO_UP, this.ShiftUp);
-			//mc['holder'].addEventListener(TUIOEvent.TUIO_DOWN, this.Holder);
+			mc['buttonShift'].addEventListener(TUIOEvent.TUIO_DOWN, this.ShiftDown, false, 0, true);
+			mc['buttonShift'].addEventListener(TUIOEvent.TUIO_UP, this.ShiftUp, false, 0, true);
+			//mc['holder'].addEventListener(TUIOEvent.TUIO_DOWN, this.Holder, false, 0, true);
 		}
 		function Holder(e:Event) {
 			e.stopPropagation();

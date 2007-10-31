@@ -53,11 +53,11 @@
 			brush = new BrushObj();
 			
 			trace(brush);
-			this.addEventListener(TUIOEvent.TUIO_MOVE, this.moveHandler);			
-			this.addEventListener(TUIOEvent.TUIO_DOWN, this.downEvent);						
-			this.addEventListener(TUIOEvent.TUIO_UP, this.upEvent);									
-			this.addEventListener(TUIOEvent.TUIO_OVER, this.rollOverHandler);									
-			this.addEventListener(TUIOEvent.TUIO_OUT, this.rollOutHandler);																
+			this.addEventListener(TUIOEvent.TUIO_MOVE, this.moveHandler, false, 0, true);			
+			this.addEventListener(TUIOEvent.TUIO_DOWN, this.downEvent, false, 0, true);						
+			this.addEventListener(TUIOEvent.TUIO_UP, this.upEvent, false, 0, true);									
+			this.addEventListener(TUIOEvent.TUIO_OVER, this.rollOverHandler, false, 0, true);									
+			this.addEventListener(TUIOEvent.TUIO_OUT, this.rollOutHandler, false, 0, true);																
 			
 			 var colorBar_0:Sprite = new Sprite();
 			 		
@@ -128,18 +128,18 @@
 			colorButton_9.y = 505;	
 			colorButton_9.x = 5;
 			
-			colorButton_0.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(0.0, 0.0, 0.0);});									
-			colorButton_1.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(1.0, 0.0, 0.0);});	
-			colorButton_2.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(1.0, 0.5, 0.0);});									
-			colorButton_3.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(1.0, 1.0, 0.0);});
-			colorButton_4.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(0.0, 1.0, 0.0);});									
-			colorButton_5.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(0.5, 1.0, 0.5);});
-			colorButton_6.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(0.0, 0.0, 1.0);});									
-			colorButton_7.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(0.5, 0.0, 0.5);});									
-			colorButton_8.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(1.0, 0.0, 1.0);});
-			colorButton_9.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(1.0, 1.0, 1.0);});
+			colorButton_0.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(0.0, 0.0, 0.0);}, false, 0, true);									
+			colorButton_1.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(1.0, 0.0, 0.0);}, false, 0, true);	
+			colorButton_2.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(1.0, 0.5, 0.0);}, false, 0, true);									
+			colorButton_3.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(1.0, 1.0, 0.0);}, false, 0, true);
+			colorButton_4.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(0.0, 1.0, 0.0);}, false, 0, true);									
+			colorButton_5.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(0.5, 1.0, 0.5);}, false, 0, true);
+			colorButton_6.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(0.0, 0.0, 1.0);}, false, 0, true);									
+			colorButton_7.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(0.5, 0.0, 0.5);}, false, 0, true);									
+			colorButton_8.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(1.0, 0.0, 1.0);}, false, 0, true);
+			colorButton_9.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(1.0, 1.0, 1.0);}, false, 0, true);
 			
-			this.addEventListener(Event.ENTER_FRAME, this.update);			
+			this.addEventListener(Event.ENTER_FRAME, this.update, false, 0, true);			
 			paintBmp = new Bitmap(paintBmpData);
 			
 			var cmat:Array = [ 1, 1, 1,

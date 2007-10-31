@@ -35,7 +35,7 @@
             var request:URLRequest = new URLRequest("local/images.xml");
             var variables:URLLoader = new URLLoader();
             variables.dataFormat = URLLoaderDataFormat.TEXT;
-            variables.addEventListener(Event.COMPLETE, LIcompleteHandler);
+            variables.addEventListener(Event.COMPLETE, LIcompleteHandler, false, 0, true);
             try
             {
                 variables.load(request);
@@ -75,7 +75,7 @@
             var request:URLRequest = new URLRequest("local/videos.xml");
             var variables:URLLoader = new URLLoader();
             variables.dataFormat = URLLoaderDataFormat.TEXT;
-            variables.addEventListener(Event.COMPLETE, LVcompleteHandler);
+            variables.addEventListener(Event.COMPLETE, LVcompleteHandler, false, 0, true);
             try
             {
                 variables.load(request);

@@ -48,7 +48,7 @@ package app.demo.tank {
 			
 			// FIXME: create a play field for tanks..
 			
-			this.addEventListener(Event.ENTER_FRAME, frameUpdate);		
+			this.addEventListener(Event.ENTER_FRAME, frameUpdate, false, 0, true);		
 		}
 		
 		function frameUpdate(e:Event)

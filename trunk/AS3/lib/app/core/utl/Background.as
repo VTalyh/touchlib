@@ -69,12 +69,12 @@ package com.gfxcomplex.display{
 		}
 		//events managment
 		private function configureListeners(dispatcher:IEventDispatcher):void {
-			dispatcher.addEventListener(Event.COMPLETE, completeHandler);
-			dispatcher.addEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler);
-			dispatcher.addEventListener(Event.INIT, initHandler);
-			dispatcher.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
-			dispatcher.addEventListener(Event.OPEN, openHandler);
-			dispatcher.addEventListener(ProgressEvent.PROGRESS, progressHandler);
+			dispatcher.addEventListener(Event.COMPLETE, completeHandler, false, 0, true);
+			dispatcher.addEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler, false, 0, true);
+			dispatcher.addEventListener(Event.INIT, initHandler, false, 0, true);
+			dispatcher.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler, false, 0, true);
+			dispatcher.addEventListener(Event.OPEN, openHandler, false, 0, true);
+			dispatcher.addEventListener(ProgressEvent.PROGRESS, progressHandler, false, 0, true);
 		}
 		//Complete the loading
 		private function completeHandler(event:Event):void {
@@ -104,13 +104,13 @@ package com.gfxcomplex.display{
 			}
 			_imageHolder.y = sH ;
 			_imageHolder.alpha = 0;
-			timer.addEventListener(TimerEvent.TIMER, timerListener);
+			timer.addEventListener(TimerEvent.TIMER, timerListener, false, 0, true);
 			timer.start();
 			
 			//stage settings
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.stage.align = StageAlign.TOP_LEFT;
-			stage.addEventListener(Event.RESIZE, stageResized);
+			stage.addEventListener(Event.RESIZE, stageResized, false, 0, true);
 			dispatchEvent(new Event(BrowserBackground.BACKGROUND_LOADED));
 		}		
 		

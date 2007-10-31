@@ -30,7 +30,7 @@
 			clickgrabber.graphics.endFill();						
 			
 			this.addChild( clickgrabber );		
-			this.addEventListener(Event.ENTER_FRAME, slide);			
+			this.addEventListener(Event.ENTER_FRAME, slide, false, 0, true);			
 		}
 		
 		public override function released(dx:Number, dy:Number, dang:Number)

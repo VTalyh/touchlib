@@ -13,6 +13,7 @@ package app.demo.appLoader
 	import flash.net.*;
 	import flash.events.*;
 	import flash.text.*;
+	import flash.geom.*;
 	import app.demo.appLoader.*;
 	import app.core.element.*;
 
@@ -29,16 +30,22 @@ package app.demo.appLoader
 		var selectedButton:AppLoaderButton;
 		
 		var loadbtn:Wrapper;
+		
+		var osButton:OSButton;
 
 		public function AppLoader()
 		{
+			osButton = new OSButton();
+			osButton.x = stage.stageWidth;
+			osButton.y = stage.stageHeight;
+
 			selectedButton = null;
 			appButtons = new Array();
 			
 			TUIO.init( this, 'localhost', 3000, '', false );
 			
 			xmlLoader = new URLLoader();
-			xmlLoader.addEventListener(Event.COMPLETE, this.xmlLoaded); 			
+			xmlLoader.addEventListener(Event.COMPLETE, this.xmlLoaded, false, 0, true); 			
 			xmlLoader.load(new URLRequest("www/xml/applist.xml"));
 			
 			var b:SimpleButton = new AppLoadButton();
@@ -48,6 +55,8 @@ package app.demo.appLoader
 			loadbtn.y = 515;			
 			loadbtn.visible = false;		
 			
+			tfAppInfo.visible = false;
+			
 			screenshotLoader = new Loader();
 			screenshotLoader.visible = false;
 			screenshotLoader.x = 218;
@@ -56,31 +65,49 @@ package app.demo.appLoader
 			
 			addChild(loadbtn);
 			
-			loadbtn.addEventListener(MouseEvent.CLICK, loadClicked);
+			loadbtn.addEventListener(MouseEvent.CLICK, loadClicked, false, 0, true);
 			
 
-			appLoader = new Loader();
-			addChild(appLoader);
 
-			this.addEventListener(TUIOEvent.TUIO_MOVE, this.tuioMoveHandler);			
-			this.addEventListener(TUIOEvent.TUIO_DOWN, this.tuioDownEvent);						
-			this.addEventListener(TUIOEvent.TUIO_UP, this.tuioUpEvent);									
-			this.addEventListener(TUIOEvent.TUIO_OVER, this.tuioRollOverHandler);									
-			this.addEventListener(TUIOEvent.TUIO_OUT, this.tuioRollOutHandler);			
+			//addChild(appLoader);
+
+			this.addEventListener(TUIOEvent.TUIO_MOVE, this.tuioMoveHandler, false, 0, true);			
+			this.addEventListener(TUIOEvent.TUIO_DOWN, this.tuioDownEvent, false, 0, true);						
+			this.addEventListener(TUIOEvent.TUIO_UP, this.tuioUpEvent, false, 0, true);									
+			this.addEventListener(TUIOEvent.TUIO_OVER, this.tuioRollOverHandler, false, 0, true);									
+			this.addEventListener(TUIOEvent.TUIO_OUT, this.tuioRollOutHandler, false, 0, true);			
 			
-			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler);									
-			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent);															
-			this.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpEvent);	
-			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOverHandler);
-			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOutHandler);
-
+			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler, false, 0, true);									
+			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent, false, 0, true);															
+			this.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpEvent, false, 0, true);	
+			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOverHandler, false, 0, true);
+			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOutHandler, false, 0, true);
+		}
+		
+		function createParticles(n:int, px:Number, py:Number)
+		{
+			for(var i:int =0; i<n; i++)
+			{
+				var p:Sprite = new AppParticle();
+				p.x = px;
+				p.y = py;
+				this.mcParticleLayer.addChild(p);
+			}
 		}
 		
 		function tuioMoveHandler(e:TUIOEvent)
 		{
+			var tuioobj:TUIOObject = TUIO.getObjectById(e.ID);							
+			
+			var localPt:Point = parent.globalToLocal(new Point(tuioobj.x, tuioobj.y));														
+			createParticles(1, localPt.x, localPt.y);
 		}
 		function tuioDownEvent(e:TUIOEvent)
 		{
+			var tuioobj:TUIOObject = TUIO.getObjectById(e.ID);							
+			
+			var localPt:Point = parent.globalToLocal(new Point(tuioobj.x, tuioobj.y));														
+			createParticles(5, localPt.x, localPt.y);			
 		}
 		function tuioUpEvent(e:TUIOEvent)
 		{
@@ -94,14 +121,12 @@ package app.demo.appLoader
 		
 		function mouseMoveHandler(e:MouseEvent)
 		{
+			createParticles(1, this.mouseX, this.mouseY);			
 		}
 		function mouseDownEvent(e:MouseEvent)
 		{
-			var p:Sprite = new AppParticle();
-			p.x = this.mouseX;
-			p.y = this.mouseY;
-			addChild(p);
-			trace("Clicky " + this.mouseX + " " + this.mouseY);
+			createParticles(5, this.mouseX, this.mouseY);
+
 		}
 		function mouseUpEvent(e:MouseEvent)
 		{
@@ -111,7 +136,7 @@ package app.demo.appLoader
 		}
 		function mouseRollOutHandler(e:MouseEvent)
 		{
-		}		
+		}
 		
 		
 		public function loadClicked(e:MouseEvent)
@@ -124,19 +149,47 @@ package app.demo.appLoader
 		
 		public function runApp()
 		{
+
+			osButton.setAppInfo(this, selectedButton.appName,  selectedButton.appDescription, "");
 			loadbtn.visible = false;						
+			appLoader = new Loader();
 			appLoader.load(new URLRequest(selectedButton.appName + ".swf"));			
-			this.setChildIndex(appLoader, this.numChildren-1);
-			removeChild(appLoader);
+			//this.setChildIndex(appLoader, this.numChildren-1);
+
 			parent.addChild(appLoader);
+			parent.addChild(osButton);
 			parent.removeChild(this);
+		}
+		
+		public function closeApp(main:DisplayObjectContainer)
+		{
+			appLoader.content.dispatchEvent(new Event(Event.UNLOAD, true));
+			
+			this.gotoAndStop("Init");
+			main.removeChild(appLoader);
+			main.removeChild(osButton);
+			main.addChild(this);
+
+
+			appLoader.unload();
+
+			appLoader = null;
+			buttonUnlock(selectedButton);			
+			
+			// GC Hack?
+			try {
+				new LocalConnection().connect('foo');
+				new LocalConnection().connect('foo');
+			} catch (e:*) {}
+			
 		}
 		
 		public function showDesc()
 		{
 			screenshotLoader.unload();			
-			screenshotLoader.load(new URLRequest("www/images/apps/" + selectedButton.appName + "_screenshot.jpg"));
+			screenshotLoader.load(new URLRequest("www/img/apps/" + selectedButton.appName + "_screenshot.jpg"));
 			screenshotLoader.visible = true;
+			tfAppInfo.visible = true;
 			this.tfAppInfo.text = selectedButton.appDescription;
 		}
 		
@@ -156,8 +209,9 @@ package app.demo.appLoader
 			}
 		}
 		
-		public function buttonUnlock(b:AppLoaderButton)
+		public function returnButtonToPool(b:AppLoaderButton)
 		{
+			screenshotLoader.unload();						
 			b.unlock();
 			b.x = b.parent.x - this.mcAppArea.x;
 			b.y = b.parent.y - this.mcAppArea.y;
@@ -166,15 +220,23 @@ package app.demo.appLoader
 			
 			this.mcAppArea.addChild(b);			
 			loadbtn.visible = false;							
-			this.gotoAndPlay("Cancel");
-			selectedButton = null;
+
+
+			tfAppInfo.visible = false;			
+		}
+		
+		public function buttonUnlock(b:AppLoaderButton)
+		{
+			returnButtonToPool(b);
+			selectedButton = null;			
+			this.gotoAndPlay("Cancel");			
 			
 		}
 		
 		public function xmlLoaded(e:Event)
 		{	
 			var myFont:Font = new DustismoFont();			
-		
+
 			try
 			{
 				var xml:XML = new XML(e.target.data);
@@ -201,16 +263,15 @@ package app.demo.appLoader
 					catlabel.width = 128;
 					catlabel.embedFonts = true;
 
-					
 					this.mcCatArea.addChild(catlabel);
 					
 					for each (var app:XML in cat.apps.app)
 					{
-						trace("app " + app);
+						//trace("app " + app);
 						var button:AppLoaderButton = new AppLoaderButton(this, app.name, app.body);
 						button.setPos(bx, by);
 
-						bx += 96 + 12
+						bx += 96 + 12;
 						appButtons.push( button );
 						this.mcAppArea.addChild( button );
 					}
@@ -220,7 +281,7 @@ package app.demo.appLoader
 
 			} catch (e:TypeError)
 			{
-				//Could not convert the data, probavlu because
+				//Could not convert the data, probably because
 				//because is not formated correctly
 				
 				trace("Could not parse the XML")

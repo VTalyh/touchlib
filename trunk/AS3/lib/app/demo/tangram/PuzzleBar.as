@@ -35,7 +35,7 @@ package app.demo.tangram
 				
 				scroller = new myscroll(); this.addChild(scroller);
 				scroller.x = 725 ; scroller.y = 250;												
-				this.addEventListener(Event.ENTER_FRAME, slide);
+				this.addEventListener(Event.ENTER_FRAME, slide, false, 0, true);
 				
 				
 				

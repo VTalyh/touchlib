@@ -42,7 +42,7 @@
 			clickgrabber.graphics.endFill();						
 			
 			this.addChild( clickgrabber );		
-			this.addEventListener(Event.ENTER_FRAME, slide);			
+			this.addEventListener(Event.ENTER_FRAME, slide, false, 0, true);			
 			
 			/*
 			var exitButton:Loader = new Loader();

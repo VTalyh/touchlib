@@ -43,7 +43,7 @@ public class Arrange extends Sprite
 		spr0.graphics.drawRect(-0,-0,300,300);
 		spr0.graphics.endFill();	
 		spr0.x = (-photos.width/2)+0; spr0.y = -photos.height/2;
-		spr0.addEventListener(TUIOEvent.DownEvent, stackPhotos);
+		spr0.addEventListener(TUIOEvent.DownEvent, stackPhotos, false, 0, true);
 		photos.addChild(spr0);
 		
 		var spr1:Shape = new Shape();
@@ -51,7 +51,7 @@ public class Arrange extends Sprite
 		spr1.graphics.drawRect(-0,-0,300,300);
 		spr1.graphics.endFill();	
 		spr1.x = (-photos.width/2)+300; spr1.y = -photos.height/2;
-		spr1.addEventListener(TUIOEvent.DownEvent, messPhotos);	
+		spr1.addEventListener(TUIOEvent.DownEvent, messPhotos, false, 0, true);	
 		photos.addChild(spr1);
 		
 		var spr2:Shape = new Shape();
@@ -59,7 +59,7 @@ public class Arrange extends Sprite
 		spr2.graphics.drawRect(-0,-0,300,300);
 		spr2.graphics.endFill();	
 		spr2.x = (-photos.width/2)+600; spr2.y = -photos.height/2;
-		spr2.addEventListener(TUIOEvent.DownEvent, gridPhotos);	
+		spr2.addEventListener(TUIOEvent.DownEvent, gridPhotos, false, 0, true);	
 		photos.addChild(spr2);
 		
 		var spr3:Shape = new Shape();
@@ -67,8 +67,8 @@ public class Arrange extends Sprite
 		spr3.graphics.drawRect(-0,-0,300,300);
 		spr3.graphics.endFill();		
 		spr3.x = photos.width/2-300; spr3.y = -photos.height/2;
-		spr3.addEventListener(TUIOEvent.DownEvent, function(){nLoad_obj_0.toggleObjects();});		
-		//spr3.addEventListener(TUIOEvent.UpEvent, stackPhotos);
+		spr3.addEventListener(TUIOEvent.DownEvent, function(){nLoad_obj_0.toggleObjects();}, false, 0, true);		
+		//spr3.addEventListener(TUIOEvent.UpEvent, stackPhotos, false, 0, true);
 		photos.addChild(spr3);	
 		
 		photos.scaleX=0.3, photos.scaleY=0.3;	

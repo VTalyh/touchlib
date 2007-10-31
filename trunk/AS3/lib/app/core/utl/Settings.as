@@ -66,7 +66,7 @@
                 public function loadSettings(url:String):void {
                         var urlRequest:URLRequest = new URLRequest(url);
                         urlLoader = new URLLoader();
-                        urlLoader.addEventListener(Event.COMPLETE, onXMLDataLoaded);
+                        urlLoader.addEventListener(Event.COMPLETE, onXMLDataLoaded, false, 0, true);
                         urlLoader.load(urlRequest);
                 }
                

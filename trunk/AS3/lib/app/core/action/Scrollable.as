@@ -37,12 +37,12 @@ package app.core.action
 			state = "none";
 
 			blobs = new Array();
-			this.addEventListener(TUIOEvent.TUIO_MOVE, this.moveHandler);			
-			this.addEventListener(TUIOEvent.TUIO_DOWN, this.downEvent);						
-			this.addEventListener(TUIOEvent.TUIO_UP, this.upEvent);									
-			//this.addEventListener(TUIOEvent.RollOverEvent, this.rollOverHandler);									
-			//this.addEventListener(TUIOEvent.RollOutEvent, this.rollOutHandler);												
-			this.addEventListener(Event.ENTER_FRAME, this.update);
+			this.addEventListener(TUIOEvent.TUIO_MOVE, this.moveHandler, false, 0, true);			
+			this.addEventListener(TUIOEvent.TUIO_DOWN, this.downEvent, false, 0, true);						
+			this.addEventListener(TUIOEvent.TUIO_UP, this.upEvent, false, 0, true);									
+			//this.addEventListener(TUIOEvent.RollOverEvent, this.rollOverHandler, false, 0, true);									
+			//this.addEventListener(TUIOEvent.RollOutEvent, this.rollOutHandler, false, 0, true);												
+			this.addEventListener(Event.ENTER_FRAME, this.update, false, 0, true);
 			
 			dX = 0;
 			dY = 0;

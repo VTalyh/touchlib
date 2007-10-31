@@ -59,13 +59,13 @@ import flash.text.TextFormat;
 			try
 			{
 				FLOSCSocket = new XMLSocket();
-	
-				FLOSCSocket.addEventListener(Event.CLOSE, closeHandler);
-				FLOSCSocket.addEventListener(Event.CONNECT, connectHandler);
-				FLOSCSocket.addEventListener(DataEvent.DATA, dataHandler);
-				FLOSCSocket.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
-				FLOSCSocket.addEventListener(ProgressEvent.PROGRESS, progressHandler);
-				FLOSCSocket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+
+				FLOSCSocket.addEventListener(Event.CLOSE, closeHandler, false, 0, true);
+				FLOSCSocket.addEventListener(Event.CONNECT, connectHandler, false, 0, true);
+				FLOSCSocket.addEventListener(DataEvent.DATA, dataHandler, false, 0, true);
+				FLOSCSocket.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler, false, 0, true);
+				FLOSCSocket.addEventListener(ProgressEvent.PROGRESS, progressHandler, false, 0, true);
+				FLOSCSocket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler, false, 0, true);
 	
 				FLOSCSocket.connect(host, port);			
 			
@@ -94,16 +94,16 @@ import flash.text.TextFormat;
 				buttonSprite.graphics.lineStyle(2, 0x202020);
 				buttonSprite.graphics.beginFill(0xF80101,0.5);
 				buttonSprite.graphics.drawRoundRect(10, 10, 200, 200,6);				 
-				buttonSprite.addEventListener(TUIOEvent.TUIO_DOWN, stopRecording);				 
+				buttonSprite.addEventListener(TUIOEvent.TUIO_DOWN, stopRecording, false, 0, true);				 
 				//thestage.addChild(buttonSprite);
 				 
 				 if(xmlPlaybackURL != "")
 				 {
 					xmlPlaybackLoader = new URLLoader();
-					xmlPlaybackLoader.addEventListener("complete", xmlPlaybackLoaded);
+					xmlPlaybackLoader.addEventListener("complete", xmlPlaybackLoaded, false, 0, true);
 					xmlPlaybackLoader.load(new URLRequest(xmlPlaybackURL));
 			
-					thestage.addEventListener(Event.ENTER_FRAME, frameUpdate);
+					thestage.addEventListener(Event.ENTER_FRAME, frameUpdate, false, 0, true);
 				 }
 
 			} else {

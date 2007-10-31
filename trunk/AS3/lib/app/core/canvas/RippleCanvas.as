@@ -64,13 +64,13 @@
 			brush = new BrushObj();
 			
 			trace(brush);
-			this.addEventListener(TUIOEvent.TUIO_MOVE, this.moveHandler);			
-			this.addEventListener(TUIOEvent.TUIO_DOWN, this.downEvent);						
-			this.addEventListener(TUIOEvent.TUIO_UP, this.upEvent);									
-			this.addEventListener(TUIOEvent.TUIO_OVER, this.rollOverHandler);									
-			this.addEventListener(TUIOEvent.TUIO_OUT, this.rollOutHandler);															
+			this.addEventListener(TUIOEvent.TUIO_MOVE, this.moveHandler, false, 0, true);			
+			this.addEventListener(TUIOEvent.TUIO_DOWN, this.downEvent, false, 0, true);						
+			this.addEventListener(TUIOEvent.TUIO_UP, this.upEvent, false, 0, true);									
+			this.addEventListener(TUIOEvent.TUIO_OVER, this.rollOverHandler, false, 0, true);									
+			this.addEventListener(TUIOEvent.TUIO_OUT, this.rollOutHandler, false, 0, true);															
 			
-			this.addEventListener(Event.ENTER_FRAME, this.update);			
+			this.addEventListener(Event.ENTER_FRAME, this.update, false, 0, true);			
 			paintBmp = new Bitmap(paintBmpData);
 			
 			

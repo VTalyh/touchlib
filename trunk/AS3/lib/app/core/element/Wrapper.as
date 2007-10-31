@@ -44,6 +44,7 @@ package app.core.element{
 		public function Wrapper(cmp:InteractiveObject)
 		{
 			wrappedComponent = cmp;
+			
 			addChild(cmp);
 			
 			var blurfx:BlurFilter = new BlurFilter(10, 10, 1);
@@ -55,13 +56,13 @@ package app.core.element{
 			gfxActiveGlow.filters = [blurfx];
 			addChild(gfxActiveGlow);			
 
-			this.addEventListener(TUIOEvent.TUIO_MOVE, this.tuioMoveHandler);			
-			this.addEventListener(TUIOEvent.TUIO_DOWN, this.tuioDownEvent);						
-			this.addEventListener(TUIOEvent.TUIO_UP, this.tuioUpEvent);									
-			this.addEventListener(TUIOEvent.TUIO_OVER, this.tuioRollOverHandler);									
-			this.addEventListener(TUIOEvent.TUIO_OUT, this.tuioRollOutHandler);
+			this.addEventListener(TUIOEvent.TUIO_MOVE, this.tuioMoveHandler, false, 0, true);			
+			this.addEventListener(TUIOEvent.TUIO_DOWN, this.tuioDownEvent, false, 0, true);						
+			this.addEventListener(TUIOEvent.TUIO_UP, this.tuioUpEvent, false, 0, true);									
+			this.addEventListener(TUIOEvent.TUIO_OVER, this.tuioRollOverHandler, false, 0, true);									
+			this.addEventListener(TUIOEvent.TUIO_OUT, this.tuioRollOutHandler, false, 0, true);
 
-			this.addEventListener(Event.ENTER_FRAME, this.frameUpdate);
+			this.addEventListener(Event.ENTER_FRAME, this.frameUpdate, false, 0, true);
 			
 			updateGraphics();
 		}

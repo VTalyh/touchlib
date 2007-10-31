@@ -57,8 +57,8 @@
 				outlineBox.graphics.drawRect(0, 0, kWidth, kHeight);
 				outlineBox.graphics.endFill();	
 				
-				//outlineBox.addEventListener (TUIOEvent.DownEvent, onMoveOn);  // If on border, turn Scaling/Rotating On
-			    //outlineBox.addEventListener(TUIOEvent.UpEvent, onupEvent);    // If not on border, turn Scaling/Rotating Off									
+				//outlineBox.addEventListener (TUIOEvent.DownEvent, onMoveOn, false, 0, true);  // If on border, turn Scaling/Rotating On
+			    //outlineBox.addEventListener(TUIOEvent.UpEvent, onupEvent, false, 0, true);    // If not on border, turn Scaling/Rotating Off									
 				
 			}
 			
@@ -104,9 +104,9 @@
 				
 				addChild(key); //add the Sprite key to the stage
 				
-				key.addEventListener (TUIOEvent.TUIO_OVER, onStartAudio);  // if Finger rolls over key, go to onStartAudio function
-				key.addEventListener(TUIOEvent.TUIO_OUT, onKeyRelease); // if Finger rolls off key, go to onSpriteRelease function
-				key.addEventListener(TUIOEvent.TUIO_OVER, onKeyPress);  // if Finger rolls off key, go to onSpritePress function
+				key.addEventListener (TUIOEvent.TUIO_OVER, onStartAudio, false, 0, true);  // if Finger rolls over key, go to onStartAudio function
+				key.addEventListener(TUIOEvent.TUIO_OUT, onKeyRelease, false, 0, true); // if Finger rolls off key, go to onSpriteRelease function
+				key.addEventListener(TUIOEvent.TUIO_OVER, onKeyPress, false, 0, true);  // if Finger rolls off key, go to onSpritePress function
 			}		
 			
 			

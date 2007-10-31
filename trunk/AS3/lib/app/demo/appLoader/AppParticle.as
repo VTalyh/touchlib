@@ -28,11 +28,11 @@
 			history = new Array();
 			direction = int(Math.random()*8);
 			dirChangeCount = 0;
-			upVec = new Point(2, 0);
+			upVec = new Point(6, 0);
 			cursor = new Point(0,0);
 			history.push(new Point(cursor.x, cursor.y));			
-			addEventListener(Event.ENTER_FRAME, frameUpdate);
-			life = 100;
+			addEventListener(Event.ENTER_FRAME, frameUpdate, false, 0, true);
+			life = 30;
 
 		}
 		
@@ -61,36 +61,31 @@
 			{
 				direction += int(Math.random()*4)-2;
 				direction = direction % 8;
-				dirChangeCount = int(Math.random()*25) + 10;
+				dirChangeCount = 1;
 			
 				history.push(new Point(cursor.x, cursor.y));
 				
-				if(history.length >= 4)
+				if(history.length >= 10)
 				{
 					history.splice(0, 1);
 				}
 				
+				var i:int;
+				
 				this.graphics.clear();
 				this.graphics.moveTo(history[0].x, history[0].y);
-				this.graphics.lineStyle(4,0xffffff, 0.5, true);			
-				var colArray:Array = new Array();
-				colArray.push(0xffffff);
-				colArray.push(0x000000);
-				var alphaArray:Array = new Array();
-				alphaArray.push(100, 100);
-				var ratiosArray:Array = new Array();
-				ratiosArray.push(0);
-				ratiosArray.push(255);
-				var gm:Matrix = new Matrix();
-				gm.createGradientBox(200, 200, 0, 0,0);
-				this.graphics.lineGradientStyle(GradientType.RADIAL, colArray, alphaArray, ratiosArray, gm); 
-				for(var i:int =0; i<history.length; i++)
+				this.graphics.lineStyle(2,0xffffff, this.life / 300.0, true);			
+	
+
+				for(i =0; i<history.length; i++)
 				{
 					// FIXME: draw history.. 
 					this.graphics.lineTo(history[i].x, history[i].y);
 					
 					//trace("" + i + ":" + history[i].x + "," + history[i].y);
 				}
+				
+		
 			
 			}						
 			
@@ -98,10 +93,25 @@
 			{
 				removeEventListener(Event.ENTER_FRAME, frameUpdate);				
 				this.parent.removeChild(this);
-				delete this;
 			}
 			
 			
 		}
 	}
 }
+
+/*
+
+	var colArray:Array = new Array();
+	colArray.push(0xffffff);
+	colArray.push(0x000000);
+	var alphaArray:Array = new Array();
+	alphaArray.push(100, 100);
+	var ratiosArray:Array = new Array();
+	ratiosArray.push(0);
+	ratiosArray.push(255);
+	var gm:Matrix = new Matrix();
+	gm.createGradientBox(200, 200, 0, 0,0);
+	this.graphics.lineGradientStyle(GradientType.RADIAL, colArray, alphaArray, ratiosArray, gm);
+
+*/

@@ -45,7 +45,8 @@ package app.demo.musicalSquares
 			addChild(ballO);
 
 			arrange();
-			this.addEventListener(Event.ENTER_FRAME, slide);
+			this.addEventListener(Event.ENTER_FRAME, slide, false, 0, true);
+			this.addEventListener(Event.UNLOAD, unloadHandler, false, 0, true);
 		}
 		
 		
@@ -57,6 +58,12 @@ package app.demo.musicalSquares
 			throwBall.scaleY = 1.0;
 		}
 		
+		public function unloadHandler(e:Event)
+		{
+			//trace("throwing unload");
+			this.removeEventListener( Event.ENTER_FRAME, slide );
+			this.removeEventListener(Event.UNLOAD, unloadHandler);
+		}
 		
 		public override function released(dx:Number, dy:Number, dang:Number) {
 
@@ -77,12 +84,12 @@ package app.demo.musicalSquares
 					this.thisState = "release"
 
 					this.removeEventListener(Event.ENTER_FRAME, slide);
-					this.addEventListener(TUIOEvent.TUIO_MOVE, this.moveHandler);			
-					this.addEventListener(TUIOEvent.TUIO_DOWN, this.downEvent);						
-					this.addEventListener(TUIOEvent.TUIO_UP, this.upEvent);									
-					this.addEventListener(TUIOEvent.TUIO_OVER, this.rollOverHandler);									
-					this.addEventListener(TUIOEvent.TUIO_OUT, this.rollOutHandler);			
-					this.removeEventListener(Event.ENTER_FRAME, this.update);					
+					this.addEventListener(TUIOEvent.TUIO_MOVE, this.moveHandler, false, 0, true);
+					this.addEventListener(TUIOEvent.TUIO_DOWN, this.downEvent, false, 0, true);
+					this.addEventListener(TUIOEvent.TUIO_UP, this.upEvent, false, 0, true);
+					this.addEventListener(TUIOEvent.TUIO_OVER, this.rollOverHandler, false, 0, true);
+					this.addEventListener(TUIOEvent.TUIO_OUT, this.rollOutHandler, false, 0, true);
+					this.removeEventListener(Event.ENTER_FRAME, this.update);
 				}
 			}
 	
