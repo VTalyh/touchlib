@@ -1,9 +1,8 @@
 Hello,
 
-Here is a brief overview of the Touchlib AS3 project:
+Here is a overview of the Touchlib AS3 project:
 
-
-
+------------------------------------------------
 //Applications
 ------------------------------------------------
 
@@ -33,6 +32,7 @@ Tangram
 Tank
 
 
+------------------------------------------------
 //Structure
 ------------------------------------------------
 
@@ -52,6 +52,7 @@ app.core.utl - Misc utils
 app.demo - Demo applications assets
  
 
+------------------------------------------------
 //Development
 ------------------------------------------------
 Here is some general guidelines to follow when building demo applications.
@@ -65,34 +66,29 @@ app/demo/appName/appNameClass.as - Document Class
 app/demo/appName/readme.txt - About the app (license, version)
 
 
-FLA Setup
-----------------------------------
-Document Class: app.core."appName"
-Source Paths: ../lib and ../ext
-Publish Resolution: 1024x786
-Background: Solid Black
-
-
-
-//Deployment
-------------------------------------------------
-www - dynamic web objects 
-local - dynamic local objects
-
-Note: you can place application assets here if you wish to you have web accessible.
-
-//Notes
---------
-c.moore: developers please let me know if have any ideas.
-
-
 When committing new applications please keep graphics to minimum, exclude things like background 
 and text objects unless necessary for programs operation. If possible put on solid black background.
 Also try to clean up any unused library elements. Think light!
 
+------------------------------------------------
+//FLA Setup
+------------------------------------------------
+Document Class: app.core.appName
+Source Paths: ../lib and ../ext
+Publish Resolution: 1024x786
+Background: Solid Black
+Publish path: deploy/appName.swf
 
+------------------------------------------------
+//Deployment
+------------------------------------------------
+www - dynamic web objects 
+local - dynamic local objects
+appName.swf
+
+------------------------------------------------
 Developers:
-------------
+------------------------------------------------
 whitenoiseaudio.com
 nuiman.com
 timroth.de
@@ -101,10 +97,21 @@ cerupcat
 adi/deej
 jensfranke
 
-
-
+------------------------------------------------
 License:
-------------
-Core - License is to be determined.
+------------------------------------------------
+Core - GPL
 Demo Applications - License determined by author(s).
+
+
+-------------------------------------------------------------
+//Notes
+-------------------------------------------------------------
+c.moore: developers let me know if have any ideas, please put here.
+
+Home: http://touchlib.com
+SVN : http://touchlib.googlecode.com
+
+
+
 
