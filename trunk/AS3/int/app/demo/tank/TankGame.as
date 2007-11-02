@@ -35,12 +35,22 @@ package app.demo.tank {
 			plyr = new PlayerTank(this, 1);
 			playerArray.push(plyr);			
 			plyr.setUIPosition(100, 550, 0);
-			plyr.setTankPosition(50, arenaHeight/2, -90);
+			plyr.setTankPosition(50, arenaHeight - 50, 45);
 			
 			plyr = new PlayerTank(this, 2);
 			playerArray.push(plyr);
 			plyr.setUIPosition(295, 50, 180);
-			plyr.setTankPosition(arenaWidth-50, arenaHeight/2, 90);	
+			plyr.setTankPosition(50, 50, 135);	
+			
+			plyr = new PlayerTank(this, 3);
+			playerArray.push(plyr);
+			plyr.setUIPosition(510, 550, 0);
+			plyr.setTankPosition(arenaWidth-50, arenaHeight - 50, -45);
+			
+			plyr = new PlayerTank(this, 4);
+			playerArray.push(plyr);
+			plyr.setUIPosition(700, 50, 180);
+			plyr.setTankPosition(arenaWidth-50, 50, 225);	
 			
 			//player2 = new PlayerTank(this, 2);
 			//player2.setUILocation(100, 400, 0);			
@@ -48,7 +58,7 @@ package app.demo.tank {
 			
 			// FIXME: create a play field for tanks..
 			
-			this.addEventListener(Event.ENTER_FRAME, frameUpdate, false, 0, true);		
+			//this.addEventListener(Event.ENTER_FRAME, frameUpdate, false, 0, true);		
 		}
 		
 		function frameUpdate(e:Event)

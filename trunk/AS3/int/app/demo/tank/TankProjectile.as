@@ -17,7 +17,7 @@
 		{
 			game = g;
 			owner = o;
-			lifeCount = 20;
+			lifeCount = 15;
 			var upVec:Point = new Point(0,-1);
 			
 			var m:Matrix = new Matrix();
@@ -27,8 +27,15 @@
 			
 			this.rotation = ang;
 			
-			this.addEventListener(Event.ENTER_FRAME, this.frameUpdate, false, 0, true);					
+			this.addEventListener(Event.ENTER_FRAME, this.frameUpdate, false, 0, true);
+			game.addEventListener(Event.UNLOAD, unloadHandler, false, 0, true);	
 		}
+		
+		function unloadHandler(e:Event)
+		{
+			removeSelf();
+		}
+				
 
 		public function frameUpdate(e:Event)
 		{
@@ -40,6 +47,17 @@
 			} else {
 				this.x += facingVec.x;
 				this.y += facingVec.y;
+				
+				
+				if(this.x > game.arenaWidth)
+					this.x = 0.0;
+				if(this.x < 0.0)
+					this.x = game.arenaWidth;
+					
+				if(this.y > game.arenaHeight)
+					this.y = 0.0;
+				if(this.y < 0)
+					this.y = game.arenaHeight;				
 				
 				// Check for collisions?
 				game.projectileHandleCollisions(this);

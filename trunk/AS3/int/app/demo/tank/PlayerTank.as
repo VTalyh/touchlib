@@ -47,7 +47,7 @@ package app.demo.tank
 		private var respawnFrames:int = 100;
 		private var respawnFramesLeft:int = 0;
 		
-		public var playerState:String = "normal";		// normal, dead, invuln
+		public var playerState:String = "normal";		// normal, dead, invuln, waiting
 		private var playerNameText:TextField;
 		private var scoreText:TextField;
 		
@@ -123,12 +123,34 @@ package app.demo.tank
 
 			upVec = new Point(0,-1);
 			
-			// FIXME: create tank movieClip.. 
-			mcTank = new Tank();
+			if(tankNum == 1)
+				mcTank = new Tank1();
+			else if(tankNum == 2)
+				mcTank = new Tank2();			
+			else if(tankNum == 3)				
+				mcTank = new Tank3();				
+			else if(tankNum == 4)				
+				mcTank = new Tank4();				
+			
 			mcTank.name = "Player" + tankNum;
 			mcMain.mcArena.addChild(mcTank);
 			
 			mcMain.addEventListener(Event.ENTER_FRAME, this.frameUpdate, false, 0, true);		
+			
+			
+			mcTank.visible = false;
+			playerState = "waiting";
+			invulnFramesLeft = invulnFrames;
+			mcTank.alpha = 0.5;	
+			
+			mcMain.addEventListener(Event.UNLOAD, unloadHandler, false, 0, true);
+			
+		}
+		
+		function unloadHandler(e:Event)
+		{
+			mcMain.removeEventListener(Event.ENTER_FRAME, this.frameUpdate);
+			fireButton.removeEventListener(MouseEvent.CLICK, fireFunc);
 		}
 		
 		function setUIPosition(xpos:Number, ypos:Number, rot:Number)
@@ -153,14 +175,24 @@ package app.demo.tank
 		
 		function fireFunc(e:Event)
 		{
-			trace("FIRE");
-			if(reloadFramesLeft == 0)
+			if(playerState == "waiting")
 			{
-				var projectile:TankProjectile = new TankProjectile(tankAngle + mcTank.mcTurret.rotation, 20, this, mcMain);
-				projectile.x = mcTank.x;
-				projectile.y = mcTank.y;
-				mcMain.mcArena.addChild(projectile);			
-				reloadFramesLeft = reloadFrames;
+					mcTank.visible = true;
+					playerState = "invuln";
+					invulnFramesLeft = invulnFrames;
+					mcTank.alpha = 0.5;				
+			} else if (playerState == "normal" || playerState == "invuln") {
+				
+			
+				trace("FIRE");
+				if(reloadFramesLeft == 0)
+				{
+					var projectile:TankProjectile = new TankProjectile(tankAngle + mcTank.mcTurret.rotation, 20, this, mcMain);
+					projectile.x = mcTank.x;
+					projectile.y = mcTank.y;
+					mcMain.mcArena.addChild(projectile);			
+					reloadFramesLeft = reloadFrames;
+				}
 			}
 			
 		}
@@ -175,8 +207,8 @@ package app.demo.tank
 				var leftVal:Number = (leftTread.getValue() - 0.5) * 2.0;
 				var rightVal:Number = (rightTread.getValue() - 0.5) * 2.0;
 	
-				mcTank.x += 5 * facingVec.x * (leftVal + rightVal);
-				mcTank.y += 5 * facingVec.y * (leftVal + rightVal);			
+				mcTank.x += 3 * facingVec.x * (leftVal + rightVal);
+				mcTank.y += 3 * facingVec.y * (leftVal + rightVal);			
 	
 				mcTank.mcTurret.rotation = (turretKnob.getValue() * 360) - 180;
 				
