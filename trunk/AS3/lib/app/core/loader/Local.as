@@ -5,19 +5,19 @@
 	import flash.display.*;		
 	import flash.events.*;
 	import flash.net.*;
-	import flash.util.trace;		
+	//import flash.util.trace;		
 	
 	public class Local extends MovieClip
 	{
 		// Class properties
-		private var thestage:DisplayObject;
+		private var thestage:Sprite;
 		private var allPics:Array;			
 
 		// Misc.
 		private var LIcontainer:String;	// Images
 		private var LVcontainer:String; // Videos
 		
-		public function Local(d:DisplayObject) 
+		public function Local(d:Sprite) 
 		{
 			thestage = d;
 			allPics = new Array();						
