@@ -1,0 +1,8 @@
+//nuiman
+---------------------------------
+Fix n3Dobjects canvas element
+Implement AudioObject
+Pressure from OSC.exe
+
+
+
