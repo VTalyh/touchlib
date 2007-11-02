@@ -17,6 +17,8 @@ import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
 
+import flash.system.Capabilities;
+
 
 
 	public class TUIO
@@ -31,7 +33,7 @@ import flash.text.TextFormat;
 		
 		static var DEBUG_TEXT:TextField;
 		static var recordedXML:XML;
-		static var bRecording:Boolean = true;
+		static var bRecording:Boolean = false; // enable debug recording
 		static var xmlPlaybackURL:String;  
 		static var xmlPlaybackLoader:URLLoader;
 		static var playbackXML:XML;
@@ -50,8 +52,8 @@ import flash.text.TextFormat;
 			debugMode = dbug;
 			
 			bInitialized = true;
-			stagewidth = s.stage.stageWidth;
-			stageheight = s.stage.stageHeight;
+			stagewidth = 1024;
+			stageheight = 786;
 			thestage = s.stage;
 			objectArray = new Array();
 			idArray = new Array();
