@@ -1,2 +1,2 @@
-dir /b images > images.xml
-dir /b videos > videos.xml
+dir /b image > images.xml
+dir /b video > videos.xml
