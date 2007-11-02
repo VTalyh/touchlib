@@ -1,39 +1,76 @@
 Hello,
 
-Here is a breif overview of the Touchlib AS3 project:
+Here is a brief overview of the Touchlib AS3 project:
+
+
+
+//Applications
+------------------------------------------------
+
+Core
+---------------
+AppLoader
+Base - Base testing for table operations. (debug)
+
+Effects
+---------------
+Ripples
+Paint
+Trace
+
+Multimemdia
+---------------
+Photo
+Viewer
+Piano
+MusicalSquares
+Turntables
+
+Games
+--------------
+Puzzle
+Tangram
+Tank
+
+
+//Structure
+------------------------------------------------
 
 src - Flash CS3 source and deployment assets
 lib - internal libraries
 ext - external libraries (papervision, tweener, etc..)
 
-com.touchlib
+com.touchlib - TUIO socket (renders touch input)
 
-app.demo.core.object - objects that can be rendered on screen (ImageObject, VideoOject)
-app.demo.core.element - interactive objects that typically act as controllers (Knob, Slider)
-app.demo.core.action - Actions that objects can extend (Rotate/Scale)
-app.demo.core.utl - 
-app.demo.core
+app.core.action - Actions for objects (Rotate/Scale, scroll, doubletap)
+app.core.canvas - Container and lens objects (MediaCanvas, nCanvas, Zoom)
+app.core.element - Interactive objects that typically act as controllers (Knob, Slider, Toggle)
+app.core.loader - External content loaders
+app.core.object - Objects that can be rendered on a canvas element (ImageObject, VideoOject)
+app.core.utl - Misc utils
 
-
-Here is some general guidelines to follow when building demo applications.
-
-
-
-//Structuring
-------------------------------------------------
-Think of the app.demo folder as you would Windows Program files, all application classes and assets 
-go into a folder. For example: 
-
-Also if you would like to put a lisense on the application please do so in a readme.txt file within this folder. 
+app.demo - Demo applications assets
  
 
 //Development
 ------------------------------------------------
+Here is some general guidelines to follow when building demo applications.
 
-Document Class
-Source Paths
+Think of the app.demo folder as you would Windows Program files, all application classes and assets 
+go into a folder. A typical folder:
+
+app/demo/appName - Folder
+app/demo/appName/assets - externals (images, fonts)
+app/demo/appName/appNameClass.as - Document Class
+app/demo/appName/readme.txt - About the app (license, version)
 
 
+FLA Setup
+----------------------------------
+Document Class: app.core."appName"
+Source Paths: ../lib and ../ext
+Publish Resolution: 1024x786
+Background: Solid Black
 
 
 
@@ -42,25 +79,32 @@ Source Paths
 www - dynamic web objects 
 local - dynamic local objects
 
-
-
+Note: you can place application assets here if you wish to you have web accessible.
 
 //Notes
 --------
 c.moore: developers please let me know if have any ideas.
 
-When commiting new applications please keep graphics to minimum, exclude things like background 
+
+When committing new applications please keep graphics to minimum, exclude things like background 
 and text objects unless necessary for programs operation. If possible put on solid black background.
+Also try to clean up any unused library elements. Think light!
+
 
 Developers:
 ------------
 whitenoiseaudio.com
 nuiman.com
-timroth
+timroth.de
 multigesture.net
+cerupcat
+adi/deej
+jensfranke
 
 
-Licence:
+
+License:
 ------------
-Licence is to be determined.
+Core - License is to be determined.
+Demo Applications - License determined by author(s).
 
