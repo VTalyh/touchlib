@@ -39,8 +39,6 @@
 			
 			if(setShapi == "square")
 			{
-				clickgrabber.graphics.drawRoundRect(0,0,setWidth,setHeight,10);
-				clickgrabber.graphics.beginFill(setColor, setAlpha/2);
 				clickgrabber.graphics.drawRoundRect(-5,-5,setWidth+10,setHeight+10,10);
 			}
 			else{clickgrabber.graphics.drawCircle(0,0,setWidth);}			

@@ -125,7 +125,7 @@
 							
 							blob1.origX = curPt1.x;
 							blob1.origY = curPt1.y;
-						}s
+						}
 						
 					}
 					if(blobs.length >= 2) {

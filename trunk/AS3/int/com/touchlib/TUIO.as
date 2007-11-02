@@ -1,8 +1,5 @@
-﻿// FIXME: need velocity
-
-package com.touchlib {
-import flash.display.*;
-
+﻿package com.touchlib {
+	
 import flash.events.DataEvent;
 import flash.events.Event;
 import flash.events.IOErrorEvent;
@@ -16,23 +13,23 @@ import flash.system.System;
 import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
-
-
+import flash.events.MouseEvent;
+import flash.display.*;
 
 	public class TUIO
 	{
 		static var FLOSCSocket:XMLSocket;
-		static var thestage:DisplayObjectContainer;
+		static var thestage:Sprite;
 		static var objectArray:Array;
 		static var idArray:Array;
 		
 
 		public static var debugMode:Boolean;		
 		
-		static var DEBUG_TEXT:TextField;
+		static var debugText:TextField;
 		static var recordedXML:XML;
-		static var bRecording:Boolean = false; //disabled XML output
-		static var xmlPlaybackURL:String;  
+		static var bRecording:Boolean = false;
+		static var xmlPlaybackURL:String = "test2.xml"; 
 		static var xmlPlaybackLoader:URLLoader;
 		static var playbackXML:XML;
 		
@@ -44,7 +41,6 @@ import flash.text.TextFormat;
 
 		public static function init (s:Sprite, host:String, port:Number, debugXMLFile:String, dbug:Boolean = true):void
 		{
-			xmlPlaybackURL = debugXMLFile; 
 			if(bInitialized)
 				return;
 			debugMode = dbug;
@@ -52,60 +48,60 @@ import flash.text.TextFormat;
 			bInitialized = true;
 			stagewidth = s.stage.stageWidth;
 			stageheight = s.stage.stageHeight;
-			thestage = s.stage;
+			thestage = s;
 			objectArray = new Array();
 			idArray = new Array();
-			
 			try
 			{
-				FLOSCSocket = new XMLSocket();
-
-				FLOSCSocket.addEventListener(Event.CLOSE, closeHandler, false, 0, true);
-				FLOSCSocket.addEventListener(Event.CONNECT, connectHandler, false, 0, true);
-				FLOSCSocket.addEventListener(DataEvent.DATA, dataHandler, false, 0, true);
-				FLOSCSocket.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler, false, 0, true);
-				FLOSCSocket.addEventListener(ProgressEvent.PROGRESS, progressHandler, false, 0, true);
-				FLOSCSocket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler, false, 0, true);
-	
-				FLOSCSocket.connect(host, port);			
 			
-			} catch (e:Event)
+			FLOSCSocket = new XMLSocket();
+
+            FLOSCSocket.addEventListener(Event.CLOSE, closeHandler);
+            FLOSCSocket.addEventListener(Event.CONNECT, connectHandler);
+            FLOSCSocket.addEventListener(DataEvent.DATA, dataHandler);
+            FLOSCSocket.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+            FLOSCSocket.addEventListener(ProgressEvent.PROGRESS, progressHandler);
+            FLOSCSocket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+
+			FLOSCSocket.connect(host, port);			
+			
+			} catch (e)
 			{
 			}
 			
 			if(debugMode)
 			{
-				var format:TextFormat = new TextFormat();
-				DEBUG_TEXT = new TextField();
-       			format.font = "Verdana";
-     			format.color = 0xFFFFFF;
-        		format.size = 10;
-        
-				DEBUG_TEXT.defaultTextFormat = format;
-				DEBUG_TEXT.autoSize = TextFieldAutoSize.LEFT;
-				DEBUG_TEXT.background = true;	
-				DEBUG_TEXT.backgroundColor = 0x000000;	
-				DEBUG_TEXT.border = true;	
-				DEBUG_TEXT.borderColor = 0x333333;	
-				thestage.addChild( DEBUG_TEXT );		
-		
-				recordedXML = <OSCPackets></OSCPackets>;				
-				var buttonSprite:Sprite = new Sprite();
-				buttonSprite.graphics.lineStyle(2, 0x202020);
-				buttonSprite.graphics.beginFill(0xF80101,0.5);
-				buttonSprite.graphics.drawRoundRect(10, 10, 200, 200,6);				 
-				buttonSprite.addEventListener(TUIOEvent.TUIO_DOWN, stopRecording, false, 0, true);				 
-				//thestage.addChild(buttonSprite);
+				// set some debug stuff?
+				var t:TextField = new TextField();
+				t.autoSize = TextFieldAutoSize.LEFT;
+				t.background = true;
+				t.border = true;				
+				t.text = "Debug info";
+				t.width = 100;
+				t.y = 40;
+				debugText = t;
+				thestage.addChild(t);
+				
+				recordedXML = <OSCPackets></OSCPackets>;
+				
+				 var buttonSprite:Sprite = new Sprite();
+				 buttonSprite.graphics.lineStyle(2, 0x202020);
+				 buttonSprite.graphics.beginFill(0x00FF00);
+				 buttonSprite.graphics.drawRect(2, 2, 40, 38);
+				 
+				 buttonSprite.addEventListener(TUIOEvent.TUIO_DOWN, stopRecording);
+				 
+				 thestage.addChild(buttonSprite);
 				 
 				 if(xmlPlaybackURL != "")
 				 {
 					xmlPlaybackLoader = new URLLoader();
-					xmlPlaybackLoader.addEventListener("complete", xmlPlaybackLoaded, false, 0, true);
+					xmlPlaybackLoader.addEventListener("complete", xmlPlaybackLoaded);
 					xmlPlaybackLoader.load(new URLRequest(xmlPlaybackURL));
 			
-					thestage.addEventListener(Event.ENTER_FRAME, frameUpdate, false, 0, true);
+					thestage.addEventListener(Event.ENTER_FRAME, frameUpdate);
 				 }
-
+				
 			} else {
 				recordedXML = <OSCPackets></OSCPackets>;
 				bRecording = false;
@@ -113,20 +109,21 @@ import flash.text.TextFormat;
 			
 		}
 		
-		private static function setDimensions(wd:int = 800, ht:int = 600):void
+		private static function setDimensions(wd:int = 800, ht:int = 600)
 		{
-			//add onResize();
 			stagewidth = wd;
 			stageheight = ht;			
 		}
+		
+		
+		
 
-		private static function xmlPlaybackLoaded(evt:Event):void
-		{
+		private static function xmlPlaybackLoaded(evt:Event) {
 			trace("Loaded xml debug data");
 			playbackXML = new XML(xmlPlaybackLoader.data);
 		}
 		
-		private static function frameUpdate(evt:Event):void
+		private static function frameUpdate(evt:Event)
 		{
 			if(playbackXML && playbackXML.OSCPACKET && playbackXML.OSCPACKET[0])
 			{
@@ -134,8 +131,8 @@ import flash.text.TextFormat;
 
 				delete playbackXML.OSCPACKET[0];
 			}
-		}
-
+		}		
+		
 		public static function getObjectById(id:Number): TUIOObject
 		{
 			for(var i=0; i<objectArray.length; i++)
@@ -147,10 +144,11 @@ import flash.text.TextFormat;
 				}
 			}
 			//trace("Notfound");
+			
 			return null;
 		}
 		
-		public static function listenForObject(id:Number, reciever:Object):void
+		public static function listenForObject(id:Number, reciever:Object)
 		{
 			var tmpObj:TUIOObject = getObjectById(id);
 			
@@ -161,7 +159,7 @@ import flash.text.TextFormat;
 
 		}
 		
-		public static function processMessage(msg:XML):void
+		public static function processMessage(msg:XML)
 		{
 
 			var fseq:String;
@@ -204,53 +202,35 @@ import flash.text.TextFormat;
 				{
 					var type:String;
 					
-					var sID:int;
-					var id:int;
-					var x:Number;
-					var y:Number;
-					var a:Number;
-					var X:Number;
-					var Y:Number;
-					var A:Number;
-					var m:Number;
-					var r:Number;					
-					
-					var objArray:Array;
-					var stagePoint:Point;
-					var displayObjArray:Array;
-					var dobj = null;					
-					
-					var tuioobj:Object;
-					
-					var localPoint:Point;
-					
 					if(node.@NAME == "/tuio/2Dobj")
 					{
 						type = node.ARGUMENT[0].@VALUE;				
 						if(type == "set")
 						{
-							sID = node.ARGUMENT[1].@VALUE;
-							id = node.ARGUMENT[2].@VALUE;
-							x = Number(node.ARGUMENT[3].@VALUE) * stagewidth;
-							y = Number(node.ARGUMENT[4].@VALUE) * stageheight;
-							a = Number(node.ARGUMENT[5].@VALUE);
-							X = Number(node.ARGUMENT[6].@VALUE);
-							Y = Number(node.ARGUMENT[7].@VALUE);
-							A = Number(node.ARGUMENT[8].@VALUE);
-							m = node.ARGUMENT[9].@VALUE;
-							r = node.ARGUMENT[10].@VALUE;
+							var sID = node.ARGUMENT[1].@VALUE;
+							var id = node.ARGUMENT[2].@VALUE;
+							var x = Number(node.ARGUMENT[3].@VALUE) * stagewidth;
+							var y = Number(node.ARGUMENT[4].@VALUE) * stageheight;
+							var a = Number(node.ARGUMENT[5].@VALUE);
+							var X = Number(node.ARGUMENT[6].@VALUE);
+							var Y = Number(node.ARGUMENT[7].@VALUE);
+							var A = Number(node.ARGUMENT[8].@VALUE);
+							var m = node.ARGUMENT[9].@VALUE;
+							var r = node.ARGUMENT[10].@VALUE;
 							
 							// send object update event..
 							
-							objArray = thestage.stage.getObjectsUnderPoint(new Point(x, y));
-							stagePoint = new Point(x,y);					
-							displayObjArray = thestage.stage.getObjectsUnderPoint(stagePoint);							
-							dobj = null;
+							var objArray:Array = thestage.stage.getObjectsUnderPoint(new Point(x, y));
+							var stagePoint:Point = new Point(x,y);					
+							var displayObjArray:Array = thestage.stage.getObjectsUnderPoint(stagePoint);							
+							var dobj = null;
 							
 //							if(displayObjArray.length > 0)								
 //								dobj = displayObjArray[displayObjArray.length-1];										
 
-							tuioobj = getObjectById(id);
+							
+						
+							var tuioobj = getObjectById(id);
 							if(tuioobj == null)
 							{
 								tuioobj = new TUIOObject("2Dobj", id, x, y, X, Y, sID, a, dobj);
@@ -275,10 +255,10 @@ import flash.text.TextFormat;
 								if(tuioobj.obj && tuioobj.obj.parent)
 								{							
 									
-									localPoint = tuioobj.obj.parent.globalToLocal(stagePoint);							
+									var localPoint:Point = tuioobj.obj.parent.globalToLocal(stagePoint);							
 									tuioobj.obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_MOVE, true, false, x, y, localPoint.x, localPoint.y, tuioobj.obj, false,false,false, true, m, "2Dobj", id, sID, a));
 								}
-							} catch (e:Event)
+							} catch (e)
 							{
 							}
 
@@ -291,17 +271,17 @@ import flash.text.TextFormat;
 						type = node.ARGUMENT[0].@VALUE;				
 						if(type == "set")
 						{
-							id = node.ARGUMENT[1].@VALUE;
-							x = Number(node.ARGUMENT[2].@VALUE) * stagewidth;
-							y = Number(node.ARGUMENT[3].@VALUE) * stageheight;
-							X = Number(node.ARGUMENT[4].@VALUE);
-							Y = Number(node.ARGUMENT[5].@VALUE);
-							m = node.ARGUMENT[6].@VALUE;
+							var id = node.ARGUMENT[1].@VALUE;
+							var x = Number(node.ARGUMENT[2].@VALUE) * stagewidth;
+							var y = Number(node.ARGUMENT[3].@VALUE) * stageheight;
+							var X = Number(node.ARGUMENT[4].@VALUE);
+							var Y = Number(node.ARGUMENT[5].@VALUE);
+							var m = node.ARGUMENT[6].@VALUE;
 							//var area = node.ARGUMENT[7].@VALUE;							
 							
-							stagePoint = new Point(x,y);					
-							displayObjArray = thestage.stage.getObjectsUnderPoint(stagePoint);
-							dobj = null;
+							var stagePoint:Point = new Point(x,y);					
+							var displayObjArray:Array = thestage.stage.getObjectsUnderPoint(stagePoint);
+							var dobj = null;
 							if(displayObjArray.length > 0)								
 								dobj = displayObjArray[displayObjArray.length-1];							
 														
@@ -311,7 +291,7 @@ import flash.text.TextFormat;
 //								sztmp += (displayObjArray[i] is InteractiveObject) + ",";
 //							trace(sztmp);
 
-							tuioobj = getObjectById(id);
+							var tuioobj = getObjectById(id);
 							if(tuioobj == null)
 							{
 								tuioobj = new TUIOObject("2Dcur", id, x, y, X, Y, -1, 0, dobj);
@@ -336,10 +316,10 @@ import flash.text.TextFormat;
 							{
 								if(tuioobj.obj && tuioobj.obj.parent)
 								{							
-									localPoint = tuioobj.obj.parent.globalToLocal(stagePoint);							
+									var localPoint:Point = tuioobj.obj.parent.globalToLocal(stagePoint);							
 									tuioobj.obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_MOVE, true, false, x, y, localPoint.x, localPoint.y, tuioobj.obj, false,false,false, true, m, "2Dobj", id, sID, a));
 								}
-							} catch (e:Event)
+							} catch (e)
 							{
 								trace("Dispatch event failed " + tuioobj.name);
 							}
@@ -352,41 +332,31 @@ import flash.text.TextFormat;
 			
 
 			if(debugMode)
-			{
-				DEBUG_TEXT.text = "";
-				DEBUG_TEXT.y = -2000;
-				DEBUG_TEXT.x = -2000;		
-			}
-			
+				debugText.text = "";
 			for (var i=0; i<objectArray.length; i++ )
 			{
 				if(objectArray[i].isAlive == false)
 				{
-					objectArray[i].removeObject();
+					objectArray[i].kill();
 					thestage.removeChild(objectArray[i].spr);
 					objectArray.splice(i, 1);
 					i--;
 
 				} else {
 					if(debugMode)
-					{
-						DEBUG_TEXT.appendText("  " + (i + 1) +" - " +objectArray[i].ID + "  X:" + int(objectArray[i].x) + "  Y:" + int(objectArray[i].y) + "  \n");
-						DEBUG_TEXT.x = stagewidth-160;
-						DEBUG_TEXT.y = 8;		
-					}
-					//trace(stagewidth);		
+						debugText.appendText(objectArray[i].ID + ": (" + int(objectArray[i].x) + "," + int(objectArray[i].y) + ")\n");
 				}
 			}
 		}
 		
 
 		
-		private static function stopRecording(e:Event):void
+		private static function stopRecording(e:MouseEvent)
 		{
 			// show XML
 			bRecording = false;
 			debugMode = false;
-			//trace(recordedXML.toString());
+			debugText.text = recordedXML.toString();
 		}
 		
         private static function closeHandler(event:Event):void {
@@ -394,8 +364,7 @@ import flash.text.TextFormat;
         }
 
         private static function connectHandler(event:Event):void {
-
-            trace("TUIO Connected : " + event);
+         //   trace("connectHandler: " + event);
         }
 
         private static function dataHandler(event:DataEvent):void {
