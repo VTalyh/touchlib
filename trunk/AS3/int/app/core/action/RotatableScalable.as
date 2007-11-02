@@ -59,7 +59,7 @@
 			if(blobs.length == 1)
 			{
 				state = "dragging";
-				trace("Drag : ");
+				trace("Dragging");		
 				
 				curScale = this.scaleX;
 				curAngle = this.rotation;					
@@ -125,7 +125,7 @@
 							
 							blob1.origX = curPt1.x;
 							blob1.origY = curPt1.y;
-						}
+						}s
 						
 					}
 					if(blobs.length >= 2) {

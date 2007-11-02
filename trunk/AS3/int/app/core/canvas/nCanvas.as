@@ -2,9 +2,9 @@
 	import flash.display.Shape;		
 	import flash.events.Event;
 	import flash.geom.Point;		
-	import app.core.action.nRotatableScalable;
+	import app.core.action.RotateScale;
 	
-	public class nCanvas extends nRotatableScalable
+	public class nCanvas extends RotateScale
 	{	
 		private var clickgrabber:Shape = new Shape();				
 		private var velX:Number = 0;

@@ -28,7 +28,7 @@
 		private var toggle_play:Number;
 
 		// Default values
-		private var border_size:Number = 5.0;
+		private var border_size:Number = 8.0;
 		private var velX:Number = 0.0;
 		private var velY:Number = 0.0;
 		private var velAng:Number = 0.0;
@@ -84,7 +84,7 @@
 			pause_btn.graphics.drawRect(video1.x+2, video1.y+2, 100, 100);
 			pause_btn.graphics.endFill();			
 			//pause_btn.graphics.lineStyle(0, 0x202020);
-			pause_btn.graphics.beginFill(0x000000, 0.35);
+			pause_btn.graphics.beginFill(0x000000, 0.25);
 			pause_btn.graphics.drawRect(video1.x+9, video1.y+7, 6, 20);
 			pause_btn.graphics.drawRect(video1.x+19, video1.y+7, 6, 20);
 			pause_btn.graphics.endFill();
@@ -109,8 +109,8 @@
 			clickgrabber.graphics.drawRect(0, 0, 1, 1);
 			clickgrabber.graphics.endFill();
 
-			border.graphics.beginFill(0xffffff, 1.0);
-			border.graphics.drawRect(0, 0, video1.width+(border_size * 2), video1.height+(border_size * 2));
+			border.graphics.beginFill(0xffffff, 0.75);
+			border.graphics.drawRoundRect(0, 0, video1.width+(border_size * 2), video1.height+(border_size * 2),10);
 			border.graphics.endFill();
 
 			addChild(border);
