@@ -33,6 +33,7 @@ void RectifyFilter::setParameter(const char *name, const char *value)
 		} else
 		{
 			level = (int) atof(value);
+			level_slider = level;
 			if(show)
 			  cvSetTrackbarPos("level", this->name.c_str(), level);
 		}

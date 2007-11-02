@@ -40,6 +40,7 @@ void BackgroundFilter::setParameter(const char *name, const char *value)
 	} else if(strcmp(name, "threshold") == 0)
 	{
 		updateThreshold = (int) atof(value);
+
 		if(show)
 			cvSetTrackbarPos("threshold", this->name.c_str(), updateThreshold);
 	} else if(strcmp(name, "mask") == 0)

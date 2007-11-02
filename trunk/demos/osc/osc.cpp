@@ -239,7 +239,7 @@ int main(int argc, char * argv[])
 	app.connectSocket(ip_address, port);
 
 	screen = TouchScreenDevice::getTouchScreen();
-	screen->setDebugMode(true);
+	screen->setDebugMode(false);
 	if(!screen->loadConfig("config.xml"))
 	{
 		std::string label;

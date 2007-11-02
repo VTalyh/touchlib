@@ -740,7 +740,9 @@ void startGLApp(int argc, char *argv[])
 		}
 
 		char s[256];
-		snprintf(s, sizeof(s), "%sx%s:%s@%s", width, height, depth, freq);
+		// not everyone has snprintf installed
+//		snprintf(s, sizeof(s), "%sx%s:%s@%s", width, height, depth, freq);
+		sprintf(s, "%sx%s:%s@%s", width, height, depth, freq);
 		glutGameModeString(s);
 		glutEnterGameMode();
 	}	

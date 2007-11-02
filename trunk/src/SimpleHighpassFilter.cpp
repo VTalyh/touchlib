@@ -49,16 +49,19 @@ void SimpleHighpassFilter::setParameter(const char *name, const char *value)
 {
 	if (strcmp(name, PARAMETER_BLUR) == 0) {
 		blurLevel = (int) atof(value);
+		blurLevelSlider = blurLevel;
 		if (show)
 			cvSetTrackbarPos(TRACKBAR_LABEL_BLUR, this->name.c_str(), blurLevel);
 	} else if (strcmp(name, PARAMETER_NOISE_METHOD) == 0) {
 		int noiseMethod = atoi(value);
+		noiseMethodSlider = noiseMethod;
 		setNoiseSmoothType(noiseMethod);
 
 		if (show)
 			cvSetTrackbarPos(TRACKBAR_LABEL_NOISE_METHOD, this->name.c_str(), noiseMethod);
 	} else if (strcmp(name, PARAMETER_NOISE) == 0) {
 		noiseLevel = (int) atof(value);
+		noiseLevelSlider = noiseLevel;
 		if (show)
 			cvSetTrackbarPos(TRACKBAR_LABEL_NOISE, this->name.c_str(), noiseLevel);
 	}

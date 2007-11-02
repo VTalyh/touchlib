@@ -37,6 +37,7 @@ void HighpassFilter::setParameter(const char *name, const char *value)
 	if(strcmp(name, "filter") == 0)
 	{
 		filterLevel = (int) atof(value);
+		filterLevel_slider = filterLevel;
 		if(show)
 			cvSetTrackbarPos("filter", this->name.c_str(), filterLevel);
 	}
@@ -44,6 +45,7 @@ void HighpassFilter::setParameter(const char *name, const char *value)
 	if(strcmp(name, "scale") == 0)
 	{
 		scale = (int) atof(value);
+		scale_slider = scale;
 		if(show)
 			cvSetTrackbarPos("scale", this->name.c_str(), scale);
 	}
