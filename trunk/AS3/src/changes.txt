@@ -1,11 +1,15 @@
 //TODO
 ---------------------------------
-Fix 3D objects wrapper container
+Add 3D objects wrapper container
 AudioObject
 Pressure from OSC.exe
 Fix textObject embeded font issue
 M$ surface apploader 
 Fix rotate/scale shake (put angle threshold)
+AppLoader Mouse Drag bug (when you try to drag icons with mouse)
+Dynamic resolution (onResize change TUIO size)
+Add old X/Y to fix Trace.fla (needs previous x/y cords)
+
 
 
 
@@ -13,6 +17,7 @@ Fix rotate/scale shake (put angle threshold)
 --------------------------------
 FPS and MemoryMonitor 
 3D Objects
-
+Viewer App
+Base App
 
 
