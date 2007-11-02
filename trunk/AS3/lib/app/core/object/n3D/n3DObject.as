@@ -36,7 +36,7 @@
 		public function n3DObject():void{
 			
 			resetBT.graphics.beginFill(0x8C8C8C,1.0);
-			resetBT.graphics.drawRoundRect(0,0,50,20,8);
+			resetBT.graphics.drawRoundRect(0,0,60,30,8);
 			resetBT.graphics.endFill();
 			resetBT.x = 955;
 			resetBT.y = 60;
