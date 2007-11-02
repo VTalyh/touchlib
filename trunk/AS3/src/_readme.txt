@@ -37,7 +37,7 @@ Tank
 ------------------------------------------------
 
 src - Flash CS3 source and deployment assets
-lib - internal libraries
+int - internal libraries
 ext - external libraries (papervision, tweener, etc..)
 
 com.touchlib - TUIO socket (renders touch input)
