@@ -1,7 +1,4 @@
-﻿// A basic Slider that listens to both TUIO events and regular MouseEvents.
-// TODO: add ability to dispatch events when the value changes.. 
-
-package app.core.element
+﻿package app.core.element
 {
 	
 	import flash.display.*;		
@@ -13,7 +10,7 @@ package app.core.element
 	import flash.text.*;
 
 
-	public class TouchlibSlider extends MovieClip
+	public class HorizontalSlider extends MovieClip
 	{
 		private var gfxSliderGrip:Sprite;
 		private var gfxActiveGrip:Sprite;
@@ -33,7 +30,7 @@ package app.core.element
 		private var mouseActive:Boolean;
 		
 
-		public function TouchlibSlider(wd:Number, ht:Number)
+		public function HorizontalSlider(wd:Number, ht:Number)
 		{
 
 					
