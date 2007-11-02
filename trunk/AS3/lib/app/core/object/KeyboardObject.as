@@ -29,7 +29,8 @@
 		function arrange(e:Event) {
 		
 			var chars: String = 'qwertyuiopasdfghjklzxcvbnm';
-			var mc:MovieClip = keyboard.content;
+			var mc:MovieClip = new MovieClip();
+			mc=keyboard.content;
 			for (var i:int = 0; i< chars.length; i++) {
 				mc['button'+chars.charAt(i).toString().toUpperCase()].addEventListener(TUIOEvent.TUIO_DOWN, this.DownKey, false, 0, true);
 				mc['button'+chars.charAt(i).toString().toUpperCase()].char = chars.charAt(i).toString();
@@ -65,6 +66,7 @@
 			e.stopPropagation();
 		}
 		function BackSpaceDown(e:Event) {
+			
 			var t: TextField = parent.getChildByName('labels').getChildByName('t');
 			var tmp:String = t.text;
 			t.text = tmp.slice(0,tmp.length-1);
@@ -78,8 +80,10 @@
 			parent.setChildIndex(t.parent, parent.numChildren-1);
 			
 			e.stopPropagation();
+			
 		}
 		function EnterDown(e:Event) {
+		
 			parent.getChildByName('labels').name = 'labels1';
 			var labels: TextObject = new TextObject();
 			labels.name = 'labels';
@@ -102,9 +106,11 @@
 			parent.setChildIndex(t.parent, parent.numChildren-1);
 			
 			e.stopPropagation();
+		
 		}
 		function DownKey(e:Event) {
 			//this.alpha -= 0.1;
+		
 			var t: TextField = parent.getChildByName('labels').getChildByName('t');
 			var tuioobj:TUIOObject = TUIO.getObjectById(e.ID);	
 			var ch: String;
@@ -131,6 +137,7 @@
 			parent.setChildIndex(t.parent, parent.numChildren-1);
 			
 			e.stopPropagation();
+			
 		}
 	}
 }

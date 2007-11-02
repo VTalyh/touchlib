@@ -25,9 +25,9 @@
 
 			
 			/**/
-			var linkedFont:myFont = new myFont();
-			var txt01:TextField = new TextField();
-			txt01.defaultTextFormat = (new TextFormat(linkedFont.fontName));
+			//var linkedFont:myFont = new myFont();
+			//var txt01:TextField = new TextField();
+			//txt01.defaultTextFormat = (new TextFormat(linkedFont.fontName));
 			
 			var embeddedFontClass = getDefinitionByName("myFont");
 			Font.registerFont(embeddedFontClass);
