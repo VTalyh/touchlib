@@ -14,6 +14,7 @@
 	import fl.controls.Button;
 	
 	import app.core.element.Wrapper;
+	//import app.core.action.RotateScale;
 	
 	public class MemoryMonitor extends Sprite
 	{
@@ -187,9 +188,10 @@
 			_b_start.label = "start";	
 			_b_start.addEventListener(MouseEvent.CLICK, onClickStartButton);
 					
-			addChild(_b_start);	
-	
-
+			
+			
+			
+			
 			_b_pause = new Button();
 			_b_pause.x = _b_start.x + _b_start.width + 10;
 			_b_pause.y = _b_start.y;
@@ -204,6 +206,10 @@
 			_b_pause.addEventListener(MouseEvent.CLICK, onClickPauseButton);
 			addChild(_b_pause);			
 		
+			var WrapperObject0:Wrapper = new Wrapper(_b_start);
+			var WrapperObject1:Wrapper = new Wrapper(_b_pause);
+			addChild(WrapperObject0);	
+			addChild(WrapperObject1);	
 			
 			var _playerInfoTxt: TextField = new TextField();
 			//_playerInfoTxt.embedFonts = true;	

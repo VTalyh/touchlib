@@ -13,7 +13,7 @@
 	import flash.filters.BitmapFilterQuality;
 	import flash.filters.DropShadowFilter;
 */
-//	import flash.util.trace;
+
 
 	public class VideoObject extends RotatableScalable {
 		// Items

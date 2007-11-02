@@ -9,9 +9,9 @@
     import flash.filters.BitmapFilterQuality;
     import flash.filters.DropShadowFilter;
 	
-	import app.core.action.RotateScale;
+	import app.core.action.RotatableScalable;
 	
-	public class SWFObject extends RotateScale 
+	public class SWFObject extends RotatableScalable 
 	{
 		private var clickgrabber:Shape = new Shape();		
 		private var photoLoader:Loader = null;		
@@ -60,10 +60,10 @@
 			clickgrabber.y = -photoLoader.height/2;			
 			
 			//this.scaleX = (Math.random()*0.4) + 0.3;
-			this.scaleX = 0.2;
-			//this.scaleX = 1;
+			//this.scaleX = 0.2;
+			this.scaleX = 1;
 			this.scaleY = this.scaleX;
-			this.alpha = 0.65;
+			//this.alpha = 1.0;
 			this.rotation = Math.random()*180 - 90;
 		}				
 		

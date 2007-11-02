@@ -10,6 +10,8 @@ Dynamic resolution (onResize change TUIO size)
 Add old X/Y to fix Trace.fla (needs previous x/y cords)
 Make project mindmap (Freemind)
 
+Debug mode error (crashes when running as swf in debug mode)
+
 Lens Object
 
 
