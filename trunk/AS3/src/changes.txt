@@ -1,7 +1,7 @@
 //TODO
 ---------------------------------
 Add 3D objects wrapper container
-AudioObject
+AudioObject with spectrum
 Pressure from OSC.exe
 Fix textObject embeded font issue
 M$ surface apploader 
@@ -9,7 +9,7 @@ Fix rotate/scale shake (put angle threshold)
 AppLoader Mouse Drag bug (when you try to drag icons with mouse)
 Dynamic resolution (onResize change TUIO size)
 Add old X/Y to fix Trace.fla (needs previous x/y cords)
-
+Make project mindmap (Freemind)
 
 
 
@@ -19,5 +19,8 @@ FPS and MemoryMonitor
 3D Objects
 Viewer App
 Base App
+Disabled XML recording 
+
+
 
 
