@@ -68,7 +68,9 @@ app/demo/appName/readme.txt - About the app (license, version)
 
 When committing new applications please keep graphics to minimum, exclude things like background 
 and text objects unless necessary for programs operation. If possible put on solid black background.
-Also try to clean up any unused library elements. Think light!
+Also try to clean up any unused library elements. 
+
+Use flash components as much as possible eg: Button
 
 ------------------------------------------------
 //FLA Setup
@@ -107,7 +109,7 @@ Demo Applications - License determined by author(s).
 -------------------------------------------------------------
 //Notes
 -------------------------------------------------------------
-c.moore: developers let me know if have any ideas, please put here.
+c.moore: developers let me know if have any ideas, please put here with your contact.
 
 Home: http://touchlib.com
 SVN : http://touchlib.googlecode.com
