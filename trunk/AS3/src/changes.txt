@@ -1,8 +1,16 @@
-//nuiman
+//TODO
 ---------------------------------
-Fix n3Dobjects canvas element
-Implement AudioObject
+Fix 3D objects wrapper container
+AudioObject
 Pressure from OSC.exe
+Fix textObject embeded font issue
+M$ surface loader (see apploader)
+
+
+//DONE
+--------------------------------
+FPS and MemoryMonitor 
+3D Objects
 
 
 
