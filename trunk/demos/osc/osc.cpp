@@ -239,7 +239,7 @@ int main(int argc, char * argv[])
 	app.connectSocket(ip_address, port);
 
 	screen = TouchScreenDevice::getTouchScreen();
-	screen->setDebugMode(false);
+	screen->setDebugMode(true);
 	if(!screen->loadConfig("config.xml"))
 	{
 		std::string label;
@@ -269,7 +269,7 @@ int main(int argc, char * argv[])
 
 	screen->beginProcessing();
 	screen->beginTracking();
-    cvNamedWindow( "keyboard grabber", CV_WINDOW_AUTOSIZE );
+    cvNamedWindow( "Touch Listener", CV_WINDOW_AUTOSIZE );
 	do
 	{
 		int keypressed = cvWaitKey(10) & 255;
