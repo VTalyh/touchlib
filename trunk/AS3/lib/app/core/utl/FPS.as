@@ -1,4 +1,4 @@
-﻿package com.touchlib {
+﻿package app.core.utl {
    
     import flash.display.Sprite;
     import flash.events.TimerEvent;

@@ -1,4 +1,4 @@
-﻿package {
+﻿package app.core.utl{
 
         import flash.events.Event;
         import flash.events.EventDispatcher;
