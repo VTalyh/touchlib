@@ -25,6 +25,7 @@ void ScalerFilter::setParameter(const char *name, const char *value)
 	if(strcmp(name, "level") == 0)
 	{
 		level = (int) atof(value);
+		level_slider = level;
 		if(show)
 			cvSetTrackbarPos("level", this->name.c_str(), level);
 	}
