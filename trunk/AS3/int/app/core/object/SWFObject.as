@@ -11,7 +11,7 @@
 	
 	import app.core.action.RotateScale;
 	
-	public class nPhoto extends RotateScale 
+	public class SWFObject extends RotateScale 
 	{
 		private var clickgrabber:Shape = new Shape();		
 		private var photoLoader:Loader = null;		
@@ -22,7 +22,7 @@
 		private var angFriction:Number = 0.05;	
 		private var setscaleXY:int;
 		
-		public function nPhoto (url:String, insetX:int, insetY:int, insetscaleXY:int)
+		public function SWFObject (url:String, insetX:int, insetY:int, insetscaleXY:int)
 		{
 			this.x = insetX ;
 			this.y = insetY ;	

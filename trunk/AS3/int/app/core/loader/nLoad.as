@@ -8,7 +8,7 @@
 	import flash.geom.Point;	
 	import flash.util.trace;		
 	
-	import app.core.object.nPhoto;
+	import app.core.object.SWFObject;
 
 	public class nLoad extends MovieClip
 	{
@@ -94,10 +94,10 @@
 				secret = flickr..photo[i].@secret.toString();
 				//url = 	"http://static.flickr.com/" + server + "/" + id + "_" + secret + ".jpg";
 				url = inGetWHAT;
-				var photo:nPhoto = new nPhoto( url , setX, setY, setscaleXY);
+				var SWFObject_0:SWFObject = new SWFObject( url , setX, setY, setscaleXY);
 				trace("Loaded: "+url);
-				thestage.addChild(photo);
-				allPics.push(photo);
+				thestage.addChild(SWFObject_0);
+				allPics.push(SWFObject_0);
 			}
 		}
 
