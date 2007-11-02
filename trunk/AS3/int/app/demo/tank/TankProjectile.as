@@ -48,8 +48,9 @@
 		
 		public function removeSelf()
 		{
+			this.removeEventListener(Event.ENTER_FRAME, this.frameUpdate);			
 			parent.removeChild(this);
-			this.removeEventListener(Event.ENTER_FRAME, this.frameUpdate, false, 0, true);
+
 			delete this;			
 		}
 	}

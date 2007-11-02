@@ -39,7 +39,7 @@ package app.demo.tank {
 			
 			plyr = new PlayerTank(this, 2);
 			playerArray.push(plyr);
-			plyr.setUIPosition(275, 50, 180);
+			plyr.setUIPosition(295, 50, 180);
 			plyr.setTankPosition(arenaWidth-50, arenaHeight/2, 90);	
 			
 			//player2 = new PlayerTank(this, 2);

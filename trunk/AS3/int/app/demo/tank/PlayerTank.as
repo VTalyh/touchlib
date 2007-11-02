@@ -9,7 +9,6 @@ package app.demo.tank
 	import flash.events.*;
 	import flash.geom.*;
 	import flash.display.*;	
-	import fl.controls.Button;
 	import flash.text.*;
 
 	dynamic public class PlayerTank
@@ -22,7 +21,7 @@ package app.demo.tank
 		private var facingVec:Point;		
 		private var playerNum:Number;
 		
-		private var fireButton:Button;
+		private var fireButton:SimpleButton;
 		
 		public var score:int;
 		
@@ -86,10 +85,8 @@ package app.demo.tank
 			turretKnob.hideLabel();
 			UIHolder.addChild(turretKnob);	
 	
-			fireButton = new Button();
-			fireButton.setSize(100, 50);
+			fireButton = new FireButton();
 			fireButton.addEventListener(MouseEvent.CLICK, fireFunc, false, 0, true);
-			fireButton.label = "FIRE";
 			
 			var tempobj:Wrapper = new Wrapper(fireButton);
 			tempobj.x = 100;
