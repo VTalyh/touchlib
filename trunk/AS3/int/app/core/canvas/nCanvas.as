@@ -16,18 +16,22 @@
 		function nCanvas(setID, setShapi, setColor, setAlpha, setBlend, setWidth, setHeight, setX, setY)
 		{
 			clickgrabber.blendMode=setBlend;
-			bringToFront = false;			
+			bringToFront = true;			
 			noScale = false;
 			noRotate = false;			
 			clickgrabber.graphics.beginFill(setColor, setAlpha);
 			if(setShapi == "square")
-			{clickgrabber.graphics.drawRect(0,0,setWidth,setHeight);}
+			{
+				clickgrabber.graphics.drawRoundRect(0,0,setWidth,setHeight,10);
+				clickgrabber.graphics.beginFill(setColor, setAlpha/2);
+				clickgrabber.graphics.drawRoundRect(-5,-5,setWidth+10,setHeight+10,10);
+			}
 			else{clickgrabber.graphics.drawCircle(0,0,setWidth);}			
 			clickgrabber.graphics.endFill();						
 			this.addChild( clickgrabber );			
 			clickgrabber.x = setX;
 			clickgrabber.y = setY;
-			this.addEventListener(Event.ENTER_FRAME, slide);			
+			//this.addEventListener(Event.ENTER_FRAME, slide);			
 		}
 		
 		
