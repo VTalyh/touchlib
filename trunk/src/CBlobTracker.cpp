@@ -599,10 +599,7 @@ void CBlobTracker::ProcessResults()
 
 	if(prevsize < numcheck)
 		numcheck = prevsize;
-
-	if(numcheck <= 2 && extraIDs > 0)
-		numcheck += 1;
-
+	
 	if(current.size() > 0)
 		permute2(0);
 
@@ -750,20 +747,36 @@ inline void CBlobTracker::permute2(int start)
   }
   else 
   {
-	  for(int i=0; i<numcheck; i++)
+	  int numchecked=0;
+
+	  for(int i=0; i<current[start].closest.size(); i++)
 	  {
-		  if((i == (numcheck-1) && extraIDs > 0) || current[start].error[current[start].closest[i]] > reject_distance_threshold)
-		  {
+		if(current[start].error[current[start].closest[i]] > reject_distance_threshold)
+			break;
+
+		ids[start] = current[start].closest[i];
+		if(checkValid(start))
+		{
+			permute2(start+1);
+			numchecked++;
+
+		}
+
+		if(numchecked >= numcheck)
+			break;
+	  }
+
+	  if(extraIDs > 0)
+	  {
 			ids[start] = -1;		// new ID
 			if(checkValidNew(start))
+			{
 				permute2(start+1);
-
-		  } else {
-			ids[start] = current[start].closest[i];
-			if(checkValid(start))
-				permute2(start+1);
-		  }
+			}
 	  }
+
+
+
   }
 }
 
