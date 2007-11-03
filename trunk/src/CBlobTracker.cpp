@@ -592,10 +592,8 @@ void CBlobTracker::ProcessResults()
 		numcheck = 4;
 	else if(cursize <= 6)
 		numcheck = 3;
-	else if(cursize <= 8)
-		numcheck = 2;
 	else
-		numcheck = 1;
+		numcheck = 2;
 
 	if(prevsize < numcheck)
 		numcheck = prevsize;
