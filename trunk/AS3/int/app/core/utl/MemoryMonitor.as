@@ -184,7 +184,7 @@
 			_b_start.toggle = true;
 			_b_start.setStyle("textFormat", _dataTxtFormat);
 			_b_start.setStyle("disabledTextFormat", _disabledTxtFormat);
-			_b_start.setStyle("embedFonts", true);			
+			//_b_start.setStyle("embedFonts", true);			
 			_b_start.label = "start";	
 			_b_start.addEventListener(MouseEvent.CLICK, onClickStartButton);
 					
@@ -199,7 +199,7 @@
 			_b_pause.height = 25;
 			_b_pause.toggle = true;
 			_b_pause.setStyle("textFormat", _dataTxtFormat);
-			_b_pause.setStyle("embedFonts", true);
+			//_b_pause.setStyle("embedFonts", true);
 			_b_pause.setStyle("disabledTextFormat", _disabledTxtFormat);
 			_b_pause.label = "pause";
 			_b_pause.enabled = false;
@@ -415,7 +415,7 @@
 			
 			showTxtData();
 			
-			drawGraph();
+			//drawGraph();
 			
 		};
 		

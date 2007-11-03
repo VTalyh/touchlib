@@ -1,14 +1,16 @@
 ﻿package com.touchlib {
-	
-	import flash.events.*;
-	import flash.xml.*;
-	import flash.net.*
-	import flash.display.*;
-	import flash.geom.*;
-	import flash.text.*;
-	import flash.net.*;
-	import flash.utils.describeType;
 
+	import flash.display.Sprite;
+	import flash.display.DisplayObject;	
+	import flash.display.InteractiveObject;	
+	import flash.display.MovieClip;	
+	import flash.geom.Point;
+	import flash.text.TextField;
+	import flash.text.TextFieldAutoSize;
+	import flash.text.TextFormat;
+	import flash.utils.Timer;
+	import flash.events.MouseEvent;
+	import flash.events.Event;
 	
 
 	public class TUIOObject 
