@@ -1,4 +1,13 @@
-﻿package app.demo.puzzle {
+﻿/* 
+Created by Laurence Muller
+Site: www.multigesture.net
+License: GPL
+
+References: Based on the example: http://www.adobe.com/devnet/flash/samples/puzzle_game/
+Notes: Puzzle images need to be resized to 800x600 and added manual into the sourcecode.
+*/
+
+package app.demo.puzzle {
 	
 	import flash.display.*;		
 	import flash.events.*;
@@ -49,7 +58,10 @@
 			
 			var easy_mode:Sprite = new Sprite();			
 			easy_mode.graphics.lineStyle(2, 0x202020);
-			easy_mode.graphics.beginFill(0xFFFFFF,0.75);
+			if(puzzleDifficulty == 4)
+				easy_mode.graphics.beginFill(0xFFFFFF,0.75);
+			else
+				easy_mode.graphics.beginFill(0xFFFFFF,0.5);
 			easy_mode.graphics.drawRoundRect(512, 700, 80, 40,8);
 			easy_mode.graphics.endFill();			
 			
@@ -68,7 +80,10 @@
 						
 			var medium_mode:Sprite = new Sprite();
 			medium_mode.graphics.lineStyle(2, 0x202020);
-			medium_mode.graphics.beginFill(0xFFFFFF,0.5);
+			if(puzzleDifficulty == 6)
+				medium_mode.graphics.beginFill(0xFFFFFF,0.75);
+			else
+				medium_mode.graphics.beginFill(0xFFFFFF,0.5);
 			medium_mode.graphics.drawRoundRect(612, 700, 80, 40,8);
 			medium_mode.graphics.endFill();			
 			
@@ -87,7 +102,10 @@
 			
 			var hard_mode:Sprite = new Sprite();
 			hard_mode.graphics.lineStyle(2, 0x202020);
-			hard_mode.graphics.beginFill(0xFFFFFF,0.5);
+			if(puzzleDifficulty == 8)
+				hard_mode.graphics.beginFill(0xFFFFFF,0.75);
+			else
+				hard_mode.graphics.beginFill(0xFFFFFF,0.5);			
 			hard_mode.graphics.drawRoundRect(712, 700, 80, 40,8);
 			hard_mode.graphics.endFill();			
 			
@@ -106,7 +124,10 @@
 			
 			var insane_mode:Sprite = new Sprite();
 			insane_mode.graphics.lineStyle(2, 0x202020);
-			insane_mode.graphics.beginFill(0xFFFFFF,0.5);
+			if(puzzleDifficulty == 10)
+				insane_mode.graphics.beginFill(0xFFFFFF,0.75);
+			else
+				insane_mode.graphics.beginFill(0xFFFFFF,0.5);				
 			insane_mode.graphics.drawRoundRect(812, 700, 80, 40,8);
 			insane_mode.graphics.endFill();			
 			

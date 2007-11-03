@@ -3,7 +3,7 @@ Hello,
 Here is a overview of the Touchlib AS3 project:
 
 ------------------------------------------------
-//Applications
+//Applications (original author)
 ------------------------------------------------
 
 Core
@@ -14,23 +14,32 @@ Base - Base testing for table operations. (debug)
 Effects
 ---------------
 Ripples
-Paint
+Paint (David Wallin)
 Trace
 
 Multimemdia
 ---------------
-Photo
-Viewer
-Piano
-MusicalSquares
-Turntables
+Photo (David Wallin)
+Viewer (Christian Moore)
+Piano (Seth Sandler)
+MusicalSquares (Seth Sandler)
+Turntables (Christian Moore)
 
 Games
 --------------
-Puzzle
-Tangram
-Tank
+Puzzle (Laurence Muller)
+Tangram (Adithya Ananth & Divesh Jaiswal)
+Tank (David Wallin)
 
+------------------------------------------------
+//Additional Application Notes
+------------------------------------------------
+
+Puzzle
+------
+The source code is based on the example from the adobe website: http://www.adobe.com/devnet/flash/samples/puzzle_game/
+To add more images to the Puzzle application, the sourcecode has to be modified manualy. Images need to be resized to 800x600 pixels.
+The included images (4) in the directory: (touchlibroot)\AS3\src\deploy\www\img\puzzle\ may only be used for non-commercial purposes.
 
 ------------------------------------------------
 //Structure
@@ -89,18 +98,18 @@ local - dynamic local objects
 appName.swf
 
 ------------------------------------------------
-Developers:
+//Developers:
 ------------------------------------------------
-whitenoiseaudio.com
-nuiman.com
-timroth.de
-multigesture.net
-cerupcat
-adi/deej
-jensfranke
+David Wallin (WhiteNoiz) - http://www.whitenoiseaudio.com
+Christian Moore (nuiman) - nuiman.com
+Tim Roth - timroth.de
+Laurence Muller (Falcon4ever) - http://www.multigesture.net
+Seth Sandler (cerupcat) - http://ssandler.wordpress.com/
+Adithya Ananth & Divesh Jaiswal (adi/deej) - http://therealdesktop.blogspot.com/
+Jens Franke - http://blog.jensfranke.com/
 
 ------------------------------------------------
-License:
+//License:
 ------------------------------------------------
 Core - GPL
 Demo Applications - License determined by author(s).
