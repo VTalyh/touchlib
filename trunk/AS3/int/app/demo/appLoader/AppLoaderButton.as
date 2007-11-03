@@ -104,6 +104,7 @@ package app.demo.appLoader
 			TUIO.listenForObject(e.ID, this);
 			buttonDown = true;
 			buttonOverlay.gotoAndStop(2);
+			this.parent.setChildIndex(this, this.parent.numChildren-1);
 			e.stopPropagation();
 		}
 
@@ -157,7 +158,9 @@ package app.demo.appLoader
 				return;		
 		
 			buttonDown = true;
-			buttonOverlay.gotoAndStop(2);
+			buttonOverlay.gotoAndStop(2);	
+			
+			this.parent.setChildIndex(this, this.parent.numChildren-1);
 		}
 		
 		public function mouseUpEvent(e:MouseEvent)
