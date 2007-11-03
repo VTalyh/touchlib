@@ -50,10 +50,10 @@ import flash.text.TextFormat;
 			debugMode = dbug;
 			
 			bInitialized = true;
-			//stagewidth = s.stage.stageWidth;
-			//stageheight = s.stage.stageHeight;
-			stagewidth = 1024;
-			stageheight = 786;			
+			stagewidth = s.stage.stageWidth;
+			stageheight = s.stage.stageHeight;
+			//stagewidth = 1024;
+			//stageheight = 786;			
 			thestage = s;
 			objectArray = new Array();
 			idArray = new Array();
