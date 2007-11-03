@@ -64,7 +64,7 @@ public:
 	void connectSocket(std::string ip_address, int port)
 	{			
 		transmitSocket = new UdpTransmitSocket( IpEndpointName( ip_address.c_str(), port ) );
-		printf("using ip:%s port:%i\n\n", ip_address.c_str(), port);
+		printf("Socket Initialized : %s Port : %i\n\n", ip_address.c_str(), port);
 		frameSeq = 0;
 	}
 
@@ -79,7 +79,7 @@ public:
 		fingerList[data.ID] = data;
 
 		
-		printf("Press detected: %f, %f\n", data.X, data.Y);
+		printf("Blob Detected | X: %f Y: %f Area: %f\n", data.X, data.Y, data.area);
 
 	}
 
@@ -140,6 +140,7 @@ public:
 					TouchData d = (*iter1).second;
 					float m = sqrtf((d.dX*d.dX) + (d.dY*d.dY));
 					float area = d.area;
+				//	printf(d.area);
 					if(!(d.X == 0 && d.Y == 0)) {
 						p << osc::BeginMessage( "/tuio/2Dcur" ) << "set" << d.ID << d.X << d.Y << d.dX << d.dY << m << osc::EndMessage;
 
@@ -195,8 +196,6 @@ public:
 
 			if(p.IsReady())
 				transmitSocket->Send( p.Data(), p.Size() );
-
-
 		}
 
 	}
