@@ -128,7 +128,7 @@ package app.core.element
 		{
 			gfxIndicator.rotation = (knobValue+0.5) * 360;
 			gfxActiveIndicator.rotation = (knobValue+0.5) * 360;
-			indicatorText.text = Math.round((knobValue) * 360);
+		//	indicatorText.text = Math.round((knobValue) * 360);
 			
 			
 			//indicatorText.text = knobValue;

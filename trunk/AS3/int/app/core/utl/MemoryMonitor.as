@@ -415,7 +415,7 @@
 			
 			showTxtData();
 			
-			//drawGraph();
+			drawGraph();
 			
 		};
 		

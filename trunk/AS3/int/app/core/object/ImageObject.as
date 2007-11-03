@@ -2,13 +2,15 @@
 	import app.core.action.RotatableScalable;
 	import flash.display.Shape;		
 	import flash.display.Loader;		
-	import flash.events.Event;
+	import flash.events.*;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.geom.Point;			
     import flash.filters.BitmapFilter;
     import flash.filters.BitmapFilterQuality;
     import flash.filters.DropShadowFilter; 
+    //http://code.google.com/p/tweener/
+	import com.tweener.transitions.Tweener;
 	
 	public class ImageObject extends RotatableScalable 
 	{
@@ -23,7 +25,6 @@
 		private var friction:Number = 0.85;
 		private var angFriction:Number = 0.92;
 		
-		
 		public function ImageObject (url:String)
 		{
 //			trace(stage);
@@ -36,9 +37,7 @@
 			clickgrabber.graphics.beginFill(0xffffff, 0.1);
 			clickgrabber.graphics.drawRect(0, 0, 1,1);
 			clickgrabber.graphics.endFill();			
-
-			
-			
+		
 			var request:URLRequest = new URLRequest( url );			
 			
 			// Unload any current child
@@ -50,9 +49,9 @@
 			photoLoader.unload();
 			photoLoader.load( request );						
 			
-			addChild( photoLoader );	
-			addChild( clickgrabber );
-			
+			this.addChild( photoLoader );	
+			this.addChild( clickgrabber );
+					
 //            var filter:BitmapFilter = getShadowFilter();
 //            var myFilters:Array = new Array();
 //            myFilters.push(filter);
@@ -63,7 +62,7 @@
 			
 			// FIXME: I'd like to have some kind of status meter while it's downloading..
 		}
-		
+
 		private function arrange( event:Event = null ):void 
 		{
 			photoLoader.x = -photoLoader.width/2;
@@ -76,9 +75,18 @@
 			clickgrabber.x = -photoLoader.width/2;
 			clickgrabber.y = -photoLoader.height/2;			
 			
-			this.scaleX = (Math.random()*0.4) + 0.3;
-			this.scaleY = this.scaleX;
-			this.rotation = Math.random()*180 - 90;
+			this.scaleX = 0;
+			this.scaleY = 0;	
+			this.alpha = 0;
+			this.rotation = 0;
+			
+			//var targetX:int = rowWidth-xOff+minX+200;
+			//var targetY:int = rowBaseline-yOff+minY+450;		
+			var targetRotation:int = Math.random()*180 - 90;	
+			var targetScale:Number = (Math.random()*0.4) + 0.3;	
+			
+			Tweener.addTween(this, {alpha:1, time:0.6, transition:"easeinoutquad"});	
+			Tweener.addTween(this, {scaleX: targetScale, scaleY: targetScale, rotation:targetRotation, time:0.5, transition:"easeinoutquad"});	
 		}				
 		
 

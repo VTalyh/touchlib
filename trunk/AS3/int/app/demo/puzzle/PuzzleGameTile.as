@@ -17,7 +17,8 @@
 			
 			noScale = true;
 			noRotate = true;		
-
+			noSelection = true;	
+			
 			// Clickgrabber
 			clickgrabber.scaleX = 1;
 			clickgrabber.scaleY = 1;

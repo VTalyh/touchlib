@@ -24,6 +24,7 @@
 			bringToFront = false;			
 			noScale = false;
 			noRotate = false;
+			noSelection = true;
 			
 			clickgrabber.graphics.beginFill(0xffffff, 0.0);
 			clickgrabber.graphics.drawRect(-sizeX/2,-sizeY/2,sizeX,sizeY);

@@ -45,6 +45,7 @@
 			noScale = true;          //make it not scale
 			noRotate = true;         //make it not rotate
 			noMove = true;           //make it not move
+			noSelection = true;	
 			
 			//This draws the border of the keyboard
 			if (outline == true){

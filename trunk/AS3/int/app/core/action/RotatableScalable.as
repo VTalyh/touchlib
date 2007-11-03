@@ -1,8 +1,11 @@
 ﻿package app.core.action{
-	import flash.display.*;
-	import flash.events.*;
+	import flash.display.MovieClip;
+	import flash.events.Event;	
+	import flash.events.MouseEvent;
 	import com.touchlib.*;
-	import flash.geom.*;
+	import flash.geom.Point;    
+	//http://code.google.com/p/tweener/
+	import com.tweener.transitions.Tweener;
 	
 	public dynamic class RotatableScalable extends MovieClip
 	{
@@ -22,6 +25,7 @@
 		public var noScale = false;
 		public var noRotate = false;		
 		public var noMove = false;
+		public var noSelection = false;
 		
 		public var dX:Number;
 		public var dY:Number;		
@@ -39,6 +43,12 @@
 			this.addEventListener(TUIOEvent.TUIO_OVER, this.rollOverHandler, false, 0, true);									
 			this.addEventListener(TUIOEvent.TUIO_OUT, this.rollOutHandler, false, 0, true);												
 			this.addEventListener(Event.ENTER_FRAME, this.update, false, 0, true);
+			
+			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler);									
+			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent);															
+			this.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpEvent);	
+			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOverHandler);
+			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOutHandler);
 			
 			dX = 0;
 			dY = 0;
@@ -170,6 +180,11 @@
 			
 			if(bringToFront)
 				this.parent.setChildIndex(this, this.parent.numChildren-1);
+			
+				if(!noSelection)
+				{
+					//this.alpha=0.5;				
+				}
 				
 			e.stopPropagation();
 		}
@@ -177,8 +192,11 @@
 		public function upEvent(e:TUIOEvent):void
 		{		
 							
-			removeBlob(e.ID);			
-				
+			removeBlob(e.ID);		
+			if(!noSelection)
+				{
+					//this.alpha=1.0;				
+				}				
 			e.stopPropagation();				
 				
 		}		
@@ -195,11 +213,53 @@
 		
 		public function rollOutHandler(e:TUIOEvent):void
 		{
-			//e.stopPropagation();
-			
+//			e.stopPropagation();	
 		}
 		
+		public function mouseDownEvent(e:MouseEvent)
+		{
+				if(e.stageX == 0 && e.stageY == 0)
+				return;			
+			
+			this.startDrag();
+			
+			if(bringToFront)
+				this.parent.setChildIndex(this, this.parent.numChildren-1);
+				
+			if(!noSelection)
+				{
+					Tweener.addTween(this, {scaleX:1.0, scaleY:1.0, rotation:0, time:0.6, transition:"easeinoutquad"});				
+				}
+			e.stopPropagation();
+		}
 		
+		public function mouseUpEvent(e:MouseEvent)
+		{
+			this.stopDrag();	
+				if(!noSelection)
+				{
+					var targetRotation:int = Math.random()*180 - 90;	
+					var targetScale:Number = (Math.random()*0.4) + 0.3;	
+		
+					Tweener.addTween(this, {scaleX: targetScale, scaleY: targetScale, rotation:targetRotation, time:0.4, transition:"easeinoutquad"});			
+				}
+			e.stopPropagation();
+		}		
+
+		public function mouseMoveHandler(e:MouseEvent)
+		{
+		//this.alpha=0.5;
+		}
+		
+		public function mouseRollOverHandler(e:MouseEvent)
+		{
+		//this.alpha=0.5;
+		}
+		
+		public function mouseRollOutHandler(e:MouseEvent)
+		{
+		//this.alpha=1.0;	
+		}	
 		
 		function getAngleTrig(X:Number, Y:Number): Number
 		{
@@ -268,10 +328,12 @@
 				var oldX:Number, oldY:Number;
 				oldX = x;
 				oldY = y;
-
+				
+			
 				x = curPosition.x + (curPt.x - (blob1.origX ));		
 				y = curPosition.y + (curPt.y - (blob1.origY ));
-				
+			
+			
 				dX *= dcoef;
 				dY *= dcoef;						
 				dAng *= dcoef;
@@ -349,8 +411,9 @@
 				
 				var ang2:int = getAngleTrig(curLine.x, curLine.y);
 				var oldAngle:int = rotation;
-				if(!noRotate)
-					rotation = curAngle + (ang2 - ang1);
+				if(!noRotate)	
+							
+				rotation = curAngle + (ang2 - ang1);
 				
 //				x = curPt1.x - ((curLine.x / len2) * len3 * newscale);
 //				y = curPt1.y - ((curLine.y / len2) * len3 * newscale);
@@ -387,6 +450,7 @@
 			}
 
 		}
+				
 	}
 }
 

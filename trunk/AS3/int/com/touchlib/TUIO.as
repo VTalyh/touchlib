@@ -14,7 +14,7 @@ import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
 import flash.events.MouseEvent;
-import flash.display.*;
+import flash.display.Sprite;
 
 	public class TUIO
 	{
@@ -29,7 +29,7 @@ import flash.display.*;
 		static var debugText:TextField;
 		static var recordedXML:XML;
 		static var bRecording:Boolean = false;
-		static var xmlPlaybackURL:String = "test2.xml"; 
+		static var xmlPlaybackURL:String = "www/xml/test.xml"; 
 		static var xmlPlaybackLoader:URLLoader;
 		static var playbackXML:XML;
 		
@@ -46,8 +46,10 @@ import flash.display.*;
 			debugMode = dbug;
 			
 			bInitialized = true;
-			stagewidth = s.stage.stageWidth;
-			stageheight = s.stage.stageHeight;
+			//stagewidth = s.stage.stageWidth;
+			//stageheight = s.stage.stageHeight;
+			stagewidth = 1680;
+			stageheight = 1050;
 			thestage = s;
 			objectArray = new Array();
 			idArray = new Array();

@@ -76,7 +76,7 @@
 		// Cycles through available photo data
 		// Used optional arguments feature of AS3
 		// Not sure if it is the right approach
-		private function showPics( event:MouseEvent = null ):void 
+		private function showPics():void 
 		{	
 			// Variables to segement out URL pieces
 			// The request object to load the photo into the display object
@@ -94,8 +94,8 @@
 
 			var len:int = flickr..photo.length();
 		
-			if(len > 20)
-				len = 20;
+			if(len > 50)
+				len = 50;
 
 			for(var i:int=0; i<len; i++)
 			{

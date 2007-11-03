@@ -50,18 +50,7 @@
 			sID = sid;
 			angle = ang;
 			isAlive = true;
-			
-			var c = int(Math.random() * 4);
-			
-			if(c == 0)
-				color = 0xff0000;
-			else if(c == 1)
-				color = 0x00ffff;
-			else if(c == 2)
-				color = 0x00ff00;				
-			else if(c == 3)
-				color = 0x0000ff;				
-			
+
 			spr = new Sprite();
 			spr.graphics.beginFill( 0xFF00FF , 1);							
 			spr.graphics.drawCircle(0,0,8);
