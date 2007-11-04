@@ -21,7 +21,7 @@
 		private var gfxHeight:Number = 0;
 		private var scrollableHeight:Number;
 		private var borderPixels:Number = 4;
-		private var roundnessPixels:Number = 16;
+		private var roundnessPixels:Number = 0;
 		
 		private var activeX:Number;
 		private var activeY:Number;		
@@ -222,7 +222,8 @@
 		}
 		
 		public function mouseRollOverHandler(e:MouseEvent)
-		{
+		{	
+		 sliderStopDrag();	
 		}
 		
 		public function mouseRollOutHandler(e:MouseEvent)

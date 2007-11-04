@@ -3,10 +3,9 @@
 	import com.touchlib.*;
 	import app.core.action.RotatableScalable;
 	
-	import flash.display.Sprite;
+	import flash.display.*;
 	import flash.events.*;
-	import flash.net.URLLoader;
-	import flash.net.URLRequest;
+	import flash.net.*;
 	import flash.media.SoundTransform;
 	import flash.media.Video;
 /*	

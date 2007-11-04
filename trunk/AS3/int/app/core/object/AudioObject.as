@@ -11,18 +11,22 @@
 	import flash.media.SoundMixer;
 	import flash.utils.ByteArray;
     import flash.net.URLRequest;
-	
+	import fl.controls.Button;	
+	import app.core.element.*;
+	import flash.events.*;
 	public class AudioObject extends MovieClip
 	{
 		private var url:String='local/audio/aphex_rmx.mp3';
-		
+			
 		private var _channel:SoundChannel;
 		
         private var _sound:Sound;
 		
 		private var timer:Timer;
 		
-		private var grafico:BitmapData;
+		private var grafico:BitmapData;	
+		
+		private var fireButton:Button;
 		
 		public function AudioObject()
 		{
@@ -39,13 +43,31 @@
 			bitmap.x=-135;
 			bitmap.y=-25;
 			bitmap.blendMode="invert";
-			addChild(bitmap);
+			addChild(bitmap);	
+			
+			fireButton = new Button();
+			fireButton.setSize(68, 68);
+			fireButton.addEventListener(MouseEvent.CLICK, toggleSound, false, 0, true);
+			//fireButton.label = "Play";
+			
+			var WrapperObject:Wrapper = new Wrapper(fireButton);
+			WrapperObject.x = -195;
+			WrapperObject.y = -33;			
+			this.addChild( WrapperObject );	
 		}
 		
 		private function initSound():void
 		{
 			_sound=new Sound(new URLRequest(url));
-            _channel=_sound.play();
+            _sound = new Sound();
+			_sound.load(new URLRequest(url));
+			_channel = _sound.play(0, 1000);
+		
+		}
+		
+		private function toggleSound(e:Event):void
+		{
+		
 		}
 		
 		private function initTimer():void

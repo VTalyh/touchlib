@@ -14,21 +14,10 @@
 			super();
 			if(TUIO.debugMode){
 			// Draw us the lil' circle
-			graphics.beginFill(0xFFFFFF , 0.5);					
-			graphics.drawCircle(0,0,5);
-			graphics.drawCircle(0,0,10);
+			graphics.beginFill(0xFF00FF , 1);	
+			graphics.drawCircle(-5 , -5, 10);
 			graphics.endFill();
-			graphics.lineStyle(1, 0x000000, 1);	
-			graphics.drawCircle(0,0,10);		
-			graphics.drawCircle(0,0,11);		
-			graphics.lineStyle(1, 0x000000, 1);			
-			graphics.drawCircle(0,0,12);	
-		}else{
-			graphics.beginFill(0xFFFFFF , 0.35);					
-			graphics.drawCircle(0,0,12);
-			}	
-			if(TUIO.debugMode){
-			// Add textfield for debugging, shows the cursor id
+				// Add textfield for debugging, shows the cursor id
 			if (debugText != '' || debugText != null)
 			{
 				var format:TextFormat = new TextFormat();
@@ -44,12 +33,16 @@
 				DEBUG_TEXT.text = '';
 				DEBUG_TEXT.appendText(' '+debugText+'  ');
 				
-				DEBUG_TEXT.x = 15;
-				DEBUG_TEXT.y = -8;  
+				DEBUG_TEXT.x = 8;
+				DEBUG_TEXT.y = -13;  
 				
 				addChild(DEBUG_TEXT);
-			}}
+			}
 		}
-		
+			else
+			{
+			// hide cursor
+			}	
+		}		
 	}
 }

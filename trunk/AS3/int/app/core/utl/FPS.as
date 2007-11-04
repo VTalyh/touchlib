@@ -46,8 +46,8 @@
             t.autoSize = TextFieldAutoSize.LEFT;
             t.selectable = false;
             t.defaultTextFormat = _fmt;
-            t.x = -0;
-            t.y = 10;
+            t.x = 25;
+            t.y = 25;
             return t;            
         }
        

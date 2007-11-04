@@ -18,9 +18,10 @@ package app.core.canvas {
 			clickgrabber.blendMode=setBlend;
 			bringToFront = true;			
 			noScale = false;
-			noRotate = false;			
+			noRotate = false;	
+			noSelection = true;			
 			clickgrabber.graphics.beginFill(setColor, setAlpha);
-			clickgrabber.graphics.lineStyle(1.0,0xFFFFFF,0.85);	
+			clickgrabber.graphics.lineStyle(1.0,0xFFFFFF,0.5);	
 			clickgrabber.graphics.drawRoundRect(0,0,setWidth,setHeight,10);
 			clickgrabber.graphics.endFill();						
 			this.addChild( clickgrabber );			

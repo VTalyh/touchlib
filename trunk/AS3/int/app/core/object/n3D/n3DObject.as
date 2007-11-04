@@ -22,10 +22,11 @@
 		
 		private var TKnobX:TouchlibKnob=  new TouchlibKnob(80);
 		private var TKnobY:TouchlibKnob=  new TouchlibKnob(80);
-		private var TKnobZ:TouchlibKnob=  new TouchlibKnob(80);
+		private var TKnobZ:TouchlibKnob=  new TouchlibKnob(80);	
 		private var TSliderX:HorizontalSlider = new HorizontalSlider(20,300);
 		private var TSliderY:HorizontalSlider = new HorizontalSlider(20,300);
 		private var TSliderZ:HorizontalSlider = new HorizontalSlider(20,300);
+		private var TSliderScale:HorizontalSlider = new HorizontalSlider(20,300);
 		//private var TKnobZ:TouchlibKnob = new TouchlibKnob(30);
 		private var boxRed:Sprite = new Sprite();
 		private var boxHolder:Sprite = new Sprite();
@@ -35,7 +36,7 @@
 		
 		public function n3DObject():void{
 			
-			resetBT.graphics.beginFill(0x8C8C8C,1.0);
+			resetBT.graphics.beginFill(0xFFFFFF,1.0);
 			resetBT.graphics.drawRoundRect(0,0,100,100,10);
 			resetBT.graphics.endFill();
 			resetBT.x = 150;
@@ -52,7 +53,9 @@
 			boxHolder.x = 0;
 			boxHolder.y = 0;
 			this.addChild(boxHolder);
-			boxHolder.addChild(_3dCube);
+			boxHolder.addChild(_3dCube);	
+			_3dCube.x = -25;	
+			_3dCube.y = 55;
 			//var TKnob = new TouchlibKnob(100);
 			TKnobX.x = 155;
 			TKnobX.y = -135;
@@ -85,7 +88,11 @@
 			TSliderZ.setValue(0.5);
 			this.addChild(TSliderZ);
 			
-			
+			TSliderScale.x = 135;
+			TSliderScale.y = 320;
+			TSliderScale.rotation +=90;
+			TSliderScale.setValue(0.5);
+			this.addChild(TSliderScale);
 			
 			this.addEventListener(Event.ENTER_FRAME, this.frameUpdate);		
 			
@@ -95,12 +102,18 @@
 				TSliderX.setValue(0.5);
 				TSliderY.setValue(0.5);
 				TSliderZ.setValue(0.5);
+				//TSliderScale.setValue(0.5);
 				TKnobX.setValue(0);
 				TKnobY.setValue(0);
-				TKnobZ.setValue(0);
+				TKnobZ.setValue(0);					
 				_3dCube._3dRot_x = 0;
 				_3dCube._3dRot_y = 0;
 				_3dCube._3dRot_z = 0;
+				_3dCube.x = -25;	
+				_3dCube.y = 55;
+				//_3dCube._3dScale_x = 0;
+				//_3dCube._3dScale_y = 0;	
+				//_3dCube._3dScale_z = 1.0;
 				}
 			
 			function frameUpdate(e:Event)
@@ -126,7 +139,10 @@
 			_3dCube._3dRot_y += (TSliderY.sliderValue*2)-1;
 			_3dCube._3dRot_z += (TSliderZ.sliderValue*2)-1;
 			
-			
+			//_3dCube._3dScale_x += (TSliderZ.sliderValue*2)-1;
+			//_3dCube._3dScale_y += (TSliderZ.sliderValue*2)-1;
+			//_3dCube._3dScale_z += (TSliderScale.sliderValue*2)-1;
+	
 			
 			//trace(TSliderH.sliderValue);
 			//boxHolder.rotation = TKnob.knobValue*360;

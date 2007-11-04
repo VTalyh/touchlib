@@ -2,6 +2,7 @@
 	import com.touchlib.*;
 	import flash.display.MovieClip;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	
 	public dynamic class RotateScale extends MovieClip
@@ -21,7 +22,8 @@
 		public var bringToFront:Boolean = true;
 		public var noScale = false;
 		public var noRotate = false;		
-		
+		public var noSelection = false;	
+			
 		public var dX:Number;
 		public var dY:Number;		
 		public var dAng:Number;
@@ -31,12 +33,21 @@
 		{
 			state = "none";
 			blobs = new Array();
-			//this.addEventListener(TUIOEvent.MoveEvent, this.moveHandler);			
-			this.addEventListener(TUIOEvent.TUIO_DOWN, this.downEvent);						
-			this.addEventListener(TUIOEvent.TUIO_UP, this.upEvent);									
-			this.addEventListener(TUIOEvent.TUIO_OVER, this.rollOverHandler);									
-			this.addEventListener(TUIOEvent.TUIO_OUT, this.rollOutHandler);												
-			this.addEventListener(Event.ENTER_FRAME, this.update);			
+			
+			this.addEventListener(TUIOEvent.TUIO_MOVE, this.moveHandler, false, 0, true);			
+			this.addEventListener(TUIOEvent.TUIO_DOWN, this.downEvent, false, 0, true);						
+			this.addEventListener(TUIOEvent.TUIO_UP, this.upEvent, false, 0, true);									
+			this.addEventListener(TUIOEvent.TUIO_OVER, this.rollOverHandler, false, 0, true);									
+			this.addEventListener(TUIOEvent.TUIO_OUT, this.rollOutHandler, false, 0, true);		
+		
+			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler);									
+			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent);															
+			this.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpEvent);	
+			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOverHandler);
+			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOutHandler);	
+													
+			this.addEventListener(Event.ENTER_FRAME, this.update, false, 0, true);
+					
 			dX = 0;
 			dY = 0;			
 			dAng = 0;
@@ -179,6 +190,47 @@
 			//e.stopPropagation();
 			
 		}
+		public function mouseDownEvent(e:MouseEvent)
+		{
+				if(e.stageX == 0 && e.stageY == 0)
+				return;			
+			
+			this.startDrag();	
+			
+			if(bringToFront)
+				this.parent.setChildIndex(this, this.parent.numChildren-1);
+				
+			if(!noSelection)
+				{
+						
+				}
+			e.stopPropagation();
+		}
+		
+		public function mouseUpEvent(e:MouseEvent)
+		{
+			this.stopDrag();	
+				if(!noSelection)
+				{
+		
+				}
+			e.stopPropagation();
+		}		
+
+		public function mouseMoveHandler(e:MouseEvent)
+		{
+		//this.alpha=0.5;
+		}
+		
+		public function mouseRollOverHandler(e:MouseEvent)
+		{
+		//this.alpha=0.5;
+		}
+		
+		public function mouseRollOutHandler(e:MouseEvent)
+		{
+		//this.alpha=1.0;	
+		}	
 		
 		function getAngleTrig(X:Number, Y:Number): Number
 		{

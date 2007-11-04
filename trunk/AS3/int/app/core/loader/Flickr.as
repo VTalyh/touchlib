@@ -94,8 +94,8 @@
 
 			var len:int = flickr..photo.length();
 		
-			if(len > 50)
-				len = 50;
+			if(len > 25)
+				len = 25;
 
 			for(var i:int=0; i<len; i++)
 			{

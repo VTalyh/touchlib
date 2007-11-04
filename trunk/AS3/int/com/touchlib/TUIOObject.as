@@ -2,15 +2,12 @@
 
 	import flash.display.Sprite;
 	import flash.display.DisplayObject;	
-	import flash.display.InteractiveObject;	
-	import flash.display.MovieClip;	
+	//import flash.display.InteractiveObject;	
+	//import flash.display.MovieClip;	
 	import flash.geom.Point;
-	import flash.text.TextField;
-	import flash.text.TextFieldAutoSize;
-	import flash.text.TextFormat;
-	import flash.utils.Timer;
-	import flash.events.MouseEvent;
-	import flash.events.Event;
+	//import flash.utils.Timer;
+	//import flash.events.MouseEvent;
+	//import flash.events.Event;
 	
 
 	public class TUIOObject 
@@ -50,15 +47,23 @@
 			sID = sid;
 			angle = ang;
 			isAlive = true;
-
-			spr = new Sprite();
-			spr.graphics.beginFill( 0xFF00FF , 1);							
-			spr.graphics.drawCircle(0,0,8);
-			spr.graphics.endFill( );			
 			
+			var c = int(Math.random() * 4);
+			
+			if(c == 0)
+				color = 0xff0000;
+			else if(c == 1)
+				color = 0x00ffff;
+			else if(c == 2)
+				color = 0x00ff00;				
+			else if(c == 3)
+				color = 0x0000ff;	
+				
+							
+			spr = new TUIOCursor(ID.toString());			
 			spr.x = x;
-			spr.y = y;
-
+			spr.y = y;  			
+			
 			try {
  	 			obj = o;
 			} catch (e)

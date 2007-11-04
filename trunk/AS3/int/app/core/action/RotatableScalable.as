@@ -1,11 +1,13 @@
 ﻿package app.core.action{
-	import flash.display.MovieClip;
-	import flash.events.Event;	
-	import flash.events.MouseEvent;
 	import com.touchlib.*;
-	import flash.geom.Point;    
-	//http://code.google.com/p/tweener/
 	import com.tweener.transitions.Tweener;
+	
+	import flash.display.MovieClip;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.filters.*;
+	import flash.geom.Point;
+	
 	
 	public dynamic class RotatableScalable extends MovieClip
 	{
@@ -41,14 +43,17 @@
 			this.addEventListener(TUIOEvent.TUIO_DOWN, this.downEvent, false, 0, true);						
 			this.addEventListener(TUIOEvent.TUIO_UP, this.upEvent, false, 0, true);									
 			this.addEventListener(TUIOEvent.TUIO_OVER, this.rollOverHandler, false, 0, true);									
-			this.addEventListener(TUIOEvent.TUIO_OUT, this.rollOutHandler, false, 0, true);												
-			this.addEventListener(Event.ENTER_FRAME, this.update, false, 0, true);
-			
+			this.addEventListener(TUIOEvent.TUIO_OUT, this.rollOutHandler, false, 0, true);		
+		
 			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler);									
 			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent);															
 			this.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpEvent);	
 			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOverHandler);
-			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOutHandler);
+			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOutHandler);	
+													
+			this.addEventListener(Event.ENTER_FRAME, this.update, false, 0, true);
+			
+		
 			
 			dX = 0;
 			dY = 0;
@@ -221,13 +226,16 @@
 				if(e.stageX == 0 && e.stageY == 0)
 				return;			
 			
-			this.startDrag();
+			this.startDrag();	
+			this.addBlob(1, e.localX, e.localY);
 			
 			if(bringToFront)
 				this.parent.setChildIndex(this, this.parent.numChildren-1);
 				
 			if(!noSelection)
-				{
+				{	
+					var dropshadow:DropShadowFilter=new DropShadowFilter(0, 45, 0x000000, 0.75, 15, 15);
+					this.filters=new Array(dropshadow);
 					Tweener.addTween(this, {scaleX:1.0, scaleY:1.0, rotation:0, time:0.6, transition:"easeinoutquad"});				
 				}
 			e.stopPropagation();
@@ -240,7 +248,7 @@
 				{
 					var targetRotation:int = Math.random()*180 - 90;	
 					var targetScale:Number = (Math.random()*0.4) + 0.3;	
-		
+					this.filters=new Array();
 					Tweener.addTween(this, {scaleX: targetScale, scaleY: targetScale, rotation:targetRotation, time:0.4, transition:"easeinoutquad"});			
 				}
 			e.stopPropagation();
@@ -380,8 +388,7 @@
 				var offs:Point = curCenter.subtract(centerOrig);
 				
 				var len1:Number = Point.distance(origPt1, origPt2);
-				var len2:Number = Point.distance(curPt1, curPt2);				
-				
+				var len2:Number = Point.distance(curPt1, curPt2);					
 				var len3:Number = Point.distance(origPt1, new Point(0,0));
 				
 //				trace(len2 + " / " + len1);
@@ -397,8 +404,12 @@
 				
 				if(!noScale)
 				{
+					//FIX THE WIGGLE
+					//trace(newscale-curScale);
+					//if((newscale-curScale)<=1 || (newscale-curScale)>=-1){
 					scaleX = newscale;
-					scaleY = newscale;				
+					scaleY = newscale;	
+					//}			
 				}
 	
 				var origLine:Point = origPt1;
@@ -411,9 +422,14 @@
 				
 				var ang2:int = getAngleTrig(curLine.x, curLine.y);
 				var oldAngle:int = rotation;
+				
 				if(!noRotate)	
-							
-				rotation = curAngle + (ang2 - ang1);
+				{		
+					//FIX THE WIGGLE
+					//trace(curAngle-oldAngle);	
+					//if((curAngle-oldAngle)<=50|| (curAngle-oldAngle)>=-50)
+					rotation = curAngle + (ang2 - ang1);			
+				}
 				
 //				x = curPt1.x - ((curLine.x / len2) * len3 * newscale);
 //				y = curPt1.y - ((curLine.y / len2) * len3 * newscale);
@@ -421,9 +437,10 @@
 				var oldX:Number, oldY:Number;
 				oldX = x;
 				oldY = y;
-				x = curPosition.x + (curCenter.x - centerOrig.x);
-				y = curPosition.y + (curCenter.y - centerOrig.y);				
-				
+			
+				x = curPosition.x + (curCenter.x - centerOrig.x);	
+				y = curPosition.y + (curCenter.y - centerOrig.y);								
+			
 				
 				dX *= dcoef;
 				dY *= dcoef;		

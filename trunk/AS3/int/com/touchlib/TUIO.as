@@ -9,12 +9,15 @@ import flash.geom.Point;
 import flash.net.URLLoader;
 import flash.net.URLRequest;
 import flash.net.XMLSocket;
-import flash.system.System;
+//import flash.system.System;
 import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
-import flash.events.MouseEvent;
+//import flash.events.MouseEvent;
 import flash.display.Sprite;
+import app.core.element.Wrapper;
+import flash.events.MouseEvent;
+//import com.tweener.transitions.Tweener;
 
 	public class TUIO
 	{
@@ -23,13 +26,14 @@ import flash.display.Sprite;
 		static var objectArray:Array;
 		static var idArray:Array;
 		
-
 		public static var debugMode:Boolean;		
 		
 		static var debugText:TextField;
+		static var debugToggle:TextField;
 		static var recordedXML:XML;
 		static var bRecording:Boolean = false;
-		static var xmlPlaybackURL:String = "www/xml/test.xml"; 
+		//static var xmlPlaybackURL:String = "www/xml/test.xml"; 
+		static var xmlPlaybackURL:String = ""; 
 		static var xmlPlaybackLoader:URLLoader;
 		static var playbackXML:XML;
 		
@@ -46,10 +50,10 @@ import flash.display.Sprite;
 			debugMode = dbug;
 			
 			bInitialized = true;
-			//stagewidth = s.stage.stageWidth;
-			//stageheight = s.stage.stageHeight;
-			stagewidth = 1680;
-			stageheight = 1050;
+			stagewidth = s.stage.stageWidth;
+			stageheight = s.stage.stageHeight;
+			//stagewidth = 1024;
+			//stageheight = 786;
 			thestage = s;
 			objectArray = new Array();
 			idArray = new Array();
@@ -73,28 +77,37 @@ import flash.display.Sprite;
 			
 			if(debugMode)
 			{
-				// set some debug stuff?
-				var t:TextField = new TextField();
-				t.autoSize = TextFieldAutoSize.LEFT;
-				t.background = true;
-				t.border = true;				
-				t.text = "Debug info";
-				t.width = 100;
-				t.y = 40;
-				debugText = t;
-				thestage.addChild(t);
+				var format:TextFormat = new TextFormat();
+				debugText = new TextField();
+       			format.font = "Verdana";
+     			format.color = 0xFFFFFF;
+        		format.size = 10;
+        
+				debugText.defaultTextFormat = format;
+				debugText.autoSize = TextFieldAutoSize.LEFT;
+				debugText.background = true;	
+				debugText.backgroundColor = 0x000000;	
+				debugText.border = true;	
+				debugText.borderColor = 0x333333;	
+				thestage.parent.addChild( debugText );	
+					
+				thestage.parent.setChildIndex(debugText, thestage.parent.numChildren-1);	
+		
+				recordedXML = <OSCPackets></OSCPackets>;	
 				
-				recordedXML = <OSCPackets></OSCPackets>;
+				var buttonSprite = new Sprite();		
+				buttonSprite.graphics.beginFill(0xFFFFFF,1.0);
+				buttonSprite.graphics.drawRoundRect(10, -35, 50, 60,10);				 
+				buttonSprite.addEventListener(MouseEvent.CLICK, toggleDebug, false, 0, true);					
+
+				var WrapperObject:Wrapper = new Wrapper(buttonSprite);
 				
-				 var buttonSprite:Sprite = new Sprite();
-				 buttonSprite.graphics.lineStyle(2, 0x202020);
-				 buttonSprite.graphics.beginFill(0x00FF00);
-				 buttonSprite.graphics.drawRect(2, 2, 40, 38);
-				 
-				 buttonSprite.addEventListener(TUIOEvent.TUIO_DOWN, stopRecording);
-				 
-				 thestage.addChild(buttonSprite);
-				 
+				thestage.parent.addChild(WrapperObject);
+						
+				
+				thestage.parent.setChildIndex(WrapperObject, thestage.parent.numChildren-1);	
+				//trace(thestage.parent.numChildren);
+				
 				 if(xmlPlaybackURL != "")
 				 {
 					xmlPlaybackLoader = new URLLoader();
@@ -334,7 +347,11 @@ import flash.display.Sprite;
 			
 
 			if(debugMode)
+			{
 				debugText.text = "";
+				debugText.y = -2000;
+				debugText.x = -2000;	
+			}	
 			for (var i=0; i<objectArray.length; i++ )
 			{
 				if(objectArray[i].isAlive == false)
@@ -346,19 +363,37 @@ import flash.display.Sprite;
 
 				} else {
 					if(debugMode)
-						debugText.appendText(objectArray[i].ID + ": (" + int(objectArray[i].x) + "," + int(objectArray[i].y) + ")\n");
-				}
+					{
+						debugText.appendText("  " + (i + 1) +" - " +objectArray[i].ID + "  X:" + int(objectArray[i].x) + "  Y:" + int(objectArray[i].y) + "  \n");
+						debugText.x = stagewidth-160;
+						debugText.y = 40;		
+					}
+					}
 			}
 		}
 		
 
 		
-		private static function stopRecording(e:MouseEvent)
-		{
+		private static function toggleDebug(e:Event)
+		{ 
+			if(!debugMode){
+			debugMode=true;	
+			e.target.x=0;
+			//Tweener.addTween(e.target, {y:10, alpha:0.5, time:0.6, transition:"easeinoutquad"});
+			;
+			}
+			else{
+			debugMode=false;
+			e.target.x=20;
+			//Tweener.addTween(e.target, {y:5, alpha:1, time:0.6, transition:"easeinoutquad"})
+			}
+			
 			// show XML
-			bRecording = false;
-			debugMode = false;
-			debugText.text = recordedXML.toString();
+			//bRecording = false;
+			//debugMode = false;			
+			//debugText.text = recordedXML.toString();
+			//debugText.x = 0;
+			//debugText.y = 0;	
 		}
 		
         private static function closeHandler(event:Event):void {

@@ -1,22 +1,21 @@
 ﻿package app.core.object.n3D
 {
-	import flash.display.Bitmap;
-	import flash.display.Sprite;
-	import flash.events.Event;
-	import com.touchlib.*;
 	import app.core.action.RotatableScalable;
 	
+	import com.touchlib.*;
+	
+	import flash.display.*;
+	import flash.events.Event;
+	import flash.geom.Matrix;
+	import flash.filters.*;
+	
 	import org.papervision3d.cameras.Camera3D;
-	import org.papervision3d.materials.BitmapAssetMaterial;
-	import org.papervision3d.materials.MaterialsList;
-	import org.papervision3d.materials.WireframeMaterial;
 	import org.papervision3d.materials.ColorMaterial;
+	import org.papervision3d.objects.Collada;
+	import org.papervision3d.objects.Cube;
 	import org.papervision3d.objects.DisplayObject3D;
 	import org.papervision3d.scenes.Scene3D;
-	import org.papervision3d.objects.Collada;
-	import org.papervision3d.objects.Cone;
-	import org.papervision3d.objects.Cube;
-	import org.papervision3d.objects.Plane;
+	
 
 	[SWF(backgroundColor="#000000", frameRate="60")]
 	
@@ -67,7 +66,7 @@
 			materiallist.addMaterial(material3,"right");
 			*/
 		
-			
+			noSelection = true;	
 			// initialize the objects
 			init3D();
 			
@@ -82,10 +81,20 @@
 			// create the container, add it to the stage, position it
 			container = new Sprite();
 			//container.y= -150;
-			dragBG.graphics.beginFill(0xFF0000,0.0);
-			dragBG.graphics.drawRect(-100,-100,200,250);
+			var matrix:Matrix = new Matrix();
+			matrix.createGradientBox(300, 300, 0, -150, -150);
+			var colors:Array = [0xFFFFFF, 0x000000];
+			var alphas:Array = [0, 25];
+			var ratios:Array = [0x0F, 255];
+			//dragBG.graphics.lineStyle(1.0,0xFFFFFF,1);
+			//dragBG.graphics.beginFill(0xFFFFFF,0.10);
+			dragBG.graphics.beginGradientFill(GradientType.RADIAL, colors, alphas, ratios, matrix);
+			dragBG.graphics.drawCircle(0,0,150);
 			dragBG.graphics.endFill();
+			var dropshadow:DropShadowFilter=new DropShadowFilter(0, 45, 0x000000, 0.75, 15, 15);
+			dragBG.filters=new Array(dropshadow);
 			addChild(dragBG);
+			dragBG.alpha = 0.65; 
 			//container.scaleX= 0.5;
 			//container.scaleY = 0.5;
 			addChild( container );
