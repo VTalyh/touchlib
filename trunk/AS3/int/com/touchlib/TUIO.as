@@ -36,10 +36,7 @@ import flash.events.MouseEvent;
 		static var xmlPlaybackURL:String = ""; 
 		static var xmlPlaybackLoader:URLLoader;
 		static var playbackXML:XML;
-		
-		static var stagewidth:int;
-		static var stageheight:int;
-		
+			
 		static var bInitialized = false;
 
 
@@ -50,10 +47,7 @@ import flash.events.MouseEvent;
 			debugMode = dbug;
 			
 			bInitialized = true;
-			stagewidth = s.stage.stageWidth;
-			stageheight = s.stage.stageHeight;
-			//stagewidth = 1024;
-			//stageheight = 786;
+
 			thestage = s;
 			objectArray = new Array();
 			idArray = new Array();
@@ -123,13 +117,6 @@ import flash.events.MouseEvent;
 			}
 			
 		}
-		
-		private static function setDimensions(wd:int = 800, ht:int = 600)
-		{
-			stagewidth = wd;
-			stageheight = ht;			
-		}
-		
 		
 		
 
@@ -224,8 +211,8 @@ import flash.events.MouseEvent;
 						{
 							var sID = node.ARGUMENT[1].@VALUE;
 							var id = node.ARGUMENT[2].@VALUE;
-							var x = Number(node.ARGUMENT[3].@VALUE) * stagewidth;
-							var y = Number(node.ARGUMENT[4].@VALUE) * stageheight;
+							var x = Number(node.ARGUMENT[3].@VALUE) * thestage.stageWidth;
+							var y = Number(node.ARGUMENT[4].@VALUE) * thestage.stageHeight;
 							var a = Number(node.ARGUMENT[5].@VALUE);
 							var X = Number(node.ARGUMENT[6].@VALUE);
 							var Y = Number(node.ARGUMENT[7].@VALUE);
@@ -287,8 +274,8 @@ import flash.events.MouseEvent;
 						if(type == "set")
 						{
 							var id = node.ARGUMENT[1].@VALUE;
-							var x = Number(node.ARGUMENT[2].@VALUE) * stagewidth;
-							var y = Number(node.ARGUMENT[3].@VALUE) * stageheight;
+							var x = Number(node.ARGUMENT[2].@VALUE) * thestage.stageWidth;
+							var y = Number(node.ARGUMENT[3].@VALUE) * thestage.stageHeight;
 							var X = Number(node.ARGUMENT[4].@VALUE);
 							var Y = Number(node.ARGUMENT[5].@VALUE);
 							var m = node.ARGUMENT[6].@VALUE;

@@ -20,13 +20,11 @@ package app.demo.tank {
 		
 		function TankGame()
 		{
-			fscommand("allowscale", "true");
-			fscommand("fullscreen", "true");
-			
+		
 			playerArray =  new Array();
 			
-			arenaWidth = mcArena.width;
-			arenaHeight = mcArena.height;
+			arenaWidth = mcArenaMask.width;
+			arenaHeight = mcArenaMask.height;
 			
 			TUIO.init( this, 'localhost', 3000, '', false );			// www/xml/test2.xml
 			
@@ -52,13 +50,84 @@ package app.demo.tank {
 			plyr.setUIPosition(700, 50, 180);
 			plyr.setTankPosition(arenaWidth-50, 50, 225);	
 			
-			//player2 = new PlayerTank(this, 2);
-			//player2.setUILocation(100, 400, 0);			
-			
-			
+		
 			// FIXME: create a play field for tanks..
-			
 			//this.addEventListener(Event.ENTER_FRAME, frameUpdate, false, 0, true);		
+
+			
+			if(this.stage)
+			{
+				addedToStage(new Event(Event.ADDED_TO_STAGE));
+			} else {
+				this.addEventListener(Event.ADDED_TO_STAGE, addedToStage, false, 0, true);
+			}
+				
+			this.addEventListener(Event.UNLOAD, unloadHandler, false, 0, true);
+		}
+		
+		function addedToStage(e:Event)
+		{
+			trace("Added to stage");
+			this.stage.addEventListener(Event.RESIZE, stageResized, false, 0, true);			
+			stageResized(new Event(Event.RESIZE));			
+			
+			this.removeEventListener(Event.ADDED_TO_STAGE, addedToStage);			
+		}
+		
+		function stageResized(e:Event)
+		{			
+			stage.align = StageAlign.TOP_LEFT;
+			stage.displayState = StageDisplayState.FULL_SCREEN;			
+			this.x = 0;
+			this.y = 0;
+			var wd:int = stage.stageWidth;
+			var ht:int = stage.stageHeight;		
+			
+			//this.x = (800-wd)/2;
+			//this.y = (600-ht)/2;
+			
+			mcArenaMask.width = wd;
+			mcArenaMask.height = ht - 300;
+			mcArenaMask.y = 150;
+			mcArenaMask.x = 0;
+			mcArena.x = 0;
+			mcArena.y = 150;
+			
+			mcBackground.width = wd;
+			mcBackground.height = ht;
+			
+			
+			arenaWidth = mcArenaMask.width;
+			arenaHeight = mcArenaMask.height;						
+			
+			// fixme: scale the player ui's?
+			
+			playerArray[0].setUIPosition(100, ht-50, 0);
+			playerArray[0].setTankPosition(50, arenaHeight - 50, 45);			
+			
+			playerArray[1].setUIPosition(295, 50, 180);
+			playerArray[1].setTankPosition(50, 50, 135);				
+			
+			playerArray[2].setUIPosition(wd-290, ht-50, 0);			
+			playerArray[2].setTankPosition(arenaWidth-50, arenaHeight - 50, -45);
+			
+			playerArray[3].setUIPosition(wd-100, 50, 180);			
+			playerArray[3].setTankPosition(arenaWidth-50, 50, 225);	
+
+		}
+		
+		function unloadHandler(e:Event)
+		{
+			try
+			{			
+				this.removeEventListener(Event.RESIZE, stageResized);
+				this.removeEventListener(Event.UNLOAD, unloadHandler);
+				//this.removeEventListener(Event.ENTER_FRAME, frameUpdate);					
+
+				this.removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
+			} catch(ex)
+			{
+			}
 		}
 		
 		function frameUpdate(e:Event)
@@ -76,7 +145,7 @@ package app.demo.tank {
 					p.owner.addToScore(1);
 					playerArray[i].tankHit();
 					
-					// FIXME: adjust score.. 
+				
 				}
 			}
 		}

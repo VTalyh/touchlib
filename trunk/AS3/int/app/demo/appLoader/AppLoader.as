@@ -16,6 +16,7 @@ package app.demo.appLoader
 	import flash.geom.*;
 	import app.demo.appLoader.*;
 	import app.core.element.*;
+	import flash.system.fscommand;	
 
 	// fixme: read apps, categories from XML
 	
@@ -82,7 +83,40 @@ package app.demo.appLoader
 			this.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpEvent, false, 0, true);	
 			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOverHandler, false, 0, true);
 			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOutHandler, false, 0, true);
+			
+			if(this.stage)
+			{
+				addedToStage(new Event(Event.ADDED_TO_STAGE));
+			} else {
+				this.addEventListener(Event.ADDED_TO_STAGE, addedToStage, false, 0, true);
+			}
+
+			
+
 		}
+		
+		function addedToStage(e:Event)
+		{
+			stage.addEventListener(Event.RESIZE, stageResized, false, 0, true);									
+			stage.align = StageAlign.TOP_LEFT;
+			stage.displayState = StageDisplayState.FULL_SCREEN;			
+				
+			stageResized(new Event(Event.RESIZE));				
+		}
+		
+		function stageResized(e:Event)
+		{
+			trace("stage resized");
+			
+			if(osButton.stage)
+			{			
+				osButton.x = osButton.stage.stageWidth + 14;
+				osButton.y = osButton.stage.stageHeight + 14;			
+			}
+			
+
+		}
+		
 		
 		function createParticles(n:int, px:Number, py:Number)
 		{
@@ -153,16 +187,20 @@ package app.demo.appLoader
 			osButton.setAppInfo(this, selectedButton.appName,  selectedButton.appDescription, "");
 			loadbtn.visible = false;						
 			appLoader = new Loader();
+			appLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, stageResized, false, 0, true);									
 			appLoader.load(new URLRequest(selectedButton.appName + ".swf"));			
 			//this.setChildIndex(appLoader, this.numChildren-1);
-
+				
 			parent.addChild(appLoader);
 			parent.addChild(osButton);
 			parent.removeChild(this);
+			
+
 		}
 		
 		public function closeApp(main:DisplayObjectContainer)
 		{
+			appLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, stageResized);			
 			appLoader.content.dispatchEvent(new Event(Event.UNLOAD, true));
 			
 			this.gotoAndStop("Init");
@@ -170,17 +208,17 @@ package app.demo.appLoader
 			main.removeChild(osButton);
 			main.addChild(this);
 
-
 			appLoader.unload();
 
 			appLoader = null;
 			buttonUnlock(selectedButton);			
-			
+			/*
 			// GC Hack?
 			try {
 				new LocalConnection().connect('foo');
 				new LocalConnection().connect('foo');
 			} catch (e:*) {}
+			*/
 			
 		}
 		
@@ -191,6 +229,8 @@ package app.demo.appLoader
 			screenshotLoader.visible = true;
 			tfAppInfo.visible = true;
 			this.tfAppInfo.text = selectedButton.appDescription;
+			this.mcAppArea.visible = false;
+			this.mcCatArea.visible = false;
 		}
 		
 		public function buttonDropped(b:AppLoaderButton)
@@ -229,6 +269,8 @@ package app.demo.appLoader
 		{
 			returnButtonToPool(b);
 			selectedButton = null;			
+			this.mcAppArea.visible = true;			
+			this.mcCatArea.visible = true;			
 			this.gotoAndPlay("Cancel");			
 			
 		}
