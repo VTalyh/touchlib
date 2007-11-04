@@ -8,6 +8,7 @@
 		import flash.text.TextFormat;
 		import flash.text.TextFieldAutoSize;
 		import flash.text.*;
+		import flash.geom.Point;
 		import com.touchlib.*;
 	
 	
@@ -26,8 +27,7 @@
 			//private var friction:Number = 1;
 			//private var gravity:Number = 0;
 			//public var velX:Number;
-			//public var velY:Number;
-	
+			//public var velY:Number;	
 	
 			public function Colliding() {
 	
@@ -36,14 +36,13 @@
 			
 			private function init():void {
 	
-				squares = new Array();
-	
+				squares = new Array();	
 
 				//Create Squares (balls)
 				for (var i:uint = 0; i < numSquares; i++) {
 	
 					var color = colorArray[i];
-					var square:Throwing = new Throwing(20, color);
+					var square:Throwing = new Throwing(25, color);
 	
 					square.x = (i * 85) + 95 ;
 					square.y = 400 + (-i * 30);
@@ -58,8 +57,6 @@
 				
 				newSquares();				
 				addEventListener(Event.ENTER_FRAME, checkCollision, false, 0, true);
-				
-
 			}
 
 			public function unload(e:Event)
@@ -104,135 +101,75 @@
 			}
 			
 
-			
-			
+			/**********************************************************
+			* When pressed, add new square
+			***********************************************************/			
 			private function addSquare(e:TUIOEvent):void {
 				
 				switch (e.currentTarget.name) {								
 				
 				case "ball0" :					
 					var color = colorArray[0];
-					var square:Throwing = new Throwing(20, color);	
-					numSquares += 1;
-					square.x = 400;
-					square.y = 200;
-					square.velX = 0;
-					square.velY = 1;
+					var square:Throwing = new Throwing(25, color);	
 					square.name = e.currentTarget.name;
-					square.getChildByName("throwBall").alpha = .15;	
-					addChild(square);
-					squares.push(square);				
-//					addEventListener(Event.ENTER_FRAME, checkCollision);
 					break;				
 				
 				case "ball1" :			
 					var color = colorArray[1];
-					var square:Throwing = new Throwing(20, color);	
-					numSquares += 1;
-					square.x = 400;
-					square.y = 200;
-					square.velX = 0;
-					square.velY = 1;
+					var square:Throwing = new Throwing(25, color);	
 					square.name = e.currentTarget.name;
-					square.getChildByName("throwBall").alpha = .15;	
-					addChild(square);
-					squares.push(square);				
-//					addEventListener(Event.ENTER_FRAME, checkCollision);
 					break;	
 					
 				case "ball2" :			
 					var color = colorArray[2];
-					var square:Throwing = new Throwing(20, color);	
-					numSquares += 1;
-					square.x = 400;
-					square.y = 200;
-					square.velX = 0;
-					square.velY = 1;
+					var square:Throwing = new Throwing(25, color);	
 					square.name = e.currentTarget.name;
-					square.getChildByName("throwBall").alpha = .15;	
-					addChild(square);
-					squares.push(square);				
-//					addEventListener(Event.ENTER_FRAME, checkCollision, false, 0, true);
 					break;	
 					
 				case "ball3" :			
 					var color = colorArray[3];
-					var square:Throwing = new Throwing(20, color);	
-					numSquares += 1;
-					square.x = 400;
-					square.y = 200;
-					square.velX = 0;
-					square.velY = 1;
+					var square:Throwing = new Throwing(25, color);	
 					square.name = e.currentTarget.name;
-					square.getChildByName("throwBall").alpha = .15;	
-					addChild(square);
-					squares.push(square);				
-//					addEventListener(Event.ENTER_FRAME, checkCollision, false, 0, true);
 					break;
 					
 				case "ball4" :			
 					var color = colorArray[4];
-					var square:Throwing = new Throwing(20, color);	
-					numSquares += 1;
-					square.x = 400;
-					square.y = 200;
-					square.velX = 0;
-					square.velY = 1;
+					var square:Throwing = new Throwing(25, color);	
 					square.name = e.currentTarget.name;
-					square.getChildByName("throwBall").alpha = .15;	
-					addChild(square);
-					squares.push(square);				
-//					addEventListener(Event.ENTER_FRAME, checkCollision, false, 0, true);
 					break;	
 					
 				case "ball5" :			
 					var color = colorArray[5];
-					var square:Throwing = new Throwing(20, color);	
-					numSquares += 1;
-					square.x = 400;
-					square.y = 200;
-					square.velX = 0;
-					square.velY = 1;
+					var square:Throwing = new Throwing(25, color);	
 					square.name = e.currentTarget.name;
-					square.getChildByName("throwBall").alpha = .15;	
-					addChild(square);
-					squares.push(square);				
-//					addEventListener(Event.ENTER_FRAME, checkCollision);
 					break;	
 					
 				case "ball6" :			
 					var color = colorArray[6];
-					var square:Throwing = new Throwing(20, color);	
-					numSquares += 1;
-					square.x = 400;
-					square.y = 200;
-					square.velX = 0;
-					square.velY = 1;
+					var square:Throwing = new Throwing(25, color);	
 					square.name = e.currentTarget.name;
-					square.getChildByName("throwBall").alpha = .15;	
-					addChild(square);
-					squares.push(square);				
-//					addEventListener(Event.ENTER_FRAME, checkCollision);
 					break;
 					
 				case "ball7" :			
 					var color = colorArray[7];
-					var square:Throwing = new Throwing(20, color);	
-					numSquares += 1;
-					square.x = 400;
-					square.y = 200;
-					square.velX = 0;
-					square.velY = 1;
+					var square:Throwing = new Throwing(25, color);	
 					square.name = e.currentTarget.name;
-					square.getChildByName("throwBall").alpha = .15;	
-					addChild(square);
-					squares.push(square);				
-//					addEventListener(Event.ENTER_FRAME, checkCollision);
 					break;
+			}			
+				var tuioobj:TUIOObject = TUIO.getObjectById(e.ID);
+				var localPt:Point = globalToLocal(new Point(tuioobj.x, tuioobj.y));
+				
+				square.x = tuioobj.x;
+			    square.y = tuioobj.y;	
+			
+				addChild(square);
+				squares.push(square);	
+				
+				square.state = "dragging";				
+				square.dispatchEvent(new TUIOEvent (TUIOEvent.TUIO_DOWN, false, false, tuioobj.x, tuioobj.y, localPt.x, localPt.y, null, false, false, false, false, 0, "2Dcur", e.ID, e.sID, e.angle));
 			}
-		}	
-			
-			
+					
+		
 			
 			private function checkCollision(event:Event):void {
 	
@@ -240,14 +177,20 @@
 				var square1:Throwing;
 				var j:uint;
 				var i:uint = 0;
-				var n:uint = numSquares - 1;
+								
+								
+				if (squares.length < 1){
+					var n:uint = 1;				
+			  	   }else
+				   {var n:uint = squares.length - 1;				   
+			       }				
 	
 				for (; i < n; i++) {;
 	
 				square0 = squares[i];
 				j = i + 1;
 	
-				for (; j < numSquares; j++) {
+				for (; j < squares.length; j++) {
 	
 					square1 = squares[j];
 	
@@ -288,35 +231,29 @@
 					}
 				}
 			}
-			for (i = 0; i < numSquares; i++) {
-				var square:Throwing = squares[i];
+			for (i = 0; i < squares.length; i++) {
+				var square:Throwing = squares[i];		
 				move(square);
-			}
+			}			
 		}
 		
 		private function move(square:Throwing):void {
 	
-			if (square != null) {
-	
-				if (square.thisState == "release") {
-	
-					var index = getChildIndex(square);
-	
+				 if (square.thisState == "release"){				
+				  
+					var index = squares.indexOf(square);					
+					
+					squares.splice(index, 1);	
 					//null position in array and delete it
-					squares[index] = null;
-					squares.splice( index, 1 );
-					//Avoid getting an infinite loop;
-					if (numSquares > 1) {
-						numSquares -= 1;
-					}
+					squares.splice(index, 0);
+					//remove eventlistener
+					square.removeEventListener(Event.ENTER_FRAME, checkCollision);
+					//kill ball
+					removeChild(square);					
 					//remove All children whithin ball
 					while (square.numChildren > 0) {
-						square.removeChildAt(0);
-					}
-					//remove eventlistener
-					//square.removeEventListener(Event.ENTER_FRAME, checkCollision);
-					//kill ball
-					removeChild(square);
+					       square.removeChildAt(0);
+						   
 				}
 			}
 		}

@@ -20,7 +20,7 @@
 		
 		public function init():void {
 			graphics.lineStyle(2, 0xFFFFFF, 1, false, LineScaleMode.NONE);
-			graphics.drawRect(-radius/2, -radius/2, radius, radius);			
+			graphics.drawRoundRect(-radius/2, -radius/2, radius, radius, 4);			
 
 		}
 	}

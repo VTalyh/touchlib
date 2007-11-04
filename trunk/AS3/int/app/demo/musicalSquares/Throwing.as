@@ -28,6 +28,11 @@ package app.demo.musicalSquares
 		private var ballTween:Tween;
 
 		public function Throwing(size:Number, color:uint) {
+			
+			bringToFront = false;
+			noScale = false;//make it not scale
+			noRotate = true;//make it not rotate
+			noMove = false;//make it not move			
 
 			//Main Ball
 			var throwBall:Ball = new Ball(size, color);
@@ -35,11 +40,6 @@ package app.demo.musicalSquares
 
 			//Outline
 			var ballO:BallOutline = new BallOutline(size, color);
-
-			bringToFront = false;
-			noScale = false;//make it not scale
-			noRotate = true;//make it not rotate
-			noMove = false;//make it not move
 
 			addChild(throwBall);
 			addChild(ballO);
@@ -61,7 +61,7 @@ package app.demo.musicalSquares
 		public function unloadHandler(e:Event)
 		{
 			//trace("throwing unload");
-			this.removeEventListener( Event.ENTER_FRAME, slide );
+			this.removeEventListener(Event.ENTER_FRAME, slide );
 			this.removeEventListener(Event.UNLOAD, unloadHandler);
 		}
 		
