@@ -30,6 +30,7 @@
 		public var isAlive:Boolean;		
 		public var obj;
 		public var spr:Sprite;
+		public var trlx:Sprite;
 		
 		private var color:int;
 		
@@ -57,8 +58,7 @@
 			else if(c == 2)
 				color = 0x00ff00;				
 			else if(c == 3)
-				color = 0x0000ff;	
-				
+				color = 0x0000ff;		
 							
 			spr = new TUIOCursor(ID.toString());			
 			spr.x = x;
