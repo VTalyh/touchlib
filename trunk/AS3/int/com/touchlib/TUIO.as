@@ -14,7 +14,7 @@ import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
 //import flash.events.MouseEvent;
-import flash.display.Sprite;
+import flash.display.*;
 import app.core.element.Wrapper;
 import flash.events.MouseEvent;
 //import com.tweener.transitions.Tweener;
@@ -24,7 +24,7 @@ import flash.events.MouseEvent;
 		static var FLOSCSocket:XMLSocket;		
 		static var FLOSCSocketHost:String;			
 		static var FLOSCSocketPort:Number;	
-		static var thestage:Sprite;
+		static var thestage:DisplayObject;
 		static var objectArray:Array;
 		static var idArray:Array;
 		
@@ -38,14 +38,11 @@ import flash.events.MouseEvent;
 		static var xmlPlaybackURL:String = ""; 
 		static var xmlPlaybackLoader:URLLoader;
 		static var playbackXML:XML;
-		
-		static var stagewidth:int;
-		static var stageheight:int;
-		
+			
 		static var bInitialized = false;
 		
 	
-		public static function init (s:Sprite, host:String, port:Number, debugXMLFile:String, dbug:Boolean = true):void
+		public static function init (s:DisplayObject, host:String, port:Number, debugXMLFile:String, dbug:Boolean = true):void
 		{
 			if(bInitialized)
 				return;
@@ -53,10 +50,6 @@ import flash.events.MouseEvent;
 			FLOSCSocketHost=host;			
 			FLOSCSocketPort=port;			
 			bInitialized = true;
-			stagewidth = s.stage.stageWidth;
-			stageheight = s.stage.stageHeight;
-			//stagewidth = 1024;
-			//stageheight = 786;
 			thestage = s;
 			objectArray = new Array();
 			idArray = new Array();
@@ -100,11 +93,11 @@ import flash.events.MouseEvent;
 				
 				var buttonSprite = new Sprite();		
 				buttonSprite.graphics.beginFill(0xFFFFFF,1.0);
-				buttonSprite.graphics.drawRoundRect(0, -10, 50, 60,10);				 
+				buttonSprite.graphics.drawRoundRect(0, -10, 50, 60,10);	
+			 
 				buttonSprite.addEventListener(MouseEvent.CLICK, toggleDebug);					
 
 				var WrapperObject:Wrapper = new Wrapper(buttonSprite);
-				
 				thestage.parent.addChild(WrapperObject);
 						
 				
@@ -227,8 +220,8 @@ import flash.events.MouseEvent;
 						{
 							var sID = node.ARGUMENT[1].@VALUE;
 							var id = node.ARGUMENT[2].@VALUE;
-							var x = Number(node.ARGUMENT[3].@VALUE) * stagewidth;
-							var y = Number(node.ARGUMENT[4].@VALUE) * stageheight;
+							var x = Number(node.ARGUMENT[3].@VALUE) * thestage.stage.stageWidth;
+							var y = Number(node.ARGUMENT[4].@VALUE) * thestage.stage.stageHeight;
 							var a = Number(node.ARGUMENT[5].@VALUE);
 							var X = Number(node.ARGUMENT[6].@VALUE);
 							var Y = Number(node.ARGUMENT[7].@VALUE);
@@ -290,8 +283,8 @@ import flash.events.MouseEvent;
 						if(type == "set")
 						{
 							var id = node.ARGUMENT[1].@VALUE;
-							var x = Number(node.ARGUMENT[2].@VALUE) * stagewidth;
-							var y = Number(node.ARGUMENT[3].@VALUE) * stageheight;
+							var x = Number(node.ARGUMENT[2].@VALUE) * thestage.stage.stageWidth;
+							var y = Number(node.ARGUMENT[3].@VALUE) *  thestage.stage.stageHeight;
 							var X = Number(node.ARGUMENT[4].@VALUE);
 							var Y = Number(node.ARGUMENT[5].@VALUE);
 							var m = node.ARGUMENT[6].@VALUE;
@@ -368,7 +361,7 @@ import flash.events.MouseEvent;
 					if(debugMode)
 					{
 						debugText.appendText("  " + (i + 1) +" - " +objectArray[i].ID + "  X:" + int(objectArray[i].x) + "  Y:" + int(objectArray[i].y) + "  \n");
-						debugText.x = stagewidth-160;
+						debugText.x = thestage.stage.stageWidth-160;
 						debugText.y = 40;		
 					}
 					}
