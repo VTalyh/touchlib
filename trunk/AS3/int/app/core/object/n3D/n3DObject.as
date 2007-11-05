@@ -20,9 +20,9 @@
 	public class n3DObject extends MovieClip
 	{
 		
-		private var TKnobX:TouchlibKnob=  new TouchlibKnob(80);
-		private var TKnobY:TouchlibKnob=  new TouchlibKnob(80);
-		private var TKnobZ:TouchlibKnob=  new TouchlibKnob(80);	
+		private var TKnobX:TouchlibKnob=  new TouchlibKnob(100);
+		private var TKnobY:TouchlibKnob=  new TouchlibKnob(100);
+		private var TKnobZ:TouchlibKnob=  new TouchlibKnob(100);	
 		private var TSliderX:HorizontalSlider = new HorizontalSlider(20,300);
 		private var TSliderY:HorizontalSlider = new HorizontalSlider(20,300);
 		private var TSliderZ:HorizontalSlider = new HorizontalSlider(20,300);
@@ -152,5 +152,5 @@
 		
 		
 		
-		}
+	}
 }

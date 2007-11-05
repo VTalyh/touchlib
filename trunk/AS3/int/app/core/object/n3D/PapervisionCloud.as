@@ -42,7 +42,7 @@ public class PapervisionCloud extends MovieClip
 	// ___________________________________________________________________ Album vars
 
 	private var paperSize :Number = 0.5;
-	private var cloudSize :Number = 1500;
+	private var cloudSize :Number = 1000;
 	private var rotSize   :Number = 360;
 	private var maxAlbums :Number = 50;
 	private var num       :Number = 0;
@@ -166,11 +166,11 @@ public class PapervisionCloud extends MovieClip
 
 	private function doRollOver(event:Event):void
 	{
-		var plane:Plane = planeByContainer[ event.target ];
-		plane.scaleX = 1.1;
-		plane.scaleY = 1.1;
+		//var plane:Plane = planeByContainer[ event.target ];
+		//plane.scaleX = 1.1;
+		p//lane.scaleY = 1.1;
 
-		plane.material.lineAlpha = 1;
+		//plane.material.lineAlpha = 1;
 
 		//var glow:Number = Math.max( 20, Math.min( 30, 10 + 20 * (1 - plane.screenZ / cloudSize ) ) );
 		//event.target.filters = [new GlowFilter( 0xFFFFFF, 0.7, glow, glow, 1, 1, false, false ) ];
@@ -179,11 +179,11 @@ public class PapervisionCloud extends MovieClip
 
 	private function doRollOut(event:Event):void
 	{
-		var plane:Plane = planeByContainer[ event.target ];
-		plane.scaleX = 1;
-		plane.scaleY = 1;
+		//var plane:Plane = planeByContainer[ event.target ];
+		//plane.scaleX = 1;
+		//plane.scaleY = 1;
 
-		plane.material.lineAlpha = 0;
+		//plane.material.lineAlpha = 0;
 
 //		event.target.filters = null;
 	};

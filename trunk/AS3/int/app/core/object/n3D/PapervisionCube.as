@@ -1,4 +1,10 @@
-﻿package app.core.object.n3D
+﻿	/**
+	 * Papervision3dTutorial.as
+	 * 25 March 2007
+	 * @author Dennis Ippel - http://www.rozengain.com
+	 */	//
+
+package app.core.object.n3D
 {
 	import app.core.action.RotatableScalable;
 	
@@ -19,11 +25,7 @@
 
 	[SWF(backgroundColor="#000000", frameRate="60")]
 	
-	/**
-	 * Papervision3dTutorial.as
-	 * 25 March 2007
-	 * @author Dennis Ippel - http://www.rozengain.com
-	 */	//
+
 	public class PapervisionCube extends RotatableScalable
 	{
 		private var myMaterials:Object;
