@@ -15,6 +15,9 @@
 		public var x:Number;
 		public var y:Number;
 		
+		public var oldX:Number;
+		public var oldY:Number;
+		
 		public var dX:Number;
 		public var dY:Number;				
 		
@@ -32,7 +35,7 @@
 		public var spr:Sprite;
 		public var trlx:Sprite;
 		
-		private var color:int;
+		public var color:int;
 		
 		var aListeners:Array;
 
@@ -43,6 +46,8 @@
 			ID = id;
 			x = px;
 			y = py;
+			oldX = px;
+			oldY = py;
 			dX = dx;
 			dY = dy;
 			sID = sid;
@@ -86,8 +91,8 @@
 				{
 					var localPoint:Point = obj.parent.globalToLocal(new Point(x, y));				
 					//trace("Down : " + localPoint.x + "," + localPoint.y);
-					obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_OVER, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));													
-					obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_DOWN, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));									
+					obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_OVER, true, false, x, y, localPoint.x, localPoint.y, 0, 0, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));													
+					obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_DOWN, true, false, x, y, localPoint.x, localPoint.y, 0, 0, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));									
 				} catch (e)
 				{
 						trace("Failed : " + e);
@@ -107,17 +112,17 @@
 					if(obj) 
 					{
 						var localPoint:Point = obj.parent.globalToLocal(new Point(x, y));				
-						obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_OVER, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));					
+						obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_OVER, true, false, x, y, localPoint.x, localPoint.y, 0, 0, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));					
 					}
 				} else if(obj != o) 
 				{
 					
 					var localPoint:Point = obj.parent.globalToLocal(new Point(x, y));								
-					obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_OUT, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));
+					obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_OUT, true, false, x, y, localPoint.x, localPoint.y, 0, 0, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));
 					if(o)
 					{
 						localPoint = obj.parent.globalToLocal(new Point(x, y));
-						o.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_OVER, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));
+						o.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_OVER, true, false, x, y, localPoint.x, localPoint.y, 0, 0, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));
 					}
 					obj = o;								
 				}
@@ -148,15 +153,15 @@
 			if(obj && obj.parent)
 			{				
 				localPoint = obj.parent.globalToLocal(new Point(x, y));				
-				obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_OUT, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));				
-				obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_UP, true, false, x, y, localPoint.x, localPoint.y, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));									
+				obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_OUT, true, false, x, y, localPoint.x, localPoint.y, 0, 0, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));				
+				obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_UP, true, false, x, y, localPoint.x, localPoint.y, 0, 0, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));									
 			}			
 			obj = null;
 			
 			for(var i:int=0; i<aListeners.length; i++)
 			{
 				localPoint = aListeners[i].parent.globalToLocal(new Point(x, y));				
-				aListeners[i].dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_UP, true, false, x, y, localPoint.x, localPoint.y, aListeners[i], false,false,false, true, 0, TUIOClass, ID, sID, angle));								
+				aListeners[i].dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_UP, true, false, x, y, localPoint.x, localPoint.y, 0, 0, aListeners[i], false,false,false, true, 0, TUIOClass, ID, sID, angle));								
 			}
 		}
 		
@@ -167,7 +172,7 @@
 			{
 				//trace("Notify moved");
 				localPoint = aListeners[i].parent.globalToLocal(new Point(x, y));				
-				aListeners[i].dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_MOVE, true, false, x, y, localPoint.x, localPoint.y, aListeners[i], false,false,false, true, 0, TUIOClass, ID, sID, angle));								
+				aListeners[i].dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_MOVE, true, false, x, y, localPoint.x, localPoint.y, 0, 0, aListeners[i], false,false,false, true, 0, TUIOClass, ID, sID, angle));								
 			}			
 		}
 	}

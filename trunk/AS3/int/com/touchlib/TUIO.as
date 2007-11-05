@@ -21,7 +21,9 @@ import flash.events.MouseEvent;
 
 	public class TUIO
 	{
-		static var FLOSCSocket:XMLSocket;
+		static var FLOSCSocket:XMLSocket;		
+		static var FLOSCSocketHost:String;			
+		static var FLOSCSocketPort:Number;	
 		static var thestage:Sprite;
 		static var objectArray:Array;
 		static var idArray:Array;
@@ -41,14 +43,15 @@ import flash.events.MouseEvent;
 		static var stageheight:int;
 		
 		static var bInitialized = false;
-
-
+		
+	
 		public static function init (s:Sprite, host:String, port:Number, debugXMLFile:String, dbug:Boolean = true):void
 		{
 			if(bInitialized)
 				return;
 			debugMode = dbug;
-			
+			FLOSCSocketHost=host;			
+			FLOSCSocketPort=port;			
 			bInitialized = true;
 			stagewidth = s.stage.stageWidth;
 			stageheight = s.stage.stageHeight;
@@ -98,7 +101,7 @@ import flash.events.MouseEvent;
 				var buttonSprite = new Sprite();		
 				buttonSprite.graphics.beginFill(0xFFFFFF,1.0);
 				buttonSprite.graphics.drawRoundRect(0, -10, 50, 60,10);				 
-				buttonSprite.addEventListener(MouseEvent.CLICK, toggleDebug, false, 0, true);					
+				buttonSprite.addEventListener(MouseEvent.CLICK, toggleDebug);					
 
 				var WrapperObject:Wrapper = new Wrapper(buttonSprite);
 				
@@ -271,7 +274,7 @@ import flash.events.MouseEvent;
 								{							
 									
 									var localPoint:Point = tuioobj.obj.parent.globalToLocal(stagePoint);							
-									tuioobj.obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_MOVE, true, false, x, y, localPoint.x, localPoint.y, tuioobj.obj, false,false,false, true, m, "2Dobj", id, sID, a));
+									tuioobj.obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_MOVE, true, false, x, y, localPoint.x, localPoint.y, tuioobj.oldX, tuioobj.oldY, tuioobj.obj, false,false,false, true, m, "2Dobj", id, sID, a));
 								}
 							} catch (e)
 							{
@@ -332,7 +335,7 @@ import flash.events.MouseEvent;
 								if(tuioobj.obj && tuioobj.obj.parent)
 								{							
 									var localPoint:Point = tuioobj.obj.parent.globalToLocal(stagePoint);							
-									tuioobj.obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_MOVE, true, false, x, y, localPoint.x, localPoint.y, tuioobj.obj, false,false,false, true, m, "2Dobj", id, sID, a));
+									tuioobj.obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_MOVE, true, false, x, y, localPoint.x, localPoint.y, tuioobj.oldX, tuioobj.oldY, tuioobj.obj, false,false,false, true, m, "2Dobj", id, sID, a));
 								}
 							} catch (e)
 							{
@@ -378,13 +381,14 @@ import flash.events.MouseEvent;
 		{ 
 			if(!debugMode){
 			debugMode=true;	
-			e.target.x=0;
+			e.target.x=20;
 			//Tweener.addTween(e.target, {y:10, alpha:0.5, time:0.6, transition:"easeinoutquad"});
 			;
 			}
 			else{
 			debugMode=false;
-			e.target.x=20;
+			FLOSCSocket.connect(FLOSCSocketHost, FLOSCSocketPort);
+			e.target.x=0;
 			//Tweener.addTween(e.target, {y:5, alpha:1, time:0.6, transition:"easeinoutquad"})
 			}
 			
