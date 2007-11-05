@@ -5,9 +5,6 @@
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.geom.Point;			
-    import flash.filters.BitmapFilter;
-    import flash.filters.BitmapFilterQuality;
-    import flash.filters.DropShadowFilter;
 	
 	import app.core.action.RotatableScalable;
 	
@@ -24,26 +21,28 @@
 		
 		public function SWFObject (url:String, insetX:int, insetY:int, insetscaleXY:int)
 		{
+			noSelection="true";
+			//noRotate="true";
+			
 			this.x = insetX ;
 			this.y = insetY ;	
+			
+			setscaleXY = insetscaleXY;
+			
 			this.x = 1400 * Math.random() - 1000;
 			this.y = 1400 * Math.random() - 1000;			
-			setscaleXY = insetscaleXY;
+		
 			photoLoader = new Loader();
 			photoLoader.contentLoaderInfo.addEventListener( Event.COMPLETE, arrange );					
-			clickgrabber.graphics.beginFill(0xffffff, 0);
-			clickgrabber.graphics.drawRect(0, 0, 1,1);
+			clickgrabber.graphics.beginFill(0xffffff, 0.01);
+			clickgrabber.graphics.drawRect(0,0, 1,1);
 			clickgrabber.graphics.endFill();			
 			var request:URLRequest = new URLRequest( url );						
 			photoLoader.unload();
 			photoLoader.load( request );		
-			
-			var filter:BitmapFilter = getShadowFilter();
-            var myFilters:Array = new Array();
-            //myFilters.push(filter);
-            filters = myFilters;						
+            addChild( clickgrabber );					
 			addChild( photoLoader );	
-			addChild( clickgrabber );			
+					
 			//this.addEventListener(Event.ENTER_FRAME, slide);
 		}
 		
@@ -54,41 +53,19 @@
 			photoLoader.scaleX = 1.0;
 			photoLoader.scaleY = 1.0;			
 			
-			clickgrabber.scaleX = photoLoader.width;
+			clickgrabber.scaleX = photoLoader.width+20;
 			clickgrabber.scaleY = photoLoader.height;			
-			clickgrabber.x = -photoLoader.width/2;
-			clickgrabber.y = -photoLoader.height/2;			
+			clickgrabber.x = -photoLoader.width/2-20;
+			clickgrabber.y = -photoLoader.height/2-15;				
 			
 			//this.scaleX = (Math.random()*0.4) + 0.3;
 			//this.scaleX = 0.2;
-			this.scaleX = 1;
-			this.scaleY = this.scaleX;
+			//this.scaleX = 1;
+			//this.scaleY = this.scaleX;
 			//this.alpha = 1.0;
-			this.rotation = Math.random()*180 - 90;
+			//this.rotation = Math.random()*180 - 90;
 		}				
-		
-		   private function getShadowFilter():BitmapFilter {
-            var color:Number = 0x000000;
-            var angle:Number = 45;
-            var alpha:Number = 0.8;
-            var blurX:Number = 8;
-            var blurY:Number = 8;
-            var distance:Number = 15;
-            var strength:Number = 0.65;
-            var inner:Boolean = false;
-            var knockout:Boolean = false;
-            var quality:Number = BitmapFilterQuality.HIGH;
-            return new DropShadowFilter(distance,
-                                        angle,
-                                        color,
-                                        alpha,
-                                        blurX,
-                                        blurY,
-                                        strength,
-                                        quality,
-                                        inner,
-                                        knockout);
-        }		
+			
 		public override function released(dx:Number, dy:Number, dang:Number)
 		{
 			velX = dx;
@@ -119,31 +96,7 @@
 					this.rotation += velAng;					
 				}
 			}
-
-		}	
-		
+		}			
 	}
 }
 
-
-/*
-function imgLoaded(event:Event = null ):void {
-var myBitmapData:BitmapData = new BitmapData(photoLoader.width, photoLoader.height);
-	myBitmapData.draw(photoLoader);
-	var myBitmap:Bitmap=new Bitmap;
-	myBitmap.bitmapData=myBitmapData;	
-	myBitmap.smoothing=true;
-	trace("Bitmaps: Smoothing Enabled");
-	photoLoader.x = -photoLoader.width/2;
-	photoLoader.y = -photoLoader.height/2;		
-	photoLoader.scaleX = 1.0;
-	photoLoader.scaleY = 1.0;						
-	clickgrabber.scaleX = photoLoader.width;
-	clickgrabber.scaleY = photoLoader.height;			
-	clickgrabber.x = -photoLoader.width/2;
-	clickgrabber.y = -photoLoader.height/2;			
-	//set scale
-	this.scaleX = 0.7;			
-	this.scaleY = this.scaleX;	
-}
-*/

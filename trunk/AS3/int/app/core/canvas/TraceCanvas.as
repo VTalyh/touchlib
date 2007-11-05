@@ -8,12 +8,12 @@
 	import com.touchlib.*;
 	import flash.geom.*;
 
-
 	import flash.filters.*;
 
 	public class TraceCanvas extends MovieClip {
 
-		private var blobs:Array;// blobs we are currently interacting with
+		private var blobs:Array;
+		
 		private var sourceBmp:BitmapData;
 		private var paintBmpData:BitmapData;
 		private var paintBmpData2:BitmapData;
@@ -41,7 +41,7 @@
 			
 			Paths = new Array();
 			
-			paintBmpData = new BitmapData(1024, 768, true, 0x00000000);
+			paintBmpData = new BitmapData(1024, 768, true, 0x0FFFFFF);
 			
 			paintBmp = new Bitmap(paintBmpData,'auto',true);
 		
@@ -54,16 +54,15 @@
 			this.addEventListener(Event.ENTER_FRAME, this.update, false, 0, true);
 			
 			this.addChild(paintBmp);
-			
+			/*
 			var exitButton:Loader = new Loader();
-			//exitButton.load(new URLRequest("closeButton.png"));
+			exitButton.load(new URLRequest("closeButton.png"));
 			exitButton.x = 20;
 			exitButton.y = 768 - 148;
 			exitButton.alpha = 0.8;
-			//exitButton.addEventListener(TUIOEvent.DownEvent, this.exit);
-			
-			//this.addChild(exitButton);
-
+			exitButton.addEventListener(TUIOEvent.DownEvent, this.exit);
+			this.addChild(exitButton);
+			*/
 		}
 		/*
 		function exit(e:Event) {
@@ -81,6 +80,7 @@
 			blobs.push( {id: id, origX: origX, origY: origY, myOrigX: x, myOrigY:y, oldX:x, oldY: y} );
 			
 			var holder: MovieClip = new MovieClip();
+			var blobID:Number;
 			
 			Paths.push({mc: holder, blobID: id});
 			addChild(Paths[Paths.length -1].mc);
@@ -90,9 +90,9 @@
 				if (blobs[i].id == id) {
 					blobs.splice(i, 1);
 					
-					//trace('===');
+					trace('===');
 					for(var j:int = 0; j<Paths.length; j++) {
-						//trace(Paths[j].blobID);
+						trace(Paths[j].blobID);
 						if (Paths[j].blobID == id) {
 							//Paths[j].mc.clear();
 							removeChild(Paths[j].mc);
@@ -109,20 +109,19 @@
 			var matrix1 = new Matrix();
 			var fIndex:Number = -1;
 			for(var i:int = 0; i<blobs.length; i++)
-			{
-				
+			{				
 				var tuioobj:TUIOObject = TUIO.getObjectById(blobs[i].id);
-				trace(tuioobj);
+				//trace(tuioobj);
 				// if not found, then it must have died..
 				if(!tuioobj)
 				{
 					removeBlob(blobs[i].id);
-					for(var j:int = 0; j<Paths.length; j++) {
+					/*for(var j:int = 0; j<Paths.length; j++) {
 						if (Paths[j].blobID == blobs[i].id) {
 							removeChild(Paths[j].mc);
 							Paths.splice(j,1);
 						}
-					}
+					}*/
 				} else {
 					for(var j:int = 0; j<Paths.length; j++) {
 						if (Paths[j].blobID == blobs[i].id) {
@@ -132,7 +131,7 @@
 					}
 					if (fIndex == -1)  {
 						if (Paths[fIndex] == undefined) {
-							
+												
 						}
 					}
 					else

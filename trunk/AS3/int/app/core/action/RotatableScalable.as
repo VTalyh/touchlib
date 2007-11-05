@@ -256,17 +256,17 @@
 
 		public function mouseMoveHandler(e:MouseEvent)
 		{
-		//this.alpha=0.5;
+		//
 		}
 		
 		public function mouseRollOverHandler(e:MouseEvent)
 		{
-		//this.alpha=0.5;
+		//
 		}
 		
 		public function mouseRollOutHandler(e:MouseEvent)
 		{
-		//this.alpha=1.0;	
+			//
 		}	
 		
 		function getAngleTrig(X:Number, Y:Number): Number

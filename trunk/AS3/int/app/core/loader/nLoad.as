@@ -1,12 +1,11 @@
 ﻿package app.core.loader {
-	import flash.display.DisplayObject;		
+	import flash.display.Sprite;		
 	import flash.display.MovieClip;	
 	import flash.events.Event;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.net.URLVariables;
 	import flash.geom.Point;	
-	import flash.util.trace;		
 	
 	import app.core.object.SWFObject;
 
@@ -17,14 +16,14 @@
 		private var fetchObject:String;	
 		private var rest:URLLoader = null;
 		private var flickr:XML = null;
-		private var thestage:DisplayObject;
+		private var thestage:Sprite;
 		private var allPics:Array;
 		private var setX:int;	
 		private var setY:int;
 		private var setscaleXY:int;
 		private var inGetWHAT:String;
 		
-		public function nLoad(d:DisplayObject, infetchAmount:int, getFlickrID:String, infetchObject:String, insetX:int, insetY:int, insetScaleXY:int, inGetWhat:String) 
+		public function nLoad(d:Sprite, infetchAmount:int, getFlickrID:String, infetchObject:String, insetX:int, insetY:int, insetScaleXY:int, inGetWhat:String) 
 		{
 			thestage = d;
 			fetchAmount = infetchAmount;

@@ -75,7 +75,7 @@ package app.core.element{
 		function touchStartDrag()
 		{
 			isActive = true;
-			gfxActiveGlow.visible = true;			
+			//gfxActiveGlow.visible = true;			
 		}
 		
 
@@ -104,8 +104,8 @@ package app.core.element{
 					activeX = this.mouseX;
 					activeY = this.mouseY;
 				}
-				gfxActiveGlow.x = activeX;
-				gfxActiveGlow.y = activeY;
+				//gfxActiveGlow.x = activeX;
+				//gfxActiveGlow.y = activeY;
 			}
 		}
 
