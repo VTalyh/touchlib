@@ -1,6 +1,7 @@
 ﻿package com.touchlib {
+import flash.display.DisplayObject;
+import flash.display.DisplayObjectContainer;
 import flash.events.Event;	
-import flash.display.DisplayObject;	
 	
 	public class TUIOEvent extends Event
 	{
@@ -16,7 +17,7 @@ import flash.display.DisplayObject;
 		public var oldY:Number;
 		public var buttonDown:Boolean;
 		public var relatedObject:DisplayObject;
-		
+
 		public static const TUIO_MOVE:String = "com.touchlib.TUIOEvent.TUIO_MOVE";
 		public static const TUIO_DOWN:String = "com.touchlib.TUIOEvent.TUIO_DOWN";				
 		public static const TUIO_CLICK:String = "com.nui.TUIOEvent.TUIO_CLICK"; //double tap-click
@@ -38,7 +39,7 @@ import flash.display.DisplayObject;
 			this.oldY = oldY;
 			this.buttonDown = buttonDown;
 			this.relatedObject = relatedObject;
-
+			
 			super(type, bubbles, cancelable);
 			
 //			super(type, bubbles, cancelable, localX, localY, relatedObject, ctrlKey, altKey, shiftKey, buttonDown, delta);

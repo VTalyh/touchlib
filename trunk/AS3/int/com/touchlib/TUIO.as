@@ -17,14 +17,13 @@ import flash.text.TextFormat;
 import flash.display.*;
 import app.core.element.Wrapper;
 import flash.events.MouseEvent;
-//import com.tweener.transitions.Tweener;
 
 	public class TUIO
 	{
 		static var FLOSCSocket:XMLSocket;		
 		static var FLOSCSocketHost:String;			
 		static var FLOSCSocketPort:Number;	
-		static var thestage:DisplayObject;
+		static var thestage:Sprite;
 		static var objectArray:Array;
 		static var idArray:Array;
 		
@@ -42,7 +41,7 @@ import flash.events.MouseEvent;
 		static var bInitialized = false;
 		
 	
-		public static function init (s:DisplayObject, host:String, port:Number, debugXMLFile:String, dbug:Boolean = true):void
+		public static function init (s:Sprite, host:String, port:Number, debugXMLFile:String, dbug:Boolean = true):void
 		{
 			if(bInitialized)
 				return;
@@ -119,15 +118,6 @@ import flash.events.MouseEvent;
 			}
 			
 		}
-		
-		private static function setDimensions(wd:int = 800, ht:int = 600)
-		{
-			stagewidth = wd;
-			stageheight = ht;			
-		}
-		
-		
-		
 
 		private static function xmlPlaybackLoaded(evt:Event) {
 			trace("Loaded xml debug data");
@@ -374,15 +364,13 @@ import flash.events.MouseEvent;
 		{ 
 			if(!debugMode){
 			debugMode=true;	
+			FLOSCSocket.connect(FLOSCSocketHost, FLOSCSocketPort);
 			e.target.x=20;
-			//Tweener.addTween(e.target, {y:10, alpha:0.5, time:0.6, transition:"easeinoutquad"});
-			;
 			}
 			else{
 			debugMode=false;
 			FLOSCSocket.connect(FLOSCSocketHost, FLOSCSocketPort);
 			e.target.x=0;
-			//Tweener.addTween(e.target, {y:5, alpha:1, time:0.6, transition:"easeinoutquad"})
 			}
 			
 			// show XML

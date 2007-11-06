@@ -67,7 +67,7 @@
 							
 			spr = new TUIOCursor(ID.toString());			
 			spr.x = x;
-			spr.y = y;  			
+			spr.y = y;  		
 			
 			try {
  	 			obj = o;
