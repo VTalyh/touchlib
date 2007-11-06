@@ -23,7 +23,7 @@ import flash.events.MouseEvent;
 		static var FLOSCSocket:XMLSocket;		
 		static var FLOSCSocketHost:String;			
 		static var FLOSCSocketPort:Number;	
-		static var thestage:Sprite;
+		static var thestage:Stage;
 		static var objectArray:Array;
 		static var idArray:Array;
 		
@@ -41,7 +41,7 @@ import flash.events.MouseEvent;
 		static var bInitialized = false;
 		
 	
-		public static function init (s:Sprite, host:String, port:Number, debugXMLFile:String, dbug:Boolean = true):void
+		public static function init (s:DisplayObjectContainer, host:String, port:Number, debugXMLFile:String, dbug:Boolean = true):void
 		{
 			if(bInitialized)
 				return;
@@ -49,22 +49,27 @@ import flash.events.MouseEvent;
 			FLOSCSocketHost=host;			
 			FLOSCSocketPort=port;			
 			bInitialized = true;
-			thestage = s;
+			thestage = s.stage;
+			
+			
+			thestage.align = StageAlign.TOP_LEFT;
+			thestage.displayState = StageDisplayState.FULL_SCREEN;						
+			
 			objectArray = new Array();
 			idArray = new Array();
 			try
 			{
 			
-			FLOSCSocket = new XMLSocket();
-
-            FLOSCSocket.addEventListener(Event.CLOSE, closeHandler);
-            FLOSCSocket.addEventListener(Event.CONNECT, connectHandler);
-            FLOSCSocket.addEventListener(DataEvent.DATA, dataHandler);
-            FLOSCSocket.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
-            FLOSCSocket.addEventListener(ProgressEvent.PROGRESS, progressHandler);
-            FLOSCSocket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
-
-			FLOSCSocket.connect(host, port);			
+				FLOSCSocket = new XMLSocket();
+	
+				FLOSCSocket.addEventListener(Event.CLOSE, closeHandler);
+				FLOSCSocket.addEventListener(Event.CONNECT, connectHandler);
+				FLOSCSocket.addEventListener(DataEvent.DATA, dataHandler);
+				FLOSCSocket.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+				FLOSCSocket.addEventListener(ProgressEvent.PROGRESS, progressHandler);
+				FLOSCSocket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+	
+				FLOSCSocket.connect(host, port);			
 			
 			} catch (e)
 			{
@@ -84,9 +89,9 @@ import flash.events.MouseEvent;
 				debugText.backgroundColor = 0x000000;	
 				debugText.border = true;	
 				debugText.borderColor = 0x333333;	
-				thestage.parent.addChild( debugText );	
+				thestage.addChild( debugText );	
 					
-				thestage.parent.setChildIndex(debugText, thestage.parent.numChildren-1);	
+				thestage.setChildIndex(debugText, thestage.numChildren-1);	
 		
 				recordedXML = <OSCPackets></OSCPackets>;	
 				
@@ -97,11 +102,11 @@ import flash.events.MouseEvent;
 				buttonSprite.addEventListener(MouseEvent.CLICK, toggleDebug);					
 
 				var WrapperObject:Wrapper = new Wrapper(buttonSprite);
-				thestage.parent.addChild(WrapperObject);
+				thestage.addChild(WrapperObject);
 						
 				
-				thestage.parent.setChildIndex(WrapperObject, thestage.parent.numChildren-1);	
-				//trace(thestage.parent.numChildren);
+				thestage.setChildIndex(WrapperObject, thestage.numChildren-1);	
+				//trace(thestage.numChildren);
 				
 				 if(xmlPlaybackURL != "")
 				 {
@@ -210,8 +215,8 @@ import flash.events.MouseEvent;
 						{
 							var sID = node.ARGUMENT[1].@VALUE;
 							var id = node.ARGUMENT[2].@VALUE;
-							var x = Number(node.ARGUMENT[3].@VALUE) * thestage.stage.stageWidth;
-							var y = Number(node.ARGUMENT[4].@VALUE) * thestage.stage.stageHeight;
+							var x = Number(node.ARGUMENT[3].@VALUE) * thestage.stageWidth;
+							var y = Number(node.ARGUMENT[4].@VALUE) * thestage.stageHeight;
 							var a = Number(node.ARGUMENT[5].@VALUE);
 							var X = Number(node.ARGUMENT[6].@VALUE);
 							var Y = Number(node.ARGUMENT[7].@VALUE);
@@ -221,9 +226,9 @@ import flash.events.MouseEvent;
 							
 							// send object update event..
 							
-							var objArray:Array = thestage.stage.getObjectsUnderPoint(new Point(x, y));
+							var objArray:Array = thestage.getObjectsUnderPoint(new Point(x, y));
 							var stagePoint:Point = new Point(x,y);					
-							var displayObjArray:Array = thestage.stage.getObjectsUnderPoint(stagePoint);							
+							var displayObjArray:Array = thestage.getObjectsUnderPoint(stagePoint);							
 							var dobj = null;
 							
 //							if(displayObjArray.length > 0)								
@@ -273,15 +278,15 @@ import flash.events.MouseEvent;
 						if(type == "set")
 						{
 							var id = node.ARGUMENT[1].@VALUE;
-							var x = Number(node.ARGUMENT[2].@VALUE) * thestage.stage.stageWidth;
-							var y = Number(node.ARGUMENT[3].@VALUE) *  thestage.stage.stageHeight;
+							var x = Number(node.ARGUMENT[2].@VALUE) * thestage.stageWidth;
+							var y = Number(node.ARGUMENT[3].@VALUE) *  thestage.stageHeight;
 							var X = Number(node.ARGUMENT[4].@VALUE);
 							var Y = Number(node.ARGUMENT[5].@VALUE);
 							var m = node.ARGUMENT[6].@VALUE;
 							//var area = node.ARGUMENT[7].@VALUE;							
 							
 							var stagePoint:Point = new Point(x,y);					
-							var displayObjArray:Array = thestage.stage.getObjectsUnderPoint(stagePoint);
+							var displayObjArray:Array = thestage.getObjectsUnderPoint(stagePoint);
 							var dobj = null;
 							if(displayObjArray.length > 0)								
 								dobj = displayObjArray[displayObjArray.length-1];							
@@ -351,7 +356,7 @@ import flash.events.MouseEvent;
 					if(debugMode)
 					{
 						debugText.appendText("  " + (i + 1) +" - " +objectArray[i].ID + "  X:" + int(objectArray[i].x) + "  Y:" + int(objectArray[i].y) + "  \n");
-						debugText.x = thestage.stage.stageWidth-160;
+						debugText.x = thestage.stageWidth-160;
 						debugText.y = 40;		
 					}
 					}

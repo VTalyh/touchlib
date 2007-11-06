@@ -260,7 +260,7 @@ package app.demo.tank
 		{
 			score += n;
 			// update text field
-			scoreText.text = score;
+			scoreText.text = score.toString();
 		}
 
 		function tankHit()
