@@ -23,21 +23,21 @@
 		override public function track(pt:Point)
 		{
 
-			tmp.x = pt.x - this.x + (Math.random()*10);
-			tmp.y = pt.y - this.y + (Math.random()*10);
-			vel = Point.interpolate (tmp, vel, 0.01);
+			tmp.x = pt.x - this.x + (Math.random()*100);
+			tmp.y = pt.y - this.y + (Math.random()*100);
+			vel = Point.interpolate (tmp, vel, 0.1);
 
 			var cent:Point = swarm.getCentroid();
 
 			tmp.x = cent.x - this.x;
 			tmp.y = cent.y - this.y;			
-			vel = Point.interpolate (tmp, vel, 0.04);
+			vel = Point.interpolate (tmp, vel, 0.4);
 
 			var avgvel:Point = swarm.getAverageVel();
 		
 //			tmp.x = avgvel.x - this.vel.x;
 //			tmp.y = avgvel.y - this.vel.y;			
-			vel = Point.interpolate (avgvel, vel, 0.04);
+			vel = Point.interpolate (avgvel, vel, 0.4);
 			
 
 			var dist:Number;			
@@ -45,10 +45,15 @@
 			if(swarm.members[i] != this)			
 			{
 
-				dist = Point.distance(new Point(this.x, this.y), new Point(swarm.members[i].x, swarm.members[i].y)) + 1;
+				dist = Point.distance(new Point(this.x, this.y), new Point(swarm.members[i].x, swarm.members[i].y)) ;
+				
+				dist -= 40;
+				
+				if(dist < 1)
+					dist = 1;
 
-				vel.x -= (10.1 * (swarm.members[i].x - this.x)) / (dist * dist);
-				vel.y -= (10.1 * (swarm.members[i].y - this.y)) / (dist * dist);				
+				vel.x -= (1.1 * (swarm.members[i].x - this.x)) / (dist * dist);
+				vel.y -= (1.1 * (swarm.members[i].y - this.y)) / (dist * dist);				
 
 			}
 		

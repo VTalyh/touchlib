@@ -9,18 +9,23 @@
 	public class ArtGenMain extends MovieClip 
 	{
 		private var s:Swarm = null;
-
+		private var waitCount:int = 5;
 		public function ArtGenMain() 
 		{
 			trace("ArtGenCanvas Initialized");
 
 	
+			var spr:Sprite = new Sprite();
+			addChild(spr);
+			
 			s = new Swarm();
 			addChild(s);
 			
+			s.setDrawingCanvas(spr);
+			
 			s.setupInfo(<swarm>
-							<swarmType>Boid</swarmType>
-							<numMembers>10</numMembers>
+							<swarmType>Boid2</swarmType>
+							<numMembers>3</numMembers>
 							<algorithm>
 								<speed>10</speed>
 							</algorithm>
@@ -35,6 +40,13 @@
 		public function frameUpdate(e:Event)
 		{
 			s.track(new Point(this.mouseX, this.mouseY));
+			waitCount -= 1;
+			
+			if(waitCount == 0)
+			{
+				s.draw();
+				waitCount = 1;
+			}
 		}
 		
 		public function unloadHandler(e:Event)

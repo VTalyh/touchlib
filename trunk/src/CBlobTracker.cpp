@@ -791,6 +791,7 @@ inline bool CBlobTracker::checkValidNew(int start)
 		  newidcount ++;
 	}
 
+	// Check to see whether we have too many 'new' id's 
 	if(newidcount > extraIDs)		//extraIDs > 0 
 	  return false;
 

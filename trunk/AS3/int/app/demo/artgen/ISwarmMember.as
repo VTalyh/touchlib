@@ -8,7 +8,7 @@
 	{
 		protected var swarm:Swarm;
 		public var vel:Point;
-		
+	
 		public function ISwarmMember() 
 		{
 			vel = new Point();			
