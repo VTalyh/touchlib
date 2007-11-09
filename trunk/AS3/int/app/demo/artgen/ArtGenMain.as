@@ -1,4 +1,6 @@
-﻿package app.demo.artgen
+﻿// IDEA: use the ability to save animations as code somehow.. 
+
+package app.demo.artgen
 {
 	import flash.display.*;
 	import com.touchlib.*;

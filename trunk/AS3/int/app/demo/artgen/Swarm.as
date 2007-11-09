@@ -112,7 +112,7 @@
 			{
 //				drawingCanvas.graphics.drawCircle(members[i].x, members[i].y, 5);
 
-				var t:MovieClip = new Test1();
+				var t:MovieClip = new Test3();
 				t.x = members[i].x;
 				t.y = members[i].y;
 				

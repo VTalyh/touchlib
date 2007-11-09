@@ -4,7 +4,7 @@
 	import com.touchlib.*;
 	import flash.geom.*;	
 	
-	public class ISwarmMember extends Sprite 
+	public class ISwarmMember extends Shape 
 	{
 		protected var swarm:Swarm;
 		public var vel:Point;
