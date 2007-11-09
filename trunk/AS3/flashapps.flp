@@ -84,6 +84,7 @@
                     <project_file path="./int/app/demo/artgen/LazyFollower.as" filetype="as" />
                     <project_file path="./int/app/demo/artgen/Swarm.as" filetype="as" />
                     <project_file path="./int/app/demo/artgen/Boid2.as" filetype="as" />
+                    <project_file path="./int/app/demo/artgen/Trail.as" filetype="as" />
                 </project_folder>
                 <project_folder name="puzzle" expanded="false">
                     <project_file path="./int/app/demo/puzzle/PuzzleGame.as" filetype="as" />
@@ -106,7 +107,7 @@
                     <project_file path="./int/app/demo/musicalSquares/Sounds.as" filetype="as" />
                     <project_file path="./int/app/demo/musicalSquares/Throwing.as" filetype="as" />
                 </project_folder>
-                <project_folder name="apploader" expanded="false">
+                <project_folder name="apploader" expanded="true">
                     <project_file path="./int/app/demo/appLoader/AppLoader.as" filetype="as" />
                     <project_file path="./int/app/demo/appLoader/AppLoaderButton.as" filetype="as" />
                     <project_file path="./int/app/demo/appLoader/AppParticle.as" filetype="as" />

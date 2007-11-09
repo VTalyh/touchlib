@@ -26,11 +26,15 @@ package app.demo.artgen
 			s.setDrawingCanvas(spr);
 			
 			s.setupInfo(<swarm>
-							<swarmType>Boid2</swarmType>
-							<numMembers>3</numMembers>
+							<swarmType>HoppingBugs</swarmType>
+							<numMembers>5</numMembers>
+							<shape>Shape1.swf</shape>
 							<algorithm>
 								<speed>10</speed>
 							</algorithm>
+							<trail>
+								<lifeTime>1000</lifeTime>
+							</trail>
 						</swarm>);
 			
 			addEventListener(Event.ENTER_FRAME, frameUpdate);

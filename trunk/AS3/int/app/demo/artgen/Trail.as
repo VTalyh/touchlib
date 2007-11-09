@@ -4,24 +4,48 @@
 	import com.touchlib.*;
 	import flash.geom.*;	
 	import flash.utils.*;
+	import flash.net.*;
+	import flash.events.Event;
 	
 	public class Trail extends Sprite
 	{
 		private var ldr:Loader;
-		private var lifeTimer:Timer;
-		private var startTimeMS:Number;
-		function Trail(info:XMLList)
+		private var startTimeMS:int;
+		private var lifeTime:int;
+		function Trail(info:XMLList, bytes:ByteArray)
 		{
 			ldr = new Loader();
 			addChild(ldr);
-			ldr.load(new URLRequest("www/shapes/" + info.name));
+			ldr.loadBytes(bytes);
 			
-			lifeTimer = new Timer(info.lifeTime, 0);
-			lifeTimer.start();
+			lifeTime = info.lifeTime;
+			
 			var d:Date=  new Date();
 			startTimeMS = d.time;
-			
 
+			
+			this.addEventListener(Event.ENTER_FRAME, frameUpdate, false, 0, true);
+		}
+		
+		function frameUpdate(e:Event)
+		{
+			var d:Date = new Date();
+			var curTime:int = d.time;			
+			
+			// fixme: add frame by frame modulations..
+
+			if(curTime - startTimeMS > lifeTime)
+			{
+//				this.visible = false;
+				ldr.unload();
+				removeEventListener(Event.ENTER_FRAME, frameUpdate);
+				this.parent.removeChild(this);
+				removeChild(ldr);
+				ldr = null;
+
+				delete this;
+			}
+			
 		}
 	}
 }

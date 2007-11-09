@@ -4,17 +4,22 @@
 	import com.touchlib.*;
 	import app.demo.artgen.*;
 	import flash.geom.*;
+	import flash.net.*;
+	import flash.events.*;
 	
 	public class Swarm extends Sprite 
 	{
-
 		public var members:Array;
+		public var shapeloader:URLLoader;
 		//public var guide:Sprite;
 		
 		private var drawingCanvas:Sprite;
+		
+		private var xmlSetupInfo:XML;
 
 		public function Swarm() 
 		{
+
 			members = new Array();
 		}
 		
@@ -31,6 +36,15 @@
 		
 		public function setupInfo(data:XML)
 		{
+			trace("www/shapes/" + data.shape);
+			xmlSetupInfo = data;
+			shapeloader = new URLLoader( );	
+			shapeloader.dataFormat = URLLoaderDataFormat.BINARY;
+			shapeloader.load( new URLRequest(	"www/shapes/" + data.shape ) );
+			shapeloader.addEventListener(HTTPStatusEvent.HTTP_STATUS, loaderEvent);
+
+			shapeloader.addEventListener(Event.COMPLETE, loaderEvent);
+			
 			// FIXME: create members.. 
 			// Factory kinda thing.. 
 			
@@ -40,6 +54,19 @@
 				trace("Member");
 			}
 		}
+		
+		public function loaderEvent(e:Event)
+		{
+			trace("URLLoader event " + e.type);
+			
+			if(e.type == "complete")
+			{
+				trace(shapeloader.dataFormat);
+				trace(shapeloader.data);
+				trace(shapeloader.bytesLoaded);
+			}
+		}
+		
 		
 		public function createMember(sz:String, data:XMLList):ISwarmMember
 		{
@@ -108,20 +135,29 @@
 		{
 
 //			drawingCanvas.graphics.beginFill(0xffffff);
-			for(var i:int =0; i<members.length; i++)
+			if(shapeloader.data != null)
 			{
-//				drawingCanvas.graphics.drawCircle(members[i].x, members[i].y, 5);
+				for(var i:int =0; i<members.length; i++)
+				{
+	//				drawingCanvas.graphics.drawCircle(members[i].x, members[i].y, 5);
 
-				var t:MovieClip = new Test3();
-				t.x = members[i].x;
-				t.y = members[i].y;
-				
-				t.rotation = members[i].rotation; //+ Math.random()*40;
-// Math.atan2(members[i].vel.x, members[i].vel.y) * 180 / Math.PI;
-				
-				drawingCanvas.addChild(t);
+
+					var t:Sprite = new Trail(xmlSetupInfo.trail, shapeloader.data);
+					t.x = members[i].x;
+					t.y = members[i].y;
+					
+					t.rotation = members[i].rotation; //+ Math.random()*40;
+	// Math.atan2(members[i].vel.x, members[i].vel.y) * 180 / Math.PI;
+					
+					drawingCanvas.addChild(t);
+					t = null;
+				}
 			}			
 //			drawingCanvas.graphics.endFill();
+try {
+   new LocalConnection().connect('foo');
+   new LocalConnection().connect('foo');
+} catch (e:*) {}
 
 
 		}
