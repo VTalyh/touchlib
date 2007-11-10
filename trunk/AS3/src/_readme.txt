@@ -21,7 +21,7 @@ Multimemdia
 ---------------
 Photo (David Wallin)
 Viewer (Christian Moore)
-Piano (Seth Sandler)
+MultiKey (Seth Sandler)
 MusicalSquares (Seth Sandler)
 Turntables (Christian Moore)
 
