@@ -22,7 +22,8 @@ public class BrowserBackground(url:String);
 */
 
 
-package com.gfxcomplex.display{
+
+package app.core.utl{
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.display.Shape;
