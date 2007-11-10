@@ -64,7 +64,9 @@
 
 			for(i=0; i < myArray.length-1; i++)
 			{
-				var photo:ImageObject = new ImageObject( myArray[i] );				
+				var photo:ImageObject = new ImageObject( myArray[i] ,false, false, false);				
+				//photo.scaleX = 1.0;
+				// photo.scaleY = 1.0;
 				thestage.addChild(photo);
 				allPics.push(photo);				
 			}			

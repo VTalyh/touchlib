@@ -83,18 +83,19 @@ package app.core.object.n3D
 			// create the container, add it to the stage, position it
 			container = new Sprite();
 			//container.y= -150;
-			var matrix:Matrix = new Matrix();
+			/*var matrix:Matrix = new Matrix();
 			matrix.createGradientBox(300, 300, 0, -150, -150);
 			var colors:Array = [0xFFFFFF, 0x000000];
 			var alphas:Array = [0, 25];
 			var ratios:Array = [0x0F, 255];
-			//dragBG.graphics.lineStyle(1.0,0xFFFFFF,1);
-			//dragBG.graphics.beginFill(0xFFFFFF,0.10);
+			//dragBG.graphics.lineStyle(1.0,0xFFFFFF,1);	
 			dragBG.graphics.beginGradientFill(GradientType.RADIAL, colors, alphas, ratios, matrix);
+			*/	
+			dragBG.graphics.beginFill(0xFFFFFF,0);
 			dragBG.graphics.drawCircle(0,0,150);
 			dragBG.graphics.endFill();
 			var dropshadow:DropShadowFilter=new DropShadowFilter(0, 45, 0x000000, 0.75, 15, 15);
-			dragBG.filters=new Array(dropshadow);
+			//dragBG.filters=new Array(dropshadow);
 			addChild(dragBG);
 			dragBG.alpha = 0.65; 
 			//container.scaleX= 0.5;

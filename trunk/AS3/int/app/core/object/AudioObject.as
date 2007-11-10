@@ -14,6 +14,7 @@
 	import fl.controls.Button;	
 	import app.core.element.*;
 	import flash.events.*;
+	
 	public class AudioObject extends MovieClip
 	{
 		private var url:String='local/audio/aphex_rmx.mp3';

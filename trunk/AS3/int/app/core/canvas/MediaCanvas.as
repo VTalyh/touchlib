@@ -3,7 +3,8 @@
 	import app.core.action.RotatableScalable;
 	import flash.display.Shape;		
 	import flash.events.Event;
-	import flash.geom.Point;		
+	import flash.geom.Point;	      
+	import app.core.utl.ColorUtil;
 	
 	public class MediaCanvas extends RotatableScalable
 	{		
@@ -19,15 +20,18 @@
 		private var friction:Number = 0.85;
 		private var angFriction:Number = 0.92;		
 		
+		public var color:int;
+		
 		function MediaCanvas()
 		{
 			bringToFront = false;			
 			noScale = false;
 			noRotate = false;
-			noSelection = true;
 			
-			clickgrabber.graphics.lineStyle(1,0xFFFFFF,0.5);
-			clickgrabber.graphics.beginFill(0xffffff, 0.0);
+			color = ColorUtil.random(100,0,0);
+						
+			clickgrabber.graphics.lineStyle(20,color,1.0);
+			clickgrabber.graphics.beginFill(color, 0.0);
 			clickgrabber.graphics.drawRect(-sizeX/2,-sizeY/2,sizeX,sizeY);
 			clickgrabber.graphics.endFill();						
 			
@@ -62,12 +66,13 @@
 			}
 		}		
 		
+		/*
 		public function addPhoto(sz:String)
 		{
 			var photo:ImageObject = new ImageObject( sz );
 			this.addChild(photo);
 		}
-		
+		*/
 		
 	}
 }

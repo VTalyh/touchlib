@@ -110,7 +110,7 @@
 			clickgrabber.graphics.endFill();
 
 			border.graphics.beginFill(0xffffff, 0.75);
-			border.graphics.drawRoundRect(0, 0, video1.width+(border_size * 2), video1.height+(border_size * 2),10);
+			border.graphics.drawRect(0, 0, video1.width+(border_size * 2), video1.height+(border_size * 2));
 			border.graphics.endFill();
 
 			addChild(border);

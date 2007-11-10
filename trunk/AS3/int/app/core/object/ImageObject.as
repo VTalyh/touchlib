@@ -1,43 +1,50 @@
 ﻿package app.core.object{
 	import app.core.action.RotatableScalable;
-	import flash.display.Shape;		
-	import flash.display.Loader;		
+	
+	import flash.display.Loader;
+	import flash.display.Shape;
 	import flash.events.*;
-	import flash.net.URLLoader;
+	import flash.filters.BitmapFilter;
+	import flash.filters.BitmapFilterQuality;
+	import flash.filters.DropShadowFilter;
 	import flash.net.URLRequest;
-	import flash.geom.Point;			
-    import flash.filters.BitmapFilter;
-    import flash.filters.BitmapFilterQuality;
-    import flash.filters.DropShadowFilter; 
-    //http://code.google.com/p/tweener/
-	import com.tweener.transitions.Tweener;
+	import com.tweener.transitions.Tweener;	
+	import app.core.object.TextObject;	
 	
 	public class ImageObject extends RotatableScalable 
 	{
 		private var clickgrabber:Shape = new Shape();		
 		private var photoLoader:Loader = null;		
 		
+		private var thisTween:Boolean;
+		private var thisSlide:Boolean;	
+			
 		private var velX:Number = 0.0;
 		private var velY:Number = 0.0;		
 		
 		private var velAng:Number = 0.0;
 		
-		private var friction:Number = 0.85;
-		private var angFriction:Number = 0.92;
+		private var friction:Number = 0.45;
+		private var angFriction:Number = 0.45;
 		
-		public function ImageObject (url:String)
+		private var TextObject_0:TextObject;	
+		
+		public function ImageObject (url:String, mouseSelect:Boolean, thisTweenX:Boolean, thisSlideX:Boolean)
 		{
-//			trace(stage);
+			mouseSelection=mouseSelect;
+			thisTween=thisTweenX;
+			thisSlide=thisSlideX;
+			//trace(stage);
 			this.x = 1600 * Math.random() - 800;
 			this.y = 1600 * Math.random() - 800;			
 			photoLoader = new Loader();
 			photoLoader.contentLoaderInfo.addEventListener( Event.COMPLETE, arrange, false, 0, true);					
-
+			//photoLoader.addEventListener(ProgressEvent.PROGRESS, progressHandler, false, 0, true);
 			
 			clickgrabber.graphics.beginFill(0xffffff, 0.1);
 			clickgrabber.graphics.drawRect(0, 0, 1,1);
 			clickgrabber.graphics.endFill();			
-		
+			trace(url);
 			var request:URLRequest = new URLRequest( url );			
 			
 			// Unload any current child
@@ -48,19 +55,25 @@
 			//		 object.
 			photoLoader.unload();
 			photoLoader.load( request );						
-			
+						
 			this.addChild( photoLoader );	
 			this.addChild( clickgrabber );
-					
+			
+			TextObject_0 = new TextObject(url);	
+			TextObject_0.visible=false;
+			this.addChild(TextObject_0);		
+			
+			
+				
 //            var filter:BitmapFilter = getShadowFilter();
 //            var myFilters:Array = new Array();
 //            myFilters.push(filter);
 //            filters = myFilters;			
 			
+			if(thisSlide){	
 			this.addEventListener(Event.ENTER_FRAME, slide, false, 0, true);
-			
-			
-			// FIXME: I'd like to have some kind of status meter while it's downloading..
+			}
+		
 		}
 
 		private function arrange( event:Event = null ):void 
@@ -75,6 +88,11 @@
 			clickgrabber.x = -photoLoader.width/2;
 			clickgrabber.y = -photoLoader.height/2;			
 			
+			TextObject_0.visible=true;
+			TextObject_0.scaleX = 0.17;
+			TextObject_0.scaleY = 0.17;	
+			TextObject_0.y=photoLoader.height/2+10;
+			
 			this.scaleX = 0;
 			this.scaleY = 0;	
 			this.alpha = 0;
@@ -82,11 +100,23 @@
 			
 			//var targetX:int = rowWidth-xOff+minX+200;
 			//var targetY:int = rowBaseline-yOff+minY+450;		
-			var targetRotation:int = Math.random()*180 - 90;	
+			var targetRotation:int = Math.random()*180 - 90;	 
 			var targetScale:Number = (Math.random()*0.4) + 0.3;	
 			
-			Tweener.addTween(this, {alpha:1, time:0.6, transition:"easeinoutquad"});	
-			Tweener.addTween(this, {scaleX: targetScale, scaleY: targetScale, rotation:targetRotation, time:0.5, transition:"easeinoutquad"});	
+		if(thisTween){
+			//Tweener.addTween(this, {alpha:1, time:0.6, transition:"easeinoutquad"});	
+			Tweener.addTween(this, {alpha:1.0, scaleX: targetScale, scaleY: targetScale, rotation:targetRotation, time:0.5, transition:"easeinoutquad"});	
+		}else {
+		
+		}
+		this.alpha = 1.0;
+		this.scaleX = 1;
+		this.scaleY = 1;	
+		this.rotation = 0;
+		//this.scaleX = (Math.random()*0.4) + 0.3;
+		//this.scaleY = this.scaleX;
+		//this.rotation = Math.random()*180 - 90;
+			
 		}				
 		
 

@@ -8,7 +8,8 @@
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.net.URLVariables;
-	import flash.geom.Point;	
+	import flash.geom.Point;
+	//import app.core.object.TextObject;	
 
 	//import flash.util.trace;		
 
@@ -19,7 +20,8 @@
 		private var rest:URLLoader = null;
 		private var flickr:XML = null;
 		private var thestage:Sprite;
-		private var allPics:Array;
+		private var allPics:Array;	
+		//private var TextObject_0:TextObject;		
 		
 		// Constructor
 		public function Flickr(d:Sprite) 
@@ -112,8 +114,13 @@
 						secret + ".jpg";
 		
 	
-				var photo:ImageObject = new ImageObject( url );
+				var photo:ImageObject = new ImageObject( url , true,true,true);
+				//TextObject_0 = new TextObject(url);
 				thestage.addChild(photo);
+				//TextObject_0.scaleX = 0.25;
+				//TextObject_0.scaleY = 0.25;	
+				//TextObject_0.y=150;
+				//photo.addChild(TextObject_0);	
 				allPics.push(photo);
 			}
 		}

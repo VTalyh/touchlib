@@ -8,7 +8,7 @@
 	//import flash.utils.Timer;
 	//import flash.events.MouseEvent;
 	//import flash.events.Event;
-	
+	import app.core.utl.ColorUtil;
 
 	public class TUIOObject 
 	{
@@ -54,18 +54,9 @@
 			angle = ang;
 			isAlive = true;
 			
-			var c = int(Math.random() * 4);
-			
-			if(c == 0)
-				color = 0xff0000;
-			else if(c == 1)
-				color = 0x00ffff;
-			else if(c == 2)
-				color = 0x00ff00;				
-			else if(c == 3)
-				color = 0x0000ff;		
+			color = ColorUtil.random(0,0,0);
 							
-			spr = new TUIOCursor(ID.toString());			
+			spr = new TUIOCursor(ID.toString(),color);			
 			spr.x = x;
 			spr.y = y;  		
 			

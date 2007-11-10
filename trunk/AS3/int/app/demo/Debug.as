@@ -7,12 +7,7 @@ import app.core.loader.*;
 import app.core.utl.*;
 import flash.display.*;
 
-//import app.ext.flare.*;
-//import app.ext.tweener.*;
-//import app.ext.p3d.*;
-
 import flash.events.Event;
-import flash.system.Capabilities;
 
 public class Debug extends Sprite
 {		
@@ -30,64 +25,39 @@ public class Debug extends Sprite
 		this.addChild(DEBUG_FPS);
 		}
 		this.stage.frameRate = Settings.instance.framerate;
-		trace(' ~ '); 
-        trace(' v '+Settings.instance.version);
+        trace('~view: '+Settings.instance.version);
         trace('-------------------------------------------------------------------------------------------------------------------------------');
         trace(' Theme : '+Settings.instance.theme); 
         trace(' Debug : '+Settings.instance.debug); 
         trace(' FPS : '+Settings.instance.framerate);		
-        TUIO.init( this, Settings.instance.host, Settings.instance.TCP, '', false);	        
+        TUIO.init( this, Settings.instance.host, Settings.instance.TCP, '', true);	        
         trace(' TUIO Socket Enabled : Host: '+Settings.instance.host+' TCP: '+Settings.instance.TCP+' UDP: '+Settings.instance.UDP);	
 	    trace('-------------------------------------------------------------------------------------------------------------------------------');		
 		trace(' Modules Available : '+Settings.instance.modules_avail);
 		trace('-------------------------------------------------------------------------------------------------------------------------------');
 		trace(' Modules Loaded : '+Settings.instance.modules);	
   		trace('-------------------------------------------------------------------------------------------------------------------------------');
-  		setupStage();
+  		setupApplication();
+  		runApplication();
   		}
   		
-	public function setupStage()
+	public function setupApplication()
 		{			
-		//var subobj = new MediaCanvas();
-		var subobj = new TestCanvas();
-		//this.addChild(subobj);
-		//var flickrLoader = new Flickr(subobj);
-		//var localLoader = new Local(subobj);
-		var sysManager = new MemoryMonitor();
 		var fpsManager = new FPS();
-		this.addChild(sysManager);
 		this.addChild(fpsManager);
-	
-		var bFullscreen:Shape = new Shape();
-		bFullscreen.graphics.beginFill(0x000000,0.0);
-		bFullscreen.graphics.drawRect(Capabilities.screenResolutionX-200,0,200,200);
-		bFullscreen.graphics.endFill();	
-		this.addChild(bFullscreen);  
-		
-		bFullscreen.addEventListener(TUIOEvent.DownEvent, function() {
-		if (stage.displayState == "fullScreen") {stage.displayState = "normal";} 
-		else {stage.displayState = "fullScreen";}
-		});	
-		
-		var buttonSprite0:Sprite = new Sprite();
-		buttonSprite0.graphics.lineStyle(1, 0x202020,0.5);
-		buttonSprite0.graphics.beginFill(0x00FF00,0.5);
-		buttonSprite0.graphics.drawCircle(500, 600, 60);
-		//this.addChild(buttonSprite0);
-		//setChildIndex(subobj,3);
 		
 		if (Settings.instance.background != "none"){
-		var bg = new BrowserBackground(Settings.instance.background);
+		var bg = new Background(Settings.instance.background);
 		this.addChildAt(bg, 0);	
 
-		bg.addEventListener(BrowserBackground.BACKGROUND_LOADING, loading);
-		bg.addEventListener(BrowserBackground.BACKGROUND_LOADED, loaded);
+		bg.addEventListener(Background.BACKGROUND_LOADING, loading);
+		bg.addEventListener(Background.BACKGROUND_LOADED, loaded);
 			
 	
 			
 		function loaded(e:Event) {
-		bg.removeEventListener(BrowserBackground.BACKGROUND_LOADING, loading);
-		bg.removeEventListener(BrowserBackground.BACKGROUND_LOADED, loaded);
+		bg.removeEventListener(Background.BACKGROUND_LOADING, loading);
+		bg.removeEventListener(Background.BACKGROUND_LOADED, loaded);
 		}
 
 		function loading(e:Event) {
@@ -98,14 +68,9 @@ public class Debug extends Sprite
 		}	
   		}	
   		}
-	public function testFunction(e:TUIOEvent)
+	public function runApplication()
 		{	
 		trace('Test');
-		//scrollCanvas0._scrollContent._tf.text = '';
-		//scrollCanvas0._scrollContent._tf.text = TUIO.recordedXML.toString();
-		//var sliderValue = slider0.getValue;		
-		//this.stage.frameRate = sliderValue;
-		//trace(sliderValue);		
 		}
   }	
 }

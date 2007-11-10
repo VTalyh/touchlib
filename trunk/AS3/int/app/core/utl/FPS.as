@@ -7,6 +7,7 @@
     import flash.text.TextFieldAutoSize;
     import flash.text.TextFormat;
     import flash.utils.Timer;
+    import flash.system.System;
    
     public class FPS extends Sprite {
        
@@ -14,11 +15,14 @@
         private var _fmt:TextFormat;
         private var _timer:Timer;
         private var _frameNum:int;
-       
+        private var _mem:String;
+        
         public function FPS() {
             _fmt = new TextFormat("_sans", 10, 0xFFFFFF);
             _frameNum = 0;
-            init(); 
+            _mem = 0;
+            init();      
+           
         }
        
         private function init():void {
@@ -31,24 +35,30 @@
         }
        
         private function displayFPS(te:TimerEvent):void {
-            _tf.text = "FPS : " + _frameNum;
-            _frameNum = 0;
+            _mem = Number( System.totalMemory / 1024 / 1024 ).toFixed( 2 ) + 'MB'; 
+            _tf.text = "FPS : " + _frameNum + "  \n";
+            _tf.appendText("MEM : "+ _mem);
+             _frameNum = 0;
+            _mem = 0;
         }
        
         private function increaseFrame(e:Event):void {
             ++ _frameNum;
         }
        
-        private function createText():TextField {
+        private function createText():TextField {   
+      
+		
             var t:TextField = new TextField();
             t.width = 0;
             t.height = 0;
             t.autoSize = TextFieldAutoSize.LEFT;
             t.selectable = false;
             t.defaultTextFormat = _fmt;
-            t.x = 25;
-            t.y = 25;
-            return t;            
+            t.x = 60;
+            t.y = 10;
+            return t;        
+         
         }
        
         public function set textColor(col:uint):void {

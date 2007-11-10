@@ -23,6 +23,7 @@ import flash.events.MouseEvent;
 		static var FLOSCSocket:XMLSocket;		
 		static var FLOSCSocketHost:String;			
 		static var FLOSCSocketPort:Number;	
+		
 		static var thestage:Stage;
 		static var objectArray:Array;
 		static var idArray:Array;
@@ -30,7 +31,7 @@ import flash.events.MouseEvent;
 		public static var debugMode:Boolean;		
 		
 		static var debugText:TextField;
-		static var debugToggle:TextField;
+		//static var debugToggle:TextField;
 		static var recordedXML:XML;
 		static var bRecording:Boolean = false;
 		//static var xmlPlaybackURL:String = "www/xml/test.xml"; 
@@ -51,9 +52,9 @@ import flash.events.MouseEvent;
 			bInitialized = true;
 			thestage = s.stage;
 			
-			
-			thestage.align = StageAlign.TOP_LEFT;
-			thestage.displayState = StageDisplayState.FULL_SCREEN;						
+			//thestage.displayState = StageDisplayState.FULL_SCREEN;
+			thestage.align = "TL";
+			thestage.scaleMode = "noScale";						
 			
 			objectArray = new Array();
 			idArray = new Array();
@@ -95,15 +96,16 @@ import flash.events.MouseEvent;
 		
 				recordedXML = <OSCPackets></OSCPackets>;	
 				
-				var buttonSprite = new Sprite();		
-				buttonSprite.graphics.beginFill(0xFFFFFF,1.0);
+				var buttonSprite = new Sprite();	
+					
+				buttonSprite.graphics.beginFill(0xFFFFFF,0.25);
 				buttonSprite.graphics.drawRoundRect(0, -10, 50, 60,10);	
-			 
 				buttonSprite.addEventListener(MouseEvent.CLICK, toggleDebug);					
 
 				var WrapperObject:Wrapper = new Wrapper(buttonSprite);
+			
 				thestage.addChild(WrapperObject);
-						
+	
 				
 				thestage.setChildIndex(WrapperObject, thestage.numChildren-1);	
 				//trace(thestage.numChildren);
@@ -125,7 +127,7 @@ import flash.events.MouseEvent;
 		}
 
 		private static function xmlPlaybackLoaded(evt:Event) {
-			trace("Loaded xml debug data");
+			trace("Loaded xml debug data:");
 			playbackXML = new XML(xmlPlaybackLoader.data);
 		}
 		
@@ -370,12 +372,14 @@ import flash.events.MouseEvent;
 			if(!debugMode){
 			debugMode=true;	
 			FLOSCSocket.connect(FLOSCSocketHost, FLOSCSocketPort);
-			e.target.x=20;
+			//e.target.x=20;
+			e.target.alpha=0.75;
 			}
 			else{
 			debugMode=false;
 			FLOSCSocket.connect(FLOSCSocketHost, FLOSCSocketPort);
-			e.target.x=0;
+			//e.target.x=0;
+			e.target.alpha=0.25;
 			}
 			
 			// show XML

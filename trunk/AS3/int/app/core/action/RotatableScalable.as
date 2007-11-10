@@ -27,7 +27,7 @@
 		public var noScale = false;
 		public var noRotate = false;		
 		public var noMove = false;
-		public var noSelection = false;
+		public var mouseSelection = false;
 		
 		public var dX:Number;
 		public var dY:Number;		
@@ -73,6 +73,8 @@
 			
 			if(blobs.length == 1)
 			{
+				//INSERT DOUBLE TAB HERE?
+				
 				state = "dragging";
 				trace("Dragging");		
 				
@@ -186,7 +188,7 @@
 			if(bringToFront)
 				this.parent.setChildIndex(this, this.parent.numChildren-1);
 			
-				if(!noSelection)
+				if(mouseSelection)
 				{
 					//this.alpha=0.5;				
 				}
@@ -198,7 +200,7 @@
 		{		
 							
 			removeBlob(e.ID);		
-			if(!noSelection)
+			if(mouseSelection)
 				{
 					//this.alpha=1.0;				
 				}				
@@ -226,13 +228,14 @@
 				if(e.stageX == 0 && e.stageY == 0)
 				return;			
 			
-			this.startDrag();	
-			this.addBlob(1, e.localX, e.localY);
-			
+			if(!noMove)
+				{	this.startDrag();	
+				//this.addBlob(1, e.localX, e.localY);
+				}
 			if(bringToFront)
 				this.parent.setChildIndex(this, this.parent.numChildren-1);
 				
-			if(!noSelection)
+			if(mouseSelection)
 				{	
 					var dropshadow:DropShadowFilter=new DropShadowFilter(0, 45, 0x000000, 0.75, 15, 15);
 					this.filters=new Array(dropshadow);
@@ -242,9 +245,12 @@
 		}
 		
 		public function mouseUpEvent(e:MouseEvent)
-		{
+		{	
+		if(!noMove)
+				{
 			this.stopDrag();	
-				if(!noSelection)
+			}
+				if(mouseSelection)
 				{
 					var targetRotation:int = Math.random()*180 - 90;	
 					var targetScale:Number = (Math.random()*0.4) + 0.3;	
@@ -395,10 +401,11 @@
 				
 				var newscale:Number = curScale * len2 / len1;
 
-				if(newscale < 0.1) newscale = 0.1;
-				if(newscale < 0.1) newscale = 0.1;
-
 				//Stop ZUI
+				//if(newscale < 0.1) newscale = 0.1;
+				//if(newscale < 0.1) newscale = 0.1;
+
+		
 				//if(newscale > 25.0) newscale = 25.0;
 				//if(newscale > 25.0) newscale = 25.0;				
 				

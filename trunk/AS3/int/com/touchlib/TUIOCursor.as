@@ -9,12 +9,13 @@
 	{
 		private var DEBUG_TEXT:TextField;	
 		
-		public function TUIOCursor(debugText:String)
+		public function TUIOCursor(debugText:String,color:int)
 		{
 			super();
 			if(TUIO.debugMode){
 			// Draw us the lil' circle
-			graphics.beginFill(0xFF00FF , 1);	
+			graphics.beginFill(0xFF00FF , 1);
+			//graphics.beginFill(color , 1);	
 			graphics.drawCircle(-5 , -5, 10);
 			graphics.endFill();
 				// Add textfield for debugging, shows the cursor id

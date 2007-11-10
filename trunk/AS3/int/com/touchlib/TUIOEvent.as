@@ -20,7 +20,7 @@ import flash.events.Event;
 
 		public static const TUIO_MOVE:String = "com.touchlib.TUIOEvent.TUIO_MOVE";
 		public static const TUIO_DOWN:String = "com.touchlib.TUIOEvent.TUIO_DOWN";				
-		public static const TUIO_CLICK:String = "com.nui.TUIOEvent.TUIO_CLICK"; //double tap-click
+		//public static const CLICK:String = "com.nui.TUIOEvent.CLICK"; //
 		public static const TUIO_UP:String = "com.touchlib.TUIOEvent.TUIO_UP";				
 		public static const TUIO_OVER:String = "com.touchlib.TUIOEvent.TUIO_OVER";						
 		public static const TUIO_OUT:String = "com.touchlib.TUIOEvent.TUIO_OUT";		
