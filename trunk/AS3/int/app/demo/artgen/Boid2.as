@@ -15,6 +15,9 @@
 		private var ang:Number;
 		
 		private var angle:Number = 0;
+		
+		private var turnRate:Number = 0.1;
+		private var speed:Number = 10;
 
 		public function Boid2() 
 		{
@@ -41,21 +44,26 @@
 				var dist1 = Math.abs(ang - angle);
 				var dist2 = Math.abs((Math.PI*2) - dist1);
 
-	
-				if(ang > this.angle)
-				{				
-					if(dist1 < dist2)
-						angle += Math.PI/20;
-					else
-						angle -= Math.PI/20;	
-						
-				} 
-				if(ang <= this.angle)
+				if(dist1 < turnRate || dist2 < turnRate)
 				{
-					if(dist1 < dist2)
-						angle -= Math.PI/30;	
-					else
-						angle += Math.PI/30;	
+					angle = ang;
+				} else {
+	
+					if(ang > this.angle)
+					{				
+						if(dist1 < dist2)
+							angle += turnRate
+						else
+							angle -= turnRate;	
+							
+					} 
+					if(ang <= this.angle)
+					{
+						if(dist1 < dist2)
+							angle -= turnRate;	
+						else
+							angle += turnRate;
+					}
 				}
 				
 				if(angle > Math.PI)
@@ -67,7 +75,7 @@
 				mat.rotate(-this.angle + (Math.PI));
 				vel = mat.transformPoint(vec);
 	
-				vel.normalize(10.0);
+				vel.normalize(speed);
 				
 			var dist:Number;			
 			for(var i:int = 0; i<swarm.members.length; i++)
@@ -99,7 +107,8 @@
 		override public function setupInfo(data:XMLList)
 		{
 
-			
+			turnRate = data.turnRate * Math.PI / 180;
+			speed = data.speed;			
 		}		
 	}
 }

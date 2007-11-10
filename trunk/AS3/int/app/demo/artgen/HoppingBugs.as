@@ -53,6 +53,8 @@
 			lastVel.y = vel.y;			
 			lastPos.x = this.x;
 			lastPos.y = this.y;
+			
+			this.rotation = Math.atan2(vel.x, vel.y) * 180 / Math.PI;
 		}
 		
 		override public function setupInfo(data:XMLList)

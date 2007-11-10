@@ -85,6 +85,10 @@
                     <project_file path="./int/app/demo/artgen/Swarm.as" filetype="as" />
                     <project_file path="./int/app/demo/artgen/Boid2.as" filetype="as" />
                     <project_file path="./int/app/demo/artgen/Trail.as" filetype="as" />
+                    <project_file path="./int/app/demo/artgen/IModulator.as" filetype="as" />
+                    <project_file path="./int/app/demo/artgen/RandomModulator.as" filetype="as" />
+                    <project_file path="./int/app/demo/artgen/SineModulator.as" filetype="as" />
+                    <project_file path="./int/app/demo/artgen/SquareModulator.as" filetype="as" />
                 </project_folder>
                 <project_folder name="puzzle" expanded="false">
                     <project_file path="./int/app/demo/puzzle/PuzzleGame.as" filetype="as" />

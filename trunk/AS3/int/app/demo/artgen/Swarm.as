@@ -16,6 +16,9 @@
 		private var drawingCanvas:Sprite;
 		
 		private var xmlSetupInfo:XML;
+		
+		private var waitCount:int = 5;
+		private var waitCountLeft:int = 5;		
 
 		public function Swarm() 
 		{
@@ -36,6 +39,7 @@
 		
 		public function setupInfo(data:XML)
 		{
+			waitCount = data.trail.createDelay;
 			trace("www/shapes/" + data.shape);
 			xmlSetupInfo = data;
 			shapeloader = new URLLoader( );	
@@ -50,7 +54,7 @@
 			
 			for( var i:int = 0; i<data.numMembers; i++)
 			{
-				addMember(createMember(data.swarmType, data.algorithm));
+				addMember(createMember(data.swarmType, data));
 				trace("Member");
 			}
 		}
@@ -61,14 +65,12 @@
 			
 			if(e.type == "complete")
 			{
-				trace(shapeloader.dataFormat);
-				trace(shapeloader.data);
-				trace(shapeloader.bytesLoaded);
+
 			}
 		}
 		
 		
-		public function createMember(sz:String, data:XMLList):ISwarmMember
+		public function createMember(sz:String, data:XML):ISwarmMember
 		{
 			var m:ISwarmMember;
 			switch(sz)
@@ -89,7 +91,18 @@
 			m.x = 400;
 			m.y = 400;
 			m.setSwarm(this);
-			m.setupInfo(data);
+			m.setupInfo(data.algorithm);
+			m.memberscale = data.scale;
+			m.memberalpha = data.alpha;			
+
+			var mod:XML;
+			for each(mod in data.modulators.modulator)
+			{
+
+
+				m.addModulator(mod.type, mod.rate, mod.dest, mod.amount);
+			}
+			
 			return m;
 		}
 		
@@ -134,6 +147,13 @@
 		public function draw()
 		{
 
+			waitCountLeft -= 1;
+			
+			if(waitCountLeft == 0)
+			{
+
+
+			
 //			drawingCanvas.graphics.beginFill(0xffffff);
 			if(shapeloader.data != null)
 			{
@@ -141,24 +161,25 @@
 				{
 	//				drawingCanvas.graphics.drawCircle(members[i].x, members[i].y, 5);
 
-
+					members[i].runModulators();
+					
 					var t:Sprite = new Trail(xmlSetupInfo.trail, shapeloader.data);
 					t.x = members[i].x;
 					t.y = members[i].y;
 					
 					t.rotation = members[i].rotation; //+ Math.random()*40;
 	// Math.atan2(members[i].vel.x, members[i].vel.y) * 180 / Math.PI;
-					
+					t.scaleX = members[i].scaleX;
+					t.scaleY = members[i].scaleY;
+					t.alpha = members[i].alpha;
 					drawingCanvas.addChild(t);
 					t = null;
 				}
 			}			
 //			drawingCanvas.graphics.endFill();
-try {
-   new LocalConnection().connect('foo');
-   new LocalConnection().connect('foo');
-} catch (e:*) {}
 
+				waitCountLeft = waitCount;
+			}			
 
 		}
 		
