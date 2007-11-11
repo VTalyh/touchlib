@@ -1,5 +1,4 @@
 ﻿package app.core.object {
-	//import com.touchlib.*;	
 	import app.core.action.RotatableScalable;
 	
 	import flash.display.*;
@@ -7,6 +6,8 @@
 	import flash.geom.*;
 	import flash.net.*;
 	import flash.text.*;
+	
+
 	
 	public class TextObject extends RotatableScalable
 	{
@@ -23,8 +24,7 @@
 			//var txt01:TextField = new TextField();
 			//txt01.defaultTextFormat = (new TextFormat(linkedFont.fontName));			
 			//var embeddedFontClass = getDefinitionByName("myFont");
-			//Font.registerFont(embeddedFontClass);
-			
+			//Font.registerFont(embeddedFontClass);			
 			
 			inString = inVar;
 			
@@ -34,7 +34,7 @@
 			//noScale = true;
 			//noRotate = true;
 			noSelection = true;
-			noMove = true;	
+			noMove = false;	
 					
 			trace('Text Object Created');
 			
@@ -63,7 +63,9 @@
 			t.setTextFormat(format);
 			
 			//mc.addChild(t);
-			this.addChild(t);
-		}
+	  		  this.addChild(t);	    
+		
+		}     		
+
 	}
 }

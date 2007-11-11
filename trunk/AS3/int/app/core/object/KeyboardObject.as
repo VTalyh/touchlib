@@ -1,13 +1,17 @@
 ﻿package app.core.object {
-	import app.core.action.RotatableScalable;
+	import app.core.action.RotatableScalable;	
+	import app.core.element.*;
+	import caurina.transitions.Tweener;
 	
-	import com.touchlib.*;
+	import com.touchlib.TUIOEvent;
 	
 	import flash.display.*;
 	import flash.events.*;
 	import flash.geom.*;
 	import flash.net.*;
 	import flash.text.*;	
+		
+	import app.core.element.Wrapper;
 	
 	public class KeyboardObject extends RotatableScalable
 	{	
@@ -27,7 +31,16 @@
 			
 			keyboard.contentLoaderInfo.addEventListener( Event.COMPLETE, arrange );	
 			
-			this.addChild(keyboard);
+			this.addChild(keyboard);	
+			
+			var buttonSprite = new Sprite();						
+			buttonSprite.graphics.beginFill(0xFFFFFF,0.75);
+			buttonSprite.graphics.lineStyle(1,0x000000,0.85);
+			buttonSprite.graphics.drawRoundRect(305,-140,40,280,6);
+			buttonSprite.addEventListener(MouseEvent.CLICK, fireFunc);	
+			var WrapperObject:Wrapper = new Wrapper(buttonSprite);					
+			this.addChild(WrapperObject);
+			
 		
 		
 		}
@@ -43,12 +56,15 @@
 			}
 
 			mc['buttonDot'].addEventListener(TUIOEvent.TUIO_DOWN, this.DownKey);
+			mc['buttonDot'].addEventListener(MouseEvent.CLICK, this.MouseDownKey);
 			mc['buttonDot'].char = ".".toString();
 
 			mc['buttonComma'].addEventListener(TUIOEvent.TUIO_DOWN, this.DownKey);
+			mc['buttonComma'].addEventListener(MouseEvent.CLICK, this.MouseDownKey);
 			mc['buttonComma'].char = ",".toString();
 			
 			mc['buttonSpace'].addEventListener(TUIOEvent.TUIO_DOWN, this.DownKey);
+			mc['buttonSpace'].addEventListener(MouseEvent.CLICK, this.MouseDownKey);
 			mc['buttonSpace'].char = " ";
 			
 			mc['buttonBackSpace'].addEventListener(TUIOEvent.TUIO_DOWN, this.BackSpaceDown);
@@ -73,16 +89,16 @@
 			var tmp:String = t.text;
 			t.text = tmp.slice(0,tmp.length-1);
 			var format:TextFormat= new TextFormat();
-			format.font= "Arial";
-			format.color= 0x000000;
+			format.font= "myFont";
+			format.color= 0xFFFFFF;
 			format.size= 72;
 			t.setTextFormat(format);			
-			stage.setChildIndex(t.parent, parent.numChildren-1);
+			parent.setChildIndex(t.parent, parent.numChildren-1);			
 			e.stopPropagation();
 		}
 		function EnterDown(e:Event) {			
 			parent.getChildByName('TextObject_0').name = 'TextObject_1';
-			var TextObject_0: TextObject = new TextObject();
+			var TextObject_0: TextObject = new TextObject(' ');
 			TextObject_0.name = 'TextObject_0';
 			TextObject_0.rotation = rotation;
 			TextObject_0.x = 0;
@@ -94,7 +110,7 @@
 			t.text += tmp.slice(0,tmp.length-1);
 			var format:TextFormat= new TextFormat();
 			format.font= "myFont";
-			format.color= 0x000000;
+			format.color= 0xFFFFFF;
 			format.size= 72;
 			t.setTextFormat(format);			
 			parent.setChildIndex(t.parent, parent.numChildren-1);		
@@ -103,7 +119,7 @@
 		function DownKey(e:Event) {					
 			var t: TextField = parent.getChildByName('TextObject_0').getChildByName('t');
 			var ch: String;			
-			if (t.text == "~") t.text = '';			
+			if (t.text == "~") t.text = ' ';			
 			if (e.relatedObject.parent.char != undefined) 
 			 	ch = e.relatedObject.parent.char
 			else 
@@ -117,7 +133,7 @@
 			
 			var format:TextFormat= new TextFormat();
 			format.font = "myFont";
-			format.color= 0x000000;
+			format.color= 0xFFFFFF;
 			format.size = 72;
 			t.setTextFormat(format);
 			
@@ -129,11 +145,12 @@
 		function MouseDownKey(e:Event) {					
 			var t: TextField = parent.getChildByName('TextObject_0').getChildByName('t');
 			var ch: String;			
-			if (t.text == "~") t.text = '';	
+			if (t.text == "~") t.text = ' ';			
 			if (e.target.parent.char != undefined) 
-			 	ch = e.target.parent.char;
+			 	ch = e.target.parent.char
 			else 
 				ch = e.target.parent.parent.char;
+				
 				
 			if (inShift) {
 				t.text += ch.toUpperCase();
@@ -143,7 +160,7 @@
 			
 			var format:TextFormat= new TextFormat();
 			format.font = "myFont";
-			format.color= 0x000000;
+			format.color= 0xFFFFFF;
 			format.size = 72;
 			t.setTextFormat(format);
 			
@@ -157,16 +174,16 @@
 			var tmp:String = t.text;
 			t.text = tmp.slice(0,tmp.length-1);
 			var format:TextFormat= new TextFormat();
-			format.font= "Arial";
-			format.color= 0x000000;
+			format.font= "myFont";
+			format.color= 0xFFFFFF;
 			format.size= 72;
 			t.setTextFormat(format);			
-			//stage.setChildIndex(t.parent, parent.numChildren);
+			parent.setChildIndex(t.parent, parent.numChildren-1);
 			e.stopPropagation();
 		}
 		function MouseEnterDown(e:Event) {			
 			parent.getChildByName('TextObject_0').name = 'TextObject_1';
-			var TextObject_0: TextObject = new TextObject();
+			var TextObject_0: TextObject = new TextObject(' ');
 			TextObject_0.name = 'TextObject_0';
 			TextObject_0.rotation = rotation;
 			TextObject_0.x = 0;
@@ -178,11 +195,21 @@
 			t.text += tmp.slice(0,tmp.length-1);
 			var format:TextFormat= new TextFormat();
 			format.font= "myFont";
-			format.color= 0x000000;
+			format.color= 0xFFFFFF;
 			format.size= 72;
 			t.setTextFormat(format);			
 			parent.setChildIndex(t.parent, parent.numChildren-1);		
 			e.stopPropagation();
+		} 	
+		function fireFunc(e:Event)
+		{
+			if(this.y >= parent.stage.stageHeight-100){
+			Tweener.addTween(this, {x:parent.stage.stageWidth/2,y:(parent.stage.stageHeight/2),scaleX: 1.0, scaleY: 1.0, rotation:0, time:0.5, transition:"easeinoutquad"});	
+				
+			}else{
+					Tweener.addTween(this, {x:80,y:(parent.stage.stageHeight)+150,scaleX: 0.5, scaleY: 0.5, rotation:-90, time:0.5, transition:"easeinoutquad"});	
+			}
 		}
+		 
 	}
 }

@@ -2,12 +2,12 @@
 	import app.core.action.RotateScale;
 	import app.core.element.*;
 	
-	import com.tweener.transitions.Tweener;
+	import caurina.transitions.Tweener;
 	
-	import flash.display.Shape;
+	import flash.display.*;
 	import flash.events.*;
 	import flash.geom.ColorTransform;	
-	import fl.controls.Button;	
+	//import fl.controls.Button;	
 	import flash.display.BlendMode;
 	
 	
@@ -38,7 +38,7 @@
 		
 		private var TSliderScale:HorizontalSlider = new HorizontalSlider(20,280);		
 		
-		private var fireButton:Button;
+		//private var fireButton:Button;
 		
 		function LensObject(setID, setShapi, setColor, setAlpha, setBlend, setWidth, setHeight, setX, setY)
 		{   		
@@ -50,25 +50,26 @@
 			noScale = false;
 			noRotate = false;				
 			
-			fireButton = new Button();
-			fireButton.setSize(35, setHeight+10);
-			fireButton.addEventListener(MouseEvent.CLICK, fireFunc, false, 0, true);
-			fireButton.label = "";
 			
-			var WrapperObject:Wrapper = new Wrapper(fireButton);
-			WrapperObject.x = 133;
-			WrapperObject.y = -105;		
-			this.addChild( WrapperObject );	
 			
 			TSliderScale.x = 155;
 			TSliderScale.y = 110;
 			TSliderScale.rotation +=90;
 			TSliderScale.setValue(0.5);
 			//this.addChild(TSliderScale);	
+				
 			clickgrabber.blendMode = setBlend;
 			clickgrabber.graphics.beginFill(setColor, 0);
 			clickgrabber.graphics.drawRoundRect(-5,-5,setWidth+10,setHeight+10,0);
 			clickgrabber.graphics.endFill();	
+				
+			var buttonSprite = new Sprite();						
+			buttonSprite.graphics.beginFill(0xFFFFFF,0.75);
+			buttonSprite.graphics.lineStyle(1,0x000000,0.85);
+			buttonSprite.graphics.drawRoundRect((setWidth/2)+10,(-setHeight/2)-5,40,setHeight+10,6);
+			buttonSprite.addEventListener(MouseEvent.CLICK, fireFunc);	
+			var WrapperObject:Wrapper = new Wrapper(buttonSprite);					
+			this.addChild(WrapperObject);
 			
 			this.addChild( clickgrabber );		
 		
@@ -200,10 +201,10 @@
 		
 		function fireFunc(e:Event)
 		{
-			if(this.y>=800)
-			Tweener.addTween(this, {x:500,y:420,scaleX: 0.8, scaleY: 0.8, rotation:0, time:0.5, transition:"easeinoutquad"});		
+			if(this.y >= parent.stage.stageHeight-100)
+			Tweener.addTween(this, {x:parent.stage.stageWidth/2,y:(parent.stage.stageHeight/2),scaleX: 1.0, scaleY: 1.0, rotation:0, time:0.5, transition:"easeinoutquad"});	
 			else
-			Tweener.addTween(this, {x:450,y:840,scaleX: 0.65, scaleY: 0.65, rotation:-90, time:0.5, transition:"easeinoutquad"});			
+			Tweener.addTween(this, {x:215,y:parent.stage.stageHeight+65,scaleX: 0.5, scaleY: 0.5, rotation:-90, time:0.5, transition:"easeinoutquad"});			
 		}
 		
 		public override function released(dx:Number, dy:Number, dang:Number)

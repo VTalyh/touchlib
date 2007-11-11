@@ -8,7 +8,9 @@
 	import flash.filters.BitmapFilterQuality;
 	import flash.filters.DropShadowFilter;
 	import flash.net.URLRequest;
-	import com.tweener.transitions.Tweener;	
+	
+	import caurina.transitions.Tweener;
+	
 	import app.core.object.TextObject;	
 	
 	public class ImageObject extends RotatableScalable 
@@ -60,6 +62,7 @@
 			this.addChild( clickgrabber );
 			
 			TextObject_0 = new TextObject(url);	
+			TextObject_0.noMove=true;
 			TextObject_0.visible=false;
 			this.addChild(TextObject_0);		
 			
@@ -77,7 +80,13 @@
 		}
 
 		private function arrange( event:Event = null ):void 
-		{
+		{	this.x = 0;
+			this.y = 0;	
+			this.scaleX = 0;
+			this.scaleY = 0;	
+			this.alpha = 1;
+			this.rotation = 0;
+			
 			photoLoader.x = -photoLoader.width/2;
 			photoLoader.y = -photoLoader.height/2;			
 			photoLoader.scaleX = 1.0;
@@ -91,24 +100,18 @@
 			TextObject_0.visible=true;
 			TextObject_0.scaleX = 0.17;
 			TextObject_0.scaleY = 0.17;	
-			TextObject_0.y=photoLoader.height/2+10;
+			TextObject_0.y=photoLoader.height/2+10;	
 			
-			this.scaleX = 0;
-			this.scaleY = 0;	
-			this.alpha = 0;
-			this.rotation = 0;
-			
-			//var targetX:int = rowWidth-xOff+minX+200;
-			//var targetY:int = rowBaseline-yOff+minY+450;		
-			var targetRotation:int = Math.random()*180 - 90;	 
-			var targetScale:Number = (Math.random()*0.4) + 0.3;	
-			
-		if(thisTween){
-			//Tweener.addTween(this, {alpha:1, time:0.6, transition:"easeinoutquad"});	
-			Tweener.addTween(this, {alpha:1.0, scaleX: targetScale, scaleY: targetScale, rotation:targetRotation, time:0.5, transition:"easeinoutquad"});	
-		}else {
+		if(thisTween){		
 		
-		}
+				
+			var targetX:int = this.x;	
+			var targetY:int = this.y;		
+			var targetRotation:int = Math.random()*180 - 90;	 
+			var targetScale:Number = (Math.random()*0.4) + 0.4;	
+			//Tweener.addTween(this, {alpha:1, time:0.6, transition:"easeinoutquad"});	
+			Tweener.addTween(this, {alpha:1, x:targetX, y:targetY,scaleX: targetScale, scaleY: targetScale, rotation:targetRotation, time:0.7, transition:"easeinoutquad"});	
+		}else {
 		this.alpha = 1.0;
 		this.scaleX = 1;
 		this.scaleY = 1;	
@@ -116,7 +119,7 @@
 		//this.scaleX = (Math.random()*0.4) + 0.3;
 		//this.scaleY = this.scaleX;
 		//this.rotation = Math.random()*180 - 90;
-			
+			}
 		}				
 		
 

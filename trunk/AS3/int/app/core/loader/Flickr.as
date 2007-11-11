@@ -13,20 +13,22 @@
 
 	//import flash.util.trace;		
 
-	public class Flickr extends MovieClip
+	public class Flickr extends Sprite
 	{
 		// Class properties
 		private var index:int = 0;		
 		private var rest:URLLoader = null;
 		private var flickr:XML = null;
 		private var thestage:Sprite;
+		private var fetchCount:Number;
 		private var allPics:Array;	
 		//private var TextObject_0:TextObject;		
 		
 		// Constructor
-		public function Flickr(d:Sprite) 
+		public function Flickr(d:Sprite,fetchIn:Number) 
 		{
 			thestage = d;
+			fetchCount = fetchIn;
 			allPics = new Array();
 			// Setup the UI and get initial data
 			fetch("recent");
@@ -96,8 +98,8 @@
 
 			var len:int = flickr..photo.length();
 		
-			if(len > 25)
-				len = 25;
+			if(len > fetchCount)
+				len = fetchCount;
 
 			for(var i:int=0; i<len; i++)
 			{

@@ -1,6 +1,6 @@
 ﻿package app.core.action{
 	import com.touchlib.*;
-	import com.tweener.transitions.Tweener;
+//	import caurina.transitions.Tweener;
 	
 	import flash.display.MovieClip;
 	import flash.events.Event;
@@ -237,9 +237,9 @@
 				
 			if(mouseSelection)
 				{	
-					var dropshadow:DropShadowFilter=new DropShadowFilter(0, 45, 0x000000, 0.75, 15, 15);
-					this.filters=new Array(dropshadow);
-					Tweener.addTween(this, {scaleX:1.0, scaleY:1.0, rotation:0, time:0.6, transition:"easeinoutquad"});				
+					//var dropshadow:DropShadowFilter=new DropShadowFilter(0, 45, 0x000000, 0.75, 15, 15);
+					//this.filters=new Array(dropshadow);
+					//Tweener.addTween(this, {scaleX:1.0, scaleY:1.0, rotation:0, time:0.6, transition:"easeinoutquad"});				
 				}
 			e.stopPropagation();
 		}
@@ -252,10 +252,10 @@
 			}
 				if(mouseSelection)
 				{
-					var targetRotation:int = Math.random()*180 - 90;	
-					var targetScale:Number = (Math.random()*0.4) + 0.3;	
-					this.filters=new Array();
-					Tweener.addTween(this, {scaleX: targetScale, scaleY: targetScale, rotation:targetRotation, time:0.4, transition:"easeinoutquad"});			
+					//var targetRotation:int = Math.random()*180 - 90;	
+					//var targetScale:Number = (Math.random()*0.4) + 0.3;	
+					//this.filters=new Array();
+					//Tweener.addTween(this, {scaleX: targetScale, scaleY: targetScale, rotation:targetRotation, time:0.4, transition:"easeinoutquad"});			
 				}
 			e.stopPropagation();
 		}		
@@ -272,7 +272,11 @@
 		
 		public function mouseRollOutHandler(e:MouseEvent)
 		{
-			//
+			if(!noMove)
+			{
+			//this.stopDrag();	
+			}		
+			//e.stopPropagation();
 		}	
 		
 		function getAngleTrig(X:Number, Y:Number): Number

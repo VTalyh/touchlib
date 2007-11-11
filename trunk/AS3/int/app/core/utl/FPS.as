@@ -7,7 +7,7 @@
     import flash.text.TextFieldAutoSize;
     import flash.text.TextFormat;
     import flash.utils.Timer;
-    import flash.system.System;
+    import flash.system.*;
    
     public class FPS extends Sprite {
        
@@ -36,9 +36,8 @@
        
         private function displayFPS(te:TimerEvent):void {
             _mem = Number( System.totalMemory / 1024 / 1024 ).toFixed( 2 ) + 'MB'; 
-            _tf.text = "FPS : " + _frameNum + "  \n";
-            _tf.appendText("MEM : "+ _mem);
-             _frameNum = 0;
+            _tf.text = _frameNum + " FPS" + "  \n"+  ""+ _mem+ " \n"+ Capabilities.version;         
+              _frameNum = 0;
             _mem = 0;
         }
        
@@ -56,7 +55,7 @@
             t.selectable = false;
             t.defaultTextFormat = _fmt;
             t.x = 60;
-            t.y = 10;
+            t.y = 5;
             return t;        
          
         }

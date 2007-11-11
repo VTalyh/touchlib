@@ -81,7 +81,7 @@
             try
             {
                 variables.load(request);
-            } 
+               } 
             catch (error:Error)
             {
                 trace("Unable to load (videos) file " + error);
@@ -107,6 +107,7 @@
 			for(i=0; i < myArray.length-1; i++)
 			{
 				var flv_video:VideoObject = new VideoObject( myArray[i] );				
+				trace(myArray[i] );
 				thestage.addChild(flv_video);
 				allPics.push(flv_video);								
 			}			

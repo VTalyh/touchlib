@@ -44,7 +44,7 @@ public class PapervisionCloud extends MovieClip
 	private var paperSize :Number = 0.5;
 	private var cloudSize :Number = 1000;
 	private var rotSize   :Number = 360;
-	private var maxAlbums :Number = 50;
+	private var maxAlbums :Number = 20;
 	private var num       :Number = 0;
 
 
@@ -111,13 +111,19 @@ public class PapervisionCloud extends MovieClip
 		// Randomize position
 		var gotoData :DisplayObject3D = new DisplayObject3D();
 
-		gotoData.x = Math.random() * cloudSize - cloudSize/2;
-		gotoData.y = Math.random() * cloudSize - cloudSize/2;
+		gotoData.x = 50+Math.random() * cloudSize - cloudSize/2;
+		gotoData.y = 50+Math.random() * cloudSize - cloudSize/2;
 		gotoData.z = Math.random() * cloudSize - cloudSize/2;
-
-		gotoData.rotationX = Math.random() * rotSize;
-		gotoData.rotationY = Math.random() * rotSize;
+		
+		gotoData.rotationX = 0;
+		gotoData.rotationY = 0;
+		gotoData.rotationZ = 0;
+		
+		//gotoData.rotationX = Math.random() * rotSize;
+		//gotoData.rotationY = Math.random() * rotSize;
 		gotoData.rotationZ = Math.random() * rotSize;
+		
+		
 
 		plane.extra =
 		{
@@ -210,8 +216,8 @@ public class PapervisionCloud extends MovieClip
 		camera.y -= (camera.y - goPosition.y) /32;
 		camera.z -= (camera.z - goPosition.z) /32;
 
-		target.x -= (target.x - goTarget.x) /32;
-		target.y -= (target.y - goTarget.y) /32;
+		target.x -= ((target.x - goTarget.x) /32);
+		target.y -= ((target.y - goTarget.y) /32);
 		target.z -= (target.z - goTarget.z) /32;
 
 		var paper :DisplayObject3D;
@@ -224,8 +230,8 @@ public class PapervisionCloud extends MovieClip
 			paper.y -= (paper.y - goto.y) / 32;
 			paper.z -= (paper.z - goto.z) / 32;
 
-			paper.rotationX -= (paper.rotationX - goto.rotationX) /32;
-			paper.rotationY -= (paper.rotationY - goto.rotationY) /32;
+			paper.rotationX -= ((paper.rotationX - goto.rotationX) /32);
+			paper.rotationY -= ((paper.rotationY - goto.rotationY) /32);
 			paper.rotationZ -= (paper.rotationZ - goto.rotationZ) /32;
 		}
 

@@ -15,8 +15,7 @@ import flash.display.*;
 import flash.system.Capabilities;
 import flash.events.*;
 
-//http://code.google.com/p/tweener/
-import com.tweener.transitions.Tweener;
+import caurina.transitions.Tweener;
 import flash.display.DisplayObject;
 import flash.geom.Rectangle;
 
