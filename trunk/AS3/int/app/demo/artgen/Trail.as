@@ -65,24 +65,24 @@
 		
 		function frameUpdate(e:Event)
 		{
-			if(scaleX < scaleDecay)
+			if(scaleDecay < 0 && scaleX < -scaleDecay)
 			{
 				scaleX = 0;
 				scaleY = 0;
 				kill();
 				return;
 			} else {
-				this.scaleX -= scaleDecay;
-				this.scaleY -= scaleDecay;
+				this.scaleX += scaleDecay;
+				this.scaleY += scaleDecay;
 			}
 				
-			if(alpha < alphaDecay)
+			if(scaleDecay < 0 && alpha < -alphaDecay)
 			{
 				alpha = 0;
 				kill();
 				return;				
 			} else
-				alpha -= alphaDecay;
+				alpha += alphaDecay;
 
 			var d:Date = new Date();
 			var curTime:int = d.time;			

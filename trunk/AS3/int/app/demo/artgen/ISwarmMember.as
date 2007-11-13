@@ -93,6 +93,8 @@
 						newalpha += v * amounts[i];
 						break;																		
 					case "position":
+					// FIXME: this is a bad way to modulate the position.. it's always gonna be diagonal. we should make
+					// orthongal position modulation (to facing direction).. and maybe make a second parameter for forward, back.. 
 						offsetX += v * amounts[i];
 						offsetY += v * amounts[i];						
 						break;																		

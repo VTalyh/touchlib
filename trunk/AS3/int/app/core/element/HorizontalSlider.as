@@ -19,7 +19,7 @@
 		private var isActive:Boolean = false;
 		private var gfxWidth:Number = 0;
 		private var gfxHeight:Number = 0;
-		private var scrollableHeight:Number;
+		private var scrollableWidth:Number;
 		private var borderPixels:Number = 4;
 		private var roundnessPixels:Number = 0;
 		
@@ -42,14 +42,18 @@
 			gfxHeight = ht;
 			gfxSliderGrip = new Sprite();
 			gfxSliderGrip.graphics.beginFill(0x8C8C8C, 1);
-			gfxSliderGrip.graphics.drawRoundRect(-(wd/2) + borderPixels-15, -20, wd-borderPixels*2, 40, roundnessPixels, roundnessPixels);
+			gfxSliderGrip.graphics.drawRoundRect(-20, -(ht/2) + borderPixels,  40, ht-borderPixels*2, roundnessPixels, roundnessPixels);
+			gfxSliderGrip.y = (ht/2);
+			gfxSliderGrip.graphics.endFill();
 			gfxSliderGrip.filters = [slider_Shadow];
 			addChild(gfxSliderGrip);
 			
 			
 			gfxActiveGrip = new Sprite();
 			gfxActiveGrip.graphics.beginFill(0xFFFFFF, 1);
-			gfxActiveGrip.graphics.drawRoundRect(-(wd/2) + borderPixels-15, -20, wd-borderPixels*2, 40, roundnessPixels, roundnessPixels);
+			gfxActiveGrip.graphics.drawRoundRect(-20, -(ht/2) + borderPixels, 40, ht-borderPixels*2, roundnessPixels, roundnessPixels);
+			gfxActiveGrip.graphics.endFill();
+			gfxSliderGrip.y = (ht/2);			
 			gfxActiveGrip.visible = false;
 			addChild(gfxActiveGrip);
 			
@@ -62,38 +66,39 @@
 			gfxActiveGlow.filters = [blurfx];
 			//addChild(gfxActiveGlow);			
 			
-			scrollableHeight = gfxHeight - 40 - borderPixels*2;
+			scrollableWidth = gfxWidth - 40 - borderPixels*2;
 			
 			this.graphics.beginFill(0x373737, 1);
 			this.graphics.drawRoundRect(0, 0, wd, ht, roundnessPixels, roundnessPixels);
 			
 			
-			this.addEventListener(TUIOEvent.TUIO_MOVE, this.tuioMoveHandler);			
-			this.addEventListener(TUIOEvent.TUIO_DOWN, this.tuioDownEvent);						
-			this.addEventListener(TUIOEvent.TUIO_UP, this.tuioUpEvent);									
-			this.addEventListener(TUIOEvent.TUIO_OVER, this.tuioRollOverHandler);									
-			this.addEventListener(TUIOEvent.TUIO_OUT, this.tuioRollOutHandler);
+			this.addEventListener(TUIOEvent.TUIO_MOVE, this.tuioMoveHandler, false, 0, true);			
+			this.addEventListener(TUIOEvent.TUIO_DOWN, this.tuioDownEvent, false, 0, true);						
+			this.addEventListener(TUIOEvent.TUIO_UP, this.tuioUpEvent, false, 0, true);									
+			this.addEventListener(TUIOEvent.TUIO_OVER, this.tuioRollOverHandler, false, 0, true);									
+			this.addEventListener(TUIOEvent.TUIO_OUT, this.tuioRollOutHandler, false, 0, true);
 
 			
-			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler);									
-			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent);															
-			this.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpEvent);	
-			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOverHandler);
-			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOutHandler);
+			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler, false, 0, true);									
+			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent, false, 0, true);															
+			this.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpEvent, false, 0, true);	
+			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOverHandler, false, 0, true);
+			this.addEventListener(MouseEvent.ROLL_OUT, this.mouseRollOutHandler, false, 0, true);
 			
-			this.addEventListener(Event.ENTER_FRAME, this.frameUpdate);			
+			this.addEventListener(Event.ENTER_FRAME, this.frameUpdate, false, 0, true);			
 			
+		
 			updateGraphics();
 		}
 		
 		function updateGraphics()
 		{
 
-			gfxSliderGrip.x = 25;
-			gfxSliderGrip.y = gfxHeight - 20 - borderPixels - (scrollableHeight*sliderValue);
+			gfxSliderGrip.y = gfxHeight/2;
+			gfxSliderGrip.x = 20 + borderPixels + (scrollableWidth*sliderValue);
 			
-			gfxActiveGrip.x = 25;
-			gfxActiveGrip.y = gfxHeight - 20 - borderPixels - (scrollableHeight*sliderValue);
+			gfxActiveGrip.y = gfxHeight/2;
+			gfxActiveGrip.x = 20 + borderPixels + (scrollableWidth*sliderValue);
 			
 			//indicatorText.text = sliderValue;
 			//trace(indicatorText.text);
@@ -180,8 +185,8 @@
 				var localPt:Point = globalToLocal(new Point(tuioobj.x, tuioobj.y));														
 				activeX = localPt.x;
 				activeY = localPt.y;
-				setValue(1.0 - ((localPt.y-20-borderPixels) / scrollableHeight));
-			}			
+				setValue(((localPt.x-20-borderPixels) / scrollableWidth));
+			}
 
 			e.stopPropagation();			
 		}
@@ -217,7 +222,7 @@
 			{
 				activeX = this.mouseX;
 				activeY = this.mouseY;
-				setValue(1.0 - ((this.mouseY-20-borderPixels) / scrollableHeight));
+				setValue(((activeX-20-borderPixels) / scrollableWidth));
 			}
 		}
 		

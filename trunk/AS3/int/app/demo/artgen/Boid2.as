@@ -23,11 +23,11 @@
 		{
 			tmp = new Point();
 			vec = new Point(0.0, -1.0);
-			/*
-			graphics.beginFill(0xff0000);
+
+			graphics.beginFill(0xffffff);
 			graphics.drawCircle(0,0, 4);
 			graphics.endFill();
-			*/
+			
 		}
 		
 		override public function track(pt:Point)

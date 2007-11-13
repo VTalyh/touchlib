@@ -63,7 +63,7 @@ package app.core.element{
 			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent, false, 0, true);															
 			this.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpEvent, false, 0, true);	
 			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOverHandler, false, 0, true);
-			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOutHandler, false, 0, true);
+			this.addEventListener(MouseEvent.ROLL_OUT, this.mouseRollOutHandler, false, 0, true);
 			
 			this.addEventListener(Event.ENTER_FRAME, this.frameUpdate, false, 0, true);			
 			

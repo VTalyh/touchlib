@@ -37,8 +37,21 @@
 			members.push(m);
 		}
 		
+		public function clear()
+		{
+			for( var i:int = 0; i<members.length; i++)
+			{			
+				removeChild(members[i]);
+			}
+			
+			members = new Array();
+		}
+		
 		public function setupInfo(data:XML)
 		{
+			// fixme: clear membmers.. 
+			clear();
+			
 			waitCount = data.trail.createDelay;
 			trace("www/shapes/" + data.shape);
 			xmlSetupInfo = data;

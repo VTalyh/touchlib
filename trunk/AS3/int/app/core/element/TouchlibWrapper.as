@@ -30,6 +30,8 @@ package app.core.element
 
 	public class TouchlibWrapper extends MovieClip
 	{
+		
+		// Maybe this class should go away and touchlib should automatically do this
 
 		private var gfxActiveGlow:Sprite;
 
@@ -40,16 +42,13 @@ package app.core.element
 		private var activeX:Number;
 		private var activeY:Number;		
 		
-		private var wrappedComponent:Sprite;
+		private var wrappedComponent:InteractiveObject;
 
-		public function TouchlibWrapper(cmp:Sprite)
+		public function TouchlibWrapper(cmp:InteractiveObject)
 		{
 			wrappedComponent = cmp;
 			addChild(cmp);
 			
-
-
-
 			var blurfx:BlurFilter = new BlurFilter(10, 10, 1);
 			
 			gfxActiveGlow = new Sprite();
