@@ -25,6 +25,8 @@
 		private var turnSlider:HorizontalSlider;
 		private var delaySlider:HorizontalSlider;
 		private var scaleDecaySlider:HorizontalSlider;
+		private var alphaDecaySlider:HorizontalSlider;		
+
 		
 		private var settings:XML;
 		private var main:ArtGenMain;
@@ -41,6 +43,7 @@
 			tf.font = "Neo Tech Std";
 			tf.size = "16";					
 			
+			var num:Number;
 			
 			swarmTypes = new Array();			
 			swarmTypes.push("LazyFollower");			
@@ -63,7 +66,7 @@
 			swarmType.x = 100;
 			swarmType.setSelected(settings.swarmType);
 			lab = new TextField();
-			lab.defaultTextFormat = tf;			
+			lab.defaultTextFormat = tf;
 			lab.text = "SWARM TYPE";
 			lab.y = curY+10;
 			addChild(lab);
@@ -118,6 +121,30 @@
 			curY += 60;
 			addChild(alphaSlider);						
 			
+			turnSlider = new HorizontalSlider(200, 40);
+			turnSlider.y = curY;
+			turnSlider.x = 100;
+			lab = new TextField();
+			lab.defaultTextFormat = tf;			
+			lab.text = "TURN";
+			lab.y = curY+10;
+			addChild(lab);									
+			turnSlider.setValue(settings.algorithm.turnRate);
+			curY += 60;
+			addChild(turnSlider);									
+			
+			speedSlider = new HorizontalSlider(200, 40);
+			speedSlider.y = curY;
+			speedSlider.x = 100;
+			lab = new TextField();
+			lab.defaultTextFormat = tf;			
+			lab.text = "SPEED";
+			lab.y = curY+10;
+			addChild(lab);									
+			speedSlider.setValue(settings.algorithm.speed);
+			curY += 60;
+			addChild(speedSlider);												
+			
 			lifeSlider = new HorizontalSlider(200, 40);
 			lifeSlider.y = curY;
 			lifeSlider.x = 100;
@@ -150,9 +177,23 @@
 			lab.text = "SCALE DECAY";
 			lab.y = curY+10;
 			addChild(lab);									
-			scaleDecaySlider.setValue((settings.trail.scaleDecay + 0.1) / 0.2);
+			num = settings.trail.scaleDecay
+			scaleDecaySlider.setValue((num + 0.1) / 0.2 );
 			curY += 60;
 			addChild(scaleDecaySlider);						
+			
+			alphaDecaySlider = new HorizontalSlider(200, 40);
+			alphaDecaySlider.y = curY;
+			alphaDecaySlider.x = 100;
+			lab = new TextField();
+			lab.defaultTextFormat = tf;			
+			lab.text = "ALPHA DECAY";
+			lab.y = curY+10;
+			addChild(lab);									
+			num = settings.trail.alphaDecay
+			alphaDecaySlider.setValue((num + 0.1) / 0.2 );
+			curY += 60;
+			addChild(alphaDecaySlider);									
 			
 			
 			var donebtn:SimpleButton = new DoneButton();			
@@ -193,6 +234,7 @@
 			settings.trail.lifeTime = lifeSlider.getValue()*10000;			
 			settings.trail.createDelay = int(delaySlider.getValue()*7.0);
 			settings.trail.scaleDecay = ((scaleDecaySlider.getValue()*0.2) - 0.1) ;			
+			settings.trail.alphaDecay = ((alphaDecaySlider.getValue()*0.2) - 0.1) ;			
 			
 			return settings;
 		}
