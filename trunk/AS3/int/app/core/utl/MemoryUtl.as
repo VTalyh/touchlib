@@ -16,7 +16,7 @@
 	import app.core.element.Wrapper;
 	//import app.core.action.RotateScale;
 	
-	public class MemoryMonitor extends Sprite
+	public class MemoryUtl extends Sprite
 	{
 		//
 		// vars
@@ -60,13 +60,13 @@
 	    
 	    private var _memValues: Array;
 	    
-	    private var _b_start: Button;
-	  	private var _b_pause: Button;
+	    private var _b_start: Sprite;
+	  	private var _b_pause: Sprite;
 	    
 		/**
 		* constructor
 		*/
-		public function MemoryMonitor()
+		public function MemoryUtl()
 		{
 			createChildren();			
 	
@@ -176,7 +176,7 @@
 			_disabledTxtFormat.color = 0x999999;
 			_disabledTxtFormat.size = 10;
 			
-			_b_start = new Button();
+			/*_b_start = new Button();
 			_b_start.x = 10;
 			_b_start.y = _bgGraphArea.y + _bgGraphArea.height + 5;
 			_b_start.width = 55;
@@ -187,24 +187,24 @@
 			//_b_start.setStyle("embedFonts", true);			
 			_b_start.label = "start";	
 			_b_start.addEventListener(MouseEvent.CLICK, onClickStartButton);
-					
+			*/	
 			
-			
-			
-			
-			_b_pause = new Button();
+			_b_start = new Sprite();						
+			_b_start.graphics.beginFill(0xFFFFFF,0.75);
+			_b_start.graphics.lineStyle(1,0x000000,0.85);
+			_b_start.graphics.drawRoundRect(0,0,55,25,6);	
+			_b_start.x = 10;
+			_b_start.y = _bgGraphArea.y + _bgGraphArea.height + 5;		
+			_b_start.addEventListener(MouseEvent.CLICK, onClickStartButton);
+	
+			_b_pause = new Sprite();						
+			_b_pause.graphics.beginFill(0xFFFFFF,0.75);
+			_b_pause.graphics.lineStyle(1,0x000000,0.85);
+			_b_pause.graphics.drawRoundRect(0,0,55,25,6);	
 			_b_pause.x = _b_start.x + _b_start.width + 10;
-			_b_pause.y = _b_start.y;
-			_b_pause.width = 55;
-			_b_pause.height = 25;
-			_b_pause.toggle = true;
-			_b_pause.setStyle("textFormat", _dataTxtFormat);
-			//_b_pause.setStyle("embedFonts", true);
-			_b_pause.setStyle("disabledTextFormat", _disabledTxtFormat);
-			_b_pause.label = "pause";
-			_b_pause.enabled = false;
+			_b_pause.y = _bgGraphArea.y + _bgGraphArea.height + 5;		
 			_b_pause.addEventListener(MouseEvent.CLICK, onClickPauseButton);
-			addChild(_b_pause);			
+			
 		
 			var WrapperObject0:Wrapper = new Wrapper(_b_start);
 			var WrapperObject1:Wrapper = new Wrapper(_b_pause);
@@ -303,29 +303,27 @@
 		///////////////////////////////////////////////////////////
 		// user input handling
 		///////////////////////////////////////////////////////////		
-
-		/**
-		* Callback method clicking start button
-		* @param	event 	MouseEvent
-		*/		
+	
 		private function onClickStartButton (event : Event): void 
-		{
+		{	
+			start();
+			/*
 			
 			if(_b_start.selected)
 			{
 				_b_start.label = "stop";
 				_b_pause.label = "pause";
-				_b_pause.selected = false;
-				_b_pause.enabled = true;
+				//_b_pause.selected = false;
+				//_b_pause.enabled = true;
 				start();
 			}
 			else
 			{
 				_b_start.label = "start";
 				_b_pause.label = "resume";
-				_b_pause.enabled = false;
+				//_b_pause.enabled = false;
 				stop();
-			}
+			}*/
 		};
 
 		/**
@@ -333,17 +331,18 @@
 		* @param	event	MouseEvent
 		*/
 		private function onClickPauseButton (event : Event): void 
-		{			
+		{	pause();
+			/*		
 			if(_b_pause.selected)
 			{
-				_b_pause.label = "resume";
+				//_b_pause.label = "resume";
 				pause();
 			}
 			else
 			{
-				_b_pause.label = "pause";
+				//_b_pause.label = "pause";
 				resume();
-			}
+			}*/
 		};
 
 		/**
