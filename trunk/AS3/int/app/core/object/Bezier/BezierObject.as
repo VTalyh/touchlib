@@ -1,13 +1,14 @@
 ﻿package app.core.object.Bezier {
+	
     import flash.display.Graphics;
     import flash.display.Shape;
     import flash.display.Sprite;
     import flash.events.Event;  
-     import com.rails2u.utils.ColorUtil;
-
-
+     
+    import app.core.utl.ColorUtil;
 
     public class BezierObject extends Sprite {
+       
         private var p1:BezierPoint = new BezierPoint();
         private var p2:BezierPoint = new BezierPoint();
         private var p3:BezierPoint = new BezierPoint();
@@ -56,7 +57,7 @@
             s.graphics.endFill();
 
             graphics.clear();
-            graphics.lineStyle(1, 0xFFFFFF, 0.25);
+            graphics.lineStyle(1, 0xFFFFFF, 0.45);
             graphics.moveTo(p1.x, p1.y);
             graphics.lineTo(p2.x, p2.y);
             graphics.moveTo(p3.x, p3.y);
@@ -83,8 +84,8 @@ internal class BezierPoint extends RotatableScalable
 		noScale = true;
 		noRotate = true;
 		noSelection = true;		
-		graphics.lineStyle(1,0xFFFFFF,0.1);
-        graphics.beginFill(COLOR,0.03);
+		graphics.lineStyle(1,0xFFFFFF,0.35);
+        graphics.beginFill(COLOR,0.55);
         graphics.drawCircle(0, 0, RADIUS);
         graphics.endFill();
 

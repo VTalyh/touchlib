@@ -1,4 +1,4 @@
-﻿package app.core.object
+package app.core.object
 {
 	import flash.display.MovieClip;
 	import flash.utils.Timer;
@@ -6,7 +6,8 @@
 	import flash.display.BitmapData;
 	import flash.geom.Rectangle;
     import flash.events.TimerEvent;
-    import flash.media.Sound;
+    import flash.media.Sound;	
+    import flash.media.SoundTransform;
     import flash.media.SoundChannel;
 	import flash.media.SoundMixer;
 	import flash.utils.ByteArray;
@@ -15,64 +16,37 @@
 	import app.core.element.*;
 	import flash.events.*;
 	
-	public class AudioObject extends MovieClip
+	public class SpectrumObject extends MovieClip
 	{
-		private var url:String='local/audio/aphex_rmx.mp3';
-			
 		private var _channel:SoundChannel;
-		
-        private var _sound:Sound;
 		
 		private var timer:Timer;
 		
-		private var grafico:BitmapData;	
+		//private var soundTransform:soundTransform;
 		
-		//private var fireButton:Button;
+		private var grafico:BitmapData;
 		
-		public function AudioObject()
+		public function SpectrumObject()
 		{
 			init();
-			initSound();
 			initTimer();
 		}
 		
 		private function init():void
-		{
-		
+		{	
+			//_channel.soundT = new SoundTransform(0);
 			grafico=new BitmapData(250,50,true,0x00000000);
 			var bitmap:Bitmap=new Bitmap(grafico);
 			bitmap.x=-135;
 			bitmap.y=-25;
-			bitmap.blendMode="invert";
+			//bitmap.blendMode="invert";
 			addChild(bitmap);	
+		}
+		
+		
+    	private function initTimer():void
+		{
 			
-			//fireButton = new Button();
-			//fireButton.setSize(68, 68);
-			//fireButton.addEventListener(MouseEvent.CLICK, toggleSound, false, 0, true);
-			//fireButton.label = "Play";
-			
-		//	var WrapperObject:Wrapper = new Wrapper(fireButton);
-		//	WrapperObject.x = -195;
-		//	WrapperObject.y = -33;			
-		//	this.addChild( WrapperObject );	
-		}
-		
-		private function initSound():void
-		{
-			_sound=new Sound(new URLRequest(url));
-            _sound = new Sound();
-			_sound.load(new URLRequest(url));
-			_channel = _sound.play(0, 1000);
-		
-		}
-		
-		private function toggleSound(e:Event):void
-		{
-		
-		}
-		
-		private function initTimer():void
-		{
 			timer=new Timer(20,0);
 			timer.addEventListener(TimerEvent.TIMER,update);
 			timer.start();

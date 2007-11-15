@@ -18,15 +18,14 @@
 
 
 	public class n3DObject extends MovieClip
-	{
-		
+	{		
 		private var TKnobX:TouchlibKnob=  new TouchlibKnob(100);
 		private var TKnobY:TouchlibKnob=  new TouchlibKnob(100);
 		private var TKnobZ:TouchlibKnob=  new TouchlibKnob(100);	
-		private var TSliderX:HorizontalSlider = new HorizontalSlider(20,300);
-		private var TSliderY:HorizontalSlider = new HorizontalSlider(20,300);
-		private var TSliderZ:HorizontalSlider = new HorizontalSlider(20,300);
-		private var TSliderScale:HorizontalSlider = new HorizontalSlider(20,300);
+		private var TSliderX:HorizontalSlider = new HorizontalSlider(300,25);
+		private var TSliderY:HorizontalSlider = new HorizontalSlider(300,25);
+		private var TSliderZ:HorizontalSlider = new HorizontalSlider(300,25);
+		private var TSliderScale:HorizontalSlider = new HorizontalSlider(300,25);
 		//private var TKnobZ:TouchlibKnob = new TouchlibKnob(30);
 		private var boxRed:Sprite = new Sprite();
 		private var boxHolder:Sprite = new Sprite();
@@ -70,27 +69,26 @@
 			this.addChild(TKnobZ);
 			
 			
-			TSliderX.x = 135;
+			TSliderX.x = -200;
 			TSliderX.y = -168;
-			TSliderX.rotation +=90;
 			TSliderX.setValue(0.5);
 			this.addChild(TSliderX);
 			
-			TSliderY.x = 135;
+			TSliderY.x = -200;
 			TSliderY.y = -203;
-			TSliderY.rotation +=90;
+		
 			TSliderY.setValue(0.5);
 			this.addChild(TSliderY);
 			
-			TSliderZ.x = 135;
+			TSliderZ.x = -200;
 			TSliderZ.y = -238;
-			TSliderZ.rotation +=90;
+
 			TSliderZ.setValue(0.5);
 			this.addChild(TSliderZ);
 			
-			TSliderScale.x = 135;
+			TSliderScale.x = -200;
 			TSliderScale.y = 320;
-			TSliderScale.rotation +=90;
+		
 			TSliderScale.setValue(0.5);
 			this.addChild(TSliderScale);
 			

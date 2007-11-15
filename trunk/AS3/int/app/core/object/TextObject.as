@@ -1,13 +1,18 @@
 ﻿package app.core.object {
 	import app.core.action.RotatableScalable;
 	
-	import flash.display.*;
-	import flash.events.*;
-	import flash.geom.*;
-	import flash.net.*;
-	import flash.text.*;
+	import flash.display.Sprite;
+	import flash.events.Event;	
+	import flash.events.MouseEvent;	
+	import app.core.utl.ColorUtil;	
 	
-
+	import flash.text.TextField;
+	import flash.text.TextFieldAutoSize;
+	import flash.text.TextFormat;
+	
+	import caurina.transitions.Tweener;
+	
+	import app.core.element.Wrapper;
 	
 	public class TextObject extends RotatableScalable
 	{
@@ -15,9 +20,10 @@
 		public var myFont:Class;
 		
 		public var t: TextField;
-		public var mc: MovieClip;
+		public var mc: Sprite;
 		public var inString:String;	
-		
+		public var closeButton:Boolean = true;	
+			
 		public function TextObject(inVar:String)
 		{					
 			//var linkedFont:myFont = new myFont();
@@ -28,13 +34,16 @@
 			
 			inString = inVar;
 			
-			mc = new MovieClip();
-			mc.graphics.beginFill(0xffffff,0.0);
+			mc = new Sprite();
+			mc.graphics.beginFill(0xFF00FF,1);
 			mc.graphics.drawRect(-200,-200,400,400);
 			//noScale = true;
 			//noRotate = true;
-			noSelection = true;
+			noSelection = true;			
+			noSelection = true;			
 			noMove = false;	
+			
+			//color = ColorUtil.random(0,0,0);
 					
 			trace('Text Object Created');
 			
@@ -63,9 +72,22 @@
 			t.setTextFormat(format);
 			
 			//mc.addChild(t);
-	  		  this.addChild(t);	    
-		
-		}     		
-
+	  		this.addChild(t);	    
+			if(closeButton){
+			var buttonSprite = new Sprite();						
+			buttonSprite.graphics.beginFill(0xFFFFFF,0.75);
+			buttonSprite.graphics.lineStyle(1,0x000000,0.85);
+			buttonSprite.graphics.drawRoundRect(-t.width/2,-63,t.width+4,25,6);
+			buttonSprite.addEventListener(MouseEvent.CLICK, fireFunc);	
+			var WrapperObject:Wrapper = new Wrapper(buttonSprite);					
+			this.addChild(WrapperObject);
+			}
+		}   
+		function fireFunc(e:Event){
+		//parent.removeChild(this); 	
+		//this.alpha=0;			
+		Tweener.addTween(this, {alpha:0,scaleX: 0.0, scaleY: 0.0, time:0.25, transition:"easeinoutquad"});	
+		//this.visible=false;		
+		}  		
 	}
 }

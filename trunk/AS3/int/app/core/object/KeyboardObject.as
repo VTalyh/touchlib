@@ -19,6 +19,7 @@
 		
 		public var keyboard: Loader;
 		public var inShift:Boolean = false;
+		public var TextObject_0:TextObject;
 
 		
 		public function KeyboardObject()
@@ -40,8 +41,7 @@
 			buttonSprite.addEventListener(MouseEvent.CLICK, fireFunc);	
 			var WrapperObject:Wrapper = new Wrapper(buttonSprite);					
 			this.addChild(WrapperObject);
-			
-		
+				
 		
 		}
 		function arrange(e:Event) {	
@@ -101,8 +101,8 @@
 			var TextObject_0: TextObject = new TextObject(' ');
 			TextObject_0.name = 'TextObject_0';
 			TextObject_0.rotation = rotation;
-			TextObject_0.x = 0;
-			TextObject_0.y = -125;
+			TextObject_0.x = 100;
+			TextObject_0.y = 100;
 			parent.addChild(TextObject_0);	
 			var t: TextField = parent.getChildByName('TextObject_0').getChildByName('t');			
 			var tmp:String = t.text;
@@ -121,7 +121,7 @@
 			var ch: String;			
 			if (t.text == "~") t.text = ' ';			
 			if (e.relatedObject.parent.char != undefined) 
-			 	ch = e.relatedObject.parent.char
+			 	ch = e.target.parent.char;
 			else 
 				ch = e.relatedObject.parent.parent.char;
 				
@@ -146,10 +146,12 @@
 			var t: TextField = parent.getChildByName('TextObject_0').getChildByName('t');
 			var ch: String;			
 			if (t.text == "~") t.text = ' ';			
-			if (e.target.parent.char != undefined) 
-			 	ch = e.target.parent.char
-			else 
-				ch = e.target.parent.parent.char;
+			if (e.target.parent.char != undefined) {
+			 	ch = e.target.parent.char;
+			 	}
+			else {
+			ch = e.target.parent.parent.char;
+			}
 				
 				
 			if (inShift) {
@@ -181,13 +183,13 @@
 			parent.setChildIndex(t.parent, parent.numChildren-1);
 			e.stopPropagation();
 		}
-		function MouseEnterDown(e:Event) {			
+		function MouseEnterDown(e:Event) {		
 			parent.getChildByName('TextObject_0').name = 'TextObject_1';
 			var TextObject_0: TextObject = new TextObject(' ');
 			TextObject_0.name = 'TextObject_0';
 			TextObject_0.rotation = rotation;
-			TextObject_0.x = 0;
-			TextObject_0.y = 0;
+			TextObject_0.x = 100;
+			TextObject_0.y = 100;
 			parent.addChild(TextObject_0);	
 			var t: TextField = parent.getChildByName('TextObject_0').getChildByName('t');			
 			var tmp:String = t.text;
@@ -207,7 +209,7 @@
 			Tweener.addTween(this, {x:parent.stage.stageWidth/2,y:(parent.stage.stageHeight/2),scaleX: 1.0, scaleY: 1.0, rotation:0, time:0.5, transition:"easeinoutquad"});	
 				
 			}else{
-					Tweener.addTween(this, {x:80,y:(parent.stage.stageHeight)+150,scaleX: 0.5, scaleY: 0.5, rotation:-90, time:0.5, transition:"easeinoutquad"});	
+			Tweener.addTween(this, {x:parent.stage.stageWidth-75,y:(parent.stage.stageHeight)+150,scaleX: 0.5, scaleY: 0.5, rotation:-90, time:0.5, transition:"easeinoutquad"});	
 			}
 		}
 		 

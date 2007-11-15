@@ -1,91 +1,82 @@
 ﻿package app.core.object{
-	import app.core.action.RotatableScalable;
-	
-	import flash.display.Loader;
-	import flash.display.Shape;
+
 	import flash.events.*;
-	import flash.filters.BitmapFilter;
-	import flash.filters.BitmapFilterQuality;
-	import flash.filters.DropShadowFilter;
+	import flash.system.LoaderContext;
 	import flash.net.URLRequest;
+	import flash.display.*;
+
 	
 	import caurina.transitions.Tweener;
 	
+	import app.core.loader.nLoader;	
 	import app.core.object.TextObject;	
+	import app.core.action.RotatableScalable;
 	
 	public class ImageObject extends RotatableScalable 
-	{
+	{		
+		public var swfboard: Loader;
 		private var clickgrabber:Shape = new Shape();		
 		private var photoLoader:Loader = null;		
 		
 		private var thisTween:Boolean;
 		private var thisSlide:Boolean;	
+		private var _thisScaleDown:Boolean;	
 			
 		private var velX:Number = 0.0;
 		private var velY:Number = 0.0;		
 		
 		private var velAng:Number = 0.0;
 		
-		private var friction:Number = 0.45;
-		private var angFriction:Number = 0.45;
+		private var friction:Number = 0.85;
+		private var angFriction:Number = 0.92;
 		
 		private var TextObject_0:TextObject;	
 		
-		public function ImageObject (url:String, mouseSelect:Boolean, thisTweenX:Boolean, thisSlideX:Boolean)
+		public function ImageObject (url:String, mouseSelect:Boolean, thisTweenX:Boolean, thisSlideX:Boolean, thisScaleDown:Boolean)
 		{
+			_thisScaleDown=thisScaleDown;
 			mouseSelection=mouseSelect;
 			thisTween=thisTweenX;
 			thisSlide=thisSlideX;
-			//trace(stage);
-			this.x = 1600 * Math.random() - 800;
-			this.y = 1600 * Math.random() - 800;			
+
+			this.x = 700 * Math.random() - 350;
+			this.y = 700 * Math.random() - 350;			
 			photoLoader = new Loader();
-			photoLoader.contentLoaderInfo.addEventListener( Event.COMPLETE, arrange, false, 0, true);					
-			//photoLoader.addEventListener(ProgressEvent.PROGRESS, progressHandler, false, 0, true);
+			photoLoader.contentLoaderInfo.addEventListener( Event.COMPLETE, arrange, false, 0, true);	
+			var context:LoaderContext = new LoaderContext();
+			context.checkPolicyFile = true;				
 			
-			clickgrabber.graphics.beginFill(0xffffff, 0.1);
+			clickgrabber.graphics.beginFill(0xffffff, 0.0);
 			clickgrabber.graphics.drawRect(0, 0, 1,1);
 			clickgrabber.graphics.endFill();			
-			trace(url);
-			var request:URLRequest = new URLRequest( url );			
-			
-			// Unload any current child
-			// Load new photo as specified by request object
-			// NOTE: Repeated calls to load photo will add children to display 
-			//		 object. All the photos will continue to be displayed 
-			//		 overlapping one another. Allows for reuse of display 
-			//		 object.
+			var request:URLRequest = new URLRequest( url );				
+	
 			photoLoader.unload();
-			photoLoader.load( request );						
-						
-			this.addChild( photoLoader );	
+			photoLoader.load( request , context);						
+	
+			this.addChild( photoLoader );				
 			this.addChild( clickgrabber );
 			
-			TextObject_0 = new TextObject(url);	
-			TextObject_0.noMove=true;
-			TextObject_0.visible=false;
-			this.addChild(TextObject_0);		
+		//	TextObject_0 = new TextObject(url);	
+		//	TextObject_0.noMove=true;
+		//	TextObject_0.visible=false;
+		//	this.addChild(TextObject_0);		
 			
-			
-				
-//            var filter:BitmapFilter = getShadowFilter();
-//            var myFilters:Array = new Array();
-//            myFilters.push(filter);
-//            filters = myFilters;			
 			
 			if(thisSlide){	
-			this.addEventListener(Event.ENTER_FRAME, slide, false, 0, true);
+			this.addEventListener(Event.ENTER_FRAME, slide);
 			}
 		
 		}
 
 		private function arrange( event:Event = null ):void 
-		{	this.x = 0;
-			this.y = 0;	
+		{			
+			//this.x = 0;
+			//this.y = 0;	
 			this.scaleX = 0;
-			this.scaleY = 0;	
+			this.scaleY =0;	
 			this.alpha = 1;
-			this.rotation = 0;
+			this.rotation =  Math.random()*180 - 90;	
 			
 			photoLoader.x = -photoLoader.width/2;
 			photoLoader.y = -photoLoader.height/2;			
@@ -97,62 +88,88 @@
 			clickgrabber.x = -photoLoader.width/2;
 			clickgrabber.y = -photoLoader.height/2;			
 			
-			TextObject_0.visible=true;
-			TextObject_0.scaleX = 0.17;
-			TextObject_0.scaleY = 0.17;	
-			TextObject_0.y=photoLoader.height/2+10;	
 			
-		if(thisTween){		
+			//TextObject_0.visible=false;
+			//TextObject_0.scaleX = 0.20;
+			//TextObject_0.scaleY = 0.20;	
+			//TextObject_0.x=photoLoader.width/2;	
+			//TextObject_0.y=photoLoader.height/2+15;	
 		
-				
+		
+ 			
+			
+		if(thisTween){						
 			var targetX:int = this.x;	
 			var targetY:int = this.y;		
 			var targetRotation:int = Math.random()*180 - 90;	 
-			var targetScale:Number = (Math.random()*0.4) + 0.4;	
-			//Tweener.addTween(this, {alpha:1, time:0.6, transition:"easeinoutquad"});	
-			Tweener.addTween(this, {alpha:1, x:targetX, y:targetY,scaleX: targetScale, scaleY: targetScale, rotation:targetRotation, time:0.7, transition:"easeinoutquad"});	
-		}else {
+			var targetScale:Number = (Math.random()*0.4) + 0.4;			
+			Tweener.addTween(this, {x:targetX, y:targetY,scaleX: targetScale, scaleY: targetScale, delay:0,time:1, transition:"easeinoutquad"});	
+		}else {			
 		this.alpha = 1.0;
-		this.scaleX = 1;
-		this.scaleY = 1;	
+		this.scaleX = 0.5;
+		this.scaleY = 0.5;	
 		this.rotation = 0;
 		//this.scaleX = (Math.random()*0.4) + 0.3;
 		//this.scaleY = this.scaleX;
 		//this.rotation = Math.random()*180 - 90;
-			}
+		this.x = 0;
+	    this.y = 0;	
+		}  
+			
+		 var image:Bitmap = Bitmap(photoLoader.content);
+         image.smoothing=true;
+       	 image.x = -photoLoader.width/2;
+		 image.y = -photoLoader.height/2;	
+         this.addChildAt(image,0);    	
+         
+         if(_thisScaleDown){
+         this.x = 0;
+         this.y = 0;        
+         this.scaleX=0.1;
+		 this.scaleY=0.1;
+		} 	
+		
+		nLoad_0 = new Loader();		
+	
+		nLoad_0.load(new URLRequest("www/swf/stack.swf"));			
+		//var nLoad_0 = new nLoader("www/swf/stack.swf",0,0);
+ 		nLoad_0.contentLoaderInfo.addEventListener( Event.COMPLETE, swfLoaded ); 
+		//nLoad_0.x=-250;	
+		//nLoad_0.y=-190;
+		
+		nLoad_0.x=clickgrabber.width*0.5-49;	
+		nLoad_0.y=-clickgrabber.height*0.5-2;
+		this.addChild(nLoad_0);			      
+		//this.addEventListener(MouseEvent.CLICK, MouseDownKey);
+		
 		}				
 		
-
-
-
-        private function getShadowFilter():BitmapFilter {
-            var color:Number = 0x000000;
-            var angle:Number = 45;
-            var alpha:Number = 0.8;
-            var blurX:Number = 8;
-            var blurY:Number = 8;
-            var distance:Number = 15;
-            var strength:Number = 0.65;
-            var inner:Boolean = false;
-            var knockout:Boolean = false;
-            var quality:Number = BitmapFilterQuality.HIGH;
-            return new DropShadowFilter(distance,
-                                        angle,
-                                        color,
-                                        alpha,
-                                        blurX,
-                                        blurY,
-                                        strength,
-                                        quality,
-                                        inner,
-                                        knockout);
-        }		
+		public function swfLoaded(e:Event)
+		{	
+			
+			//trace('Sub-Menu Object Created');
+			var mc:MovieClip = nLoad_0.content;	
+			mc['stack1'].addEventListener(MouseEvent.CLICK, MouseDownKey);
+		}
+		
+		
+		public function MouseDownKey(e:Event) {					
+			trace('target parent :'+e.target.parent.parent.parent.parent.parent.name);
+			trace('target :'+e.target.name);
+			trace('parent :'+parent);
+			trace('parent parent :'+parent.parent);
+			trace('root :'+root);
+			trace('this :'+this);		
+			//e.target.parent.parent.parent.parent.parent=null;
+			//trace(parent.getChildByName('TextObject_0'));
+			//parent.parent.photos.removeChild(getChildByName('ImageObject_0'));	
+			
+			}		
 		
 		public override function released(dx:Number, dy:Number, dang:Number)
 		{
 			velX = dx;
-			velY = dy;			
-			
+			velY = dy;				
 			velAng = dang;
 		}
 		

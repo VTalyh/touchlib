@@ -36,8 +36,7 @@ package app.core.object.n3D
 		private var scene:Scene3D;
 		private var camera:Camera3D;
 		private var rootNode:DisplayObject3D;
-		private var xwing:DisplayObject3D = new Collada( "local/3D/xwing.dae");
-		//private var xwing:DisplayObject3D = new Collada( "3dXwing/assets/xwing.dae");
+		private var xwing:DisplayObject3D = new Collada( "assets/xwing.dae");
 		
 		public var _3dRot_x:Number = new Number(0);
 		public var _3dRot_y:Number = new Number(0);

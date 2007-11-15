@@ -45,12 +45,11 @@
 			//clickgrabber.blendMode=setBlend;
 			
 			//clickgrabber.filters =[new ConvolutionFilter(3,3,[0,1,0,1-31,0,1,0])];
-		
+			trace('Lens Object Created');
+			
 			bringToFront = true;			
 			noScale = false;
 			noRotate = false;				
-			
-			
 			
 			TSliderScale.x = 155;
 			TSliderScale.y = 110;
@@ -204,7 +203,7 @@
 			if(this.y >= parent.stage.stageHeight-100)
 			Tweener.addTween(this, {x:parent.stage.stageWidth/2,y:(parent.stage.stageHeight/2),scaleX: 1.0, scaleY: 1.0, rotation:0, time:0.5, transition:"easeinoutquad"});	
 			else
-			Tweener.addTween(this, {x:215,y:parent.stage.stageHeight+65,scaleX: 0.5, scaleY: 0.5, rotation:-90, time:0.5, transition:"easeinoutquad"});			
+			Tweener.addTween(this, {x:parent.stage.stageWidth-200,y:parent.stage.stageHeight+65,scaleX: 0.5, scaleY: 0.5, rotation:-90, time:0.5, transition:"easeinoutquad"});			
 		}
 		
 		public override function released(dx:Number, dy:Number, dang:Number)
