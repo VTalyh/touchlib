@@ -7,19 +7,21 @@
 	import flash.net.*;
 	//import flash.util.trace;		
 	
-	public class Local extends MovieClip
+	public class Local extends Sprite
 	{
 		// Class properties
 		private var thestage:Sprite;
 		private var allPics:Array;			
-
+		private var _thisScaleDown:Boolean;	
+		
 		// Misc.
 		private var LIcontainer:String;	// Images
 		private var LVcontainer:String; // Videos
 		
-		public function Local(d:Sprite) 
+		public function Local(d:Sprite,thisScaleDown:Boolean) 
 		{
 			thestage = d;
+			_thisScaleDown=thisScaleDown
 			allPics = new Array();						
 			clearPics();			
 			
@@ -64,9 +66,9 @@
 
 			for(i=0; i < myArray.length-1; i++)
 			{
-				var photo:ImageObject = new ImageObject( myArray[i] ,false, false, false);				
+				var photo:ImageObject = new ImageObject( myArray[i] ,false, false, false,_thisScaleDown);				
 				//photo.scaleX = 1.0;
-				// photo.scaleY = 1.0;
+				//photo.scaleY = 1.0;
 				thestage.addChild(photo);
 				allPics.push(photo);				
 			}			
@@ -77,17 +79,17 @@
             var request:URLRequest = new URLRequest("local/videos.xml");
             var variables:URLLoader = new URLLoader();
             variables.dataFormat = URLLoaderDataFormat.TEXT;
-            variables.addEventListener(Event.COMPLETE, LVcompleteHandler, false, 0, true);
+            variables.addEventListener(Event.COMPLETE, LVcompleteHandler);
             try
             {
                 variables.load(request);
-               } 
+            } 
             catch (error:Error)
             {
                 trace("Unable to load (videos) file " + error);
             }
         }
-		
+		 
 		private function LVcompleteHandler(event:Event):void
         {
             var loader:URLLoader = URLLoader(event.target);
@@ -95,19 +97,22 @@
 			showVids();	// Show videos when done loading textfile
         }			
 		
-		public function showVids()
+			public function showVids()
 		{
 			var myArray:Array = new Array();
 			myArray = LVcontainer.split("\r\n");
 			for(var i:int=0; i<myArray.length; i++)
 			{
-				myArray[i] = "local/video/" + myArray[i];							
+				myArray[i] = "local/video/" + myArray[i];
+				trace('local/video/'+myArray[i]);	
+				//myArray[i] = "http://cache.googlevideo.com/get_video?video_id=" + myArray[i];	
+				
 			}	
 
 			for(i=0; i < myArray.length-1; i++)
-			{
+			{	
+				trace('Trying to load :'+(myArray[i]));
 				var flv_video:VideoObject = new VideoObject( myArray[i] );				
-				trace(myArray[i] );
 				thestage.addChild(flv_video);
 				allPics.push(flv_video);								
 			}			
