@@ -1,11 +1,10 @@
 ﻿package app.core.action{
 	import com.touchlib.*;
-//	import caurina.transitions.Tweener;
-	
+
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.filters.*;
+	import flash.filters.DropShadowFilter;
 	import flash.geom.Point;
 	
 	

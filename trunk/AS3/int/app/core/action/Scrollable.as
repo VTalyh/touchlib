@@ -1,12 +1,10 @@
-﻿//This is the class which makes the puzzle bar on the right,  scrollable  in the Y direction only
-// This is a direct modification of whitenoise's RotatableScalable class
-
-package app.core.action
+﻿package app.core.action
 {
-	import flash.display.*;
-	import flash.events.*;
 	import com.touchlib.*;
-	import flash.geom.*;
+	import flash.display.MovieClip;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.geom.Point;
 	
 	public dynamic class Scrollable extends MovieClip
 	{
@@ -42,7 +40,13 @@ package app.core.action
 			this.addEventListener(TUIOEvent.TUIO_UP, this.upEvent, false, 0, true);									
 			//this.addEventListener(TUIOEvent.RollOverEvent, this.rollOverHandler, false, 0, true);									
 			//this.addEventListener(TUIOEvent.RollOutEvent, this.rollOutHandler, false, 0, true);												
-			this.addEventListener(Event.ENTER_FRAME, this.update, false, 0, true);
+			this.addEventListener(Event.ENTER_FRAME, this.update, false, 0, true);			
+			
+			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler);									
+			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent);															
+			this.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpEvent);	
+			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOverHandler);
+			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOutHandler);	
 			
 			dX = 0;
 			dY = 0;
@@ -195,7 +199,6 @@ package app.core.action
 		public function rollOverHandler(e:TUIOEvent):void
 		{
 //			e.stopPropagation();	
-			trace ("mother roll")
 		}
 		
 		public function rollOutHandler(e:TUIOEvent):void
@@ -204,6 +207,43 @@ package app.core.action
 			
 		}
 		
+		public function mouseDownEvent(e:MouseEvent)
+		{
+				if(e.stageX == 0 && e.stageY == 0)
+				return;	
+				this.startDrag();	
+				//this.x=0;
+				
+				if(bringToFront)
+				this.parent.setChildIndex(this, this.parent.numChildren-1);
+				
+				e.stopPropagation();
+		}
+		
+		public function mouseUpEvent(e:MouseEvent)
+		{	
+			this.stopDrag();	
+			e.stopPropagation();
+		}		
+
+		public function mouseMoveHandler(e:MouseEvent)
+		{
+		//
+		}
+		
+		public function mouseRollOverHandler(e:MouseEvent)
+		{
+		//
+		}
+		
+		public function mouseRollOutHandler(e:MouseEvent)
+		{
+			if(!noMove)
+			{
+			//this.stopDrag();	
+			}		
+			//e.stopPropagation();
+		}	
 		
 		
 		function getAngleTrig(X:Number, Y:Number): Number
