@@ -373,7 +373,7 @@ import flash.events.MouseEvent;
 			debugMode=true;	
 			FLOSCSocket.connect(FLOSCSocketHost, FLOSCSocketPort);
 			//e.target.x=20;
-			e.target.alpha=0.75;
+			e.target.alpha=1;
 			}
 			else{
 			debugMode=false;
