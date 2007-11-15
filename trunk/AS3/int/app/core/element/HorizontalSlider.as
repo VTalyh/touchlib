@@ -34,7 +34,7 @@
 		{
 
 					
-			var slider_Shadow : DropShadowFilter = new DropShadowFilter(4,30,0,.5,10,10);
+			//var slider_Shadow : DropShadowFilter = new DropShadowFilter(4,30,0,.5,10,10);
 			//var slider_Shadow : DropShadowFilter = new DropShadowFilter(4,30,0,.5,10,10);
 			
 			mouseActive = false;
@@ -45,7 +45,7 @@
 			gfxSliderGrip.graphics.drawRoundRect(-20, -(ht/2) + borderPixels,  40, ht-borderPixels*2, roundnessPixels, roundnessPixels);
 			gfxSliderGrip.y = (ht/2);
 			gfxSliderGrip.graphics.endFill();
-			gfxSliderGrip.filters = [slider_Shadow];
+			//gfxSliderGrip.filters = [slider_Shadow];
 			addChild(gfxSliderGrip);
 			
 			
@@ -63,7 +63,7 @@
 			gfxActiveGlow.graphics.beginFill(0xFFFFFF, 0.3);
 			gfxActiveGlow.graphics.drawCircle(0,0,20);
 			gfxActiveGlow.visible = false;
-			gfxActiveGlow.filters = [blurfx];
+			//gfxActiveGlow.filters = [blurfx];
 			//addChild(gfxActiveGlow);			
 			
 			scrollableWidth = gfxWidth - 40 - borderPixels*2;
@@ -108,7 +108,7 @@
 		function sliderStartDrag()
 		{
 			isActive = true;
-			gfxActiveGlow.visible = true;	
+			//gfxActiveGlow.visible = true;	
 			gfxActiveGrip.visible = true;
 			
 		}
@@ -119,7 +119,7 @@
 			if(isActive)
 			{
 				isActive = false;
-				gfxActiveGlow.visible = false;
+				//gfxActiveGlow.visible = false;
 				gfxActiveGrip.visible = false;
 			}
 			mouseActive = false;					
@@ -156,8 +156,8 @@
 					activeX = this.mouseX;
 					activeY = this.mouseY;
 				}
-				gfxActiveGlow.x = activeX;
-				gfxActiveGlow.y = activeY;
+				//gfxActiveGlow.x = activeX;
+				//gfxActiveGlow.y = activeY;
 			}
 		}
 

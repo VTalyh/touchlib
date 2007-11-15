@@ -22,15 +22,13 @@ package app.core.element{
 	import flash.display.*;		
 	import flash.events.*;
 	import flash.net.*;
+	
 	import com.touchlib.*;	
 	import flash.geom.*;			
-    import flash.filters.*;
-	
 
 	public class Wrapper extends MovieClip
 	{
 
-		private var gfxActiveGlow:Sprite;
 
 		private var knobValue:Number = 0.0;
 		private var isActive:Boolean = false;
@@ -47,15 +45,7 @@ package app.core.element{
 			
 			addChild(cmp);
 			
-			var blurfx:BlurFilter = new BlurFilter(10, 10, 1);
 			
-			gfxActiveGlow = new Sprite();
-			gfxActiveGlow.graphics.beginFill(0xFFFFFF, 0.7);
-			gfxActiveGlow.graphics.drawCircle(0,0,20);
-			gfxActiveGlow.visible = false;
-			gfxActiveGlow.filters = [blurfx];
-			addChild(gfxActiveGlow);			
-
 			this.addEventListener(TUIOEvent.TUIO_MOVE, this.tuioMoveHandler, false, 0, true);			
 			this.addEventListener(TUIOEvent.TUIO_DOWN, this.tuioDownEvent, false, 0, true);						
 			this.addEventListener(TUIOEvent.TUIO_UP, this.tuioUpEvent, false, 0, true);									
@@ -75,7 +65,6 @@ package app.core.element{
 		function touchStartDrag()
 		{
 			isActive = true;
-			//gfxActiveGlow.visible = true;			
 		}
 		
 
@@ -85,7 +74,6 @@ package app.core.element{
 			if(isActive)
 			{
 				isActive = false;
-				gfxActiveGlow.visible = false;			
 			}
 			mouseActive = false;					
 		}		
@@ -104,8 +92,6 @@ package app.core.element{
 					activeX = this.mouseX;
 					activeY = this.mouseY;
 				}
-				//gfxActiveGlow.x = activeX;
-				//gfxActiveGlow.y = activeY;
 			}
 		}
 

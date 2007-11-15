@@ -1,30 +1,31 @@
 ﻿// A basic knob that listens to both TUIO events and regular MouseEvents.
 // TODO: add ability to dispatch events when the value changes.. 
 
-package app.core.element{
-
+package app.core.element
+{
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	
-	import flash.text.*;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
 	
-	import flash.display.*;		
-	import flash.events.*;
-	import flash.net.*;
-	import com.touchlib.*;	
-	import flash.geom.*;			
-	import flash.filters.BlurFilter;
+	import flash.display.Sprite;		
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 	
-    import flash.filters.*;
+	import com.touchlib.*;
+		
+	import flash.geom.Point;			
 
-
-	public class Knob extends MovieClip
+	public class Knob extends Sprite
 	{
 		private var gfxIndicator:Sprite;
+		private var gfxActiveIndicator:Sprite;
 		private var gfxActiveGlow:Sprite;
-		private var knobValue:Number = 0.0;
+		public var knobValue:Number = 0.0;
 		private var isActive:Boolean = false;
 		private var gfxRadius:Number = 0;
+		private var mouseActive:Boolean = false;
 
 		
 		private var activeX:Number;
@@ -37,61 +38,76 @@ package app.core.element{
 		private var maxValue:Number = 1.0;		
 		
 		private var indicatorText:TextField;
-		private var mouseActive:Boolean = false;
+		
 		
 
 		public function Knob(diam:Number)
 		{
+			//var knob_Shadow : DropShadowFilter = new DropShadowFilter(4,30,0,.5,10,10);
+			
 			gfxRadius = diam/2;
 
 			gfxIndicator = new Sprite();
-			gfxIndicator.graphics.beginFill(0xFF0000, 0.5);
+			gfxIndicator.graphics.beginFill(0x8C8C8C, 1);
 			gfxIndicator.graphics.moveTo(-0.1*gfxRadius, 0);
 			gfxIndicator.graphics.lineTo(0, -gfxRadius);			
 			gfxIndicator.graphics.lineTo(0.1*gfxRadius, 0);						
 			gfxIndicator.graphics.lineTo(-0.1*gfxRadius, 0);			
 			gfxIndicator.graphics.endFill();
 			gfxIndicator.x = gfxRadius;
-			gfxIndicator.y = gfxRadius;			
+			gfxIndicator.y = gfxRadius;	
 			addChild(gfxIndicator);
 			
-			var blurfx:BlurFilter = new BlurFilter(10, 10, 1);
-			
-			gfxActiveGlow = new Sprite();
-			gfxActiveGlow.graphics.beginFill(0xFFFFFF, 0.7);
-			gfxActiveGlow.graphics.drawCircle(0,0,20);
-			gfxActiveGlow.visible = false;
-			gfxActiveGlow.filters = [blurfx];
-			addChild(gfxActiveGlow);			
 			
 			
-			this.graphics.beginFill(0xFFFFFF, 0.5);
+			
+			
+			gfxActiveIndicator = new Sprite();
+			gfxActiveIndicator.graphics.beginFill(0xFFFFFF, 1);
+			gfxActiveIndicator.graphics.moveTo(-0.1*gfxRadius, 0);
+			gfxActiveIndicator.graphics.lineTo(0, -gfxRadius);			
+			gfxActiveIndicator.graphics.lineTo(0.1*gfxRadius, 0);						
+			gfxActiveIndicator.graphics.lineTo(-0.1*gfxRadius, 0);			
+			gfxActiveIndicator.graphics.endFill();
+			gfxActiveIndicator.x = gfxRadius;
+			gfxActiveIndicator.y = gfxRadius;
+			gfxActiveIndicator.visible = false;
+			addChild(gfxActiveIndicator);
+			
+
+			
+			this.graphics.beginFill(0x373737, 1);
 			this.graphics.drawCircle(gfxRadius, gfxRadius, gfxRadius);
 			
 			var tf:TextFormat = new TextFormat();
 			tf.color = 0xffffff;
 			tf.align = "center";
+			tf.font = "Arial";
+			tf.size = "10";
 			indicatorText = new TextField();
 			indicatorText.x = 0;
-			indicatorText.y = gfxRadius*2;
+			indicatorText.y = gfxRadius*2+5;
 			indicatorText.width = gfxRadius*2;
+			indicatorText.height = 14;	
+			indicatorText.selectable = false;
 			indicatorText.defaultTextFormat  = tf;
-			addChild(indicatorText);
+			addChild(indicatorText);		
+			
 			
 
-			this.addEventListener(TUIOEvent.TUIO_MOVE, this.tuioMoveHandler, false, 0, true);			
-			this.addEventListener(TUIOEvent.TUIO_DOWN, this.tuioDownEvent, false, 0, true);						
-			this.addEventListener(TUIOEvent.TUIO_UP, this.tuioUpEvent, false, 0, true);									
-			this.addEventListener(TUIOEvent.TUIO_OVER, this.tuioRollOverHandler, false, 0, true);									
-			this.addEventListener(TUIOEvent.TUIO_OUT, this.tuioRollOutHandler, false, 0, true);
+			this.addEventListener(TUIOEvent.TUIO_MOVE, this.tuioMoveHandler);			
+			this.addEventListener(TUIOEvent.TUIO_DOWN, this.tuioDownEvent);						
+			this.addEventListener(TUIOEvent.TUIO_UP, this.tuioUpEvent);									
+			this.addEventListener(TUIOEvent.TUIO_OVER, this.tuioRollOverHandler);									
+			this.addEventListener(TUIOEvent.TUIO_OUT, this.tuioRollOutHandler);
 
-			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler, false, 0, true);									
-			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent, false, 0, true);															
-			this.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpEvent, false, 0, true);	
-			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOverHandler, false, 0, true);
-			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOutHandler, false, 0, true);
+			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler);									
+			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent);															
+			this.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpEvent);	
+			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOverHandler);
+			this.addEventListener(MouseEvent.ROLL_OUT, this.mouseRollOutHandler);
 			
-			this.addEventListener(Event.ENTER_FRAME, this.frameUpdate, false, 0, true);			
+			this.addEventListener(Event.ENTER_FRAME, this.frameUpdate);			
 			
 			updateGraphics();
 		}
@@ -99,47 +115,49 @@ package app.core.element{
 		function updateGraphics()
 		{
 			gfxIndicator.rotation = (knobValue+0.5) * 360;
-			indicatorText.text = knobValue.toString();
+			gfxActiveIndicator.rotation = (knobValue+0.5) * 360;
+			indicatorText.text = Math.round((knobValue) * 360);
+			
+			
+			indicatorText.text = knobValue;
 		}
 
 		function knobStartDrag()
 		{
 			isActive = true;
-			gfxActiveGlow.visible = true;			
+			//gfxActiveGlow.visible = true;	
+			gfxActiveIndicator.visible = true;
 		}
 		
-		public function hideLabel()
-		{
-			indicatorText.visible = false;
-		}
-		
-		public function setMinValue(v:Number)
+		function setMinValue(v:Number)
 		{
 			// FIXME: add sanity checking
 			minValue = v;
 		}
 		
-		public function setMaxValue(v:Number)
+		function setMaxValue(v:Number)
 		{
 			maxValue = v;
 		}		
+		
 		
 		function knobStopDrag()
 		{
 			if(isActive)
 			{
 				isActive = false;
-				gfxActiveGlow.visible = false;			
+			//	gfxActiveGlow.visible = false;	
+				gfxActiveIndicator.visible = false;
 			}
 			mouseActive = false;					
 		}		
 		
 		public function setValue(f:Number)
 		{
-			if(f < minValue)
-				f = minValue;
-			if(f > maxValue)
-				f = maxValue;
+			if(f < 0)
+				f = 0.0;
+			if(f > 1.0)
+				f = 1.0;
 			knobValue = f;
 			
 			updateGraphics();
@@ -164,10 +182,9 @@ package app.core.element{
 					activeX = this.mouseX;
 					activeY = this.mouseY;
 				}
-				gfxActiveGlow.x = activeX;
-				gfxActiveGlow.y = activeY;
 			}
 		}
+
 		
 		public function tuioDownEvent(e:TUIOEvent)
 		{		
