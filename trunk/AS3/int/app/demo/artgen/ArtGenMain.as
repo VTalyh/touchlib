@@ -42,10 +42,10 @@ package app.demo.artgen
 			var spr:Sprite = new Sprite();
 			curLayer = spr;
 			layers.push(spr);
-			addChild(spr);
+			layerHolder.addChild(spr);
 			
 			swarm = new Swarm();
-			addChild(swarm);
+			layerHolder.addChild(swarm);
 			
 			swarm.setDrawingCanvas(spr);
 			
@@ -74,7 +74,7 @@ package app.demo.artgen
 									<type>random</type>
 									<rate>16.0</rate>
 									<dest>position</dest>
-									<amount>5.5</amount>
+									<amount>0.1</amount>
 								</modulator>
 								
 								<modulator>
@@ -144,7 +144,7 @@ package app.demo.artgen
 			var spr:Sprite = new Sprite();
 			curLayer = spr;
 			layers.push(spr);			
-			addChild(spr);
+			layerHolder.addChild(spr);
 							
 			swarm.setDrawingCanvas(spr);			
 			
