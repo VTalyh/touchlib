@@ -129,8 +129,7 @@
 		 this.scaleY=0.1;
 		} 	
 		
-		nLoad_0 = new Loader();		
-	
+		/*nLoad_0 = new Loader();		
 		nLoad_0.load(new URLRequest("www/swf/stack.swf"));			
 		//var nLoad_0 = new nLoader("www/swf/stack.swf",0,0);
  		nLoad_0.contentLoaderInfo.addEventListener( Event.COMPLETE, swfLoaded ); 
@@ -141,15 +140,15 @@
 		nLoad_0.y=-clickgrabber.height*0.5-2;
 		this.addChild(nLoad_0);			      
 		//this.addEventListener(MouseEvent.CLICK, MouseDownKey);
-		
+		*/
 		}				
 		
 		public function swfLoaded(e:Event)
 		{	
 			
 			//trace('Sub-Menu Object Created');
-			var mc:MovieClip = nLoad_0.content;	
-			mc['stack1'].addEventListener(MouseEvent.CLICK, MouseDownKey);
+			//var mc:MovieClip = nLoad_0.content;	
+		//	mc['stack1'].addEventListener(MouseEvent.CLICK, MouseDownKey);
 		}
 		
 		
