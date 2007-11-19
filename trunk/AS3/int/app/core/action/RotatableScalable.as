@@ -6,6 +6,7 @@
 	import flash.events.MouseEvent;
 	import flash.filters.DropShadowFilter;
 	import flash.geom.Point;
+	import flash.utils.getTimer;
 	
 	
 	public dynamic class RotatableScalable extends MovieClip
@@ -32,6 +33,16 @@
 		public var dY:Number;		
 		public var dAng:Number;
 		public var dcoef:Number = 0.5;
+		
+		//DoubleTap variables
+		public var xdist:Number;
+		public var ydist:Number;
+		public var distance:Number;
+		private var oldX:Number = 0;
+		private var oldY:Number = 0;		
+		public var doubleclickDuration:Number = 300;
+		public var clickRadius:Number = 25;		
+		public var lastClick:Number = 0;
 		
 		public function RotatableScalable()
 		{
@@ -191,6 +202,29 @@
 				{
 					//this.alpha=0.5;				
 				}
+			
+			//DoubleTap Gesture
+			var tuioobj:TUIOObject = TUIO.getObjectById(e.ID);
+			var localPt:Point = globalToLocal(new Point(tuioobj.x, tuioobj.y));
+			
+			xdist = localPt.x - oldX;
+			ydist = localPt.y - oldY;			
+			distance = Math.sqrt(xdist*xdist+ydist*ydist);
+			oldX = localPt.x;
+			oldY = localPt.y;		
+			
+			trace(distance);
+			
+			if (parent.hitTestPoint(localPt.x,localPt.y) && distance <= clickRadius) {
+
+				if (lastClick == 0) {
+					lastClick = getTimer();
+				} else {
+					lastClick = 0;
+					trace("double click");
+					doubleTap();//perform doubleTap Function
+				}
+			}//end DoubleTap
 				
 			e.stopPropagation();
 		}
@@ -206,7 +240,7 @@
 			e.stopPropagation();				
 				
 		}		
-
+		
 		public function moveHandler(e:TUIOEvent):void
 		{
 //			e.stopPropagation();			
@@ -240,6 +274,26 @@
 					//this.filters=new Array(dropshadow);
 					//Tweener.addTween(this, {scaleX:1.0, scaleY:1.0, rotation:0, time:0.6, transition:"easeinoutquad"});				
 				}
+				
+			//DoubleTap Gesture			
+			xdist = mouseX - oldX;
+			ydist = mouseY - oldY;			
+			distance = Math.sqrt(xdist*xdist+ydist*ydist);
+			oldX = mouseX;
+			oldY = mouseY;		
+			//trace(distance);
+			
+			if (parent.hitTestPoint(mouseX,mouseY) && distance <= clickRadius) {
+
+				if (lastClick == 0) {
+					lastClick = getTimer();
+				} else {
+					lastClick = 0;
+					trace("double click");
+					doubleTap();//perform doubleTap Function
+				}
+			}//end DoubleTap
+			
 			e.stopPropagation();
 		}
 		
@@ -304,9 +358,7 @@
 					return 360.0-Math.atan(-Y/X) * GRAD_PI;
 				else
 					return 180.0+Math.atan(-Y/-X) * GRAD_PI;
-		} 
-		
-		
+		} 		
 		
 		
 		
@@ -314,13 +366,23 @@
 		{
 		}
 		
+		public function doubleTap()
+		{
+			//override this function to create something when a doubleTap occurs
+		}		
 		
 		
 		
 		private function update(e:Event):void
 		{
-
-			if(!noMove){
+			//DoubleTap Check
+			if (lastClick > 0) {
+				if ((getTimer()-lastClick) > doubleclickDuration) {
+					lastClick = 0;
+					trace("single click");
+				}
+			}//end DoubleTap Check
+			
 			
 			if(state == "dragging")
 			{
@@ -346,9 +408,11 @@
 				oldX = x;
 				oldY = y;
 				
-			
-				x = curPosition.x + (curPt.x - (blob1.origX ));		
-				y = curPosition.y + (curPt.y - (blob1.origY ));
+				if(!noMove)
+				{
+					x = curPosition.x + (curPt.x - (blob1.origX ));		
+					y = curPosition.y + (curPt.y - (blob1.origY ));
+				}
 			
 			
 				dX *= dcoef;
@@ -448,8 +512,11 @@
 				oldX = x;
 				oldY = y;
 			
-				x = curPosition.x + (curCenter.x - centerOrig.x);	
-				y = curPosition.y + (curCenter.y - centerOrig.y);								
+				if(!noMove)
+				{
+					x = curPosition.x + (curCenter.x - centerOrig.x);	
+					y = curPosition.y + (curCenter.y - centerOrig.y);	
+				}
 			
 				
 				dX *= dcoef;
@@ -474,9 +541,7 @@
 				}
 			}
 			
-			}
-
-		}
+			}	
 				
 	}
 }
