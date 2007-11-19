@@ -24,18 +24,19 @@ package app.demo.musicalSquares
 		private var bounce:Number = -.9;
 		public var hitloop:Number;
 		public var thisState:String;
+		private var gravity:Number = 0;
 
 		private var ballTween:Tween;
 
-		public function Throwing(size:Number, color:uint) {
+		public function Throwing(size:Number, color:uint, filterOn:Boolean) {
 			
-			bringToFront = false;
+			bringToFront = true;
 			noScale = false;//make it not scale
 			noRotate = true;//make it not rotate
 			noMove = false;//make it not move			
 
 			//Main Ball
-			var throwBall:Ball = new Ball(size, color);
+			var throwBall:Ball = new Ball(size, color, filterOn);
 			throwBall.name = "throwBall";
 
 			//Outline
@@ -67,8 +68,15 @@ package app.demo.musicalSquares
 		
 		public override function released(dx:Number, dy:Number, dang:Number) {
 
+			if (Math.abs(dx) > Math.abs(dy)){
 			velX = dx;
+			velY = 0;
+			}
+			else{
+			velX = 0;
 			velY = dy;
+			}
+
 		}
 		
 		
@@ -76,8 +84,8 @@ package app.demo.musicalSquares
 			
 			this.thisState = this.state;			
 			
-				if (this.x + this.width/2 > 750 || this.x - this.width/2 < 50 ||
-				    this.y + this.width/2 > 490 || this.y - this.width/2 < 110) {
+				if (this.x + this.width/2 > 770 || this.x - this.width/2 < 30 ||
+				    this.y + this.width/2 > 510 || this.y - this.width/2 < 90) {
 					
 					if (this.state == "none") {
 					
@@ -89,12 +97,23 @@ package app.demo.musicalSquares
 					this.addEventListener(TUIOEvent.TUIO_UP, this.upEvent, false, 0, true);
 					this.addEventListener(TUIOEvent.TUIO_OVER, this.rollOverHandler, false, 0, true);
 					this.addEventListener(TUIOEvent.TUIO_OUT, this.rollOutHandler, false, 0, true);
-					this.removeEventListener(Event.ENTER_FRAME, this.update);
+					//this.removeEventListener(Event.ENTER_FRAME, this.update);
 				}
 			}
 	
 
 			if (this.state == "none") {
+				
+				velY += gravity;
+				
+				if (velX > 23){
+					velX = 23;
+				}
+				if (velY > 23){
+					velY = 23;
+				}
+
+				
 				if (Math.abs(velX) < 0.001) {
 					velX = 0;
 				} else {
@@ -128,11 +147,16 @@ package app.demo.musicalSquares
 					//velY = 0;}
 					//else { velY *= bounce; }
 
-					velY *= bounce;
-					doTween(this);
+					
+					
 
-					if (Math.abs(velY) > 0.1) {
+					if (Math.abs(velY) > .97) {
 						Sounds.sound(this);
+						doTween(this);
+						velY *= bounce;
+					}
+					else{
+						velY = 0;
 					}
 				} else if (y - this.width/2 < 110) {
 					y = this.width/2 + 110;
@@ -148,7 +172,7 @@ package app.demo.musicalSquares
 		/////////////////////////////////////////////
 		public function doTween(throwBall) {
 
-			ballTween = new Tween(this.getChildByName("throwBall"), "alpha", Regular.easeOut, 1, 0.15, 1, true);
+			ballTween = new Tween(this.getChildByName("throwBall"), "alpha", Regular.easeOut, 1, 0.1, 1, true);
 		}
 	}
 }

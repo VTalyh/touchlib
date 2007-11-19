@@ -11,14 +11,16 @@
 		
 		public var radius:Number;
 		private var color:uint;
+		private var filterOn:Boolean;
 		public var vx:Number = 0;
 		public var vy:Number = 0;
 		public var mass:Number = 1;
 		public var dropShadow:DropShadowFilter = new DropShadowFilter(6, 45, 0x2F2F2F, 1, 2, 2, 1);		
 		
-		public function Ball(radius:Number=40, color:uint=0xff0000) {
+		public function Ball(radius:Number=40, color:uint=0xff0000, filterOn:Boolean = false) {
 			this.radius = radius;
 			this.color = color;
+			this.filterOn = filterOn
 			init();
 		}
 		
@@ -34,10 +36,13 @@
 		  graphics.beginGradientFill(fillType, colors, alphas, ratios, matr, spreadMethod);  
  
 		  graphics.lineStyle(2, 0xFFFFFF, 1, false, LineScaleMode.NONE);
-		  graphics.drawRoundRect(-radius/2, -radius/2, radius, radius, 4);			
-		  graphics.endFill();
+		  graphics.drawRect(-radius/2, -radius/2, radius, radius);			
+		  graphics.endFill();		
 		
-		  filters = [dropShadow];
+		  if (filterOn == true){
+			  filters = [dropShadow];
+		  }
+		  
 		}		
 	}	
 }

@@ -15,11 +15,15 @@
 		public class Colliding extends Sprite {
 	
 			public var squares:Array;
-			private var numSquares:Number = 8;
+			private var numSquares:Number = 16;
 			private var hitloop:Number = 0;
 			//Color of Square
-			private var colorArray:Array = new Array(0xED441B, 0xEFD918, 0x70EF18, 0x17F0AF, 
-				                                     0x17C6F0, 0xFFFFFF, 0x595959, 0x000000);
+			private var colorArray:Array = new Array(0xED1C24, 0xDC547C, 0xEC008C, 0x91278F, 0x5D53A3, 0x1B75BC, 0x00AEEF, 0x00A79D, 0x39B54A, 0xBFD73B, 0xF9ED33, 0xF7931E, 							 
+													 
+			0xEE2B30, 0xF0608E, 0xED2290, 0xA8489B, 0x726AB0, 0x418CCB, 0x43B4E7, 0x45C0BC, 0x6ABE56, 0xDFE343, 0xFCEF3E, 0xF89724,									 
+													 0xFFFFFF, 0x595959, 0x000000);			
+			
+			
 			//In case I want to attach the Note name to the Square
 			private var letterArr:Array = new Array("C", "D", "E", "F", "G", "A", "B", "C2");
 			//private var bounce:Number = -0.8;
@@ -42,10 +46,10 @@
 				for (var i:uint = 0; i < numSquares; i++) {
 	
 					var color = colorArray[i];
-					var square:Throwing = new Throwing(25, color);
+					var square:Throwing = new Throwing(25, color, true);
 	
-					square.x = (i * 85) + 95 ;
-					square.y = 400 + (-i * 30);
+					square.x = (i * 40) + 95 ;
+					square.y = 380 + (-i * 13);
 					square.velX = 0;
 					square.velY = 1;
 					square.name = "ball" + i;
@@ -73,26 +77,48 @@
 
 			private function newSquares(){				
 				
-			for (var j:uint = 0; j < numSquares; j++) {				
+			for (var j:uint = 0; j < 36; j++) {				
 	
 				var color = colorArray[j];
-				var staticSquare:Ball = new Ball(20, color);
+				var staticSquare:Ball = new Ball(20, color, false);
 
-				staticSquare.x = 25;
-				staticSquare.y = 400 + (-j * 30);
+				if (j < 12){
+					staticSquare.y = 90;
+					staticSquare.x = 300 + (j * 21);
+				}
+				else if (j < 24){
+					staticSquare.y = 70;
+					staticSquare.x = 300 + ((j - 12) * 21);					
+				}
+				else{
+					staticSquare.y = 50;
+					staticSquare.x = 300 + ((j - 24) * 21);
+				}
+				
 				staticSquare.name = "ball" + j;
 
 				addChild(staticSquare);
 				staticSquare.addEventListener(TUIOEvent.TUIO_DOWN, addSquare, false, 0, true);				
 				}			
 				
-			for (var h:uint = 0; h < numSquares; h++) {				
+			for (var h:uint = 0; h < 36; h++) {				
 	
 				var color = colorArray[h];
-				var staticSquare:Ball = new Ball(20, color);
+				var staticSquare:Ball = new Ball(20, color, false);
 
-				staticSquare.x = 775;
-				staticSquare.y = (h * 30) + 190;
+				if (h < 12){
+					staticSquare.y = 510;
+					staticSquare.x = 530 - (h * 21);
+				}
+				else if (h < 24){
+					staticSquare.y = 530;
+					staticSquare.x = 530 - ((h - 12) * 21);					
+				}
+				else{
+					staticSquare.y = 550;
+					staticSquare.x = 530 - ((h - 24) * 21);	
+				}				
+				
 				staticSquare.name = "ball" + h;
 
 				addChild(staticSquare);
@@ -110,65 +136,235 @@
 				
 				case "ball0" :					
 					var color = colorArray[0];
-					var square:Throwing = new Throwing(25, color);	
+					var square:Throwing = new Throwing(25, color, true);	
 					square.name = e.currentTarget.name;
 					break;				
 				
 				case "ball1" :			
 					var color = colorArray[1];
-					var square:Throwing = new Throwing(25, color);	
+					var square:Throwing = new Throwing(25, color, true);	
 					square.name = e.currentTarget.name;
 					break;	
 					
 				case "ball2" :			
 					var color = colorArray[2];
-					var square:Throwing = new Throwing(25, color);	
+					var square:Throwing = new Throwing(25, color, true);	
 					square.name = e.currentTarget.name;
 					break;	
 					
 				case "ball3" :			
 					var color = colorArray[3];
-					var square:Throwing = new Throwing(25, color);	
+					var square:Throwing = new Throwing(25, color, true);	
 					square.name = e.currentTarget.name;
 					break;
 					
 				case "ball4" :			
 					var color = colorArray[4];
-					var square:Throwing = new Throwing(25, color);	
+					var square:Throwing = new Throwing(25, color, true);	
 					square.name = e.currentTarget.name;
 					break;	
 					
 				case "ball5" :			
 					var color = colorArray[5];
-					var square:Throwing = new Throwing(25, color);	
+					var square:Throwing = new Throwing(25, color, true);	
 					square.name = e.currentTarget.name;
 					break;	
 					
 				case "ball6" :			
 					var color = colorArray[6];
-					var square:Throwing = new Throwing(25, color);	
+					var square:Throwing = new Throwing(25, color, true);	
 					square.name = e.currentTarget.name;
 					break;
 					
 				case "ball7" :			
 					var color = colorArray[7];
-					var square:Throwing = new Throwing(25, color);	
+					var square:Throwing = new Throwing(25, color, true);	
 					square.name = e.currentTarget.name;
 					break;
+					
+				case "ball8" :					
+					var color = colorArray[8];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;				
+				
+				case "ball9" :			
+					var color = colorArray[9];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;	
+					
+				case "ball10" :			
+					var color = colorArray[10];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;	
+					
+				case "ball11" :			
+					var color = colorArray[11];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;
+					
+				case "ball12" :			
+					var color = colorArray[12];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;	
+					
+				case "ball13" :			
+					var color = colorArray[13];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;	
+					
+				case "ball14" :			
+					var color = colorArray[14];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;
+					
+				case "ball15" :			
+					var color = colorArray[15];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;					
+					
+					
+				case "ball16" :					
+					var color = colorArray[16];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;				
+				
+				case "ball17" :			
+					var color = colorArray[17];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;	
+					
+				case "ball18" :			
+					var color = colorArray[18];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;	
+					
+				case "ball19" :			
+					var color = colorArray[19];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;
+					
+				case "ball20" :			
+					var color = colorArray[20];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;	
+					
+				case "ball21" :			
+					var color = colorArray[21];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;	
+					
+				case "ball22" :			
+					var color = colorArray[22];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;
+					
+				case "ball23" :			
+					var color = colorArray[23];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;
+					
+				case "ball24" :					
+					var color = colorArray[24];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;				
+				
+				case "ball25" :			
+					var color = colorArray[25];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;	
+					
+				case "ball126" :			
+					var color = colorArray[26];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;	
+					
+				case "ball127" :			
+					var color = colorArray[27];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;
+					
+				case "ball28" :			
+					var color = colorArray[28];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;	
+					
+				case "ball29" :			
+					var color = colorArray[29];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;	
+					
+				case "ball30" :			
+					var color = colorArray[30];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;
+					
+				case "ball31" :			
+					var color = colorArray[31];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;					
+					
+				case "ball32" :			
+					var color = colorArray[32];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;	
+					
+				case "ball33" :			
+					var color = colorArray[33];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;	
+					
+				case "ball34" :			
+					var color = colorArray[34];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;
+					
+				case "ball35" :			
+					var color = colorArray[35];
+					var square:Throwing = new Throwing(25, color, true);	
+					square.name = e.currentTarget.name;
+					break;
+			
 			}			
 				var tuioobj:TUIOObject = TUIO.getObjectById(e.ID);
 				var localPt:Point = globalToLocal(new Point(tuioobj.x, tuioobj.y));
 				
-				square.x = tuioobj.x;
-			    square.y = tuioobj.y;	
+				square.x = localPt.x;
+			    square.y = localPt.y;	
 			
 				addChild(square);
 				squares.push(square);	
 				
 				square.state = "dragging";				
-				square.dispatchEvent(new TUIOEvent (TUIOEvent.TUIO_DOWN, false, false, tuioobj.x, tuioobj.y, localPt.x, localPt.y, null, false, false, false, false, 0, "2Dcur", e.ID, e.sID, e.angle));
+				square.dispatchEvent(new TUIOEvent (TUIOEvent.TUIO_DOWN, false, false, tuioobj.x, tuioobj.y, localPt.x, localPt.y, 0, 0, null, false, false, false, false, 0, "2Dcur", e.ID, e.sID, e.angle));
 			}
-					
+
 		
 			
 			private function checkCollision(event:Event):void {
