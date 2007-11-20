@@ -57,7 +57,7 @@
 			this.addEventListener(TUIOEvent.TUIO_DOWN, this.downEvent, false, 0, true);						
 			this.addEventListener(TUIOEvent.TUIO_UP, this.upEvent, false, 0, true);									
 			this.addEventListener(TUIOEvent.TUIO_OVER, this.rollOverHandler, false, 0, true);									
-			this.addEventListener(TUIOEvent.TUIO_OUT, this.rollOutHandler, false, 0, true);																
+			this.addEventListener(TUIOEvent.TUIO_OUT, this.rollOutHandler, false, 0, true);
 			
 			 var colorBar_0:Sprite = new Sprite();
 			 		

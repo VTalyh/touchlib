@@ -125,6 +125,12 @@
 		
 		public function addListener(reciever:Object)
 		{
+			for(var i:int = 0; i<aListeners.length; i++)
+			{
+				if(aListeners[i] == reciever)			
+					return;
+			}
+			
 			aListeners.push(reciever);
 		}
 		public function removeListener(reciever:Object)
@@ -154,6 +160,8 @@
 				localPoint = aListeners[i].parent.globalToLocal(new Point(x, y));				
 				aListeners[i].dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_UP, true, false, x, y, localPoint.x, localPoint.y, 0, 0, aListeners[i], false,false,false, true, 0, TUIOClass, ID, sID, angle));								
 			}
+			
+			aListeners = new Array();
 		}
 		
 		public function notifyMoved()
