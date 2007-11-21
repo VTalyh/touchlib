@@ -109,8 +109,8 @@ void glutApplication::DrawField(void)
 {
 	int i, j, idx;
 	const int n = fluid->getMeshSize();
-	fftw_real  wn = (fftw_real)width / (fftw_real)(n + 1);   /* Grid element width */
-	fftw_real  hn = (fftw_real)height / (fftw_real)(n + 1);  /* Grid element height */
+	fftw_real  wn = (fftw_real)width / (fftw_real)(n - 1);   /* Grid element width */
+	fftw_real  hn = (fftw_real)height / (fftw_real)(n - 1);  /* Grid element height */
 	float     px, py;
 
 	const fftw_real* r = fluid->getDensityFieldR();
@@ -131,28 +131,28 @@ void glutApplication::DrawField(void)
 		glBegin(GL_TRIANGLE_STRIP);
 
 		i = 0;
-		px = wn + (fftw_real)i * wn;
-		py = hn + (fftw_real)j * hn;
+		px =  (fftw_real)i * wn;
+		py = (fftw_real)j * hn;
 		idx = (j * n) + i;
 		glColor3f(r[idx], g[idx], b[idx]);
 		glVertex2f(px, py);
 
 		for (i = 0; i < n - 1; i++) {
-			px = wn + (fftw_real)i * wn;
-			py = hn + (fftw_real)(j + 1) * hn;
+			px =(fftw_real)i * wn;
+			py =(fftw_real)(j + 1) * hn;
 			idx = ((j + 1) * n) + i;
 			glColor3f(r[idx], g[idx], b[idx]);
 			glVertex2f(px, py);
 
-			px = wn + (fftw_real)(i + 1) * wn;
-			py = hn + (fftw_real)j * hn;
+			px =(fftw_real)(i + 1) * wn;
+			py =(fftw_real)j * hn;
 			idx = (j * n) + (i + 1);
 			glColor3f(r[idx], g[idx], b[idx]);
 			glVertex2f(px, py);
 		}
 
-		px = wn + (fftw_real)(n - 1) * wn;
-		py = hn + (fftw_real)(j + 1) * hn;
+		px =(fftw_real)(n - 1) * wn;
+		py =(fftw_real)(j + 1) * hn;
 		idx = ((j + 1) * n) + (n - 1);
 		glColor3f(r[idx], g[idx], b[idx]);
 		glVertex2f(px, py);
@@ -167,8 +167,8 @@ void glutApplication::DrawField(void)
 			for (j = 0; j < n; j++) {
 				idx = (j * n) + i;
 				glColor3f(1, 0, 0);
-				glVertex2f(wn + (fftw_real)i * wn, hn + (fftw_real)j * hn);
-				glVertex2f((wn + (fftw_real)i * wn) + 1000 * u[idx], (hn + (fftw_real)j * hn) + 1000 * v[idx]);
+				glVertex2f( (fftw_real)i * wn,  (fftw_real)j * hn);
+				glVertex2f(((fftw_real)i * wn) + 1000 * u[idx], ( (fftw_real)j * hn) + 1000 * v[idx]);
 			}
 		}
 		glEnd();
