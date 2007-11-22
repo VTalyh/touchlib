@@ -34,6 +34,8 @@ ITouchScreen *screen;
 
 #define OUTPUT_BUFFER_SIZE 2048
 
+//#define OSC_STRICT 1
+
 
 
 ///////////////////////////////////////////////////////////////////////
@@ -117,7 +119,10 @@ public:
 		// send update messages..
 
 		char buffer[OUTPUT_BUFFER_SIZE];
+		char buffer2[OUTPUT_BUFFER_SIZE];
 		osc::OutboundPacketStream p( buffer, OUTPUT_BUFFER_SIZE );
+		osc::OutboundPacketStream p2( buffer, OUTPUT_BUFFER_SIZE );
+
 		std::map<int, TouchData>::iterator iter1, iter2, iter_last;	    
 
 		if(fingerList.size() > 0)
@@ -133,7 +138,11 @@ public:
 			while(!done)
 			{
 				p.Clear();
+				p2.Clear();
+
+
 				p << osc::BeginBundle();
+				p2 << osc::BeginBundle();
 
 				for(; iter1 != fingerList.end(); iter1++)
 				{
@@ -142,7 +151,20 @@ public:
 					float area = d.area;
 				//	printf(d.area);
 					if(!(d.X == 0 && d.Y == 0)) {
-						p << osc::BeginMessage( "/tuio/2Dcur" ) << "set" << d.ID << d.X << d.Y << d.dX << d.dY << m << osc::EndMessage;
+						if(d.tagID == 0)
+						{
+// don't send extra info
+#ifdef OSC_STRICT
+							p << osc::BeginMessage( "/tuio/2Dcur" ) << "set" << d.ID << d.X << d.Y << d.dX << d.dY << m << osc::EndMessage;
+#else
+							p << osc::BeginMessage( "/tuio/2Dcur" ) << "set" << d.ID << d.X << d.Y << d.dX << d.dY << m << d.width << d.height << osc::EndMessage;
+#endif
+						} else {
+							// is a fiducial tag
+
+							//FIXME: should we send height and width for obj's too?
+							p2 << osc::BeginMessage( "/tuio/2Dobj" ) << "set" << d.ID << d.tagID << d.X << d.Y << d.angle << d.dX << d.dY << 0.0 << m << 0.0 << osc::EndMessage;
+						}
 
 						scount ++;
 						if(scount >= 10)
@@ -157,28 +179,49 @@ public:
 					done = true;
 
 
+
 				p << osc::BeginMessage( "/tuio/2Dcur" );
 				p << "alive";
+				p2 << osc::BeginMessage( "/tuio/2Dobj" );
+				p2 << "alive";
+
 				for(iter2=fingerList.begin(); iter2 != fingerList.end(); iter2++)
 				{
 					TouchData d = (*iter2).second;
-					if(!(d.X == 0 && d.Y == 0)) {
-						p << d.ID;
+					if(d.tagID == 0)
+					{
+						if(!(d.X == 0 && d.Y == 0)) {
+							p << d.ID;
+						}
+					} else {
+						if(!(d.X == 0 && d.Y == 0)) {
+							p2 << d.ID;
+						}
 					}
 				}
 				p << osc::EndMessage;
-
 				p << osc::BeginMessage( "/tuio/2Dcur" ) << "fseq" << frameSeq << osc::EndMessage;
 				p << osc::EndBundle;
+
+				p2 << osc::EndMessage;
+				p2 << osc::BeginMessage( "/tuio/2Dobj" ) << "fseq" << frameSeq << osc::EndMessage;
+				p2 << osc::EndBundle;
+
+
 
 				//printf("%d size. %d #fingers\n", p.Size(), fingerList.size());
 				frameSeq ++; 
 				if(p.IsReady())
 					transmitSocket->Send( p.Data(), p.Size() );
+
+				if(p2.IsReady())
+					transmitSocket->Send( p2.Data(), p2.Size() );
 			}
 
 
 		} else {
+			// do we even need to do this?
+
 			//p << osc::BeginBundleImmediate;
 			p.Clear();
 			p << osc::BeginBundle();

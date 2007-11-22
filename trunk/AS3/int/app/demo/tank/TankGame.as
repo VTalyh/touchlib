@@ -20,14 +20,12 @@ package app.demo.tank {
 		
 		function TankGame()
 		{
-		
 			playerArray =  new Array();
 			
 			arenaWidth = mcArenaMask.width;
 			arenaHeight = mcArenaMask.height;
 			
 			TUIO.init( this, 'localhost', 3000, '', false );			// www/xml/test2.xml
-			
 			
 			var plyr:PlayerTank;
 			plyr = new PlayerTank(this, 1);
@@ -54,7 +52,6 @@ package app.demo.tank {
 			// FIXME: create a play field for tanks..
 			//this.addEventListener(Event.ENTER_FRAME, frameUpdate, false, 0, true);		
 
-			
 			if(this.stage)
 			{
 				addedToStage(new Event(Event.ADDED_TO_STAGE));

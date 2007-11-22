@@ -241,7 +241,7 @@ import flash.events.MouseEvent;
 							var tuioobj = getObjectById(id);
 							if(tuioobj == null)
 							{
-								tuioobj = new TUIOObject("2Dobj", id, x, y, X, Y, sID, a, dobj);
+								tuioobj = new TUIOObject("2Dobj", id, x, y, X, Y, sID, a, 0, 0, dobj);
 								thestage.addChild(tuioobj.spr);
 								
 								objectArray.push(tuioobj);
@@ -284,8 +284,14 @@ import flash.events.MouseEvent;
 							var y = Number(node.ARGUMENT[3].@VALUE) *  thestage.stageHeight;
 							var X = Number(node.ARGUMENT[4].@VALUE);
 							var Y = Number(node.ARGUMENT[5].@VALUE);
-							var m = node.ARGUMENT[6].@VALUE;
-							//var area = node.ARGUMENT[7].@VALUE;							
+							var m = Number(node.ARGUMENT[6].@VALUE);
+							var wd:Number=0.0, ht:Number = 0.0;
+							
+							if(node.ARGUMENT[7])
+								wd = Number(node.ARGUMENT[7].@VALUE) * thestage.stageWidth;							
+							
+							if(node.ARGUMENT[8])
+								ht = Number(node.ARGUMENT[8].@VALUE) * thestage.stageHeight;
 							
 							var stagePoint:Point = new Point(x,y);					
 							var displayObjArray:Array = thestage.getObjectsUnderPoint(stagePoint);
@@ -302,8 +308,8 @@ import flash.events.MouseEvent;
 							var tuioobj = getObjectById(id);
 							if(tuioobj == null)
 							{
-								tuioobj = new TUIOObject("2Dcur", id, x, y, X, Y, -1, 0, dobj);
-								//tuioobj.area = area;
+								tuioobj = new TUIOObject("2Dcur", id, x, y, X, Y, -1, 0, wd, ht, dobj);
+
 								thestage.addChild(tuioobj.spr);								
 								objectArray.push(tuioobj);
 								tuioobj.notifyCreated();
@@ -312,10 +318,12 @@ import flash.events.MouseEvent;
 								tuioobj.spr.y = y;
 								tuioobj.x = x;
 								tuioobj.y = y;
-								//tuioobj.area = area;								
+								tuioobj.width = wd;
+								tuioobj.height = ht;
+								tuioobj.area = wd * ht;								
 								tuioobj.dX = X;
 								tuioobj.dY = Y;
-								
+
 								tuioobj.setObjOver(dobj);
 								tuioobj.notifyMoved();
 							}  

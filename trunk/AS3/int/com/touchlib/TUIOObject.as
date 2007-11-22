@@ -21,7 +21,9 @@
 		public var dX:Number;
 		public var dY:Number;				
 		
-		public var area:Number;
+		public var area:Number = 0;
+		public var height:Number = 0;
+		public var width:Number = 0;
 		
 		public var TUIOClass:String;		// cur or Obj.. 
 		public var sID:int;
@@ -31,7 +33,7 @@
 		
 		private var isNew:Boolean;
 		public var isAlive:Boolean;		
-		public var obj;
+		public var obj:Object;
 		public var spr:Sprite;
 		public var trlx:Sprite;
 		
@@ -39,7 +41,7 @@
 		
 		var aListeners:Array;
 
-		public function TUIOObject (cls:String, id:int, px:Number, py:Number, dx:Number, dy:Number, sid:int = -1, ang:Number = 0, o = null)
+		public function TUIOObject (cls:String, id:int, px:Number, py:Number, dx:Number, dy:Number, sid:int = -1, ang:Number = 0, ht:Number=0.0, wd:Number=0.0, o:Object = null)
 		{
 			aListeners = new Array();
 			TUIOClass = cls;
@@ -53,6 +55,9 @@
 			sID = sid;
 			angle = ang;
 			isAlive = true;
+			height = ht;
+			width = wd;
+			area = ht * wd;
 			
 			color = ColorUtil.random(0,0,0);
 							
