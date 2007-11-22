@@ -129,17 +129,29 @@ package app.core.element
 			gfxActiveIndicator.visible = true;
 		}
 		
-		function setMinValue(v:Number)
+		public function setMinValue(v:Number = 0)
 		{
-			// FIXME: add sanity checking
+			if(v < 0)
+				return;
+				
 			minValue = v;
 		}
 		
-		function setMaxValue(v:Number)
+		public function setMaxValue(v:Number = 1.0)
 		{
+			if(maxValue > 1.0)
+				return;
 			maxValue = v;
 		}		
 		
+		public function hideLabel()
+		{
+			indicatorText.visible = false;
+		}
+		public function showLabel()
+		{
+			indicatorText.visible = true;
+		}		
 		
 		function knobStopDrag()
 		{
@@ -154,10 +166,10 @@ package app.core.element
 		
 		public function setValue(f:Number)
 		{
-			if(f < 0)
-				f = 0.0;
-			if(f > 1.0)
-				f = 1.0;
+			if(f < minValue)
+				f = minValue;
+			if(f > maxValue)
+				f = maxValue;
 			knobValue = f;
 			
 			updateGraphics();
