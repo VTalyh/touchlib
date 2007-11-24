@@ -40,8 +40,8 @@
 		public var distance:Number;
 		private var oldX:Number = 0;
 		private var oldY:Number = 0;		
-		public var doubleclickDuration:Number = 300;
-		public var clickRadius:Number = 25;		
+		public var doubleclickDuration:Number = 500;
+		public var clickRadius:Number = 100;		
 		public var lastClick:Number = 0;
 		
 		public function RotatableScalable()
@@ -58,11 +58,12 @@
 			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler);									
 			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent);															
 			this.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpEvent);	
-			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOverHandler);
-			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOutHandler);	
-													
-			this.addEventListener(Event.ENTER_FRAME, this.update, false, 0, true);
+			//this.addEventListener(MouseEvent.MOUSE_OVER, this.mouseRollOverHandler);
+			this.addEventListener(MouseEvent.MOUSE_OUT, this.mouseUpEvent);	
 			
+			this.addEventListener(MouseEvent.DOUBLE_CLICK, this.doubleTap);										
+			
+			this.addEventListener(Event.ENTER_FRAME, this.update, false, 0, true);		
 		
 			
 			dX = 0;
@@ -83,10 +84,9 @@
 			
 			if(blobs.length == 1)
 			{
-				//INSERT DOUBLE TAB HERE?
 				
 				state = "dragging";
-				trace("Dragging");		
+				trace("Drag :"+this);		
 				
 				curScale = this.scaleX;
 				curAngle = this.rotation;					
@@ -97,8 +97,8 @@
 			} else if(blobs.length == 2)
 			{
 				state = "rotatescale";
-				trace("Scale : "+this.scaleX);		
-				trace("Rotation : "+this.rotation);				
+				trace("Scale : "+this+" :"+this.scaleX);		
+				trace("Rotate : "+this+" :"+this.rotation);				
 				curScale = this.scaleX;
 				curAngle = this.rotation;					
 				curPosition.x = x;
@@ -117,8 +117,11 @@
 					blob1.origX = curPt1.x;
 					blob1.origY = curPt1.y;
 				}				
-				
 
+			}
+			else if(blobs.length == 3)
+			{
+				return;
 			}
 		}
 		
@@ -213,7 +216,7 @@
 			oldX = localPt.x;
 			oldY = localPt.y;		
 			
-			trace(distance);
+			//trace(distance);
 			
 			if (parent.hitTestPoint(localPt.x,localPt.y) && distance <= clickRadius) {
 
@@ -221,7 +224,7 @@
 					lastClick = getTimer();
 				} else {
 					lastClick = 0;
-					trace("double click");
+					trace("Double Tap");
 					doubleTap();//perform doubleTap Function
 				}
 			}//end DoubleTap
@@ -289,7 +292,7 @@
 					lastClick = getTimer();
 				} else {
 					lastClick = 0;
-					trace("double click");
+					trace("Double Tap");
 					doubleTap();//perform doubleTap Function
 				}
 			}//end DoubleTap
@@ -368,7 +371,6 @@
 		
 		public function doubleTap()
 		{
-			//override this function to create something when a doubleTap occurs
 		}		
 		
 		
@@ -379,7 +381,7 @@
 			if (lastClick > 0) {
 				if ((getTimer()-lastClick) > doubleclickDuration) {
 					lastClick = 0;
-					trace("single click");
+					trace("Single Tap");
 				}
 			}//end DoubleTap Check
 			

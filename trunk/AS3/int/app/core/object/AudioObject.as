@@ -65,11 +65,7 @@
 			_channel = _sound.play(0, 1000);
 		
 		}
-		
-		private function toggleSound(e:Event):void
-		{
-		
-		}
+
 		
 		private function initTimer():void
 		{

@@ -2,10 +2,14 @@
 	import app.core.object.ImageObject;
 	import app.core.action.RotatableScalable;
 	import flash.display.Shape;		
-	import flash.events.Event;
+	import flash.events.Event;	
+	
+	import caurina.transitions.Tweener;
+	
 	import flash.geom.Point;	      
 	import app.core.utl.ColorUtil;
 	import app.core.object.TextObject;	
+
 	
 	public class MediaCanvas extends RotatableScalable
 	{		
@@ -24,7 +28,8 @@
 	
 		private var _canvasName:String;			
 		private var TextObject_0:TextObject;			
-		public var color:int;
+		public var color:int;	
+		
 		
 		function MediaCanvas(canvasName:String)
 		{	
@@ -66,6 +71,14 @@
 			velX = dx;
 			velY = dy;				
 			velAng = dang;
-		}				
+		}	
+		
+		public override function doubleTap()
+		{
+	   	if(this.scaleX>0.25)
+		Tweener.addTween(this, {scaleX: 0.25, scaleY: 0.25,rotation: 0, x:1024*0.5, y:768*0.5,time:0.25, transition:"easeinoutquad"});	
+		else
+		Tweener.addTween(this, {scaleX: 1, scaleY: 1,rotation: 0, x:1024*0.5, y:768*0.5,time:0.25, transition:"easeinoutquad"});		
+		}					
 	}
 }

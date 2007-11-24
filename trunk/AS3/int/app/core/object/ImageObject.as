@@ -14,6 +14,8 @@
 	
 	public class ImageObject extends RotatableScalable 
 	{		
+		public var doubleTapEnabled: Boolean;
+		
 		public var swfboard: Loader;
 		private var clickgrabber:Shape = new Shape();		
 		private var photoLoader:Loader = null;		
@@ -40,13 +42,15 @@
 			thisSlide=thisSlideX;
 
 			this.x = 700 * Math.random() - 350;
-			this.y = 700 * Math.random() - 350;			
+			this.y = 700 * Math.random() - 350;	
+			
+			doubleTapEnabled = false;		
 			photoLoader = new Loader();
 			photoLoader.contentLoaderInfo.addEventListener( Event.COMPLETE, arrange, false, 0, true);	
 			var context:LoaderContext = new LoaderContext();
 			context.checkPolicyFile = true;				
 			
-			clickgrabber.graphics.beginFill(0xffffff, 0.0);
+			clickgrabber.graphics.beginFill(0xFFFFFF, 0.0);
 			clickgrabber.graphics.drawRect(0, 0, 1,1);
 			clickgrabber.graphics.endFill();			
 			var request:URLRequest = new URLRequest( url );				
@@ -54,7 +58,7 @@
 			photoLoader.unload();
 			photoLoader.load( request , context);						
 	
-			this.addChild( photoLoader );				
+			//this.addChild( photoLoader );				
 			this.addChild( clickgrabber );
 			
 		//	TextObject_0 = new TextObject(url);	
@@ -171,6 +175,18 @@
 			velY = dy;				
 			velAng = dang;
 		}
+		
+		public override function doubleTap()
+		{
+	   	if(!doubleTapEnabled){
+		Tweener.addTween(this, {scaleX: 1.5, scaleY: 1.5,x:0, y:0,rotation: 0, time:0.45, transition:"easeinoutquad"});		
+	   	doubleTapEnabled = true;
+	   	}
+	   	else{	
+	   	Tweener.addTween(this, {scaleX: 0.35, scaleY: 0.35,x:this.x+200, y:this.y+200, rotation: Math.random()*180 - 90,  time:0.35,  transition:"easeinoutquad"});	
+	   	  doubleTapEnabled = false;	 	
+	   	 }
+	   	}
 		
 		private function slide(e:Event):void
 		{
