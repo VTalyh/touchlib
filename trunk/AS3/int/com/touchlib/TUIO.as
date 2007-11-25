@@ -251,6 +251,8 @@ import flash.events.MouseEvent;
 								tuioobj.spr.y = y;								
 								tuioobj.x = x;
 								tuioobj.y = y;
+								tuioobj.oldX = tuioobj.x;
+								tuioobj.oldY = tuioobj.y;
 								tuioobj.dX = X;
 								tuioobj.dY = Y;
 								
@@ -318,6 +320,8 @@ import flash.events.MouseEvent;
 								tuioobj.spr.y = y;
 								tuioobj.x = x;
 								tuioobj.y = y;
+								tuioobj.oldX = tuioobj.x;
+								tuioobj.oldY = tuioobj.y;
 								tuioobj.width = wd;
 								tuioobj.height = ht;
 								tuioobj.area = wd * ht;								
