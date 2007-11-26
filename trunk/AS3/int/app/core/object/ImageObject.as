@@ -9,7 +9,7 @@
 	import caurina.transitions.Tweener;
 	
 	import app.core.loader.nLoader;	
-	import app.core.object.TextObject;	
+	//import app.core.object.TextObject;	
 	import app.core.action.RotatableScalable;
 	
 	public class ImageObject extends RotatableScalable 
@@ -17,7 +17,8 @@
 		public var doubleTapEnabled: Boolean;
 		
 		public var swfboard: Loader;
-		private var clickgrabber:Shape = new Shape();		
+		private var clickgrabber:Shape = new Shape();	
+		private var photoBack:Sprite = new Sprite();		
 		private var photoLoader:Loader = null;		
 		
 		private var thisTween:Boolean;
@@ -28,11 +29,11 @@
 		private var velY:Number = 0.0;		
 		
 		private var velAng:Number = 0.0;
-		
+		 
 		private var friction:Number = 0.85;
 		private var angFriction:Number = 0.92;
 		
-		private var TextObject_0:TextObject;	
+		//private var TextObject_0:TextObject;	
 		
 		public function ImageObject (url:String, mouseSelect:Boolean, thisTweenX:Boolean, thisSlideX:Boolean, thisScaleDown:Boolean)
 		{
@@ -47,12 +48,19 @@
 			doubleTapEnabled = false;		
 			photoLoader = new Loader();
 			photoLoader.contentLoaderInfo.addEventListener( Event.COMPLETE, arrange, false, 0, true);	
+			photoLoader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, onProgressHandler);
 			var context:LoaderContext = new LoaderContext();
 			context.checkPolicyFile = true;				
 			
+			photoBack.graphics.beginFill(0x000000,0.75);
+			photoBack.graphics.drawRect(0, 0, 1,1);
+			photoBack.graphics.endFill();	
+			//photoBack.blendMode = 'invert';				
+			
 			clickgrabber.graphics.beginFill(0xFFFFFF, 0.0);
 			clickgrabber.graphics.drawRect(0, 0, 1,1);
-			clickgrabber.graphics.endFill();			
+			clickgrabber.graphics.endFill();	
+			
 			var request:URLRequest = new URLRequest( url );				
 	
 			photoLoader.unload();
@@ -60,12 +68,12 @@
 	
 			//this.addChild( photoLoader );				
 			this.addChild( clickgrabber );
-			
+			this.addChild( photoBack );
+		
 		//	TextObject_0 = new TextObject(url);	
-		//	TextObject_0.noMove=true;
-		//	TextObject_0.visible=false;
-		//	this.addChild(TextObject_0);		
-			
+		//	TextObject_0.noMove=true;		
+		//	TextObject_0.visible=false;		
+		//	this.addChild(TextObject_0);	
 			
 			if(thisSlide){	
 			this.addEventListener(Event.ENTER_FRAME, slide);
@@ -74,7 +82,8 @@
 		}
 
 		private function arrange( event:Event = null ):void 
-		{			
+		{						
+				
 			//this.x = 0;
 			//this.y = 0;	
 			this.scaleX = 0;
@@ -92,12 +101,17 @@
 			clickgrabber.x = -photoLoader.width/2;
 			clickgrabber.y = -photoLoader.height/2;			
 			
+			photoBack.scaleX = photoLoader.width;
+			photoBack.scaleY = photoLoader.height;			
+			photoBack.x = -photoLoader.width/2;
+			photoBack.y = -photoLoader.height/2;				
+			photoBack.alpha = 0.0;
 			
-			//TextObject_0.visible=false;
-			//TextObject_0.scaleX = 0.20;
-			//TextObject_0.scaleY = 0.20;	
-			//TextObject_0.x=photoLoader.width/2;	
-			//TextObject_0.y=photoLoader.height/2+15;	
+		//	TextObject_0.visible=true;
+		//	TextObject_0.scaleX = 0.20;
+		//	TextObject_0.scaleY = 0.20;	
+		//	TextObject_0.x=0;	
+		//	TextObject_0.y=photoLoader.height/2+15;	
 		
 		
  			
@@ -155,6 +169,11 @@
 		//	mc['stack1'].addEventListener(MouseEvent.CLICK, MouseDownKey);
 		}
 		
+		private function onProgressHandler(mProgress:ProgressEvent)
+		{
+		var percent:Number = mProgress.bytesLoaded/mProgress.bytesTotal;
+		trace(percent*100+"%");
+		}
 		
 		public function MouseDownKey(e:Event) {					
 			trace('target parent :'+e.target.parent.parent.parent.parent.parent.name);
@@ -179,12 +198,18 @@
 		public override function doubleTap()
 		{
 	   	if(!doubleTapEnabled){
-		Tweener.addTween(this, {scaleX: 1.5, scaleY: 1.5,x:0, y:0,rotation: 0, time:0.45, transition:"easeinoutquad"});		
+		//Tweener.addTween(this, {scaleX: 1, scaleY: 1,x:0, y:0,rotation: 0, time:0.30, transition:"easeinoutquad"});		
+		Tweener.addTween(this, { scaleX: 1, scaleY: 1, time:0.45, transition:"easeinoutquad"});		
+	   	Tweener.addTween(photoBack, {alpha:0.0, delay: 0.05, time:0.25,  transition:"easeinoutquad"});
 	   	doubleTapEnabled = true;
 	   	}
 	   	else{	
-	   	Tweener.addTween(this, {scaleX: 0.35, scaleY: 0.35,x:this.x+200, y:this.y+200, rotation: Math.random()*180 - 90,  time:0.35,  transition:"easeinoutquad"});	
-	   	  doubleTapEnabled = false;	 	
+	   	//Tweener.addTween(this, {scaleX: 1.0, scaleY: 0,x:this.x+200, y:this.y+200, rotation: Math.random()*180 - 90,  time:0.35,  transition:"easeinoutquad"});	
+	   	 
+	   	  Tweener.addTween(this, {scaleX: -1.0, scaleY: 1.0,  delay: 0.0, time:0.45,  transition:"easeinoutquad"});
+	      Tweener.addTween(photoBack, {alpha:1.0, delay: 0.05, time:0.25,  transition:"easeinoutquad"});
+	   	  doubleTapEnabled = false;	   	
+	   	  //Tweener.addTween(this, {scaleX: 1.0, scaleY: 1.0,  time:0.35,  transition:"easeinoutquad"}); 	
 	   	 }
 	   	}
 		

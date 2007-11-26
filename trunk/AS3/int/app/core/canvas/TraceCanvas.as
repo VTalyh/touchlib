@@ -1,4 +1,4 @@
-﻿package app.core.canvas {
+﻿package app.core.canvas{
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 
@@ -7,13 +7,15 @@
 	import flash.net.*;
 	import com.touchlib.*;
 	import flash.geom.*;
-
+	
 	import flash.filters.*;
 
 	public class TraceCanvas extends MovieClip {
+		//[Embed(source="brush.swf", symbol="Brush")]
+		//public var Brush:Class;
 
-		private var blobs:Array;
-		
+
+		private var blobs:Array;// blobs we are currently interacting with
 		private var sourceBmp:BitmapData;
 		private var paintBmpData:BitmapData;
 		private var paintBmpData2:BitmapData;
@@ -41,36 +43,36 @@
 			
 			Paths = new Array();
 			
-			paintBmpData = new BitmapData(1024, 768, true, 0x0FFFFFF);
+			paintBmpData = new BitmapData(1024, 768, true, 0x00000000);
 			
 			paintBmp = new Bitmap(paintBmpData,'auto',true);
 		
-			this.addEventListener(TUIOEvent.TUIO_MOVE, this.moveHandler, false, 0, true);
-			this.addEventListener(TUIOEvent.TUIO_DOWN, this.downEvent, false, 0, true);
-			this.addEventListener(TUIOEvent.TUIO_UP, this.upEvent, false, 0, true);
-			this.addEventListener(TUIOEvent.TUIO_OVER, this.rollOverHandler, false, 0, true);
-			this.addEventListener(TUIOEvent.TUIO_OUT, this.rollOutHandler, false, 0, true);
+			this.addEventListener(TUIOEvent.TUIO_MOVE, this.moveHandler);
+			this.addEventListener(TUIOEvent.TUIO_DOWN, this.downEvent);
+			this.addEventListener(TUIOEvent.TUIO_UP, this.upEvent);
+			this.addEventListener(TUIOEvent.TUIO_OVER, this.rollOverHandler);
+			this.addEventListener(TUIOEvent.TUIO_OUT, this.rollOutHandler);
 
-			this.addEventListener(Event.ENTER_FRAME, this.update, false, 0, true);
+			this.addEventListener(Event.ENTER_FRAME, this.update);
 			
 			this.addChild(paintBmp);
-			/*
+			
 			var exitButton:Loader = new Loader();
 			exitButton.load(new URLRequest("closeButton.png"));
 			exitButton.x = 20;
 			exitButton.y = 768 - 148;
 			exitButton.alpha = 0.8;
-			exitButton.addEventListener(TUIOEvent.DownEvent, this.exit);
+			exitButton.addEventListener(TUIOEvent.TUIO_DOWN, this.exit);
+			
 			this.addChild(exitButton);
-			*/
+
 		}
-		/*
 		function exit(e:Event) {
 			var subobj = new mTouchSurface();
 			subobj.name = "SurfaceHolder";
 			parent.addChild(subobj);
-			parent.removeChild(parent.getChildByName("DebugSurface"));
-		}*/
+			parent.removeChild(parent.getChildByName("TraceSurface"));
+		}
 		function addBlob(id:Number, origX:Number, origY:Number) {
 			for (var i=0; i<blobs.length; i++) {
 				if (blobs[i].id == id) {
@@ -80,7 +82,6 @@
 			blobs.push( {id: id, origX: origX, origY: origY, myOrigX: x, myOrigY:y, oldX:x, oldY: y} );
 			
 			var holder: MovieClip = new MovieClip();
-			var blobID:Number;
 			
 			Paths.push({mc: holder, blobID: id});
 			addChild(Paths[Paths.length -1].mc);
@@ -109,19 +110,19 @@
 			var matrix1 = new Matrix();
 			var fIndex:Number = -1;
 			for(var i:int = 0; i<blobs.length; i++)
-			{				
+			{
 				var tuioobj:TUIOObject = TUIO.getObjectById(blobs[i].id);
-				//trace(tuioobj);
+				
 				// if not found, then it must have died..
 				if(!tuioobj)
 				{
 					removeBlob(blobs[i].id);
-					/*for(var j:int = 0; j<Paths.length; j++) {
+					for(var j:int = 0; j<Paths.length; j++) {
 						if (Paths[j].blobID == blobs[i].id) {
 							removeChild(Paths[j].mc);
 							Paths.splice(j,1);
 						}
-					}*/
+					}
 				} else {
 					for(var j:int = 0; j<Paths.length; j++) {
 						if (Paths[j].blobID == blobs[i].id) {
@@ -131,7 +132,7 @@
 					}
 					if (fIndex == -1)  {
 						if (Paths[fIndex] == undefined) {
-												
+							
 						}
 					}
 					else

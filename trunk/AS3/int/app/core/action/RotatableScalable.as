@@ -119,10 +119,12 @@
 				}				
 
 			}
+			/* NULLIFY 3rd BLOB... input error correction
 			else if(blobs.length == 3)
 			{
 				return;
 			}
+			 */
 		}
 		
 		function removeBlob(id:Number):void

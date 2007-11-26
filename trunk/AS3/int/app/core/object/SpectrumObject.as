@@ -20,9 +20,7 @@ package app.core.object
 	{
 		private var _channel:SoundChannel;
 		
-		private var timer:Timer;
-		
-		//private var soundTransform:soundTransform;
+		private var timer:Timer;		
 		
 		private var grafico:BitmapData;
 		
@@ -34,7 +32,10 @@ package app.core.object
 		
 		private function init():void
 		{	
-			//_channel.soundT = new SoundTransform(0);
+			//_channel.soundT = new SoundTransform(0.5);
+			
+		    //var _channel:SoundTransform = new SoundTransform(0.5);
+		    
 			grafico=new BitmapData(250,50,true,0x00000000);
 			var bitmap:Bitmap=new Bitmap(grafico);
 			bitmap.x=-135;
@@ -53,7 +54,8 @@ package app.core.object
 		}
 		
 		private function update(evt:TimerEvent):void
-		{
+		{   
+		   //  _channel.soundTransform(0.5);
 			var spectrum:ByteArray=new ByteArray();
 			SoundMixer.computeSpectrum(spectrum);
 			grafico.fillRect(grafico.rect,0x0000FF00);

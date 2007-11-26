@@ -104,8 +104,7 @@
 			for(var i:int=0; i<myArray.length; i++)
 			{
 				myArray[i] = "local/video/" + myArray[i];
-				trace('local/video/'+myArray[i]);	
-				//myArray[i] = "http://cache.googlevideo.com/get_video?video_id=" + myArray[i];	
+				//myArray[i] = "http://cache.googlevideo.com/get_video?video_id=0awjPUkBXOU&amp&origin=youtube.com";			
 				
 			}	
 

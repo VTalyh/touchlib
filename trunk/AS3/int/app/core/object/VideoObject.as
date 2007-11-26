@@ -1,6 +1,6 @@
 ﻿package app.core.object {
 	
-	//import com.touchlib.*;
+	import com.touchlib.*;
 	import app.core.action.RotatableScalable;
 	import app.core.element.*;
 
@@ -27,7 +27,12 @@
 		private var pause_btn:Sprite = new Sprite();
 		private var toggle_play:Number;
 		
-		private var slider:HorizontalSlider;
+		private var _scrubbing:Boolean;
+		private var _Vscrubbing:Boolean;
+		private var _duration:Number;
+		
+		private var scrubSlider:HorizontalSlider;
+		private var volumeSlider:HorizontalSlider;
 		
 		// Default values
 		private var border_size:Number = 10.0;
@@ -46,19 +51,20 @@
 			connection.connect(null);
 
 			Client = new Object();
-			Client.onMetaData = onMetaData;
+			Client.onMetaData = onMetaData;			
 
 			stream1 = new NetStream(connection);
-			stream1.soundTransform = new SoundTransform(1); // Range: 0 = sound off, 1 = sound on
+			//stream1.soundTransform = new SoundTransform(0); // Range: 0 = sound off, 1 = sound on
 			stream1.play( url );
 			
 			stream1.client = Client;
 
 			video1 = new Video();
 			video1.attachNetStream(stream1);
-			//trace(stream1);
-			stream1.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus, false, 0, true);
-
+			video1.smoothing = true;
+			stream1.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus, false, 0, true);			
+			video1.addEventListener(Event.ENTER_FRAME, onEnterFrame);				
+			
 			video1.x = -video1.width/2;
 			video1.y = -video1.height/2;
 			video1.scaleX = 1.0;
@@ -68,7 +74,7 @@
 			border.y = video1.y-border_size;
 			
 			
-			//play_btn.graphics.lineStyle(0, 0x202020);
+		//play_btn.graphics.lineStyle(0, 0x202020);
 			play_btn.graphics.beginFill(0x00CC00, 0.0);
 			play_btn.graphics.drawRect(video1.x+2, video1.y+2, 100, 100);
 			play_btn.graphics.endFill();												
@@ -91,8 +97,7 @@
 			pause_btn.graphics.drawRect(video1.x+9, video1.y+7, 6, 20);
 			pause_btn.graphics.drawRect(video1.x+19, video1.y+7, 6, 20);
 			pause_btn.graphics.endFill();
-			pause_btn.blendMode="invert";
-			
+			pause_btn.blendMode="invert";			
 			
 			
 			clickgrabber.scaleX = video1.width;
@@ -100,17 +105,30 @@
 			clickgrabber.x = -video1.width/2;
 			clickgrabber.y = -video1.height/2;
 
-			//var wrapper:Wrapper = new Wrapper(colorBtn); 
-			//var knob:TouchlibKnob=  new TouchlibKnob(20);
-			var slider:HorizontalSlider = new HorizontalSlider(video1.width,20);
-			//this.knob.x = 460;
-			//this.knob.y=10;
-			slider.x=-video1.width/2;
-			slider.y=video1.height/2+5;
-			//slider.rotation-=90;
+			scrubSlider = new HorizontalSlider(video1.width,20);	
+			volumeSlider = new HorizontalSlider(video1.height+48,25);
 
-			//this.addChild(knob);		
-			//this.addChild(wrapper);
+			scrubSlider.x=-video1.width/2;
+			scrubSlider.y=video1.height/2+5;		
+			volumeSlider.x=video1.width/2+12;			
+			volumeSlider.y=video1.height/2+38;
+			volumeSlider.rotation-=90;	
+			volumeSlider.alpha = 0.5;	
+			
+			//scrubSlider.setValue(0.0);
+			//volumeSlider.setValue(0.5);
+			
+			scrubSlider.addEventListener(TUIOEvent.TUIO_DOWN, onMouseDown);
+			scrubSlider.addEventListener(TUIOEvent.TUIO_UP, onMouseUp);
+			scrubSlider.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			scrubSlider.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);	
+			
+			volumeSlider.addEventListener(TUIOEvent.TUIO_DOWN, onMouseDownV);
+			volumeSlider.addEventListener(TUIOEvent.TUIO_UP, onMouseUpV);
+			volumeSlider.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownV);
+			volumeSlider.addEventListener(MouseEvent.MOUSE_UP, onMouseUpV);
+				
+			
 					
 			/*
 			// Disabled since most movies are small anyway (320x240)
@@ -131,11 +149,7 @@
 
 			addChild(border); 
 			addChild(video1);
-			addChild(clickgrabber);
-			//addChild(play_btn);
-			//addChild(pause_btn);	
-			addChild(slider);			
-			
+			addChild(clickgrabber);	
 
 			var wrapper0:Wrapper = new Wrapper(play_btn); 		
 			var wrapper1:Wrapper = new Wrapper(pause_btn); 
@@ -143,11 +157,31 @@
 			wrapper1.addEventListener(MouseEvent.CLICK, buttontouch);
 			addChild(wrapper0);
 			addChild(wrapper1);		
-																	  
+			
+		
+	
+													  
 			toggle_play = 0;
 			pause_btn.visible = false;
 			stream1.seek(1);
-			stream1.pause();			
+			stream1.pause();				
+			
+			addChild(scrubSlider);			
+			addChild(volumeSlider);		
+		
+		}
+		public function onMouseDown(e:Event) {
+			_scrubbing = true;
+				}
+		public function onMouseUp(e:Event) {
+			_scrubbing = false;
+		}
+		
+		public function onMouseDownV(e:Event) {
+			_Vscrubbing = true;
+				}
+		public function onMouseUpV(e:Event) {
+			_Vscrubbing = false;
 		}
 		
 		public function buttontouch(e:Event) {			
@@ -167,22 +201,57 @@
 			}
 		}
 		
-		private function onMetaData(data:Object) {
-			// _duration = data.duration;
-		}
-		
+	
 		private function onNetStatus(e:NetStatusEvent) {
+			//trace(stream1.time);
 			switch (e.info.code) {
 				case 'NetStream.Buffer.Flush' :	// Video done
 						stream1.seek(1);
 						stream1.pause();
 						pause_btn.visible = false;
 						play_btn.visible = true;
-						toggle_play = 0;
+						toggle_play = 0;			
+						//stream1.soundTransform = new SoundTransform(0); 
+						//trace('Length : '+_duration);	
+						 scrubSlider.setValue(0.00);
+					
 					break;
 			}
+		
 		}
-
+		private function onMetaData(data:Object) {
+		 _duration = data.duration;	
+		 trace('Length : '+_duration);	
+		}
+		
+		public function onEnterFrame(e:Event):void {		 
+		 
+		 _duration=100;
+		 if(_duration > 0){
+		 if(_scrubbing){
+		 var seeky = (_duration * (scrubSlider.sliderValue));
+		 stream1.seek(seeky);
+		 }
+		 else {
+		// scrubSlider.setValue((stream1.time / scrubSlider.width));
+		// trace(scrubSlider.getValue());
+		 }
+		 } 
+		 
+		 if(_Vscrubbing){
+		 stream1.soundTransform = new SoundTransform(volumeSlider.sliderValue);  
+		 volumeSlider.alpha = volumeSlider.sliderValue+0.25; 
+		  }	else{		  
+		  if(this.scaleX<=5)
+		  {  
+		  stream1.soundTransform = new SoundTransform((scaleX/2)-0.5);  
+		  //volumeSlider.setValue((scaleX/1)); 
+		  } 
+		  else if(this.scaleX<=0.5){	  
+		  stream1.soundTransform = new SoundTransform(0);  }
+		  }
+		}
+		
 		public override function released(dx:Number, dy:Number, dang:Number) {
 			velX = dx;
 			velY = dy;
