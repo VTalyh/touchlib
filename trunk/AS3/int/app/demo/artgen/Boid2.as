@@ -28,6 +28,8 @@
 			graphics.drawCircle(0,0, 4);
 			graphics.endFill();
 			
+			angle = 2.0 * (Math.random()-0.5) * Math.PI;
+			
 		}
 		
 		override public function track(pt:Point)

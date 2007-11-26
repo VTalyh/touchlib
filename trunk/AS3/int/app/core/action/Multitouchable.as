@@ -7,23 +7,25 @@ package app.core.action
 	import flash.display.*;		
 	import flash.events.*;
 	import com.touchlib.*;		
+	import flash.geom.Point;
 	
-	class Multitouchable extends Sprite
+	public class Multitouchable extends Sprite
 	{
 		protected var blobs:Array;		// blobs we are currently interacting with			
 		
 		function Multitouchable()
 		{
+			blobs = new Array();
 		
 			this.addEventListener(TUIOEvent.TUIO_MOVE, this.moveHandler, false, 0, true);			
 			this.addEventListener(TUIOEvent.TUIO_DOWN, this.downHandler, false, 0, true);						
-			this.addEventListener(TUIOEvent.TUIO_UP, this.upHander false, 0, true);									
+			this.addEventListener(TUIOEvent.TUIO_UP, this.upHandler, false, 0, true);									
 			this.addEventListener(TUIOEvent.TUIO_OVER, this.rollOverHandler, false, 0, true);									
 			this.addEventListener(TUIOEvent.TUIO_OUT, this.rollOutHandler, false, 0, true);		
 			
 			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler, false, 0, true);
 			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownHandler, false, 0, true);			
-			this.addEventListener(MouseEvent.MOUSE_UP, this.mouseDownHandler, false, 0, true);						
+			this.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpHandler, false, 0, true);						
 		}
 
 		function idExists(id:int):Boolean
@@ -42,9 +44,12 @@ package app.core.action
 			for(var i=0; i<blobs.length; i++)
 			{
 				if(blobs[i].id == id)
+				{
+					handleBlobCreated(id, origX, origY);
 					return;
+				}
 			}
-			
+
 			blobs.push( {id: id, clicked:c, origX: origX, origY:origY, clicked:c} );
 		}
 		
@@ -55,6 +60,7 @@ package app.core.action
 				if(blobs[i].id == id) 
 				{
 					blobs.splice(i, 1);		
+					handleBlobRemoved(id);					
 					return;
 				}
 			}
@@ -72,7 +78,7 @@ package app.core.action
 			return null;
 		}
 		
-		private function downHandler(e:TUIOEvent):void
+		public function downHandler(e:TUIOEvent):void
 		{
 		
 			if(e.stageX == 0 && e.stageY == 0)
@@ -89,7 +95,7 @@ package app.core.action
 		}
 		
 		
-		private function upHandler(e:TUIOEvent):void
+		public function upHandler(e:TUIOEvent):void
 		{
 			handleUpEvent(e.ID);
 			removeBlob(e.ID);
@@ -106,12 +112,39 @@ package app.core.action
 				trace("Error, shouldn't this blob already be in the list?");
 				//TUIO.listenForObject(e.ID, this);			
 				addBlob(e.ID);
+
 			}
 			
 			var curPt:Point = parent.globalToLocal(new Point(e.stageX, e.stageY));																	
 			handleMoveEvent(e.ID, curPt.x, curPt.y);			
 			
 			e.stopPropagation();						
+		}		
+		
+		public function mouseDownHandler(e:MouseEvent):void
+		{
+			trace("Mouse down");
+			addBlob(0, e.localX, e.localY, true);
+			
+			handleDownEvent(0, e.localX, e.localY);
+		}
+		
+		public function mouseMoveHandler(e:MouseEvent):void
+		{
+			if(!idExists(0))
+			{
+				trace("Error, shouldn't this blob already be in the list?");
+				addBlob(0, e.localX, e.localY, false);
+			}			
+			
+			
+			handleMoveEvent(0, e.localX, e.localY);
+		}		
+		
+		public function mouseUpHandler(e:MouseEvent):void
+		{
+			handleUpEvent(0);
+			removeBlob(0);			
 		}		
 		
 		public function rollOverHandler(e:TUIOEvent):void
@@ -149,7 +182,17 @@ package app.core.action
 			e.stopPropagation();									
 		}		
 		
-		public function handleDownEvent(id:int, x:Number, y:Number)
+		/* override these events */
+		
+		public function handleBlobCreated(id:int, mx:Number, my:Number)
+		{
+		}
+		
+		public function handleBlobRemoved(id:int)
+		{
+		}		
+		
+		public function handleDownEvent(id:int, mx:Number, my:Number)
 		{
 		}
 		
@@ -157,16 +200,16 @@ package app.core.action
 		{
 		}
 		
-		public function handleRollOverEvent(id:int, x:Number, y:Number)
+		public function handleRollOverEvent(id:int, mx:Number, my:Number)
 		{
 		}		
 		
-		public function handleRollOutEvent(id:int, x:Number, y:Number)
+		public function handleRollOutEvent(id:int, mx:Number, my:Number)
 		{
 		}				
 
-		public function handleMoveEvent(id:int, x:Number, y:Number)
+		public function handleMoveEvent(id:int, mx:Number, my:Number)
 		{
-		}				
+		}
 	}
 }

@@ -18,13 +18,14 @@ package app.demo.artgen
 	import com.touchlib.*;
 	import app.demo.artgen.*;
 	import app.core.element.*;
+	import app.core.action.Multitouchable;	
 	import flash.events.*;
 	import flash.geom.Point;
 	import flash.ui.Keyboard;
 	
-	public class ArtGenMain extends MovieClip 
-	{
-		private var swarm:Swarm = null;
+	public class ArtGenMain extends Multitouchable 
+	{		
+		private var aSwarms:Array;
 
 		private var curLayer:Sprite;
 		private var layers:Array;
@@ -35,6 +36,7 @@ package app.demo.artgen
 
 		public function ArtGenMain() 
 		{
+			aSwarms = new Array();
 			trace("ArtGenCanvas Initialized");
 
 			layers = new Array();
@@ -44,10 +46,7 @@ package app.demo.artgen
 			layers.push(spr);
 			layerHolder.addChild(spr);
 			
-			swarm = new Swarm();
-			layerHolder.addChild(swarm);
-			
-			swarm.setDrawingCanvas(spr);
+
 			
 			settings = <swarm>
 							<swarmType>Boid2</swarmType>
@@ -87,7 +86,7 @@ package app.demo.artgen
 							</modulators>
 					</swarm>;
 			
-			swarm.setupInfo(settings);
+
 			
 			addEventListener(Event.ENTER_FRAME, frameUpdate, false, 0, true);
 			addEventListener(Event.UNLOAD, unloadHandler, false, 0, true);
@@ -95,15 +94,14 @@ package app.demo.artgen
 			btClearLayer.addEventListener(MouseEvent.CLICK, clearLayerHandler, false, 0, true);
 			btSwarmSettings.addEventListener(MouseEvent.CLICK, editSettingsHandler, false, 0, true);
 			
+			// hide it for now, until I make it work.
+			btEditLayers.visible = false;
+			
 			addEventListener(Event.ADDED_TO_STAGE, addedHandler, false, 0, true);
 
 			TUIO.init( this, 'localhost', 3000, '', true );			
 			
-			var tmpArray = new Array();
-			tmpArray.push("item1");
-			tmpArray.push("item2");			
-			tmpArray.push("item3");			
-			
+
 			dialog = new SettingsDialog(settings, this);
 			dialog.visible = false;
 
@@ -112,16 +110,29 @@ package app.demo.artgen
 		
 		function applySettings()
 		{
-			swarm.setupInfo(dialog.getXML());
+			settings = dialog.getXML();
+			/*
+			for(var i:int = 0; i<aSwarms.length; i++)
+			{
+				aSwarm[i].setupInfo(dialog.getXML());
+			}
+			*/
 		}
 		
 		function addedHandler(e:Event)
 		{
-				stage.addEventListener(KeyboardEvent.KEY_DOWN, keyboardHandler);			
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyboardHandler);			
 		}
 		
 		function editSettingsHandler(e:Event)
 		{
+			// fixme: stop all swarms?
+			
+			for(var i:int = 0; i<aSwarms.length; i++)
+			{
+				layerHolder.removeChild(aSwarm[i]);
+			}			
+			aSwarms = new Array();
 			dialog.visible = true;
 		}
 		
@@ -137,6 +148,12 @@ package app.demo.artgen
 		
 		public function saveLayer()
 		{
+			for(var i:int = 0; i<aSwarms.length; i++)
+			{
+				layerHolder.removeChild(aSwarm[i]);
+			}			
+			aSwarms = new Array();			
+			
 			trace("save layer");
 			curLayer.dispatchEvent(new Event("freeze"));
 			curLayer.cacheAsBitmap = true;
@@ -146,8 +163,7 @@ package app.demo.artgen
 			layers.push(spr);			
 			layerHolder.addChild(spr);
 							
-			swarm.setDrawingCanvas(spr);			
-			
+		
 			swapChildren(spr, swarm);		// make sure swarm is on top.. 
 			
 		}
@@ -171,11 +187,57 @@ package app.demo.artgen
 		
 		public function frameUpdate(e:Event)
 		{
-			swarm.track(new Point(this.mouseX, this.mouseY));
+			for(var i:int = 0; i<aSwarms.length; i++)
+			{			
+				
 
-			swarm.draw();
+				aSwarms[i].track();
+				aSwarms[i].draw();
+			}
 
 		}
+		
+		public override function handleBlobCreated(id:int, mx:Number, my:Number)
+		{
+			trace("Blob created "+ id);
+			var swarm:Swarm;
+			swarm = new Swarm(id, mx, my);
+			layerHolder.addChild(swarm);
+			
+			swarm.setDrawingCanvas(curLayer);			
+			
+			swarm.setupInfo(settings);			
+			
+			aSwarms.push(swarm);
+		}
+		
+		public override function handleBlobRemoved(id:int)
+		{
+			for(var i:int = 0; i<aSwarms.length; i++)
+			{
+				if(aSwarms[i].id == id)
+				{
+					layerHolder.removeChild(aSwarms[i]);
+					aSwarms.splice(i, 1);
+					return;
+				}
+			}
+			
+		}		
+
+		public override function handleMoveEvent(id:int, mx:Number, my:Number)
+		{
+			trace("Blob moved "+ id);			
+			for(var i:int = 0; i<aSwarms.length; i++)
+			{
+				if(aSwarms[i].id == id)
+				{
+					aSwarms[i].setTrack(new Point(mx, my));
+					return;
+				}
+			}
+			
+		}		
 		
 		public function unloadHandler(e:Event)
 		{

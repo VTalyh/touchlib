@@ -20,9 +20,19 @@
 		private var waitCount:int = 5;
 		private var waitCountLeft:int = 5;		
 
-		public function Swarm() 
-		{
+		public var id:int;
+		
+		public var trackPt:Point;
+		
 
+		public function Swarm(i:int, ix:Number, iy:Number) 
+		{
+			trackPt = new Point();
+			
+			trackPt.x = ix;
+			trackPt.y = iy;
+
+			id = i;
 			members = new Array();
 		}
 		
@@ -101,8 +111,8 @@
 					m = new Boid2();
 					break;					
 			}
-			m.x = 400;
-			m.y = 400;
+			m.x = trackPt.x;
+			m.y = trackPt.y;
 			m.setSwarm(this);
 			m.setupInfo(data.algorithm);
 			m.memberscale = data.scale;
@@ -149,13 +159,18 @@
 			return pt;
 		}
 		
-		public function track(pt:Point)
+		public function setTrack(pt:Point)
+		{
+			trackPt = pt;
+		}
+		
+		public function track()
 		{
 			for(var i:int =0; i<members.length; i++)
 			{
-				members[i].track(pt);
+				members[i].track(trackPt);
 			}
-		}		
+		}
 		
 		public function draw()
 		{
