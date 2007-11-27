@@ -121,7 +121,7 @@ public:
 		char buffer[OUTPUT_BUFFER_SIZE];
 		char buffer2[OUTPUT_BUFFER_SIZE];
 		osc::OutboundPacketStream p( buffer, OUTPUT_BUFFER_SIZE );
-		osc::OutboundPacketStream p2( buffer, OUTPUT_BUFFER_SIZE );
+		osc::OutboundPacketStream p2( buffer2, OUTPUT_BUFFER_SIZE );
 
 		std::map<int, TouchData>::iterator iter1, iter2, iter_last;	    
 
