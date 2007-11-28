@@ -41,7 +41,7 @@
 		private var oldX:Number = 0;
 		private var oldY:Number = 0;		
 		public var doubleclickDuration:Number = 500;
-		public var clickRadius:Number = 100;		
+		public var clickRadius:Number = 50;		
 		public var lastClick:Number = 0;
 		
 		public function RotatableScalable()
@@ -461,6 +461,9 @@
 				var origPt1:Point = new Point(blob1.origX, blob1.origY);
 				var origPt2:Point = new Point(blob2.origX, blob2.origY);
 				var centerOrig:Point = Point.interpolate(origPt1, origPt2, 0.5);
+				//trace(parent.parent.stage.stageWidth/2);
+				//trace(parent.parent.stage.stageHeight/2);
+				//var centerOrig:Point = new Point(parent.parent.stage.stageWidth/2, parent.parent.stage.stageHeight/2);
 				
 				var offs:Point = curCenter.subtract(centerOrig);
 				
@@ -475,7 +478,6 @@
 				//Stop ZUI
 				//if(newscale < 0.1) newscale = 0.1;
 				//if(newscale < 0.1) newscale = 0.1;
-
 		
 				//if(newscale > 25.0) newscale = 25.0;
 				//if(newscale > 25.0) newscale = 25.0;				
