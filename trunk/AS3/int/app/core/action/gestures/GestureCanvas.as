@@ -1,10 +1,10 @@
 ﻿package app.core.action.gestures {	
 public class GestureCanvas extends Sprite {				
-public function GestureCanvas(s:DisplayObjectContainer) {
+public function GestureCanvas(s:DisplayObjectContainer, xml_url:String) {
 trace("Construct ~ GestureCanvas.as");			
 			thestage = s.stage;			
 			var loader:URLLoader = new URLLoader();	
-			var request:URLRequest = new URLRequest("Dictionary.xml");
+			var request:URLRequest = new URLRequest(xml_url);
 			loader.addEventListener(Event.COMPLETE, dataLoaded);		
             try {loader.load(request);} 
             catch (error:Error) {trace("Unabled to locate your gesture definition file (dictionary.xml)");

@@ -15,8 +15,14 @@
 			if(TUIO.debugMode){
 			// Draw us the lil' circle
 			graphics.beginFill(0xFF00FF , 1);
+		
 			//graphics.beginFill(color , 1);	
-			graphics.drawCircle(-5 , -5, 10);
+			graphics.drawCircle(0 ,0, 10);	
+			graphics.lineStyle( 1, 0x000000 );
+			graphics.moveTo( 0, -6 );
+			graphics.lineTo( 0, 6 );
+			graphics.moveTo( -6, 0 );
+			graphics.lineTo( 6, 0 );
 			graphics.endFill();
 				// Add textfield for debugging, shows the cursor id
 			if (debugText != '' || debugText != null)
@@ -34,7 +40,7 @@
 				DEBUG_TEXT.text = '';
 				DEBUG_TEXT.appendText(' '+debugText+'  ');
 				
-				DEBUG_TEXT.x = 8;
+				DEBUG_TEXT.x = 12;
 				DEBUG_TEXT.y = -13;  
 				
 				addChild(DEBUG_TEXT);

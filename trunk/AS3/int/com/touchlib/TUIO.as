@@ -370,6 +370,7 @@ import flash.events.MouseEvent;
 					if(debugMode)
 					{
 						debugText.appendText("  " + (i + 1) +" - " +objectArray[i].ID + "  X:" + int(objectArray[i].x) + "  Y:" + int(objectArray[i].y) + "  \n");
+						trace('area: '+int(objectArray[i].area));
 						debugText.x = thestage.stageWidth-160;
 						debugText.y = 40;		
 					}
