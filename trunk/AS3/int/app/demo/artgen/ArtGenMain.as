@@ -189,8 +189,6 @@ package app.demo.artgen
 		{
 			for(var i:int = 0; i<aSwarms.length; i++)
 			{			
-				
-
 				aSwarms[i].track();
 				aSwarms[i].draw();
 			}
@@ -199,7 +197,6 @@ package app.demo.artgen
 		
 		public override function handleBlobCreated(id:int, mx:Number, my:Number)
 		{
-			trace("Blob created "+ id);
 			var swarm:Swarm;
 			swarm = new Swarm(id, mx, my);
 			layerHolder.addChild(swarm);
@@ -227,7 +224,6 @@ package app.demo.artgen
 
 		public override function handleMoveEvent(id:int, mx:Number, my:Number)
 		{
-			trace("Blob moved "+ id);			
 			for(var i:int = 0; i<aSwarms.length; i++)
 			{
 				if(aSwarms[i].id == id)

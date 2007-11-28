@@ -143,6 +143,10 @@ import flash.events.MouseEvent;
 		
 		public static function getObjectById(id:Number): TUIOObject
 		{
+			if(id == 0)
+			{
+				return new TUIOObject("mouse", 0, thestage.mouseX, thestage.mouseY, 0, 0, 0, 0, 10, 10, null);
+			}
 			for(var i=0; i<objectArray.length; i++)
 			{
 				if(objectArray[i].ID == id)

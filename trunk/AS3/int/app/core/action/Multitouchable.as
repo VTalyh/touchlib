@@ -9,7 +9,7 @@ package app.core.action
 	import com.touchlib.*;		
 	import flash.geom.Point;
 	
-	public class Multitouchable extends Sprite
+	public class Multitouchable extends MovieClip
 	{
 		protected var blobs:Array;		// blobs we are currently interacting with			
 		
@@ -25,7 +25,7 @@ package app.core.action
 			
 			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler, false, 0, true);
 			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownHandler, false, 0, true);			
-			this.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpHandler, false, 0, true);						
+			this.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpHandler, false, 0, true);
 		}
 
 		function idExists(id:int):Boolean
@@ -45,12 +45,15 @@ package app.core.action
 			{
 				if(blobs[i].id == id)
 				{
-					handleBlobCreated(id, origX, origY);
+					// blob exists.
 					return;
 				}
 			}
 
-			blobs.push( {id: id, clicked:c, origX: origX, origY:origY, clicked:c} );
+			trace("Creating new blob " + id + " " + origX + " " + origY);
+			blobs.push( {id: id, clicked:c, origX: origX, origY:origY, clicked:c, history:new Array(new Point(origX, origY)), dX:0.0, dY:0.0} );
+			
+			handleBlobCreated(id, origX, origY);			
 		}
 		
 		function removeBlob(id:int):void
@@ -59,12 +62,36 @@ package app.core.action
 			{
 				if(blobs[i].id == id) 
 				{
+					trace("blob removed " + id);										
 					blobs.splice(i, 1);		
 					handleBlobRemoved(id);					
+
 					return;
 				}
 			}
 		}	
+		
+		private function updateBlob(id:int, origX:Number, origY:Number):void
+		{
+			for(var i:int = 0; i<blobs.length; i++)
+			{
+				if(blobs[i].id == id) 
+				{
+					blobs[i].history.push(new Point(origX, origY));
+					if(blobs[i].history.length >= 2)
+					{
+						var len:int = blobs[i].history.length;
+						blobs[i].dX = blobs[i].history[len-1].x - blobs[i].history[len-2].x;
+						blobs[i].dY = blobs[i].history[len-1].y - blobs[i].history[len-2].y;						
+//						trace("X: " + blobs[i].history[len-1].x + "," + blobs[i].history[len-2].x);
+						//trace("DELTA : " + blobs[i].dX + "," + blobs[i].dY);
+					}
+					
+//					trace(blobs[i].history.length);
+					return;
+				}
+			}
+		}			
 		
 		function getBlobInfo(id:int):Object
 		{
@@ -72,7 +99,6 @@ package app.core.action
 			{
 				if(blobs[i].id == id)
 					return blobs[i];
-
 			}			
 			
 			return null;
@@ -80,7 +106,6 @@ package app.core.action
 		
 		public function downHandler(e:TUIOEvent):void
 		{
-		
 			if(e.stageX == 0 && e.stageY == 0)
 				return;			
 				
@@ -93,7 +118,7 @@ package app.core.action
 			handleDownEvent(e.ID, curPt.x, curPt.y);
 			e.stopPropagation();			
 		}
-		
+
 		
 		public function upHandler(e:TUIOEvent):void
 		{
@@ -107,15 +132,17 @@ package app.core.action
 			if(e.stageX == 0 && e.stageY == 0)
 				return;			
 			
+			var curPt:Point = parent.globalToLocal(new Point(e.stageX, e.stageY));															
+			
 			if(!idExists(e.ID))
 			{
 				trace("Error, shouldn't this blob already be in the list?");
 				//TUIO.listenForObject(e.ID, this);			
-				addBlob(e.ID);
-
+				addBlob(e.ID, curPt.x, curPt.y, false);
+			} else {
+				updateBlob(e.ID, curPt.x, curPt.y);				
 			}
 			
-			var curPt:Point = parent.globalToLocal(new Point(e.stageX, e.stageY));																	
 			handleMoveEvent(e.ID, curPt.x, curPt.y);			
 			
 			e.stopPropagation();						
@@ -124,27 +151,36 @@ package app.core.action
 		public function mouseDownHandler(e:MouseEvent):void
 		{
 			trace("Mouse down");
-			addBlob(0, e.localX, e.localY, true);
+			var curPt:Point = parent.globalToLocal(new Point(e.stageX, e.stageY));			
+			addBlob(0, curPt.x, curPt.y, true);
 			
-			handleDownEvent(0, e.localX, e.localY);
+			handleDownEvent(0, curPt.x, curPt.y);
+			
+			e.stopPropagation();					
 		}
 		
 		public function mouseMoveHandler(e:MouseEvent):void
 		{
+			var curPt:Point = parent.globalToLocal(new Point(e.stageX, e.stageY));						
+			
 			if(!idExists(0))
 			{
-				trace("Error, shouldn't this blob already be in the list?");
-				addBlob(0, e.localX, e.localY, false);
-			}			
+				return;				
+			} else {
+				updateBlob(0, curPt.x, curPt.y);				
+			}
 			
+			handleMoveEvent(0, curPt.x, curPt.y);
 			
-			handleMoveEvent(0, e.localX, e.localY);
+			e.stopPropagation();
 		}		
 		
 		public function mouseUpHandler(e:MouseEvent):void
 		{
 			handleUpEvent(0);
-			removeBlob(0);			
+			removeBlob(0);
+			
+			e.stopPropagation();	
 		}		
 		
 		public function rollOverHandler(e:TUIOEvent):void
@@ -159,7 +195,6 @@ package app.core.action
 				TUIO.listenForObject(e.ID, this);			
 				addBlob(e.ID, curPt.x, curPt.y, false);
 			}
-			
 
 			handleRollOverEvent(e.ID, curPt.x, curPt.y);			
 			
@@ -170,7 +205,6 @@ package app.core.action
 		{
 			if(e.stageX == 0 && e.stageY == 0)
 				return;			
-				
 		
 		// FIXME: only remove if not clicked?
 			var curPt:Point = parent.globalToLocal(new Point(e.stageX, e.stageY));												
@@ -181,6 +215,9 @@ package app.core.action
 			
 			e.stopPropagation();									
 		}		
+		
+		
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		/* override these events */
 		
@@ -202,7 +239,7 @@ package app.core.action
 		
 		public function handleRollOverEvent(id:int, mx:Number, my:Number)
 		{
-		}		
+		}
 		
 		public function handleRollOutEvent(id:int, mx:Number, my:Number)
 		{
@@ -210,6 +247,7 @@ package app.core.action
 
 		public function handleMoveEvent(id:int, mx:Number, my:Number)
 		{
+//			trace("Handle move event");
 		}
 	}
 }

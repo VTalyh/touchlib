@@ -16,7 +16,7 @@ package app.demo.appLoader
 	import flash.geom.*;
 	import app.demo.appLoader.*;
 	import app.core.element.*;
-	import flash.system.fscommand;	
+	import flash.system.fscommand;
 
 	// fixme: read apps, categories from XML
 	
