@@ -67,8 +67,8 @@
 			
 			video1.x = -video1.width/2;
 			video1.y = -video1.height/2;
-			video1.scaleX = 1.0;
-			video1.scaleY = 1.0;
+			//video1.scaleX = 1.0;
+			//video1.scaleY = 1.0;
 
 			border.x = video1.x-border_size;
 			border.y = video1.y-border_size;

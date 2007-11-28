@@ -146,9 +146,6 @@
 			//boxHolder.rotation = TKnob.knobValue*360;
 			//trace(TSlider.sliderValue);
 			//boxHolder.x = TSliderH.sliderValue*800;
-		}
-		
-		
-		
+		}				
 	}
 }
