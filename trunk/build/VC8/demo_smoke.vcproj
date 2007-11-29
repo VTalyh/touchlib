@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="8,00"
 	Name="demo_smoke"
 	ProjectGUID="{DDCFF849-ABEF-4634-B572-CA0E1D0A3FDA}"
 	RootNamespace="demo_smoke"
@@ -211,10 +211,6 @@
 			>
 			<File
 				RelativePath="..\..\demos\smoke\fluid2d.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\demos\smoke\glut.h"
 				>
 			</File>
 			<File

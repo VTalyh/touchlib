@@ -16,6 +16,7 @@
 #include "HighpassFilter.h"
 #include "InvertFilter.h"
 #include "ScalerFilter.h"
+#include "CropFilter.h"
 #include "SimpleHighpassFilter.h"
 #include "ThresholdFilter.h"
 
@@ -59,6 +60,8 @@ Filter *FilterFactory::createFilter(const char *type, const char *label)
 		newFilter = (Filter *)new BackgroundFilter((char*)label);
 	} else if(strcmp(type, "resize") == 0) {
 		newFilter = (Filter *)new ResizeFilter((char*)label);
+	} else if(strcmp(type, "crop") == 0) {
+		newFilter = (Filter *)new CropFilter((char*)label);
 	} else if (strcmp(type, "threshold") == 0) {
 		newFilter = (Filter *) new ThresholdFilter((char *) label);
 	} else {
