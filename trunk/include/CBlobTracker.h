@@ -27,6 +27,7 @@ namespace touchlib
 		{
 			area = 0.0f;
 			weight = 0.0f;
+			tagID = 0;
 		}
 		vector2df center;
 		float area;
@@ -56,6 +57,7 @@ namespace touchlib
 			ID = -1;
 			markedForDeletion = false;
 			framesLeft = 0;
+
 		}
 
 		CFinger(const CBlob &b)
@@ -65,6 +67,7 @@ namespace touchlib
 			area = b.area;
 			box = b.box;
 			angle = b.angle;
+			tagID = b.tagID;
 		}
 
 		int getLowestError()

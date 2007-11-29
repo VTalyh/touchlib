@@ -34,7 +34,7 @@ import flash.events.MouseEvent;
 		//static var debugToggle:TextField;
 		static var recordedXML:XML;
 		static var bRecording:Boolean = false;
-		//static var xmlPlaybackURL:String = "www/xml/test.xml"; 
+		//static var xmlPlaybackURL:String = "www/xml/tableData.xml"; 
 		static var xmlPlaybackURL:String = ""; 
 		static var xmlPlaybackLoader:URLLoader;
 		static var playbackXML:XML;
@@ -51,6 +51,7 @@ import flash.events.MouseEvent;
 			FLOSCSocketPort=port;			
 			bInitialized = true;
 			thestage = s.stage;
+			xmlPlaybackURL = debugXMLFile;
 			
 			//thestage.displayState = StageDisplayState.FULL_SCREEN;
 			thestage.align = "TL";
@@ -216,6 +217,10 @@ import flash.events.MouseEvent;
 					
 					if(node.@NAME == "/tuio/2Dobj")
 					{
+						/*
+						
+						// fixme: ensure everything is working properly here.
+						
 						type = node.ARGUMENT[0].@VALUE;				
 						if(type == "set")
 						{
@@ -278,6 +283,7 @@ import flash.events.MouseEvent;
 
 		
 						}
+						*/
 						
 					} else if(node.@NAME == "/tuio/2Dcur")
 					{
@@ -285,19 +291,34 @@ import flash.events.MouseEvent;
 						type = node.ARGUMENT[0].@VALUE;				
 						if(type == "set")
 						{
-							var id = node.ARGUMENT[1].@VALUE;
-							var x = Number(node.ARGUMENT[2].@VALUE) * thestage.stageWidth;
-							var y = Number(node.ARGUMENT[3].@VALUE) *  thestage.stageHeight;
-							var X = Number(node.ARGUMENT[4].@VALUE);
-							var Y = Number(node.ARGUMENT[5].@VALUE);
-							var m = Number(node.ARGUMENT[6].@VALUE);
-							var wd:Number=0.0, ht:Number = 0.0;
+							var x:Number,
+								y:Number,
+								X:Number,
+								Y:Number,
+								m:Number,
+								wd:Number = 0, 
+								ht:Number = 0;
+							try 
+							{
+								id = node.ARGUMENT[1].@VALUE;
+								x = Number(node.ARGUMENT[2].@VALUE) * thestage.stageWidth;
+								y = Number(node.ARGUMENT[3].@VALUE) *  thestage.stageHeight;
+								X = Number(node.ARGUMENT[4].@VALUE);
+								Y = Number(node.ARGUMENT[5].@VALUE);
+								m = Number(node.ARGUMENT[6].@VALUE);
+						
+
+								if(node.ARGUMENT[7])
+									wd = Number(node.ARGUMENT[7].@VALUE) * thestage.stageWidth;							
+								
+								if(node.ARGUMENT[8])
+									ht = Number(node.ARGUMENT[8].@VALUE) * thestage.stageHeight;
+							} catch (e)
+							{
+								trace("Error parsing");
+							}
 							
-							if(node.ARGUMENT[7])
-								wd = Number(node.ARGUMENT[7].@VALUE) * thestage.stageWidth;							
-							
-							if(node.ARGUMENT[8])
-								ht = Number(node.ARGUMENT[8].@VALUE) * thestage.stageHeight;
+							trace("Blob : ("+id + ")" + x + " " + y + " " + wd + " " + ht);
 							
 							var stagePoint:Point = new Point(x,y);					
 							var displayObjArray:Array = thestage.getObjectsUnderPoint(stagePoint);
@@ -341,11 +362,11 @@ import flash.events.MouseEvent;
 								if(tuioobj.obj && tuioobj.obj.parent)
 								{							
 									var localPoint:Point = tuioobj.obj.parent.globalToLocal(stagePoint);							
-									tuioobj.obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_MOVE, true, false, x, y, localPoint.x, localPoint.y, tuioobj.oldX, tuioobj.oldY, tuioobj.obj, false,false,false, true, m, "2Dobj", id, sID, a));
+									tuioobj.obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_MOVE, true, false, x, y, localPoint.x, localPoint.y, tuioobj.oldX, tuioobj.oldY, tuioobj.obj, false,false,false, true, m, "2Dcur", id, 0, 0));
 								}
 							} catch (e)
 							{
-								trace("Dispatch event failed " + tuioobj.name);
+								trace("(" + e + ")Dispatch event failed " + tuioobj.ID);
 							}
 
 	

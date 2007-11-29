@@ -169,6 +169,8 @@ void CBlobTracker::findBlobs_contour(BwImage &img, BwImage &label_img)
 
 				if(cont->v_next)
 					blob.tagID = getTag(cont->v_next);
+				else
+					blob.tagID = 0;
 
 				printf("Square Detected %d\n", blob.tagID);
 

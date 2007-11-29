@@ -150,6 +150,7 @@ public:
 					float m = sqrtf((d.dX*d.dX) + (d.dY*d.dY));
 					float area = d.area;
 				//	printf(d.area);
+				//	printf("%d\n", d.tagID);
 					if(!(d.X == 0 && d.Y == 0)) {
 						if(d.tagID == 0)
 						{

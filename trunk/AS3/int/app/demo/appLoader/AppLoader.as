@@ -43,7 +43,7 @@ package app.demo.appLoader
 			selectedButton = null;
 			appButtons = new Array();
 			
-			TUIO.init( this, 'localhost', 3000, '', false );
+			TUIO.init( this, '127.0.0.1', 3000, '', false );
 			
 			xmlLoader = new URLLoader();
 			xmlLoader.addEventListener(Event.COMPLETE, this.xmlLoaded, false, 0, true); 			
