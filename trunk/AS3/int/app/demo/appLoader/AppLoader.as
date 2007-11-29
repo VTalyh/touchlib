@@ -141,7 +141,7 @@ package app.demo.appLoader
 			var tuioobj:TUIOObject = TUIO.getObjectById(e.ID);							
 			
 			var localPt:Point = parent.globalToLocal(new Point(tuioobj.x, tuioobj.y));														
-			createParticles(5, localPt.x, localPt.y);			
+			createParticles(1, localPt.x, localPt.y);			
 		}
 		function tuioUpEvent(e:TUIOEvent)
 		{
@@ -159,7 +159,7 @@ package app.demo.appLoader
 		}
 		function mouseDownEvent(e:MouseEvent)
 		{
-			createParticles(5, this.mouseX, this.mouseY);
+			createParticles(1, this.mouseX, this.mouseY);
 
 		}
 		function mouseUpEvent(e:MouseEvent)

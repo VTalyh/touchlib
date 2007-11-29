@@ -68,6 +68,9 @@
 			
 			shapes = new Array();
 			shapes.push("Shape1.swf");
+			shapes.push("Shape2.swf");
+			shapes.push("Shape3.swf");
+			shapes.push("Shape4.swf");
 			
 			modDests = new Array();
 			modDests.push("nothing");

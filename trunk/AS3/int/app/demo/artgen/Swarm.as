@@ -195,7 +195,7 @@
 					t.x = members[i].x;
 					t.y = members[i].y;
 					
-					t.rotation = members[i].rotation; //+ Math.random()*40;
+					t.rotation = members[i].rotation + 180; //+ Math.random()*40;
 	// Math.atan2(members[i].vel.x, members[i].vel.y) * 180 / Math.PI;
 					t.scaleX = members[i].scaleX;
 					t.scaleY = members[i].scaleY;
