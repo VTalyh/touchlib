@@ -45,19 +45,15 @@
             ++ _frameNum;
         }
        
-        private function createText():TextField {   
-      
-		
+        private function createText():TextField {  		
             var t:TextField = new TextField();
             t.width = 0;
             t.height = 0;
             t.autoSize = TextFieldAutoSize.LEFT;
             t.selectable = false;
             t.defaultTextFormat = _fmt;
-            t.x = 60;
-            t.y = 5;
+            t.blendMode="invert";
             return t;        
-         
         }
        
         public function set textColor(col:uint):void {
