@@ -328,8 +328,7 @@
 			colorPicker_0.y = 450;			
 			addChild(colorPicker_0);
 			
-			var donebtn:SimpleButton = new DoneButton();				
-			
+			var donebtn:SimpleButton = new DoneButton();					
 			
 			// FIXME: need a cancel button.
 			doneBtnHolder = new TouchlibWrapper(donebtn);
@@ -387,9 +386,7 @@
 			nextCtrl(lfo2Type, 70);
 			nextCtrl(lfo2Rate, 55);
 			nextCtrl(lfo2Dest, 70);
-			nextCtrl(lfo2Amount, 55);	
-			
-			nextCtrl(colorPicker, 55);					
+			nextCtrl(lfo2Amount, 55);			
 			
 			nextCtrl(doneBtnHolder, 55);								
 
