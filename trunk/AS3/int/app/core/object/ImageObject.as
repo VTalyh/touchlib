@@ -17,6 +17,8 @@
 		public var doubleTapEnabled: Boolean;
 		
 		public var swfboard: Loader;
+		
+		private var progressBar:Sprite = new Sprite();	
 		private var clickgrabber:Shape = new Shape();	
 		private var photoBack:Sprite = new Sprite();		
 		private var photoLoader:Loader = null;		
@@ -40,24 +42,25 @@
 			_thisScaleDown=thisScaleDown;
 			mouseSelection=mouseSelect;
 			thisTween=thisTweenX;
-			thisSlide=thisSlideX;
-
-			this.x = 700 * Math.random() - 350;
-			this.y = 700 * Math.random() - 350;	
+			thisSlide=thisSlideX;		
 			
 			doubleTapEnabled = false;		
-			photoLoader = new Loader();
+			photoLoader = new Loader();		
+			photoLoader.contentLoaderInfo.addEventListener( ProgressEvent.PROGRESS, onProgressHandler);	
 			photoLoader.contentLoaderInfo.addEventListener( Event.COMPLETE, arrange, false, 0, true);	
-			photoLoader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, onProgressHandler);
 			var context:LoaderContext = new LoaderContext();
 			context.checkPolicyFile = true;				
 			
+			progressBar.graphics.beginFill(0xFFFFFF,1);
+			progressBar.graphics.drawRect(0, 0, 25, 100);
+			progressBar.graphics.endFill();				
+			    
 			photoBack.graphics.beginFill(0x000000,0.75);
 			photoBack.graphics.drawRect(0, 0, 1,1);
 			photoBack.graphics.endFill();	
 			//photoBack.blendMode = 'invert';				
 			
-			clickgrabber.graphics.beginFill(0xFFFFFF, 0.0);
+			clickgrabber.graphics.beginFill(0xFFFFFF, 1);
 			clickgrabber.graphics.drawRect(0, 0, 1,1);
 			clickgrabber.graphics.endFill();	
 			
@@ -69,28 +72,35 @@
 			//this.addChild( photoLoader );				
 			this.addChild( clickgrabber );
 			this.addChild( photoBack );
-		
+			//this.addChild( progressBar );
+			
 		//	TextObject_0 = new TextObject(url);	
 		//	TextObject_0.noMove=true;		
 		//	TextObject_0.visible=false;		
 		//	this.addChild(TextObject_0);	
 			
 			if(thisSlide){	
-			this.addEventListener(Event.ENTER_FRAME, slide);
+			//this.addEventListener(Event.ENTER_FRAME, slide);
 			}
 		
 		}
-
+		private function onProgressHandler(mProgress:ProgressEvent)
+		{	
+		var percent:Number = -100*(mProgress.target.bytesLoaded/mProgress.target.bytesTotal);
+		//progressBar.alpha=percent;			
+		///trace(percent);
+		}
 		private function arrange( event:Event = null ):void 
-		{						
-				
+		{							
+			Tweener.addTween(clickgrabber, {alpha:0, time:1, transition:"easeinoutquad"});	
+			//removeChild(progressBar);	
 			//this.x = 0;
 			//this.y = 0;	
 			this.scaleX = 0;
 			this.scaleY =0;	
 			this.alpha = 1;
-			this.rotation =  Math.random()*180 - 90;	
-			
+			this.rotation =  Math.random()*180 - 90;				
+	
 			photoLoader.x = -photoLoader.width/2;
 			photoLoader.y = -photoLoader.height/2;			
 			photoLoader.scaleX = 1.0;
@@ -111,10 +121,7 @@
 		//	TextObject_0.scaleX = 0.20;
 		//	TextObject_0.scaleY = 0.20;	
 		//	TextObject_0.x=0;	
-		//	TextObject_0.y=photoLoader.height/2+15;	
-		
-		
- 			
+		//	TextObject_0.y=photoLoader.height/2+15;	 			
 			
 		if(thisTween){						
 			var targetX:int = this.x;	
@@ -122,16 +129,22 @@
 			var targetRotation:int = Math.random()*180 - 90;	 
 			var targetScale:Number = (Math.random()*0.4) + 0.4;			
 			Tweener.addTween(this, {x:targetX, y:targetY,scaleX: targetScale, scaleY: targetScale, delay:0,time:1, transition:"easeinoutquad"});	
-		}else {			
+		}
+		else {			
+		//random
+		this.scaleX = (Math.random()*0.4) + 0.3;
+		this.scaleY = this.scaleX;
+		this.rotation = Math.random()*180 - 90;
+		this.x = 700 * Math.random() - 350;
+		this.y = 700 * Math.random() - 350;	
 		this.alpha = 1.0;
+		
+		//static
 		this.scaleX = 0.5;
 		this.scaleY = 0.5;	
-		this.rotation = 0;
-		//this.scaleX = (Math.random()*0.4) + 0.3;
-		//this.scaleY = this.scaleX;
-		//this.rotation = Math.random()*180 - 90;
-		this.x = 0;
-	    this.y = 0;	
+		//this.rotation = 0;		
+		//this.x = 0;
+	    //this.y = 0;	
 		}  
 			
 		 var image:Bitmap = Bitmap(photoLoader.content);
@@ -169,11 +182,7 @@
 		//	mc['stack1'].addEventListener(MouseEvent.CLICK, MouseDownKey);
 		}
 		
-		private function onProgressHandler(mProgress:ProgressEvent)
-		{
-		var percent:Number = mProgress.bytesLoaded/mProgress.bytesTotal;
-		trace(percent*100+"%");
-		}
+
 		
 		public function MouseDownKey(e:Event) {					
 			trace('target parent :'+e.target.parent.parent.parent.parent.parent.name);

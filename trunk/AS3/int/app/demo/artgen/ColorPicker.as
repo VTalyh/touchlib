@@ -22,7 +22,7 @@ package app.demo.artgen
 			imgLoader.contentLoaderInfo.addEventListener( Event.COMPLETE, onCompleteHandler, false, 0, true);	
 			var context:LoaderContext = new LoaderContext();
 			context.checkPolicyFile = true;		
-			var request:URLRequest = new URLRequest( "color.png" );			
+			var request:URLRequest = new URLRequest( "www/img/color.png" );			
 			imgLoader.unload();
 			imgLoader.load( request , context);			
 	
@@ -43,17 +43,3 @@ package app.demo.artgen
 		}
 	}
 }
-
-/*          
-import flash.display.BitmapData;
-import flash.geom.ColorTransform;
-var separateByPixels:BitmapData = new BitmapData(img._width, img._height, false);
-separateByPixels.draw(img);
-function setThumbColor(i) {
-	var thumbColorTransform:ColorTransform = new ColorTransform();
-	thumbColorTransform.rgb = i;
-	your_thumb.transform.colorTransform = thumbColorTransform;
-}
-function onMouseDown(){
-	setThumbColor(separateByPixels.getPixel(img._xmouse, img._ymouse));
-}*/
