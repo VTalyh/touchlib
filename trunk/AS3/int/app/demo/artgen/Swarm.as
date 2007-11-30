@@ -24,6 +24,10 @@
 		
 		public var trackPt:Point;
 		
+		private var r:Number;
+		private var g:Number;
+		private var b:Number;
+		
 
 		public function Swarm(i:int, ix:Number, iy:Number) 
 		{
@@ -61,6 +65,10 @@
 		{
 			// fixme: clear membmers.. 
 			clear();
+			
+
+			
+			trace("r" + r + " b" + b + " g" + g);
 			
 			waitCount = data.trail.createDelay;
 			trace("www/shapes/" + data.shape);
@@ -199,7 +207,10 @@
 	// Math.atan2(members[i].vel.x, members[i].vel.y) * 180 / Math.PI;
 					t.scaleX = members[i].scaleX;
 					t.scaleY = members[i].scaleY;
-					t.alpha = members[i].alpha;
+					t.transform.colorTransform.alphaMultiplier = members[i].alpha;
+					t.transform.colorTransform.redMultiplier = r;
+					t.transform.colorTransform.greenMultiplier = g;					
+					t.transform.colorTransform.blueMultiplier = b;					
 					drawingCanvas.addChild(t);
 					t = null;
 				}

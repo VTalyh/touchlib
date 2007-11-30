@@ -8,6 +8,7 @@
 	import flash.geom.Point;
 	import flash.ui.Keyboard;
 	import flash.text.*;
+	import flash.geom.*;
 	
 	public class SettingsDialog extends MovieClip 
 	{
@@ -39,6 +40,7 @@
 		private var lfo2Dest:ScrollList;
 		private var lfo2Amount:HorizontalSlider;				
 		
+		private var colorPicker_0:ColorPicker;
 	
 		private var settings:XML;
 		private var main:ArtGenMain;
@@ -323,7 +325,7 @@
 			lfo2Amount.setValue(settings.modulators.modulator[1].amount);
 			addChild(lfo2Amount);																		
 			
-			var colorPicker_0 = new ColorPicker();
+			colorPicker_0 = new ColorPicker();
 			colorPicker_0.x = 600;
 			colorPicker_0.y = 450;			
 			addChild(colorPicker_0);
@@ -388,6 +390,8 @@
 			nextCtrl(lfo2Dest, 70);
 			nextCtrl(lfo2Amount, 55);			
 			
+			nextCtrl(colorPicker_0, 300);						
+			
 			nextCtrl(doneBtnHolder, 55);								
 
 		}
@@ -419,7 +423,7 @@
 			settings.modulators.modulator[1].rate = lfo2Rate.getValue()*20.0;			
 			settings.modulators.modulator[1].dest = lfo2Dest.getSelected();			
 			settings.modulators.modulator[1].amount = lfo2Amount.getValue();			
-			
+			settings.color = colorPicker_0.color;
 			return settings;
 		}
 	}

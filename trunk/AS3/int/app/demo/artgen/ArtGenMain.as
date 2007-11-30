@@ -20,8 +20,8 @@ package app.demo.artgen
 	import app.core.element.*;
 	import app.core.action.Multitouchable;	
 	import flash.events.*;
-	import flash.geom.Point;
 	import flash.ui.Keyboard;
+	import flash.geom.*;
 	
 	public class ArtGenMain extends Multitouchable 
 	{		
@@ -43,6 +43,10 @@ package app.demo.artgen
 			
 			var spr:Sprite = new Sprite();
 			curLayer = spr;
+			
+//			var t:ColorTransform = new ColorTransform(1.0, 0.2, 0.2);
+//			curLayer.transform.colorTransform = t;			
+			
 			layers.push(spr);
 			layerHolder.addChild(spr);
 			
@@ -53,7 +57,8 @@ package app.demo.artgen
 							<numMembers>2</numMembers>
 							<shape>Shape1.swf</shape>
 							<scale>0.5</scale>
-							<alpha>0.5</alpha>								
+							<alpha>0.5</alpha>			
+							<color>255</color>
 							<algorithm>
 								<speed>10</speed>
 								<turnRate>4</turnRate>
@@ -111,6 +116,16 @@ package app.demo.artgen
 		function applySettings()
 		{
 			settings = dialog.getXML();
+			
+			var color:int = settings.color;
+			var r:Number = Number(color >> 16) / 255.0;
+			var g:Number = Number((color & 0xff00) >> 8) / 255.0;
+			var b:Number = Number(color & 0xff) / 255.0;			
+			
+			var t:ColorTransform = new ColorTransform(r, g, b);
+			curLayer.transform.colorTransform = t;					
+			
+			
 			/*
 			for(var i:int = 0; i<aSwarms.length; i++)
 			{
@@ -160,11 +175,21 @@ package app.demo.artgen
 			
 			var spr:Sprite = new Sprite();
 			curLayer = spr;
+			
+			
+			var color:int = settings.color;
+			var r:Number = Number(color >> 16) / 255.0;
+			var g:Number = Number((color & 0xff00) >> 8) / 255.0;
+			var b:Number = Number(color & 0xff) / 255.0;			
+			
+			var t:ColorTransform = new ColorTransform(r, g, b);
+			curLayer.transform.colorTransform = t;
+			
+			
 			layers.push(spr);			
 			layerHolder.addChild(spr);
 							
-		
-			swapChildren(spr, swarm);		// make sure swarm is on top.. 
+	
 			
 		}
 		
