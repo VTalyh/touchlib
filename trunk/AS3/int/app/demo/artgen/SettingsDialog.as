@@ -71,6 +71,17 @@
 			shapes.push("Shape2.swf");
 			shapes.push("Shape3.swf");
 			shapes.push("Shape4.swf");
+			shapes.push("Shape5.swf");
+			shapes.push("Shape6.swf");
+			shapes.push("Shape7.swf");
+			shapes.push("Shape8.swf");
+			shapes.push("Shape9.swf");
+			shapes.push("Shape10.swf");	
+			shapes.push("Shape11.swf");	
+			shapes.push("Shape12.swf");	
+			shapes.push("Shape13.swf");	
+			shapes.push("Shape14.swf");				
+			
 			
 			modDests = new Array();
 			modDests.push("nothing");
