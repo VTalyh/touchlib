@@ -32,8 +32,7 @@ package app.demo.artgen
 			context.checkPolicyFile = true;		
 			var request:URLRequest = new URLRequest( "www/img/color.png" );			
 			imgLoader.unload();
-			imgLoader.load( request, context);	
-			
+			imgLoader.load( request, context);			
 			label = new TextField();
 		}	
 		function onCompleteHandler(event:Event = null){
@@ -51,6 +50,7 @@ package app.demo.artgen
 			selectedSpr.graphics.lineTo(5, 0);			
 			selectedSpr.graphics.moveTo(0, -5);
 			selectedSpr.graphics.lineTo(0, 5);	
+			selectedSpr.blendMode='invert';
 			
 			
 			addChild(sampleSprite);		
@@ -62,7 +62,8 @@ package app.demo.artgen
 		{
 			trace(mx + "," + my);
 			// FIXME: why is this?
-			color  = separateByPixels.getPixel(mx- this.x, my-this.y)			
+			color  = separateByPixels.getPixel(mx- this.x, my-this.y);
+			trace(color.toString(16).toUpperCase());
 			r = color >> 16;
 			g = (color & 0xff00) >> 8;
 			b = color & 0xff;
