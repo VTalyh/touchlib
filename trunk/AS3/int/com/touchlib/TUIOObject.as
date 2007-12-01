@@ -8,7 +8,6 @@
 	//import flash.utils.Timer;
 	//import flash.events.MouseEvent;
 	//import flash.events.Event;
-	import app.core.utl.ColorUtil;
 
 	public class TUIOObject 
 	{
@@ -58,10 +57,9 @@
 			height = ht;
 			width = wd;
 			area = ht * wd;
-		
-			color = ColorUtil.random(0,0,0);
 							
-			spr = new TUIOCursor(ID.toString(),color, area);			
+			spr = new TUIOCursor(ID.toString(),0xFFFFFF, area);			
+			
 			spr.x = x;
 			spr.y = y;  		
 			
@@ -171,11 +169,12 @@
 		
 		public function notifyMoved()
 		{
-			var localPoint:Point;
+			var localPoint:Point;	
+			trace("Notify moved");
 			for(var i:int=0; i<aListeners.length; i++)
-			{
-				//trace("Notify moved");
-				localPoint = aListeners[i].parent.globalToLocal(new Point(x, y));				
+			{			
+				localPoint = aListeners[i].parent.globalToLocal(new Point(x, y));			
+				trace("Notify moved"+ localPoint);			
 				aListeners[i].dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_MOVE, true, false, x, y, localPoint.x, localPoint.y, 0, 0, aListeners[i], false,false,false, true, 0, TUIOClass, ID, sID, angle));								
 			}			
 		}
