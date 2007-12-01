@@ -20,11 +20,11 @@
 		public var dX:Number;
 		public var dY:Number;				
 		
-		public var area:Number = 0;
-		public var height:Number = 0;
+		public var area:Number = 0;	
 		public var width:Number = 0;
+		public var height:Number = 0;	
 		
-		public var TUIOClass:String;		// cur or Obj.. 
+		public var TUIOClass:String;
 		public var sID:int;
 		public var ID:int;
 		public var angle:Number;		
@@ -53,12 +53,12 @@
 			dY = dy;
 			sID = sid;
 			angle = ang;
-			isAlive = true;
-			height = ht;
+			isAlive = true;			
 			width = wd;
+			height = ht;
 			area = ht * wd;
-							
-			spr = new TUIOCursor(ID.toString(),0xFFFFFF, area);			
+																			//hack here because no proper width is passed?
+			spr = new TUIOCursor(ID.toString(),0xFFFFFF, int(area/-100000), int(ht/10000), int(ht/10000));			
 			
 			spr.x = x;
 			spr.y = y;  		
@@ -147,9 +147,7 @@
 		
 		public function kill()
 		{
-			//trace("Die " + ID);			
-			var localPoint:Point;
-			
+			var localPoint:Point;			
 			if(obj && obj.parent)
 			{				
 				localPoint = obj.parent.globalToLocal(new Point(x, y));				
@@ -170,7 +168,6 @@
 		public function notifyMoved()
 		{
 			var localPoint:Point;	
-			trace("Notify moved");
 			for(var i:int=0; i<aListeners.length; i++)
 			{			
 				localPoint = aListeners[i].parent.globalToLocal(new Point(x, y));			

@@ -9,13 +9,18 @@
 	{
 		//private var DEBUG_TEXT:TextField;	
 		
-		public function TUIOCursor(debugText:String,color:int,pressure:Number)
+		public function TUIOCursor(debugText:String,color:int,pressure:Number,thewidth:Number, theheight:Number)
 		{
 			super();
 			if(TUIO.debugMode) { 
-			var tmp = pressure/-100000;
 			graphics.lineStyle( 2, 0x000000);
-			graphics.drawCircle(0 ,0, tmp+10);
+			if(pressure >= 0 && pressure != null){			
+			graphics.drawCircle(0 ,0, pressure+10);
+			}
+			else{
+			graphics.drawCircle(0 ,0, 15);
+			}
+			
 		
 			/*//graphics.beginFill(color , 1);	
 			// Draw us the lil' circle
@@ -51,7 +56,15 @@
 		}
 			else
 			{
-			// hide cursor
+			//hide cursor
+			graphics.lineStyle( 1, 0x000000 );
+			//graphics.drawRect((-thewidth/2)-10,(-theheight/2)-10,thewidth+20,theheight+20);
+			trace('--------------------------------------- w:' + width + ' h:' + height);
+			graphics.moveTo( 0, -5 );
+			graphics.lineTo( 0, 5 );
+			graphics.moveTo( -5, 0 );
+			graphics.lineTo( 5, 0 );
+			this.blendMode='invert';
 			}	
 		}		
 	}

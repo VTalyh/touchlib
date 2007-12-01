@@ -1,5 +1,4 @@
 ﻿package com.touchlib {
-	
 import flash.events.DataEvent;
 import flash.events.Event;
 import flash.events.IOErrorEvent;
@@ -9,14 +8,14 @@ import flash.geom.Point;
 import flash.net.URLLoader;
 import flash.net.URLRequest;
 import flash.net.XMLSocket;
-//import flash.system.System;
 import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
-//import flash.events.MouseEvent;
-import flash.display.*;
-import app.core.element.Wrapper;
+import flash.display.Stage;
+import flash.display.Sprite;
+import flash.display.DisplayObjectContainer;
 import flash.events.MouseEvent;
+import app.core.element.Wrapper;
 
 	public class TUIO
 	{
@@ -28,19 +27,16 @@ import flash.events.MouseEvent;
 		static var objectArray:Array;
 		static var idArray:Array;
 		
-		public static var debugMode:Boolean;		
+		static var debugMode:Boolean;		
 		
 		static var debugText:TextField;
-		//static var debugToggle:TextField;
 		static var recordedXML:XML;
-		static var bRecording:Boolean = false;
-		//static var xmlPlaybackURL:String = "www/xml/tableData.xml"; 
+		static var bRecording:Boolean = true;
 		static var xmlPlaybackURL:String = ""; 
 		static var xmlPlaybackLoader:URLLoader;
 		static var playbackXML:XML;
 			
-		static var bInitialized = false;
-		
+		static var bInitialized = false;		
 	
 		public static function init (s:DisplayObjectContainer, host:String, port:Number, debugXMLFile:String, dbug:Boolean = true):void
 		{
@@ -51,9 +47,9 @@ import flash.events.MouseEvent;
 			FLOSCSocketPort=port;			
 			bInitialized = true;
 			thestage = s.stage;
+			
 			xmlPlaybackURL = debugXMLFile;
 			
-			//thestage.displayState = StageDisplayState.FULL_SCREEN;
 			thestage.align = "TL";
 			thestage.scaleMode = "noScale";						
 			
@@ -61,57 +57,53 @@ import flash.events.MouseEvent;
 			idArray = new Array();
 			try
 			{
-			
-				FLOSCSocket = new XMLSocket();
-	
+				FLOSCSocket = new XMLSocket();	
 				FLOSCSocket.addEventListener(Event.CLOSE, closeHandler);
 				FLOSCSocket.addEventListener(Event.CONNECT, connectHandler);
 				FLOSCSocket.addEventListener(DataEvent.DATA, dataHandler);
 				FLOSCSocket.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
 				FLOSCSocket.addEventListener(ProgressEvent.PROGRESS, progressHandler);
-				FLOSCSocket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
-	
+				FLOSCSocket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);	
 				FLOSCSocket.connect(host, port);			
 			
-			} catch (e)
-			{
-			}
+			} catch (e){}
 			
 			if(debugMode)
 			{
-				var format:TextFormat = new TextFormat();
-				debugText = new TextField();
-       			format.font = "Verdana";
-     			format.color = 0xFFFFFF;
-        		format.size = 10;
-        
+				var format:TextFormat = new TextFormat("Verdana", 10, 0xFFFFFF);
+				debugText = new TextField();       
 				debugText.defaultTextFormat = format;
 				debugText.autoSize = TextFieldAutoSize.LEFT;
 				debugText.background = true;	
 				debugText.backgroundColor = 0x000000;	
 				debugText.border = true;	
 				debugText.borderColor = 0x333333;	
-				thestage.addChild( debugText );	
-					
+				thestage.addChild( debugText );						
 				thestage.setChildIndex(debugText, thestage.numChildren-1);	
 		
 				recordedXML = <OSCPackets></OSCPackets>;	
 				
-				var buttonSprite = new Sprite();						
-				buttonSprite.graphics.beginFill(0xFFFFFF,0.25);
-				buttonSprite.graphics.drawRoundRect(0, -10, 50, 60,10);	
-				buttonSprite.addEventListener(MouseEvent.CLICK, toggleDebug);
-				var WrapperObject:Wrapper = new Wrapper(buttonSprite);			
-				thestage.addChild(WrapperObject);					
-				thestage.setChildIndex(WrapperObject, thestage.numChildren-1);	
-				//trace(thestage.numChildren);
+				var debugBtn = new Sprite();						
+				debugBtn.graphics.beginFill(0xFFFFFF,0.25);
+				debugBtn.graphics.drawRect(thestage.stageWidth-210, 0, 200, 65);	
+				debugBtn.addEventListener(MouseEvent.CLICK, toggleDebug);
+				var debugBtnW:Wrapper = new Wrapper(debugBtn);			
+				debugBtnW.y = 20;				
+				thestage.addChildAt(debugBtnW, thestage.numChildren-1);								
+				
+				var recordBtn = new Sprite();						
+				recordBtn.graphics.beginFill(0xFF0000,0.5);
+				recordBtn.graphics.drawRect(thestage.stageWidth-210, 0, 200, 65);	
+				recordBtn.addEventListener(MouseEvent.CLICK, toggleRecord);
+				var recordBtnW:Wrapper = new Wrapper(recordBtn);			
+				recordBtnW.y = 85;				
+				thestage.addChildAt(recordBtnW, thestage.numChildren-1);	
 				
 				 if(xmlPlaybackURL != "")
 				 {
 					xmlPlaybackLoader = new URLLoader();
 					xmlPlaybackLoader.addEventListener("complete", xmlPlaybackLoaded);
-					xmlPlaybackLoader.load(new URLRequest(xmlPlaybackURL));
-			
+					xmlPlaybackLoader.load(new URLRequest(xmlPlaybackURL));			
 					thestage.addEventListener(Event.ENTER_FRAME, frameUpdate);
 				 }
 				
@@ -125,6 +117,7 @@ import flash.events.MouseEvent;
 		private static function xmlPlaybackLoaded(evt:Event) {
 			trace("Loaded xml debug data:");
 			playbackXML = new XML(xmlPlaybackLoader.data);
+			
 		}
 		
 		private static function frameUpdate(evt:Event)
@@ -132,7 +125,6 @@ import flash.events.MouseEvent;
 			if(playbackXML && playbackXML.OSCPACKET && playbackXML.OSCPACKET[0])
 			{
 				processMessage(playbackXML.OSCPACKET[0]);
-
 				delete playbackXML.OSCPACKET[0];
 			}
 		}		
@@ -147,12 +139,10 @@ import flash.events.MouseEvent;
 			{
 				if(objectArray[i].ID == id)
 				{
-					//trace("found " + id);
 					return objectArray[i];
 				}
 			}
-			//trace("Notfound");
-			
+
 			return null;
 		}
 		
@@ -164,7 +154,6 @@ import flash.events.MouseEvent;
 			{
 				tmpObj.addListener(reciever);				
 			}
-
 		}
 		
 		public static function processMessage(msg:XML)
@@ -177,8 +166,7 @@ import flash.events.MouseEvent;
 				if(node.ARGUMENT[0] && node.ARGUMENT[0].@VALUE == "fseq")
 					fseq = node.ARGUMENT[1].@VALUE;					
 			}
-///			trace("fseq = " + fseq);
-
+			
 			for each(node in msg.MESSAGE)
 			{
 				if(node.ARGUMENT[0] && node.ARGUMENT[0].@VALUE == "alive")
@@ -195,12 +183,8 @@ import flash.events.MouseEvent;
 							getObjectById(aliveItem.@VALUE).isAlive = true;
 
 					}   
-					
-					//trace(idArray);
-
 					idArray = newIdArray;
 				}
-
 			}			
 			
 							
@@ -282,7 +266,7 @@ import flash.events.MouseEvent;
 						
 					} else if(node.@NAME == "/tuio/2Dcur")
 					{
-//						trace("2dcur");
+						//trace("2dcur");
 						type = node.ARGUMENT[0].@VALUE;				
 						if(type == "set")
 						{
@@ -369,16 +353,14 @@ import flash.events.MouseEvent;
 					}
 				}
 			}
-			
-
 			if(debugMode)
 			{
 				debugText.text = "";
 				debugText.y = -2000;
-				debugText.x = -2000;	
+				debugText.x = -2000;		
 			}	
 			for (var i=0; i<objectArray.length; i++ )
-			{
+			{	
 				if(objectArray[i].isAlive == false)
 				{
 					objectArray[i].kill();
@@ -388,73 +370,69 @@ import flash.events.MouseEvent;
 
 				} else {
 					if(debugMode)
-					{
-						debugText.appendText("  " + (i + 1) +" - " +objectArray[i].ID + "  X:" + int(objectArray[i].x) + "  Y:" + int(objectArray[i].y) + "  \n");
-						var tmp = (int(objectArray[i].area)/-100000);
+					{	var tmp = (int(objectArray[i].area)/-100000);
 						trace('area: '+tmp);
-						debugText.x = thestage.stageWidth-160;
-						debugText.y = 40;		
+						debugText.appendText("  " + (i + 1) +" - " +objectArray[i].ID + "  X:" + int(objectArray[i].x) + "  Y:" + int(objectArray[i].y) +
+						"  A:" + int(tmp) + "  \n");						
+						debugText.x = thestage.stageWidth-200;
+						debugText.y = 25;	
 					}
 					}
 			}
 		}
-		
-
 		
 		private static function toggleDebug(e:Event)
 		{ 
 			if(!debugMode){
-			debugMode=true;	
-			FLOSCSocket.connect(FLOSCSocketHost, FLOSCSocketPort);
-			//e.target.x=20;
+			debugMode=true;		
+			//FLOSCSocket.connect(FLOSCSocketHost, FLOSCSocketPort);
 			e.target.alpha=1;
 			}
 			else{
 			debugMode=false;
-			FLOSCSocket.connect(FLOSCSocketHost, FLOSCSocketPort);
-			//e.target.x=0;
-			e.target.alpha=0.25;
+			//FLOSCSocket.connect(FLOSCSocketHost, FLOSCSocketPort);
+			e.target.alpha=0.25;	
 			}
-			
-			// show XML
-			//bRecording = false;
-			//debugMode = false;			
-			//debugText.text = recordedXML.toString();
-			trace(recordedXML);
-			//debugText.x = 0;
-			//debugText.y = 0;	
 		}
-		
-        private static function closeHandler(event:Event):void {
-            //trace("closeHandler: " + event);
-        }
-
-        private static function connectHandler(event:Event):void {
-         //   trace("connectHandler: " + event);
-        }
-
-        private static function dataHandler(event:DataEvent):void {
-			
-            //trace("dataHandler: " + event);
-			
+		private static function toggleRecord(e:Event)
+		{ 
+			if(!bRecording){
+			bRecording = true;
+			e.target.alpha=1;				
+			trace('-----------------------------------------------------------------------------------------------------');		
+			trace('-------------------------------------- DEBUG ON  ----------------------------------------------------');
+			trace('-----------------------------------------------------------------------------------------------------');	
+			recordedXML = new XML();	
+			}
+			else{
+			bRecording = false;
+			e.target.alpha=0.25;	
+			trace('-----------------------------------------------------------------------------------------------------');		
+			trace('-------------------------------------- DEBUG OFF ----------------------------------------------------');
+			trace('-----------------------------------------------------------------------------------------------------');	
+			trace(recordedXML);	
+			//recordedXML = new XML();	
+			}
+		}
+        private static function dataHandler(event:DataEvent):void {           			
 			if(bRecording)
-				recordedXML.appendChild( XML(event.data) );
-			
+			recordedXML.appendChild( XML(event.data) );			
 			processMessage(XML(event.data));
-        }
-
+        }     	
+     	private static function connectHandler(event:Event):void {
+            //trace("connectHandler: " + event);
+        }       
         private static function ioErrorHandler(event:IOErrorEvent):void {
-//			thestage.tfDebug.appendText("ioError: " + event + "\n");			
-            trace("ioErrorHandler: " + event);
+            //trace("ioErrorHandler: " + event);
         }
-
         private static function progressHandler(event:ProgressEvent):void {
             //trace("progressHandler loaded:" + event.bytesLoaded + " total: " + event.bytesTotal);
         }
-
+       private static function closeHandler(event:Event):void {
+            //trace("closeHandler: " + event);
+        }
         private static function securityErrorHandler(event:SecurityErrorEvent):void {
-            trace("securityErrorHandler: " + event);
-//			thestage.tfDebug.appendText("securityError: " + event + "\n");			
+            //trace("securityErrorHandler: " + event);
         }
 	}
 }
