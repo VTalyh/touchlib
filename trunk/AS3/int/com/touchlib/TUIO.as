@@ -1,21 +1,25 @@
 ﻿package com.touchlib {
-import flash.events.DataEvent;
-import flash.events.Event;
-import flash.events.IOErrorEvent;
-import flash.events.ProgressEvent;
-import flash.events.SecurityErrorEvent;
-import flash.geom.Point;
-import flash.net.URLLoader;
-import flash.net.URLRequest;
-import flash.net.XMLSocket;
-import flash.text.TextField;
-import flash.text.TextFieldAutoSize;
-import flash.text.TextFormat;
-import flash.display.Stage;
-import flash.display.Sprite;
-import flash.display.DisplayObjectContainer;
-import flash.events.MouseEvent;
-import app.core.element.Wrapper;
+	//import flash.events.*;
+	import flash.net.*;	
+	import flash.events.DataEvent;
+	import flash.events.Event;
+	import flash.events.IOErrorEvent;
+	import flash.events.ProgressEvent;
+	import flash.events.SecurityErrorEvent;
+	import flash.geom.Point;
+	import flash.net.URLLoader;
+	import flash.net.URLRequest;
+	import flash.net.XMLSocket;
+	import flash.text.TextField;
+	import flash.text.TextFieldAutoSize;
+	import flash.text.TextFormat;
+	import flash.display.Stage;
+	import flash.display.Sprite;
+	import flash.display.DisplayObjectContainer;
+	import flash.events.MouseEvent;
+	import app.core.element.Wrapper;   
+	
+	import caurina.transitions.Tweener;
 
 	public class TUIO
 	{
@@ -25,31 +29,42 @@ import app.core.element.Wrapper;
 		
 		static var thestage:Stage;
 		static var objectArray:Array;
-		static var idArray:Array;
+		static var idArray:Array; 					
 		
-		static var debugMode:Boolean;		
-		
-		static var debugText:TextField;
-		static var recordedXML:XML;
-		static var bRecording:Boolean = true;
-		static var xmlPlaybackURL:String = ""; 
+		static var debugText:TextField;		
+	
+		static var xmlPlaybackURL:String; 
 		static var xmlPlaybackLoader:URLLoader;
 		static var playbackXML:XML;
-			
-		static var bInitialized = false;		
-	
+		static var recordedXML:XML;
+		
+		static var bInitialized:Boolean;
+		static var bRecording:Boolean;		
+		static var bPlayback:Boolean;	
+		static var bDebug:Boolean;		
+		
+		private	var myService:NetConnection;
+    	private	var responder:Responder;
+		
 		public static function init (s:DisplayObjectContainer, host:String, port:Number, debugXMLFile:String, dbug:Boolean = true):void
 		{
 			if(bInitialized)
-				return;
-			debugMode = dbug;
+				return;	
+			
 			FLOSCSocketHost=host;			
-			FLOSCSocketPort=port;			
+			FLOSCSocketPort=port;	
+		       
+			myService = new NetConnection();
+			myService.connect("http://touchlib.com/amfphp/gateway.php");
+		
+			bDebug = dbug;				
 			bInitialized = true;
+			bRecording = false;		
+			bPlayback = false;
+						
+			xmlPlaybackURL = "http://touchlib.com/amfphp/services/test.xml";
+			
 			thestage = s.stage;
-			
-			xmlPlaybackURL = debugXMLFile;
-			
 			thestage.align = "TL";
 			thestage.scaleMode = "noScale";						
 			
@@ -68,7 +83,7 @@ import app.core.element.Wrapper;
 			
 			} catch (e){}
 			
-			if(debugMode)
+			if(bDebug)
 			{
 				var format:TextFormat = new TextFormat("Verdana", 10, 0xFFFFFF);
 				debugText = new TextField();       
@@ -84,40 +99,39 @@ import app.core.element.Wrapper;
 				recordedXML = <OSCPackets></OSCPackets>;	
 				
 				var debugBtn = new Sprite();						
-				debugBtn.graphics.beginFill(0xFFFFFF,0.25);
-				debugBtn.graphics.drawRect(thestage.stageWidth-210, 0, 200, 65);	
+				debugBtn.graphics.beginFill(0xFFFFFF);
+				debugBtn.graphics.drawRect(thestage.stageWidth-210, 0, 200, 50);	
 				debugBtn.addEventListener(MouseEvent.CLICK, toggleDebug);
 				var debugBtnW:Wrapper = new Wrapper(debugBtn);			
-				debugBtnW.y = 20;				
+				debugBtnW.alpha = 0.85; debugBtnW.y = 20;				
 				thestage.addChildAt(debugBtnW, thestage.numChildren-1);								
 				
 				var recordBtn = new Sprite();						
-				recordBtn.graphics.beginFill(0xFF0000,0.5);
-				recordBtn.graphics.drawRect(thestage.stageWidth-210, 0, 200, 65);	
+				recordBtn.graphics.beginFill(0xFF0000);
+				recordBtn.graphics.drawRect(thestage.stageWidth-210, 0, 200, 50);	
 				recordBtn.addEventListener(MouseEvent.CLICK, toggleRecord);
 				var recordBtnW:Wrapper = new Wrapper(recordBtn);			
-				recordBtnW.y = 85;				
+				recordBtnW.alpha = 0.25; recordBtnW.y = 70;				
 				thestage.addChildAt(recordBtnW, thestage.numChildren-1);	
 				
-				 if(xmlPlaybackURL != "")
-				 {
-					xmlPlaybackLoader = new URLLoader();
-					xmlPlaybackLoader.addEventListener("complete", xmlPlaybackLoaded);
-					xmlPlaybackLoader.load(new URLRequest(xmlPlaybackURL));			
-					thestage.addEventListener(Event.ENTER_FRAME, frameUpdate);
-				 }
-				
-			} else {
+				var playbackBtn = new Sprite();						
+				playbackBtn.graphics.beginFill(0x00FF00);
+				playbackBtn.graphics.drawRect(thestage.stageWidth-210, 0, 200, 50);	
+				playbackBtn.addEventListener(MouseEvent.CLICK, togglePlayback);
+				var playbackBtnW:Wrapper = new Wrapper(playbackBtn);			
+				playbackBtnW.alpha = 0.25; playbackBtnW.y = 120;				
+				thestage.addChildAt(playbackBtnW, thestage.numChildren-1);				
+			} 
+			else {		
+				recordedXML = new XML();	
 				recordedXML = <OSCPackets></OSCPackets>;
-				bRecording = false;
-			}
-			
+				bRecording = false;			
+			}			
 		}
 
 		private static function xmlPlaybackLoaded(evt:Event) {
-			trace("Loaded xml debug data:");
-			playbackXML = new XML(xmlPlaybackLoader.data);
-			
+			trace("Playing from XML file...");
+			playbackXML = new XML(xmlPlaybackLoader.data);			
 		}
 		
 		private static function frameUpdate(evt:Event)
@@ -346,14 +360,12 @@ import app.core.element.Wrapper;
 							} catch (e)
 							{
 								trace("(" + e + ")Dispatch event failed " + tuioobj.ID);
-							}
-
-	
+							}	
 						}
 					}
 				}
 			}
-			if(debugMode)
+			if(bDebug)
 			{
 				debugText.text = "";
 				debugText.y = -2000;
@@ -369,7 +381,7 @@ import app.core.element.Wrapper;
 					i--;
 
 				} else {
-					if(debugMode)
+					if(bDebug)
 					{	var tmp = (int(objectArray[i].area)/-100000);
 						trace('area: '+tmp);
 						debugText.appendText("  " + (i + 1) +" - " +objectArray[i].ID + "  X:" + int(objectArray[i].x) + "  Y:" + int(objectArray[i].y) +
@@ -383,36 +395,62 @@ import app.core.element.Wrapper;
 		
 		private static function toggleDebug(e:Event)
 		{ 
-			if(!debugMode){
-			debugMode=true;		
-			//FLOSCSocket.connect(FLOSCSocketHost, FLOSCSocketPort);
-			e.target.alpha=1;
+			if(!bDebug){
+			bDebug=true;		
+			FLOSCSocket.connect(FLOSCSocketHost, FLOSCSocketPort);
+			e.target.parent.alpha=0.85;
 			}
 			else{
-			debugMode=false;
-			//FLOSCSocket.connect(FLOSCSocketHost, FLOSCSocketPort);
-			e.target.alpha=0.25;	
+			bDebug=false;
+			FLOSCSocket.connect(FLOSCSocketHost, FLOSCSocketPort);
+			e.target.parent.alpha=0.5;	
 			}
 		}
 		private static function toggleRecord(e:Event)
 		{ 
 			if(!bRecording){
 			bRecording = true;
-			e.target.alpha=1;				
+			e.target.parent.alpha=0.85;			
+			trace(e.target.parent);
 			trace('-----------------------------------------------------------------------------------------------------');		
-			trace('-------------------------------------- DEBUG ON  ----------------------------------------------------');
+			trace('-------------------------------------- Record ON ----------------------------------------------------');
 			trace('-----------------------------------------------------------------------------------------------------');	
-			recordedXML = new XML();	
+			//Clear XML
+			//recordedXML = new XML();		
+			var responder = new Responder(saveSession_Result, onFault);
+			myService.call("touchlib.clearSession", responder);
 			}
 			else{
 			bRecording = false;
-			e.target.alpha=0.25;	
+			e.target.parent.alpha=0.25;
 			trace('-----------------------------------------------------------------------------------------------------');		
-			trace('-------------------------------------- DEBUG OFF ----------------------------------------------------');
+			trace('-------------------------------------- Record OFF ---------------------------------------------------');
 			trace('-----------------------------------------------------------------------------------------------------');	
-			trace(recordedXML);	
-			//recordedXML = new XML();	
+			var responder = new Responder(saveSession_Result, onFault);
+			myService.call("touchlib.saveSession", responder, recordedXML.toXMLString());
+			//trace(recordedXML.toString());		
+			trace('-------------------------------------- Recording END ------------------------------------------------');
 			}
+		}	
+		private static function saveSession_Result(result){	
+		debugText.text = result;
+		trace(result);
+		}
+		private static function onFault(e:Event ){
+		trace("There was a problem: " + e.description);
+		}
+		private static function togglePlayback(e:Event)
+		{ 	
+			if(xmlPlaybackURL != "")
+				 {	
+				 	Tweener.addTween(e.target.parent, {alpha:1, time:0.45, transition:"easeinoutquad"});	
+				 	Tweener.addTween(e.target.parent, {alpha:0.25, delay:0.45,time:0.45, transition:"easeinoutquad"});	
+				 	//e.target.parent.alpha=0.85;	
+					xmlPlaybackLoader = new URLLoader();
+					xmlPlaybackLoader.addEventListener("complete", xmlPlaybackLoaded);
+					xmlPlaybackLoader.load(new URLRequest(xmlPlaybackURL));			
+					thestage.addEventListener(Event.ENTER_FRAME, frameUpdate);
+				 }
 		}
         private static function dataHandler(event:DataEvent):void {           			
 			if(bRecording)

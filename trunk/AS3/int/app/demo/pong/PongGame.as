@@ -5,6 +5,7 @@
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	import com.touchlib.*;
+	import app.core.utl.FPS;
 
 	public class PongGame extends MovieClip
 	{
@@ -27,7 +28,10 @@
 		
 		function PongGame()
 		{	
-		
+			var fps = new FPS();
+			fps.x = fps.y = 50;
+			this.addChild(fps);	
+			
 			TUIO.init( this, 'localhost', 3000, '', true );	
 			var wallHeight:Number = 10;
 			

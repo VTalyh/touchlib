@@ -12,7 +12,7 @@
 		public function TUIOCursor(debugText:String,color:int,pressure:Number,thewidth:Number, theheight:Number)
 		{
 			super();
-			if(TUIO.debugMode) { 
+			if(TUIO.bDebug) { 
 			graphics.lineStyle( 2, 0x000000);
 			if(pressure >= 0 && pressure != null){			
 			graphics.drawCircle(0 ,0, pressure+10);
