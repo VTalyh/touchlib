@@ -2,43 +2,32 @@
 
 	import flash.display.Sprite;
 	import flash.display.DisplayObject;	
-	//import flash.display.InteractiveObject;	
-	//import flash.display.MovieClip;	
 	import flash.geom.Point;
-	//import flash.utils.Timer;
-	//import flash.events.MouseEvent;
-	//import flash.events.Event;
 
 	public class TUIOObject 
 	{
 		public var x:Number;
-		public var y:Number;
-		
+		public var y:Number;		
 		public var oldX:Number;
-		public var oldY:Number;
-		
+		public var oldY:Number;		
 		public var dX:Number;
-		public var dY:Number;				
-		
+		public var dY:Number;		
 		public var area:Number = 0;	
 		public var width:Number = 0;
-		public var height:Number = 0;	
-		
+		public var height:Number = 0;		
 		public var TUIOClass:String;
 		public var sID:int;
 		public var ID:int;
 		public var angle:Number;		
-		public var pressure:Number;
-		
+		public var pressure:Number;		
 		private var isNew:Boolean;
 		public var isAlive:Boolean;		
 		public var obj:Object;
 		public var spr:Sprite;
-		public var trlx:Sprite;
-		
+		public var trlx:Sprite;		
 		public var color:int;
 		
-		var aListeners:Array;
+		private var aListeners:Array;
 
 		public function TUIOObject (cls:String, id:int, px:Number, py:Number, dx:Number, dy:Number, sid:int = -1, ang:Number = 0, ht:Number=0.0, wd:Number=0.0, o:Object = null)
 		{
@@ -57,7 +46,7 @@
 			width = wd;
 			height = ht;
 			area = ht * wd;
-																			//hack here because no proper width is passed?
+
 			spr = new TUIOCursor(ID.toString(),0xFFFFFF, int(area/-100000), int(ht/10000), int(ht/10000));			
 			
 			spr.x = x;
@@ -69,10 +58,6 @@
 			{
 				obj = null;
 			}
-			
-			//trace("Start " + ID + ", " + sID + " (" + int(px) + "," + int(py) + ")");
-			
-
 			
 			isNew = true;
 		}
@@ -89,7 +74,7 @@
 					obj.dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_DOWN, true, false, x, y, localPoint.x, localPoint.y, 0, 0, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));									
 				} catch (e)
 				{
-						trace("Failed : " + e);
+					trace("Failed : " + e);
 //					trace(obj.name);
 					obj = null;
 				}

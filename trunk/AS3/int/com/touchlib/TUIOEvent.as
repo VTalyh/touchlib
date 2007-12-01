@@ -1,7 +1,8 @@
 ﻿package com.touchlib {
-import flash.display.DisplayObject;
-import flash.display.DisplayObjectContainer;
-import flash.events.Event;	
+	
+	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
+	import flash.events.Event;	
 	
 	public class TUIOEvent extends Event
 	{
@@ -38,13 +39,9 @@ import flash.events.Event;
 			this.oldX = oldX;
 			this.oldY = oldY;
 			this.buttonDown = buttonDown;
-			this.relatedObject = relatedObject;
-			
-			super(type, bubbles, cancelable);
-			
-//			super(type, bubbles, cancelable, localX, localY, relatedObject, ctrlKey, altKey, shiftKey, buttonDown, delta);
-			
+			this.relatedObject = relatedObject;			
+			super(type, bubbles, cancelable);			
+			//super(type, bubbles, cancelable, localX, localY, relatedObject, ctrlKey, altKey, shiftKey, buttonDown, delta);	
 		}
-
 	}
 }

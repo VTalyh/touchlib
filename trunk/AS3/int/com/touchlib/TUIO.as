@@ -1,76 +1,65 @@
-﻿package com.touchlib {
-
-	import flash.net.*;	
+﻿package com.touchlib {		
+	
+	import app.core.element.Wrapper;	
+	import flash.display.Stage;
+	import flash.display.Sprite;
+	import flash.display.DisplayObjectContainer;
 	import flash.events.DataEvent;
-	import flash.events.Event;
+	import flash.events.Event;	
+	import flash.events.MouseEvent;
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
 	import flash.events.SecurityErrorEvent;
-	import flash.geom.Point;
+	import flash.geom.Point;	
+	import flash.net.NetConnection;
+	import flash.net.Responder;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.net.XMLSocket;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
-	import flash.text.TextFormat;
-	import flash.display.Stage;
-	import flash.display.Sprite;
-	import flash.display.DisplayObjectContainer;
-	import flash.events.MouseEvent;
-	import app.core.element.Wrapper;   
-	
-	import caurina.transitions.Tweener;
+	import flash.text.TextFormat;	
+	//import caurina.transitions.Tweener;
 
 	public class TUIO
-	{
+	{		
 		static var FLOSCSocket:XMLSocket;		
 		static var FLOSCSocketHost:String;			
-		static var FLOSCSocketPort:Number;	
-		
+		static var FLOSCSocketPort:Number;			
 		static var thestage:Stage;
 		static var objectArray:Array;
-		static var idArray:Array; 					
-		
+		static var idArray:Array; 				
 		static var debugText:TextField;		
-	
 		static var xmlPlaybackURL:String; 
 		static var xmlPlaybackLoader:URLLoader;
 		static var playbackXML:XML;
-		static var recordedXML:XML;
-		
+		static var recordedXML:XML;		
 		static var bInitialized:Boolean;
 		static var bRecording:Boolean;		
 		static var bPlayback:Boolean;	
-		static var bDebug:Boolean;		
-		
-		private	var myService:NetConnection;
-    	private	var responder:Responder;
-		
-		public static function init (s:DisplayObjectContainer, host:String, port:Number, debugXMLFile:String, dbug:Boolean = true):void
-		{
-			if(bInitialized)
-				return;	
-			
-			FLOSCSocketHost=host;			
-			FLOSCSocketPort=port;	
-		       
-			myService = new NetConnection();
-			myService.connect("http://touchlib.com/amfphp/gateway.php");
-			xmlPlaybackURL = "http://touchlib.com/amfphp/services/test.xml";
-			
-			bDebug = dbug;				
-			bInitialized = true;
-			bRecording = false;		
-			bPlayback = false;
-						
-		
+		static var bDebug:Boolean;			
+		static var myService:NetConnection;
+    	static var responder:Responder;
+    	
+	public static function init (s:DisplayObjectContainer, host:String, port:Number, debugXMLFile:String, dbug:Boolean = true):void
+	{
+			if(bInitialized){return;}	
 			
 			thestage = s.stage;
 			thestage.align = "TL";
-			thestage.scaleMode = "noScale";						
-			
+			thestage.scaleMode = "noScale";				
+			FLOSCSocketHost=host;			
+			FLOSCSocketPort=port;					       
+			myService = new NetConnection();
+			myService.connect("http://nui.mine.nu/amfphp/gateway.php");
+			xmlPlaybackURL = "http://nui.mine.nu/amfphp/services/test.xml";			
+			bDebug = dbug;				
+			bInitialized = true;
+			bRecording = false;		
+			bPlayback = false;									
 			objectArray = new Array();
 			idArray = new Array();
+			
 			try
 			{
 				FLOSCSocket = new XMLSocket();	
@@ -80,100 +69,23 @@
 				FLOSCSocket.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
 				FLOSCSocket.addEventListener(ProgressEvent.PROGRESS, progressHandler);
 				FLOSCSocket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);	
-				FLOSCSocket.connect(host, port);			
-			
-			} catch (e){}
-			
+				FLOSCSocket.connect(host, port);				
+			} 
+			catch(e){}			
 			if(bDebug)
 			{
-				var format:TextFormat = new TextFormat("Verdana", 10, 0xFFFFFF);
-				debugText = new TextField();       
-				debugText.defaultTextFormat = format;
-				debugText.autoSize = TextFieldAutoSize.LEFT;
-				debugText.background = true;	
-				debugText.backgroundColor = 0x000000;	
-				debugText.border = true;	
-				debugText.borderColor = 0x333333;	
-				thestage.addChild( debugText );						
-				thestage.setChildIndex(debugText, thestage.numChildren-1);	
-		
-				recordedXML = <OSCPackets></OSCPackets>;	
-				
-				var debugBtn = new Sprite();						
-				debugBtn.graphics.beginFill(0xFFFFFF);
-				debugBtn.graphics.drawRect(thestage.stageWidth-210, 0, 200, 50);	
-				debugBtn.addEventListener(MouseEvent.CLICK, toggleDebug);
-				var debugBtnW:Wrapper = new Wrapper(debugBtn);			
-				debugBtnW.alpha = 0.85; debugBtnW.y = 20;				
-				thestage.addChildAt(debugBtnW, thestage.numChildren-1);								
-				
-				var recordBtn = new Sprite();						
-				recordBtn.graphics.beginFill(0xFF0000);
-				recordBtn.graphics.drawRect(thestage.stageWidth-210, 0, 200, 50);	
-				recordBtn.addEventListener(MouseEvent.CLICK, toggleRecord);
-				var recordBtnW:Wrapper = new Wrapper(recordBtn);			
-				recordBtnW.alpha = 0.25; recordBtnW.y = 70;				
-				thestage.addChildAt(recordBtnW, thestage.numChildren-1);	
-				
-				var playbackBtn = new Sprite();						
-				playbackBtn.graphics.beginFill(0x00FF00);
-				playbackBtn.graphics.drawRect(thestage.stageWidth-210, 0, 200, 50);	
-				playbackBtn.addEventListener(MouseEvent.CLICK, togglePlayback);
-				var playbackBtnW:Wrapper = new Wrapper(playbackBtn);			
-				playbackBtnW.alpha = 0.25; playbackBtnW.y = 120;				
-				thestage.addChildAt(playbackBtnW, thestage.numChildren-1);				
-			} 
-			else {		
+				activateDebugMode();				
+			}  
+			else 
+			{		
 				recordedXML = new XML();	
 				recordedXML = <OSCPackets></OSCPackets>;
 				bRecording = false;			
 			}			
 		}
-
-		private static function xmlPlaybackLoaded(evt:Event) {
-			trace("Playing from XML file...");
-			playbackXML = new XML(xmlPlaybackLoader.data);			
-		}
-		
-		private static function frameUpdate(evt:Event)
-		{
-			if(playbackXML && playbackXML.OSCPACKET && playbackXML.OSCPACKET[0])
-			{
-				processMessage(playbackXML.OSCPACKET[0]);
-				delete playbackXML.OSCPACKET[0];
-			}
-		}		
-		
-		public static function getObjectById(id:Number): TUIOObject
-		{
-			if(id == 0)
-			{
-				return new TUIOObject("mouse", 0, thestage.mouseX, thestage.mouseY, 0, 0, 0, 0, 10, 10, null);
-			}
-			for(var i=0; i<objectArray.length; i++)
-			{
-				if(objectArray[i].ID == id)
-				{
-					return objectArray[i];
-				}
-			}
-
-			return null;
-		}
-		
-		public static function listenForObject(id:Number, reciever:Object)
-		{
-			var tmpObj:TUIOObject = getObjectById(id);
-			
-			if(tmpObj)
-			{
-				tmpObj.addListener(reciever);				
-			}
-		}
 		
 		public static function processMessage(msg:XML)
 		{
-
 			var fseq:String;
 			var node:XML;
 			for each(node in msg.MESSAGE)
@@ -200,15 +112,14 @@
 					}   
 					idArray = newIdArray;
 				}
-			}			
-			
+			}				
 							
 			for each(node in msg.MESSAGE)
 			{
 				if(node.ARGUMENT[0])
 				{
 					var type:String;
-					
+										
 					if(node.@NAME == "/tuio/2Dobj")
 					{
 						/*
@@ -279,9 +190,9 @@
 						}
 						*/
 						
-					} else if(node.@NAME == "/tuio/2Dcur")
+					} 
+					else if(node.@NAME == "/tuio/2Dcur")
 					{
-						//trace("2dcur");
 						type = node.ARGUMENT[0].@VALUE;				
 						if(type == "set")
 						{
@@ -300,8 +211,7 @@
 								X = Number(node.ARGUMENT[4].@VALUE);
 								Y = Number(node.ARGUMENT[5].@VALUE);
 								m = Number(node.ARGUMENT[6].@VALUE);
-						
-
+								
 								if(node.ARGUMENT[7])
 									wd = Number(node.ARGUMENT[7].@VALUE) * thestage.stageWidth;							
 								
@@ -317,20 +227,14 @@
 							var stagePoint:Point = new Point(x,y);					
 							var displayObjArray:Array = thestage.getObjectsUnderPoint(stagePoint);
 							var dobj = null;
+							
 							if(displayObjArray.length > 0)								
-								dobj = displayObjArray[displayObjArray.length-1];							
-														
-								
-							var sztmp:String="";
-//							for(var i=0; i<displayObjArray.length; i++)
-//								sztmp += (displayObjArray[i] is InteractiveObject) + ",";
-//							trace(sztmp);
-
+							dobj = displayObjArray[displayObjArray.length-1];	
+																				
 							var tuioobj = getObjectById(id);
 							if(tuioobj == null)
 							{
 								tuioobj = new TUIOObject("2Dcur", id, x, y, X, Y, -1, 0, wd, ht, dobj);
-
 								thestage.addChild(tuioobj.spr);								
 								objectArray.push(tuioobj);
 								tuioobj.notifyCreated();
@@ -346,7 +250,6 @@
 								tuioobj.area = wd * ht;								
 								tuioobj.dX = X;
 								tuioobj.dY = Y;
-
 								tuioobj.setObjOver(dobj);
 								tuioobj.notifyMoved();
 							}  
@@ -384,7 +287,7 @@
 				} else {
 					if(bDebug)
 					{	var tmp = (int(objectArray[i].area)/-100000);
-						trace('area: '+tmp);
+						//trace('area: '+tmp);
 						debugText.appendText("  " + (i + 1) +" - " +objectArray[i].ID + "  X:" + int(objectArray[i].x) + "  Y:" + int(objectArray[i].y) +
 						"  A:" + int(tmp) + "  \n");						
 						debugText.x = thestage.stageWidth-200;
@@ -394,32 +297,111 @@
 			}
 		}
 		
+		public static function listenForObject(id:Number, reciever:Object)
+		{
+			var tmpObj:TUIOObject = getObjectById(id);			
+			if(tmpObj)
+			{
+				tmpObj.addListener(reciever);				
+			}
+		}
+		
+		public static function getObjectById(id:Number): TUIOObject
+		{
+			if(id == 0)
+			{
+				return new TUIOObject("mouse", 0, thestage.mouseX, thestage.mouseY, 0, 0, 0, 0, 10, 10, null);
+			}
+			for(var i=0; i<objectArray.length; i++)
+			{
+				if(objectArray[i].ID == id)
+				{
+					return objectArray[i];
+				}
+			}
+			return null;
+		}
+		
+        private static function activateDebugMode():void 
+        {
+  				var format:TextFormat = new TextFormat("Verdana", 10, 0xFFFFFF);
+				debugText = new TextField();       
+				debugText.defaultTextFormat = format;
+				debugText.autoSize = TextFieldAutoSize.LEFT;
+				debugText.background = true;	
+				debugText.backgroundColor = 0x000000;	
+				debugText.border = true;	
+				debugText.borderColor = 0x333333;	
+				thestage.addChild( debugText );						
+				thestage.setChildIndex(debugText, thestage.numChildren-1);	
+		
+				recordedXML = <OSCPackets></OSCPackets>;	
+				
+				var debugBtn = new Sprite();						
+				debugBtn.graphics.beginFill(0xFFFFFF,0.5);
+				debugBtn.graphics.drawRect(thestage.stageWidth-210, 0, 200, 50);	
+				debugBtn.addEventListener(MouseEvent.CLICK, toggleDebug);
+				var debugBtnW:Wrapper = new Wrapper(debugBtn);			
+				debugBtnW.alpha = 0.5; debugBtnW.y = 20;				 
+				thestage.addChildAt(debugBtnW, thestage.numChildren-1);								
+				
+				var recordBtn = new Sprite();						
+				recordBtn.graphics.beginFill(0xFF0000);
+				recordBtn.graphics.drawRect(thestage.stageWidth-210, 0, 200, 50);	
+				recordBtn.addEventListener(MouseEvent.CLICK, toggleRecord);
+				var recordBtnW:Wrapper = new Wrapper(recordBtn);			
+				recordBtnW.alpha = 0.25; recordBtnW.y = 120;				
+				//thestage.addChildAt(recordBtnW, thestage.numChildren-1);	
+				
+				var playbackBtn = new Sprite();						
+				playbackBtn.graphics.beginFill(0x00FF00);
+				playbackBtn.graphics.drawRect(thestage.stageWidth-210, 0, 200, 50);	
+				playbackBtn.addEventListener(MouseEvent.CLICK, togglePlayback);
+				var playbackBtnW:Wrapper = new Wrapper(playbackBtn);			
+				playbackBtnW.alpha = 0.25; playbackBtnW.y = 70;				
+				//thestage.addChildAt(playbackBtnW, thestage.numChildren-1);
+        }	
+        
+        private static function xmlPlaybackLoaded(evt:Event) 
+        {
+			trace("Playing from XML file...");
+			playbackXML = new XML(xmlPlaybackLoader.data);			
+		}
+		
+		private static function frameUpdate(evt:Event)
+		{
+			if(playbackXML && playbackXML.OSCPACKET && playbackXML.OSCPACKET[0])
+			{
+				processMessage(playbackXML.OSCPACKET[0]);
+				delete playbackXML.OSCPACKET[0];
+			}
+		}		
+		
 		private static function toggleDebug(e:Event)
 		{ 
 			if(!bDebug){
 			bDebug=true;		
-			FLOSCSocket.connect(FLOSCSocketHost, FLOSCSocketPort);
+			//FLOSCSocket.connect(FLOSCSocketHost, FLOSCSocketPort);
 			e.target.parent.alpha=0.85;
 			}
 			else{
 			bDebug=false;
-			FLOSCSocket.connect(FLOSCSocketHost, FLOSCSocketPort);
+			//FLOSCSocket.connect(FLOSCSocketHost, FLOSCSocketPort);
 			e.target.parent.alpha=0.5;	
 			}
 		}
+		
 		private static function toggleRecord(e:Event)
 		{ 	
 			var responder = new Responder(saveSession_Result, onFault);
 			
 			if(!bRecording){
 			bRecording = true;
-			e.target.parent.alpha=0.85;			
+			e.target.parent.alpha=1.0;			
 			trace(e.target.parent);
 			trace('-----------------------------------------------------------------------------------------------------');		
 			trace('-------------------------------------- Record ON ----------------------------------------------------');
 			trace('-----------------------------------------------------------------------------------------------------');	
-			//Clear XML
-			//recordedXML = new XML();			
 			myService.call("touchlib.clearSession", responder);
 			}
 			else{
@@ -432,14 +414,15 @@
 			//trace(recordedXML.toString());		
 			trace('-------------------------------------- Recording END ------------------------------------------------');
 			}
-		}	
-		private static function saveSession_Result(result){	
+		}
+			
+		private static function saveSession_Result(result)
+		{	
+		debugText.x = debugText.y = 5;
 		debugText.text = result;
 		trace(result);
 		}
-		private static function onFault(e:Event ){
-		trace("There was a problem: " + e.description);
-		}
+			
 		private static function togglePlayback(e:Event)
 		{ 	
 			if(xmlPlaybackURL != "")
@@ -453,25 +436,36 @@
 					thestage.addEventListener(Event.ENTER_FRAME, frameUpdate);
 				 }
 		}
-        private static function dataHandler(event:DataEvent):void {           			
+		
+        private static function dataHandler(event:DataEvent):void 
+        {           			
 			if(bRecording)
 			recordedXML.appendChild( XML(event.data) );			
 			processMessage(XML(event.data));
-        }     	
-     	private static function connectHandler(event:Event):void {
+        }     			
+        private static function onFault(e:Event )
+		{
+			//trace("There was a problem: " + e.description);
+		}
+     	private static function connectHandler(event:Event):void 
+     	{
             //trace("connectHandler: " + event);
         }       
-        private static function ioErrorHandler(event:IOErrorEvent):void {
+        private static function ioErrorHandler(event:IOErrorEvent):void 
+        {
             //trace("ioErrorHandler: " + event);
         }
-        private static function progressHandler(event:ProgressEvent):void {
-            //trace("progressHandler loaded:" + event.bytesLoaded + " total: " + event.bytesTotal);
+        private static function progressHandler(event:ProgressEvent):void 
+        {
+            //trace("Debug XML Loading..." + event.bytesLoaded + " out of: " + event.bytesTotal);
         }
-       private static function closeHandler(event:Event):void {
+        private static function closeHandler(event:Event):void 
+        {
             //trace("closeHandler: " + event);
         }
-        private static function securityErrorHandler(event:SecurityErrorEvent):void {
+        private static function securityErrorHandler(event:SecurityErrorEvent):void 
+        {
             //trace("securityErrorHandler: " + event);
-        }
-	}
+        }  
+    }
 }

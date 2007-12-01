@@ -1,5 +1,5 @@
-﻿package com.touchlib
-{
+﻿package com.touchlib {
+	
 	import flash.display.Sprite;
 	//import flash.text.TextFormat;
 	//import flash.text.TextField;
