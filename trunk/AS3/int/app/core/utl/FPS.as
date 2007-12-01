@@ -21,8 +21,7 @@
             _fmt = new TextFormat("_sans", 10, 0xFFFFFF);
             _frameNum = 0;
             _mem = 0;
-            init();      
-           
+            init();               
         }
        
         private function init():void {
