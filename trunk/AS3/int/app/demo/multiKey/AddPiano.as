@@ -12,6 +12,9 @@
 	import flash.geom.ColorTransform;
 	import flash.media.SoundMixer;
 	import flash.media.SoundTransform;
+	import fl.transitions.Tween;
+	import fl.transitions.easing.*;
+	import app.core.action.RotatableScalable;
 
 	import com.touchlib.*;
 	import app.demo.multiKey.*;
@@ -27,6 +30,16 @@
 		private var velAng:Number = 0.0;		
 		private var friction:Number = 0.85;
 		private var angFriction:Number = 0.92;
+		
+		private var scaleXTween:Tween;	
+		private var scaleYTween:Tween;
+		private var thisscaleXTween:Tween;	
+		private var thisscaleYTween:Tween;
+		private var rotationTween:Tween;
+		private var xTween:Tween;
+		private var yTween:Tween;
+		private var thisXTween:Tween;
+		private var thisyTween:Tween;
 		
 		var wholePiano:AssemblePiano;
 
@@ -44,15 +57,15 @@
 	
 			moveScalePoints(octaves);
 			
-			clickgrabber.graphics.beginFill(0xFFFFFF, .01);
+			clickgrabber.graphics.beginFill(0xFFFFFF, 0);
 			clickgrabber.graphics.drawRect(0, 0, 1,1);
 			clickgrabber.graphics.endFill();			
 
+			addChild(wholePiano); 
 			addChild(clickgrabber);		
-			addChild(wholePiano);   
 			
 			arrange();
-
+			this.setChildIndex(wholePiano, this.numChildren-1);
 			this.addEventListener(Event.ENTER_FRAME, slide);			
 		}				
 		
@@ -78,6 +91,22 @@
 			velX = dx;			
 			velY = dy;					
 			velAng = dang;
+		}
+		
+		public override function doubleTap()
+		{
+			if (!noMove)
+			{ 
+				scaleXTween = new Tween(parent, "scaleX", Regular.easeOut, parent.scaleX, .9, .5, true);
+				scaleYTween = new Tween(parent, "scaleY", Regular.easeOut, parent.scaleY, .9, .5, true);
+				thisscaleXTween = new Tween(this, "scaleX", Regular.easeOut, this.scaleX, .22, .5, true);
+				thisscaleYTween = new Tween(this, "scaleY", Regular.easeOut, this.scaleY, .22, .5, true);
+				thisXTween = new Tween(this, "x", Regular.easeOut, this.x, Math.random() * 500, .5, true);
+				thisYTween = new Tween(this, "y", Regular.easeOut, this.y, Math.random() * 500, .5, true);
+				rotationTween = new Tween(parent, "rotation", Regular.easeOut, parent.rotation, 0, .5, true);
+				xTween = new Tween(parent, "x", Regular.easeOut, parent.x, 0, .5, true);
+				yTween = new Tween(parent, "y", Regular.easeOut, parent.y, 0, .5, true);
+			}
 		}
 		
 		
@@ -124,7 +153,7 @@
 			}			
 			
 			scalePoints.graphics.lineStyle(4, 0xffffff, 1);
-			scalePoints.graphics.beginFill(0xFFFFFF, .6);
+			scalePoints.graphics.beginFill(0xFFFFFF, .8);
 			scalePoints.graphics.moveTo(-outlineW/2, -outlineH/2);
 			scalePoints.graphics.lineTo(outlineW/2, -outlineH/2);
 			scalePoints.graphics.lineTo(outlineW/2, outlineH/2);
@@ -153,50 +182,32 @@
 			addChild(scalePoints);
 
 			scalePoints.addEventListener(TUIOEvent.TUIO_DOWN, toggleRotateScale);
-			//scalePoints.addEventListener(TUIOEvent.UpEvent, removeRotatableScalable);		
-		}	
-		
-		
-	
+		}		
 		
 			
 		public function toggleRotateScale(event:TUIOEvent):void {
 			
-				//Move Mode
+				//Move Mode sets all modes
 				if (noMove) {
 					noMove = false; 
+					noScale = false;
+					noRotate= false;
 					var colorTransform:ColorTransform = transform.colorTransform;
 					colorTransform.color = 0xFFFF99;
 					event.target.transform.colorTransform = colorTransform;
-					trace("move mode off");
+					trace("move, scale, rotate mode off");
+					this.setChildIndex(clickgrabber, this.numChildren-1); //sets clickgrabber to front
 				}
 				else {
 					noMove = true;
+					noScale = true;
+					noRotate = true;
 					var colorTransform:ColorTransform = transform.colorTransform;
 					colorTransform.color = 0xFFFFFF;
 					event.target.transform.colorTransform = colorTransform;
-					trace("move mode on");
-				}			
-			
-			    //Scale mode			
-				if (noScale) {
-					noScale = false;
-					trace("scale mode off");			
-				}
-				else {
-					noScale = true;	
-					trace("scale mode on");
-				}					
-				
-				//Rotate Mode
-				if (noRotate) {
-					noRotate= false; 
-					trace("rotate mode off");
-				}
-				else {
-					noRotate = true;
-					trace("rotate mode on");
-				}	
+					trace("move, scale, rotate mode on");
+					this.setChildIndex(wholePiano, this.numChildren-1); //sets clickgrabber to back
+				}				
 				
 				//Sound Mode			
 				if (wholePiano.noSound) {

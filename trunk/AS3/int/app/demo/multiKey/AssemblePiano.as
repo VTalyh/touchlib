@@ -69,12 +69,13 @@ package app.demo.multiKey {
 				subobj.name = "natural_" + i;
 				addChild(subobj);
 				
-				trace(subobj.name);
+				//trace(subobj.name);
 				
 				subobj.x = ((subobj.width) * i) + subobj.width/2 ;
 				subobj.y = subobj.height/2;
 				
 				subobj.addEventListener(TUIOEvent.TUIO_OVER, onStartAudio);  // if Finger rolls over key, go to onStartAudio function
+				subobj.addEventListener(TUIOEvent.TUIO_DOWN, onStartAudio);  // if Finger rolls over key, go to onStartAudio function
 			}
 			
 			for (var j = 0; j < numSharpKeys; j++) {
@@ -83,7 +84,7 @@ package app.demo.multiKey {
 				subobj.name = "sharp_" + j; 				
 				addChild(subobj);
 				
-				trace(subobj.name);
+				//trace(subobj.name);
 				
 				subobj.x = (subobj.width + 33) * (j + 1);
 				subobj.y = subobj.height/2;
@@ -106,6 +107,7 @@ package app.demo.multiKey {
 				}
 				
 				subobj.addEventListener(TUIOEvent.TUIO_OVER, onStartAudio);  // if Finger rolls over key, go to onStartAudio function
+				subobj.addEventListener(TUIOEvent.TUIO_DOWN, onStartAudio);  // if Finger rolls over key, go to onStartAudio function
 			}
 		}		
 		
@@ -116,7 +118,7 @@ package app.demo.multiKey {
 			
 			
 	        var keyvolume:Number = (event.localY/event.target.height);	//Volume = Key pressed location/ height of key	
-            if (keyvolume >= .75) {keyvolume = .75};
+            if (keyvolume >= .50) {keyvolume = .50};
 			
 			//trace("this is" + " " + event.currentTarget.name);
 			

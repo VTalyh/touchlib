@@ -1,10 +1,4 @@
-﻿//////////////////////////////////////////////////////////////////////
-//                                                                  //
-//    Main Document Class. Sets TUIO and adds main parts to stage   //
-////
-//////////////////////////////////////////////////////////////////////
-
-package app.demo.multiKey {
+﻿package app.demo.multiKey {
 
 	import flash.display.Shape;		
 	import flash.display.Loader;		
@@ -15,8 +9,12 @@ package app.demo.multiKey {
     import flash.filters.BitmapFilter;
     import flash.filters.BitmapFilterQuality;
     import flash.filters.DropShadowFilter; 
+	import flash.geom.ColorTransform;
+
 	import com.touchlib.*;
 	import app.createMultiKey.*;
+	import app.core.action.RotatableScalable;
+
 	
 
 	public class AddKey extends RotatableScalable {
@@ -42,26 +40,31 @@ package app.demo.multiKey {
 			noRotate = true;         //make it not rotate
 			noMove = true;           //make it not move			
 			
-			clickgrabber.graphics.beginFill(0xffffff, 0.1);
+			clickgrabber.graphics.beginFill(0xffffff, 0);
 			clickgrabber.graphics.drawRect(0, 0, 1,1);
 			clickgrabber.graphics.endFill();
 			
-			addChild(clickgrabber);
+			
 			
 			if (type == "natural")
 			{				
 				addChild(singleNaturalKey);
+				//this.setChildIndex(singleNaturalKey, this.numChildren-1);
+
 			}
 			else
 			{
 				addChild(singleSharpKey);
+				//this.setChildIndex(singleSharpKey, this.numChildren-1);
+
 			}		    
 			
 			arrange(type);
-
-			this.addEventListener(Event.ENTER_FRAME, slide);			
-		}				
+			//addChild(clickgrabber);			
+			this.addEventListener(Event.ENTER_FRAME, slide);					
 		
+		}	
+
 		
 		private function arrange(type:String) {
 			

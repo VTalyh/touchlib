@@ -49,6 +49,11 @@ package app.demo.multiKey {
 			outline.y = outline.height/2;
 
 			addChild(outline);
+			addEventListener(TUIOEvent.TUIO_OUT, offKey);   // if Finger rolls off key, go to onSpriteRelease function
+			addEventListener(TUIOEvent.TUIO_UP, offKey);  // if Finger rolls over key, go to onStartAudio function
+			addEventListener(TUIOEvent.TUIO_OVER, onKey);   // if Finger rolls off key, go to onSpritePress function
+			addEventListener(TUIOEvent.TUIO_DOWN, onKey);  // if Finger rolls over key, go to onStartAudio function
+		
 		}		
 		
 		
@@ -77,7 +82,9 @@ package app.demo.multiKey {
 			addChild(key);//add the Sprite key to the stage	
 
 			addEventListener(TUIOEvent.TUIO_OUT, offKey);   // if Finger rolls off key, go to onSpriteRelease function
+			addEventListener(TUIOEvent.TUIO_UP, offKey);  // if Finger rolls over key, go to onStartAudio function
 			addEventListener(TUIOEvent.TUIO_OVER, onKey);   // if Finger rolls off key, go to onSpritePress function
+			addEventListener(TUIOEvent.TUIO_DOWN, onKey);  // if Finger rolls over key, go to onStartAudio function
 		}
 		
 		
