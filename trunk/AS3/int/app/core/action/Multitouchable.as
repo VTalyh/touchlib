@@ -50,7 +50,7 @@ package app.core.action
 				}
 			}
 
-			trace("Creating new blob " + id + " " + origX + " " + origY);
+			//trace("Creating new blob " + id + " " + origX + " " + origY);
 			blobs.push( {id: id, clicked:c, origX: origX, origY:origY, clicked:c, history:new Array(new Point(origX, origY)), dX:0.0, dY:0.0} );
 			
 			handleBlobCreated(id, origX, origY);			
@@ -62,7 +62,7 @@ package app.core.action
 			{
 				if(blobs[i].id == id) 
 				{
-					trace("blob removed " + id);										
+					//trace("blob removed " + id);										
 					blobs.splice(i, 1);		
 					handleBlobRemoved(id);					
 
@@ -150,7 +150,7 @@ package app.core.action
 		
 		public function mouseDownHandler(e:MouseEvent):void
 		{
-			trace("Mouse down");
+			//trace("Mouse down");
 			var curPt:Point = parent.globalToLocal(new Point(e.stageX, e.stageY));			
 			addBlob(0, curPt.x, curPt.y, true);
 			
