@@ -58,10 +58,10 @@
 			height = ht;
 			width = wd;
 			area = ht * wd;
-			
+		
 			color = ColorUtil.random(0,0,0);
 							
-			spr = new TUIOCursor(ID.toString(),color);			
+			spr = new TUIOCursor(ID.toString(),color, area);			
 			spr.x = x;
 			spr.y = y;  		
 			

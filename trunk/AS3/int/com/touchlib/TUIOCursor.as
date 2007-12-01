@@ -9,13 +9,13 @@
 	{
 		//private var DEBUG_TEXT:TextField;	
 		
-		public function TUIOCursor(debugText:String,color:int)
+		public function TUIOCursor(debugText:String,color:int,pressure:Number)
 		{
 			super();
 			if(TUIO.debugMode) { 
-			
+			var tmp = pressure/-100000;
 			graphics.lineStyle( 2, 0x000000);
-			graphics.drawCircle(0 ,0, 20);	
+			graphics.drawCircle(0 ,0, tmp+10);
 		
 			/*//graphics.beginFill(color , 1);	
 			// Draw us the lil' circle

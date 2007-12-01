@@ -97,17 +97,12 @@ import flash.events.MouseEvent;
 		
 				recordedXML = <OSCPackets></OSCPackets>;	
 				
-				var buttonSprite = new Sprite();	
-					
+				var buttonSprite = new Sprite();						
 				buttonSprite.graphics.beginFill(0xFFFFFF,0.25);
 				buttonSprite.graphics.drawRoundRect(0, -10, 50, 60,10);	
-				buttonSprite.addEventListener(MouseEvent.CLICK, toggleDebug);					
-
-				var WrapperObject:Wrapper = new Wrapper(buttonSprite);
-			
-				thestage.addChild(WrapperObject);
-	
-				
+				buttonSprite.addEventListener(MouseEvent.CLICK, toggleDebug);
+				var WrapperObject:Wrapper = new Wrapper(buttonSprite);			
+				thestage.addChild(WrapperObject);					
 				thestage.setChildIndex(WrapperObject, thestage.numChildren-1);	
 				//trace(thestage.numChildren);
 				
@@ -395,7 +390,8 @@ import flash.events.MouseEvent;
 					if(debugMode)
 					{
 						debugText.appendText("  " + (i + 1) +" - " +objectArray[i].ID + "  X:" + int(objectArray[i].x) + "  Y:" + int(objectArray[i].y) + "  \n");
-						trace('area: '+int(objectArray[i].area));
+						var tmp = (int(objectArray[i].area)/-100000);
+						trace('area: '+tmp);
 						debugText.x = thestage.stageWidth-160;
 						debugText.y = 40;		
 					}
@@ -424,6 +420,7 @@ import flash.events.MouseEvent;
 			//bRecording = false;
 			//debugMode = false;			
 			//debugText.text = recordedXML.toString();
+			trace(recordedXML);
 			//debugText.x = 0;
 			//debugText.y = 0;	
 		}
