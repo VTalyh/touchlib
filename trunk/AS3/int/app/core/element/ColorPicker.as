@@ -1,4 +1,8 @@
-﻿package app.core.element
+﻿// TODO: two finger color blending
+// ----- Still some minor bugs on the toggling of the colorBar
+// ----- make this class return a color value also.. similar to a slider
+
+package app.core.element
 {
 	import app.core.element.*;
 	
@@ -25,6 +29,8 @@
 		public var g:int;
 		public var b:int;
 		private var colorThumb:Shape;
+		private var colorThumbBlend:Shape;
+		
 		private var selectedSpr:Sprite;
 		private var sampleSprite:Sprite;
 		
@@ -39,12 +45,13 @@
 			imgLoader.load( request, context);			
 		}	
 		function onCompleteHandler(event:Event = null){			
-			_fmt = new TextFormat("_sans", 10, 0xFFFFFF,false,false,false,false,null,"right");
+			_fmt = new TextFormat("_sans", 10, 0xFFFFFF,false,false,false,null,null,"right");
 			label = new TextField(); 
 			label.defaultTextFormat=_fmt; 
-			label.blendMode='invert';					
+			label.blendMode='invert';		
+			label.selectable=false;						
 			label.x = imgLoader.width-110;
-			label.y = -45;		
+			label.y = -40;		
 			
 			//var image:Bitmap = Bitmap(imgLoader.content);
 			separateByPixels = new BitmapData(imgLoader.width, imgLoader.height, false); 
@@ -58,7 +65,7 @@
 			//sampleSprite.y=-25;
 			
 			selectedSpr = new Sprite();
-			selectedSpr.graphics.lineStyle(1.2, 0xffffff);
+			selectedSpr.graphics.lineStyle(1.35, 0xffffff);
 			selectedSpr.graphics.moveTo(-7, 0);
 			selectedSpr.graphics.lineTo(7, 0);			
 			selectedSpr.graphics.moveTo(0, -7);
@@ -67,33 +74,44 @@
 			selectedSpr.visible=false;
 				
 			colorThumb = new Shape();
-			colorThumb.graphics.lineStyle(1.2, 0xffffff);
 			colorThumb.graphics.beginFill(0xFFFFFF);
-			colorThumb.graphics.drawRect(0, -55, imgLoader.width, 50);
+			colorThumb.graphics.drawRoundRect(0, -55, imgLoader.width, 50,6);
 			colorThumb.graphics.endFill();
+			
+			colorThumbBlend = new Shape();
+			colorThumbBlend.graphics.beginFill(0xFFFFFF);
+			colorThumbBlend.graphics.drawRoundRect(0, -55, 50, 50,6);
+			colorThumbBlend.graphics.endFill();
 			
 			var colorThumbBorder = new Shape();
 			colorThumbBorder.graphics.lineStyle(1, 0xffffff);
-			colorThumbBorder.graphics.drawRect(0, -55, imgLoader.width, 50);	
+			colorThumbBorder.graphics.drawRoundRect(0, -55, imgLoader.width, 50,6);	
 			
 		
-			addChild(colorThumb);		
+			addChild(colorThumb);
+			addChild(colorThumbBlend);			
 			addChild(colorThumbBorder);			
 			addChild(sampleSprite);		
 			addChild(label);		
 			addChild(selectedSpr);	
 	
 		}	
-		function setThumbColor(i) {
+		function setThumbColor(c) {
 			var thumbColorTransform:ColorTransform = new ColorTransform();
-			thumbColorTransform.color = i;
+			thumbColorTransform.color = c;
 			colorThumb.transform.colorTransform = thumbColorTransform;
+		}	
+		function setThumbBlend(c) {
+			var thumbColorBlend:ColorTransform = new ColorTransform();
+			thumbColorBlend.color = c;
+			colorThumbBlend.transform.colorTransform = thumbColorBlend;
 		}
 		public override function handleDownEvent(id:int, mx:Number, my:Number, targetObj)
 		{	
+			//trace('---------------------------------------------------------------------------------------'+blobs.length);
 			if(targetObj is ColorPicker || targetObj is Shape)
 			{ 	
-				selectedSpr.x = selectedSpr.y = 0;
+				//selectedSpr.x = selectedSpr.y = 0;
 				if(sampleSprite.alpha!=1){		
 				sampleSprite.visible=true;		
 				selectedSpr.visible=true;
@@ -105,31 +123,42 @@
 				selectedSpr.visible=false;
 				}			
 			}
-			else{
-			color  = separateByPixels.getPixel(mx- this.x, my-this.y);
-			setThumbColor(color);		
-			//trace(color.toString(16).toUpperCase());
-			r = color >> 16;
-			g = (color & 0xff00) >> 8;
-			b = color & 0xff;
-			label.text = r + "," + g + "," + b;					
-			selectedSpr.x = mx- this.x;
-			selectedSpr.y = my- this.y;
+			else{	
+			// hrmm if id > 0 then loop thru the current blobs and extract their X/Y... create a new color/crosshair at that point... 
+			// determine average of colors and draw it to the blending thumbnail (should each new point get a new thumbnail?)
+			
+			for(var i:int = 0; i<blobs.length; i++)
+			{
+			//trace(blobs[i].y+'-----------'+this.x);	
 			}
+			color1  = separateByPixels.getPixel(mx- this.x, my-this.y);		
+			color2  = separateByPixels.getPixel(250, 250);
+			setThumbColor(color1);		
+			setThumbBlend((color2 + color1)/2);
+			//trace(color.toString(16).toUpperCase());
+			r = color1 >> 16;
+			g = (color1 & 0xff00) >> 8;
+			b = color1 & 0xff;
+			label.text = r + ", " + g + ", " + b;					
+			selectedSpr.x = mx- this.x;
+			selectedSpr.y = my- this.y;	
+			}
+		
 		}		
 
 		public override function handleMoveEvent(id:int, mx:Number, my:Number, targetObj)
 		{
-			color  = separateByPixels.getPixel(mx- this.x, my-this.y);
-			setThumbColor(color);	
-			r = color >> 16;
-			g = (color & 0xff00) >> 8;
-			b = color & 0xff;
-			label.text = r + "," + g + "," + b;					
+			color1  = separateByPixels.getPixel(mx- this.x, my-this.y);
+			color2  = separateByPixels.getPixel(250, 250);
+			setThumbColor(color1);		
+			setThumbBlend((color2 + color1)/2);
+			r = color1 >> 16;
+			g = (color1 & 0xff00) >> 8;
+			b = color1 & 0xff;
+			label.text = r + ", " + g + ", " + b;					
 			selectedSpr.x = mx- this.x;
 			selectedSpr.y = my- this.y;
 		}		
-
 
 	}
 }
