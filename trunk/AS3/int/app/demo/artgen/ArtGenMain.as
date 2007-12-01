@@ -1,16 +1,21 @@
-﻿// IDEA: use the ability to save animations as code somehow.. 
+﻿// IDEA: use the ability to save animations as code somehow.. SVG might work? http://code.google.com/p/as3svgrendererlib/
 // IDEA: allow layer blending effects to be set
+// IDEA: Add a slider to adjust framerate
 
 // TODO: 
 // move buttons,dialog to topmost layer
 
-// color palettes - hard code? take from kuler?
+// color palettes - color thumbnail 
 // Settings editor
 // more shapes
 // Layer editor - delete layer, hide/unhide layer, layer blend mode.. layer FX - blend / dropshadow.. 
 // write more AI algo's..
 
 // Make multitouchable - each finger is it's own swarm.. 
+
+// RESOURCE: http://tutorialblog.org/free-vector-downloads/  
+// RESOURCE: http://www.bittbox.com/freebies/35-free-abstract-illustrator-brushes/
+// RESOURCE: http://www.vecteezy.com/
 
 package app.demo.artgen
 {
@@ -22,6 +27,8 @@ package app.demo.artgen
 	import flash.events.*;
 	import flash.ui.Keyboard;
 	import flash.geom.*;
+	import app.core.element.XMLMenu;
+	import app.core.utl.FPS;
 	
 	public class ArtGenMain extends Multitouchable 
 	{		
@@ -33,7 +40,8 @@ package app.demo.artgen
 		private var settings:XML;
 		
 		private var dialog:SettingsDialog;
-
+		private var myVMenu:XMLMenu;
+		
 		public function ArtGenMain() 
 		{
 			aSwarms = new Array();
@@ -49,9 +57,7 @@ package app.demo.artgen
 			
 			layers.push(spr);
 			layerHolder.addChild(spr);
-			
-
-			
+						
 			settings = <swarm>
 							<swarmType>Boid2</swarmType>
 							<numMembers>2</numMembers>
@@ -111,6 +117,22 @@ package app.demo.artgen
 			dialog.visible = false;
 
 			addChild(dialog);
+			
+			//var menu new XMLMenu(layout, XML file, padding, width, height, x, y, labels?, effects?);
+			myVMenu = new XMLMenu('vertical', 'www/menus/artgen/vert_menu.xml',0 ,125,50,10,7, true, false);
+			
+			var menuHolder = new Sprite();
+			menuHolder.graphics.beginFill(0xFFFFFF,0.35);
+			menuHolder.graphics.drawRoundRect(0,0,145, 215,10);
+			menuHolder.graphics.endFill();
+			addChildAt(menuHolder, this.numChildren-1);
+			menuHolder.x = menuHolder.y = 16;
+			menuHolder.addChild(myVMenu);		
+			
+			var fps = new FPS();
+			fps.x = menuHolder.width+25;			
+			fps.y = 25;
+			this.addChild(fps);	 
 		}
 		
 		function applySettings()

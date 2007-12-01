@@ -1,11 +1,21 @@
-﻿package {
-public class XMLMenu extends RotatableScalable {	
+﻿// EACH MENU NEEDS AN UNIQUE ID?
+// Setting actions to individual menu items @ parent level
+// Remove Rotate/Scale extension
+//
+// Preloader
+// Width/Height settings in XML 
+// Mouse hover/over/out efffects in XML
+// FONT Settings in XML
+// Finish Radial Menu (add timer to autoclose ~2.5 seconds) Embeded Fonts working in Flex Builder
+// Menu background images
+
+package app.core.element {
+//public class XMLMenu extends RotatableScalable {	
+public class XMLMenu extends Sprite {	
 [Embed(source="Arial.ttf", fontFamily="myFont")]  var myFont:Class;
-	//EACH MENU NEEDS AN ID
 				
 		private var __menuList:XMLList;	 		
-		private var __loader:URLLoader;		
-		
+		private var __loader:URLLoader;			
 		private var __spacing:Number;
 		private var __sizeX:Number;
 		private var __sizeY:Number;
@@ -14,7 +24,6 @@ public class XMLMenu extends RotatableScalable {
 		private var __layout:String;	
 		private var __labels:Boolean;
 		private var __effects:Boolean;			
-		
 		private var imageButtonUP:Loader;
 	 
 				
@@ -28,9 +37,9 @@ public function XMLMenu(layout:String, xml_url:String, spacing:Number, sizeX:Num
 			__labels = labels;
 			__effects = effects;	
 			__spacing = spacing;
-			this.noMove=true;
-			this.noScale=true;
-			this.noRotate=true;
+			//this.noMove=true;
+			//this.noScale=true;
+			//this.noRotate=true;
 		}
 		
 		private function loadXML(xml_url):void {			
@@ -143,9 +152,9 @@ public function XMLMenu(layout:String, xml_url:String, spacing:Number, sizeX:Num
 				}				
 				else if(__layout == "radial"){				
 				
-				this.noMove=false;
-				this.noScale=false;
-				this.noRotate=false;		
+				//this.noMove=false;
+				//this.noScale=false;
+				//this.noRotate=false;		
 				
 				var radialHolderBG = new Shape();		
 				var radialHolderUP = new Sprite();		
@@ -202,6 +211,7 @@ public function XMLMenu(layout:String, xml_url:String, spacing:Number, sizeX:Num
 				button.addEventListener(MouseEvent.MOUSE_OVER, displayActiveState);
 				button.addEventListener(MouseEvent.MOUSE_OUT, displayInactiveState);
 				button.addEventListener(MouseEvent.CLICK, displayMessage);					
+				
 				button.addEventListener(TUIOEvent.TUIO_OVER, displayActiveState);
 				button.addEventListener(TUIOEvent.TUIO_OUT, displayInactiveState);
 				button.addEventListener(TUIOEvent.TUIO_DOWN, displayMessage);			
@@ -238,20 +248,22 @@ public function XMLMenu(layout:String, xml_url:String, spacing:Number, sizeX:Num
 		}
 		private function killRadial(e:Event)
 		{
-		trace('FUCING DIE');
+		trace('kill this radial menu!');
 		}
-		private function displayActiveState(event:Event):void {
-			Tweener.addTween(event.currentTarget.getChildByName("over"), {alpha:0.75, time:0.2, transition:"easeinoutquad"});
+		private function displayActiveState(e:Event):void {
+			Tweener.addTween(e.currentTarget.getChildByName("over"), {alpha:0.75, time:0.2, transition:"easeinoutquad"});
+			e.stopPropagation();
 		}
-		private function displayInactiveState(event:Event):void {	
-			Tweener.addTween(event.currentTarget.getChildByName("over"), {alpha:0.0, time:0.65, transition:"easeinoutquad"});
+		private function displayInactiveState(e:Event):void {	
+			Tweener.addTween(e.currentTarget.getChildByName("over"), {alpha:0.0, time:0.65, transition:"easeinoutquad"});
+			Tweener.addTween(e.currentTarget.getChildByName("down"), {alpha:0.0, delay:0.40,time:0.25, transition:"easeinoutquad"});		
+			e.stopPropagation();
 		}
 		private function displayMessage(e:Event):void {		
 			//e.currentTarget.getChildByName("down").alpha=1;
-			Tweener.addTween(e.currentTarget.getChildByName("down"), {alpha:0.0, time:0.35, transition:"easeinoutquad"});			
-			
+			Tweener.addTween(e.currentTarget.getChildByName("down"), {alpha:1.0, time:0.35, transition:"easeinoutquad"});				
 			//e.currentTarget.removeChild(button);			
-			//e.stopPropagation();
+			e.stopPropagation();
 		}
 		
 	
