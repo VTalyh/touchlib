@@ -156,7 +156,7 @@
 			for(var i:int=0; i<aListeners.length; i++)
 			{			
 				localPoint = aListeners[i].parent.globalToLocal(new Point(x, y));			
-				trace("Notify moved"+ localPoint);			
+				//trace("Notify moved"+ localPoint);			
 				aListeners[i].dispatchEvent(new TUIOEvent(TUIOEvent.TUIO_MOVE, true, false, x, y, localPoint.x, localPoint.y, 0, 0, aListeners[i], false,false,false, true, 0, TUIOClass, ID, sID, angle));								
 			}			
 		}

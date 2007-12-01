@@ -51,8 +51,8 @@
 			FLOSCSocketHost=host;			
 			FLOSCSocketPort=port;					       
 			myService = new NetConnection();
-			myService.connect("http://nui.mine.nu/amfphp/gateway.php");
-			xmlPlaybackURL = "http://nui.mine.nu/amfphp/services/test.xml";			
+			//myService.connect("http://nui.mine.nu/amfphp/gateway.php");
+			//xmlPlaybackURL = "http://nui.mine.nu/amfphp/services/test.xml";			
 			bDebug = dbug;				
 			bInitialized = true;
 			bRecording = false;		
@@ -222,7 +222,7 @@
 								trace("Error parsing");
 							}
 							
-							trace("Blob : ("+id + ")" + x + " " + y + " " + wd + " " + ht);
+							//trace("Blob : ("+id + ")" + x + " " + y + " " + wd + " " + ht);
 							
 							var stagePoint:Point = new Point(x,y);					
 							var displayObjArray:Array = thestage.getObjectsUnderPoint(stagePoint);
