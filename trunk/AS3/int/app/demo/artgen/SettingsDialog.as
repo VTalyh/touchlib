@@ -327,7 +327,7 @@
 			
 			colorPicker_0 = new ColorPicker();
 			colorPicker_0.x = 600;
-			colorPicker_0.y = 450;			
+			colorPicker_0.y = 500;			
 			addChild(colorPicker_0);
 			
 			var donebtn:SimpleButton = new DoneButton();					
@@ -390,7 +390,7 @@
 			nextCtrl(lfo2Dest, 70);
 			nextCtrl(lfo2Amount, 55);			
 			
-			nextCtrl(colorPicker_0, 300);						
+			nextCtrl(colorPicker_0, 350);						
 			
 			nextCtrl(doneBtnHolder, 55);								
 
