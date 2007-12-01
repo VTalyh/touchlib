@@ -1,7 +1,6 @@
 ﻿// EACH MENU NEEDS AN UNIQUE ID?
-// Setting actions to individual menu items @ parent level
+// Setting actions (Event Listeners) to individual menu items @ parent level
 // Remove Rotate/Scale extension
-//
 // Preloader
 // Width/Height settings in XML 
 // Mouse hover/over/out efffects in XML

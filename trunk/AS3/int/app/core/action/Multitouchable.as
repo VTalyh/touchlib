@@ -115,7 +115,7 @@ package app.core.action
 
 			addBlob(e.ID, curPt.x, curPt.y, true);
 			
-			handleDownEvent(e.ID, curPt.x, curPt.y);
+			handleDownEvent(e.ID, curPt.x, curPt.y, e.target);
 			e.stopPropagation();			
 		}
 
@@ -143,7 +143,7 @@ package app.core.action
 				updateBlob(e.ID, curPt.x, curPt.y);				
 			}
 			
-			handleMoveEvent(e.ID, curPt.x, curPt.y);			
+			handleMoveEvent(e.ID, curPt.x, curPt.y, e.target);			
 			
 			e.stopPropagation();						
 		}		
@@ -154,7 +154,7 @@ package app.core.action
 			var curPt:Point = parent.globalToLocal(new Point(e.stageX, e.stageY));			
 			addBlob(0, curPt.x, curPt.y, true);
 			
-			handleDownEvent(0, curPt.x, curPt.y);
+			handleDownEvent(0, curPt.x, curPt.y, e.target);
 			
 			e.stopPropagation();					
 		}
@@ -170,7 +170,7 @@ package app.core.action
 				updateBlob(0, curPt.x, curPt.y);				
 			}
 			
-			handleMoveEvent(0, curPt.x, curPt.y);
+			handleMoveEvent(0, curPt.x, curPt.y, e.target);
 			
 			e.stopPropagation();
 		}		
@@ -178,8 +178,7 @@ package app.core.action
 		public function mouseUpHandler(e:MouseEvent):void
 		{
 			handleUpEvent(0);
-			removeBlob(0);
-			
+			removeBlob(0);			
 			e.stopPropagation();	
 		}		
 		
@@ -210,8 +209,8 @@ package app.core.action
 			var curPt:Point = parent.globalToLocal(new Point(e.stageX, e.stageY));												
 			handleRollOutEvent(e.ID, curPt.x, curPt.y);			
 			
-			if(!getBlobInfo(e.id).clicked)
-				removeBlob(e.ID);			
+			//if(!getBlobInfo(e.id).clicked)
+			//	removeBlob(e.ID);			
 			
 			e.stopPropagation();									
 		}		
@@ -229,7 +228,7 @@ package app.core.action
 		{
 		}		
 		
-		public function handleDownEvent(id:int, mx:Number, my:Number)
+		public function handleDownEvent(id:int, mx:Number, my:Number, targetObj)
 		{
 		}
 		
@@ -245,7 +244,7 @@ package app.core.action
 		{
 		}				
 
-		public function handleMoveEvent(id:int, mx:Number, my:Number)
+		public function handleMoveEvent(id:int, mx:Number, my:Number, targetObj)
 		{
 //			trace("Handle move event");
 		}

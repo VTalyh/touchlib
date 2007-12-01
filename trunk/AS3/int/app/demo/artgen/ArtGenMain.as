@@ -27,6 +27,7 @@ package app.demo.artgen
 	import flash.events.*;
 	import flash.ui.Keyboard;
 	import flash.geom.*;
+	
 	import app.core.element.XMLMenu;
 	import app.core.utl.FPS;
 	
