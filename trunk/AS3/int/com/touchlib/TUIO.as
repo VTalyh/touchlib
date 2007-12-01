@@ -1,5 +1,5 @@
 ﻿package com.touchlib {
-	//import flash.events.*;
+
 	import flash.net.*;	
 	import flash.events.DataEvent;
 	import flash.events.Event;
@@ -56,13 +56,14 @@
 		       
 			myService = new NetConnection();
 			myService.connect("http://touchlib.com/amfphp/gateway.php");
-		
+			xmlPlaybackURL = "http://touchlib.com/amfphp/services/test.xml";
+			
 			bDebug = dbug;				
 			bInitialized = true;
 			bRecording = false;		
 			bPlayback = false;
 						
-			xmlPlaybackURL = "http://touchlib.com/amfphp/services/test.xml";
+		
 			
 			thestage = s.stage;
 			thestage.align = "TL";
@@ -407,7 +408,9 @@
 			}
 		}
 		private static function toggleRecord(e:Event)
-		{ 
+		{ 	
+			var responder = new Responder(saveSession_Result, onFault);
+			
 			if(!bRecording){
 			bRecording = true;
 			e.target.parent.alpha=0.85;			
@@ -416,8 +419,7 @@
 			trace('-------------------------------------- Record ON ----------------------------------------------------');
 			trace('-----------------------------------------------------------------------------------------------------');	
 			//Clear XML
-			//recordedXML = new XML();		
-			var responder = new Responder(saveSession_Result, onFault);
+			//recordedXML = new XML();			
 			myService.call("touchlib.clearSession", responder);
 			}
 			else{
@@ -426,7 +428,6 @@
 			trace('-----------------------------------------------------------------------------------------------------');		
 			trace('-------------------------------------- Record OFF ---------------------------------------------------');
 			trace('-----------------------------------------------------------------------------------------------------');	
-			var responder = new Responder(saveSession_Result, onFault);
 			myService.call("touchlib.saveSession", responder, recordedXML.toXMLString());
 			//trace(recordedXML.toString());		
 			trace('-------------------------------------- Recording END ------------------------------------------------');
