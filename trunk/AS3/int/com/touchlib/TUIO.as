@@ -338,11 +338,12 @@
 				recordedXML = <OSCPackets></OSCPackets>;	
 				
 				var debugBtn = new Sprite();						
-				debugBtn.graphics.beginFill(0xFFFFFF,0.5);
-				debugBtn.graphics.drawRect(thestage.stageWidth-210, 0, 200, 50);	
+				debugBtn.graphics.beginFill(0xFFFFFF,1);
+				//debugBtn.graphics.drawRect(thestage.stageWidth-210, 0, 200, 50);	
+				debugBtn.graphics.drawRoundRect(thestage.stageWidth-60, 10, 50, 50,10);	
 				debugBtn.addEventListener(MouseEvent.CLICK, toggleDebug);
 				var debugBtnW:Wrapper = new Wrapper(debugBtn);			
-				debugBtnW.alpha = 0.5; debugBtnW.y = 20;				 
+				debugBtnW.alpha = 0.85; 			 
 				thestage.addChildAt(debugBtnW, thestage.numChildren-1);								
 				
 				var recordBtn = new Sprite();						
@@ -429,7 +430,6 @@
 				 {	
 				 	Tweener.addTween(e.target.parent, {alpha:1, time:0.45, transition:"easeinoutquad"});	
 				 	Tweener.addTween(e.target.parent, {alpha:0.25, delay:0.45,time:0.45, transition:"easeinoutquad"});	
-				 	//e.target.parent.alpha=0.85;	
 					xmlPlaybackLoader = new URLLoader();
 					xmlPlaybackLoader.addEventListener("complete", xmlPlaybackLoaded);
 					xmlPlaybackLoader.load(new URLRequest(xmlPlaybackURL));			
