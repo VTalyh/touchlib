@@ -62,6 +62,7 @@ package app.core.element
 			sampleSprite.graphics.drawRect(0, 0, imgLoader.width, imgLoader.height)
 			sampleSprite.graphics.endFill();   
 			sampleSprite.visible=false;
+			sampleSprite.scaleY = 0;
 			//sampleSprite.y=-25;
 			
 			selectedSpr = new Sprite();
@@ -115,10 +116,10 @@ package app.core.element
 				if(sampleSprite.alpha!=1){		
 				sampleSprite.visible=true;		
 				selectedSpr.visible=true;
-				Tweener.addTween(sampleSprite, {alpha:1, y:0, time:0.35, transition:"easeinoutquad"});				
+				Tweener.addTween(sampleSprite, {alpha:1, scaleY:1, time:0.35, transition:"easeinoutquad"});				
 				}
 				else{				
-				Tweener.addTween(sampleSprite, {alpha:0, y:0, time:0.35, transition:"easeinoutquad"});
+				Tweener.addTween(sampleSprite, {alpha:0,scaleY:0, time:0.35, transition:"easeinoutquad"});
 				sampleSprite.visible=false;		
 				selectedSpr.visible=false;
 				}			
