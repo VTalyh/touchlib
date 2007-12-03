@@ -117,6 +117,7 @@ package app.demo.artgen
 			addChild(dialog);
 			
 			//var menu new XMLMenu(layout, XML file, padding, width, height, x, y, labels?, effects?);
+			/*
 			myVMenu = new XMLMenu('vertical', 'www/menus/artgen/vert_menu.xml',0 ,125,50,10,7, true, false);
 			
 			var menuHolder = new Sprite();
@@ -127,10 +128,12 @@ package app.demo.artgen
 			menuHolder.x = menuHolder.y = 16;
 			menuHolder.addChild(myVMenu);		
 			
+			
 			var fps = new FPS();
 			fps.x = menuHolder.width+25;			
 			fps.y = 25;
 			this.addChild(fps);	 
+			*/
 		}
 		
 		function applySettings()
