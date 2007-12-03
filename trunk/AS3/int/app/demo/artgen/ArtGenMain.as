@@ -1,17 +1,14 @@
-﻿// IDEA: use the ability to save animations as code somehow.. SVG might work? http://code.google.com/p/as3svgrendererlib/
-// IDEA: allow layer blending effects to be set
+﻿// IDEA: allow layer blending effects to be set
 // IDEA: Add a slider to adjust framerate
+// IDEA: ability to modulate colors?
 
 // TODO: 
-// move buttons,dialog to topmost layer
-
-// color palettes - color thumbnail 
-// Settings editor
-// more shapes
+// Tweak sliders in SettingsDialog - ScaleDecay, AlphaDecay too fidly (need finer control).
+// Color Picker - multifinger blending?
+// Get NUI xmlmenu working.. 
 // Layer editor - delete layer, hide/unhide layer, layer blend mode.. layer FX - blend / dropshadow.. 
 // write more AI algo's..
 
-// Make multitouchable - each finger is it's own swarm.. 
 
 // RESOURCE: http://tutorialblog.org/free-vector-downloads/  
 // RESOURCE: http://www.bittbox.com/freebies/35-free-abstract-illustrator-brushes/

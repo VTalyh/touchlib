@@ -136,6 +136,7 @@ package app.core.element
 			color2  = separateByPixels.getPixel(250, 250);
 			setThumbColor(color1);		
 			setThumbBlend((color2 + color1)/2);
+			color = color1;
 			//trace(color.toString(16).toUpperCase());
 			r = color1 >> 16;
 			g = (color1 & 0xff00) >> 8;
@@ -153,6 +154,7 @@ package app.core.element
 			color2  = separateByPixels.getPixel(250, 250);
 			setThumbColor(color1);		
 			setThumbBlend((color2 + color1)/2);
+			color = color1;
 			r = color1 >> 16;
 			g = (color1 & 0xff00) >> 8;
 			b = color1 & 0xff;

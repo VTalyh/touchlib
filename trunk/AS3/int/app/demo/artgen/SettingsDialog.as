@@ -388,7 +388,7 @@
 			nextCtrl(lfo2Type, 70);
 			nextCtrl(lfo2Rate, 55);
 			nextCtrl(lfo2Dest, 70);
-			nextCtrl(lfo2Amount, 55);			
+			nextCtrl(lfo2Amount, 125);			
 			
 			nextCtrl(colorPicker_0, 350);						
 			

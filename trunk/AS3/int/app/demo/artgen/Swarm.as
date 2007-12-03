@@ -208,9 +208,9 @@
 					t.scaleX = members[i].scaleX;
 					t.scaleY = members[i].scaleY;
 					t.transform.colorTransform.alphaMultiplier = members[i].alpha;
-					t.transform.colorTransform.redMultiplier = r;
-					t.transform.colorTransform.greenMultiplier = g;					
-					t.transform.colorTransform.blueMultiplier = b;					
+					//t.transform.colorTransform.redMultiplier = r;
+					//t.transform.colorTransform.greenMultiplier = g;					
+					//t.transform.colorTransform.blueMultiplier = b;					
 					drawingCanvas.addChild(t);
 					t = null;
 				}
