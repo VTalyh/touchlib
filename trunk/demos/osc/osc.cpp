@@ -126,7 +126,7 @@ public:
 		std::map<int, TouchData>::iterator iter1, iter2, iter_last;	    
 
 		if(fingerList.size() > 0)
-		{	    
+		{
 			//p << osc::BeginBundleImmediate;
 
 
@@ -215,8 +215,8 @@ public:
 				if(p.IsReady())
 					transmitSocket->Send( p.Data(), p.Size() );
 
-				if(p2.IsReady())
-					transmitSocket->Send( p2.Data(), p2.Size() );
+				//if(p2.IsReady())
+					//transmitSocket->Send( p2.Data(), p2.Size() );
 			}
 
 
@@ -241,7 +241,6 @@ public:
 			if(p.IsReady())
 				transmitSocket->Send( p.Data(), p.Size() );
 		}
-
 	}
 
 	void clearFingers()
@@ -255,8 +254,6 @@ private:
 	// Keep track of all finger presses.
 	std::map<int, TouchData> fingerList;
 	int frameSeq;
-
-
 };
 
 /////////////////////////////////////////////////////////////////////////

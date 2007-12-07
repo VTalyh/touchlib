@@ -12,11 +12,11 @@ package app.demo.tangram
 	import flash.filters.*;
 	
 	public class PuzzleBar extends Scrollable
-		{
+	{
 			public var scroller:Sprite;
 			private var velX:Number = 0.0;
-			private var velY:Number = 0.0;			
-			private var velAng:Number = 0.0;		
+			private var velY:Number = 0.0;
+			private var velAng:Number = 0.0;
 			private var friction:Number = 0.8;
 			private var angFriction:Number = 0.92;
 			

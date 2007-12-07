@@ -1,3 +1,4 @@
+#ifdef CMUCAM
 
 #include <CMUCaptureFilter.h>
 
@@ -389,3 +390,5 @@ void CMUCaptureFilter::kernel()
 		}
 	}
 }
+
+#endif

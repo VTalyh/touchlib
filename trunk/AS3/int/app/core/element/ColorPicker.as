@@ -82,12 +82,13 @@ package app.core.element
 			colorThumb.graphics.drawRoundRect(0, -55, imgLoader.width, 50,6);
 			colorThumb.graphics.endFill();
 			
-			/*			
+			/*
 			colorThumbBlend = new Shape();
 			colorThumbBlend.graphics.beginFill(0xFFFFFF);
 			colorThumbBlend.graphics.drawRoundRect(0, -55, 50, 50,6);
 			colorThumbBlend.graphics.endFill();
 			*/
+			
 			
 			var colorThumbBorder = new Shape();
 			colorThumbBorder.graphics.lineStyle(1, 0xffffff);

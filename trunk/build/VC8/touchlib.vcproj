@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="8.00"
 	Name="touchlib"
 	ProjectGUID="{A4325213-6505-4E16-B543-8FB0FC059A1A}"
 	RootNamespace="touchlib"
@@ -162,6 +162,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -260,6 +261,10 @@
 				</File>
 				<File
 					RelativePath="..\..\src\ScalerFilter.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\ShapeFilter.cpp"
 					>
 				</File>
 				<File

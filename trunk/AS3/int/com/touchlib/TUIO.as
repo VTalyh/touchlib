@@ -19,7 +19,7 @@
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;	
-	//import caurina.transitions.Tweener;
+	import caurina.transitions.Tweener;
 
 	public class TUIO
 	{		
@@ -196,6 +196,8 @@
 						type = node.ARGUMENT[0].@VALUE;				
 						if(type == "set")
 						{
+							var id:int;
+							
 							var x:Number,
 								y:Number,
 								X:Number,

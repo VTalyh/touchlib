@@ -111,10 +111,10 @@ void SimpleHighpassFilter::kernel()
 	// create the unsharp mask using a linear average filter
 	int blurParameter = blurLevel*2+1;
 	cvSmooth(source, buffer, CV_BLUR, blurParameter, blurParameter);
+	//cvAbsDiff(source, buffer, buffer);
 	cvSub(source, buffer, buffer);
 
 	// filter out the noise using a median filter
 	int noiseParameter = noiseLevel*2+1;
 	cvSmooth(buffer, destination, noiseSmoothType, noiseParameter, noiseParameter);
 }
-

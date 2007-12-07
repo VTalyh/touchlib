@@ -1,4 +1,3 @@
-
 #ifdef WIN32
 	#include <tchar.h>
 	#include <AtlConv.h>

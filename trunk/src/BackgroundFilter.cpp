@@ -22,7 +22,6 @@ BackgroundFilter::BackgroundFilter(char* s) : Filter(s)
 	currentRow = 0;
 }
 
-
 BackgroundFilter::~BackgroundFilter()
 {
 	if(destination)
@@ -99,7 +98,10 @@ void BackgroundFilter::kernel()
 			cvSet(mask,cvScalar(255,255,255));			
 			cvFillConvexPoly(mask, polyMask,nPolyMask,cvScalar(0,0,0));
 		}
+
 		cvAdd(reference,mask,reference);
+		cvSubS(reference, cvScalar(updateThreshold,updateThreshold,updateThreshold), reference);
+		
 		recapture = false;
 	}
 

@@ -4,7 +4,9 @@
 #ifdef WIN32
 	#include "VideoWrapperFilter.h"
 	#include "DSVLCaptureFilter.h"
+#ifdef CMUCAM
 	#include "CMUCapturefilter.h"
+#endif
 #endif
 
 #include "BrightnessContrastFilter.h"
@@ -18,6 +20,7 @@
 #include "ScalerFilter.h"
 #include "CropFilter.h"
 #include "SimpleHighpassFilter.h"
+#include "ShapeFilter.h"
 #include "ThresholdFilter.h"
 
 FilterFactory::FilterFactory()
@@ -37,8 +40,10 @@ Filter *FilterFactory::createFilter(const char *type, const char *label)
 		newFilter = (Filter *)new VideoWrapperFilter((char*)label);
 	} else if(strcmp(type, "dsvlcapture") == 0) {
 		newFilter = (Filter *)new DSVLCaptureFilter((char*)label);
+#ifdef CMUCAM
 	} else if(strcmp(type, "cmucapture") == 0) {
 		newFilter = (Filter *)new CMUCaptureFilter((char*)label);
+#endif
 #endif
 	} else if(strcmp(type, "mono") == 0) {
 		newFilter = (Filter *)new MonoFilter((char*)label);
@@ -52,6 +57,8 @@ Filter *FilterFactory::createFilter(const char *type, const char *label)
 		newFilter = (Filter *)new ScalerFilter((char*)label);
 	} else if (strcmp(type, "simplehighpass") == 0) {
 		newFilter = (Filter *) new SimpleHighpassFilter((char *) label);
+	} else if (strcmp(type, "shape") == 0) {
+		newFilter = (Filter *) new ShapeFilter((char *) label);
 	} else if(strcmp(type, "smooth") == 0) {
 		newFilter = (Filter *)new SmoothingFilter((char*)label);
 	} else if(strcmp(type, "brightnesscontrast") == 0) {
