@@ -78,16 +78,19 @@ public:
 			
 	                float X = (data.X*2.0f) - 1.0;
         	        float Y = ((1.0-data.Y)*2.0f) - 1.0;
-			float halfX = data.width * 0.5f;
-			float halfY = data.height * 0.5f;
+			float halfX = data.width;	// 0..2
+			float halfY = data.height;	// 0..2
 			float ulX = X - halfX;
 			float ulY = Y - halfY;
 			float lrX = X + halfX;
 			float lrY = Y + halfY;
-
-			float rad = 0.005f;
-
-			glutDrawBox(ulX-rad, ulY-rad, lrX+rad, lrY+rad, (float)color.r/255.0f, (float)color.g/255.0f, (float)color.b/255.0f);
+			
+			glPushMatrix();
+				glTranslatef(X, Y, 0.0f);
+				glRotatef(data.angle, 0.0f, 0.0f, 1.0f);
+				glTranslatef(-X, -Y, 0.0f);
+				glutDrawBox(ulX, ulY, lrX, lrY, (float)color.r/255.0f, (float)color.g/255.0f, (float)color.b/255.0f);
+			glPopMatrix();
 
 		}
 	}

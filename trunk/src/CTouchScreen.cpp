@@ -621,7 +621,7 @@ void CTouchScreen::transformDimension(float &width, float &height, float centerX
         cameraToScreenSpace(lrX, lrY);
 
         width = lrX - ulX;
-        height = lrY - ulY;
+        height = ulY - lrY;
 }
 
 
