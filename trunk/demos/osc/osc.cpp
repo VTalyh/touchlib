@@ -91,7 +91,6 @@ public:
 
 		fingerList[data.ID] = data;
 
-
 	}
 
 	//! A finger is no longer active..

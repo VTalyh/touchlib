@@ -89,18 +89,23 @@ void BackgroundFilter::kernel()
 		else
 			reference = cvCloneImage(source);
 
-		if(!mask){
+		if(!mask) {
 			mask = cvCreateImage(cvSize(reference->width,reference->height), reference->depth, 1);
 			mask->origin = reference->origin;  // same vertical flip as reference
 			cvSet(mask,cvScalar(0,0,0));
 		}
-		if(nPolyMask){
+
+		if(nPolyMask && updateThreshold == 0) {
 			cvSet(mask,cvScalar(255,255,255));			
 			cvFillConvexPoly(mask, polyMask,nPolyMask,cvScalar(0,0,0));
 		}
 
-		cvAdd(reference,mask,reference);
-		cvSubS(reference, cvScalar(updateThreshold,updateThreshold,updateThreshold), reference);
+		//cvAdd(reference,mask,reference);
+		if(updateThreshold != 0)
+		{
+			cvSubS(reference, cvScalar(updateThreshold,updateThreshold,updateThreshold), reference);
+		}
+
 		
 		recapture = false;
 	}
