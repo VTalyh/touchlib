@@ -48,6 +48,7 @@
 			photoLoader = new Loader();		
 			photoLoader.contentLoaderInfo.addEventListener( ProgressEvent.PROGRESS, onProgressHandler);	
 			photoLoader.contentLoaderInfo.addEventListener( Event.COMPLETE, arrange, false, 0, true);	
+			photoLoader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, onIOError);
 			var context:LoaderContext = new LoaderContext();
 			context.checkPolicyFile = true;				
 			
@@ -202,6 +203,10 @@
 			velX = dx;
 			velY = dy;				
 			velAng = dang;
+		}
+		function onIOError(e:Event)
+		{
+			trace(e);
 		}
 		
 		public override function doubleTap()

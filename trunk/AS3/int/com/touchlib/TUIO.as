@@ -51,8 +51,8 @@
 			FLOSCSocketHost=host;			
 			FLOSCSocketPort=port;					       
 			myService = new NetConnection();
-			//myService.connect("http://nui.mine.nu/amfphp/gateway.php");
-			//xmlPlaybackURL = "http://nui.mine.nu/amfphp/services/test.xml";			
+			myService.connect("http://nui.mine.nu/amfphp/gateway.php");
+			xmlPlaybackURL = "http://nui.mine.nu/amfphp/services/test.xml";			
 			bDebug = dbug;				
 			bInitialized = true;
 			bRecording = false;		
@@ -342,7 +342,7 @@
 				var debugBtn = new Sprite();						
 				debugBtn.graphics.beginFill(0xFFFFFF,1);
 				//debugBtn.graphics.drawRect(thestage.stageWidth-210, 0, 200, 50);	
-				debugBtn.graphics.drawRoundRect(thestage.stageWidth-60, 10, 50, 50,10);	
+				debugBtn.graphics.drawRect(10, 20, 50, 50);	
 				debugBtn.addEventListener(MouseEvent.CLICK, toggleDebug);
 				var debugBtnW:Wrapper = new Wrapper(debugBtn);			
 				debugBtnW.alpha = 0.85; 			 
@@ -350,18 +350,18 @@
 				
 				var recordBtn = new Sprite();						
 				recordBtn.graphics.beginFill(0xFF0000);
-				recordBtn.graphics.drawRect(thestage.stageWidth-210, 0, 200, 50);	
+				recordBtn.graphics.drawRect(10, 70, 50, 50);	
 				recordBtn.addEventListener(MouseEvent.CLICK, toggleRecord);
 				var recordBtnW:Wrapper = new Wrapper(recordBtn);			
-				recordBtnW.alpha = 0.25; recordBtnW.y = 120;				
+				recordBtnW.alpha = 0.25; //recordBtnW.y = 120;				
 				//thestage.addChildAt(recordBtnW, thestage.numChildren-1);	
 				
 				var playbackBtn = new Sprite();						
 				playbackBtn.graphics.beginFill(0x00FF00);
-				playbackBtn.graphics.drawRect(thestage.stageWidth-210, 0, 200, 50);	
+				playbackBtn.graphics.drawRect(10, 120, 50, 50);	
 				playbackBtn.addEventListener(MouseEvent.CLICK, togglePlayback);
 				var playbackBtnW:Wrapper = new Wrapper(playbackBtn);			
-				playbackBtnW.alpha = 0.25; playbackBtnW.y = 70;				
+				playbackBtnW.alpha = 0.25; //playbackBtnW.y = 70;				
 				//thestage.addChildAt(playbackBtnW, thestage.numChildren-1);
         }	
         
@@ -384,12 +384,12 @@
 		{ 
 			if(!bDebug){
 			bDebug=true;		
-			//FLOSCSocket.connect(FLOSCSocketHost, FLOSCSocketPort);
+			FLOSCSocket.connect(FLOSCSocketHost, FLOSCSocketPort);
 			e.target.parent.alpha=0.85;
 			}
 			else{
 			bDebug=false;
-			//FLOSCSocket.connect(FLOSCSocketHost, FLOSCSocketPort);
+			FLOSCSocket.connect(FLOSCSocketHost, FLOSCSocketPort);
 			e.target.parent.alpha=0.5;	
 			}
 		}

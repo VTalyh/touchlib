@@ -36,8 +36,9 @@
 			
 			var buttonSprite = new Sprite();						
 			buttonSprite.graphics.beginFill(0xFFFFFF,0.75);
-			buttonSprite.graphics.lineStyle(1,0x000000,0.85);
+			buttonSprite.graphics.lineStyle(1,0x000000,0.85);	
 			buttonSprite.graphics.drawRoundRect(-345,-140,40,280,6);
+			buttonSprite.graphics.drawRoundRect(303,-140,40,280,6);
 			buttonSprite.addEventListener(MouseEvent.CLICK, fireFunc);	
 			var WrapperObject:Wrapper = new Wrapper(buttonSprite);					
 			this.addChild(WrapperObject);
@@ -98,7 +99,7 @@
 		}
 		function EnterDown(e:Event) {			
 			parent.getChildByName('TextObject_0').name = 'TextObject_1';
-			var TextObject_0: TextObject = new TextObject(' ');
+			var TextObject_0: TextObject = new TextObject(' ',true);
 			TextObject_0.name = 'TextObject_0';
 			TextObject_0.rotation = rotation;
 			TextObject_0.x = 100;
@@ -185,7 +186,7 @@
 		}
 		function MouseEnterDown(e:Event) {		
 			parent.getChildByName('TextObject_0').name = 'TextObject_1';
-			var TextObject_0: TextObject = new TextObject(' ');
+			var TextObject_0: TextObject = new TextObject(' ',true);
 			TextObject_0.name = 'TextObject_0';
 			TextObject_0.rotation = rotation;
 			TextObject_0.x = 100;

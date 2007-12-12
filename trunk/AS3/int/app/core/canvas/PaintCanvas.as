@@ -9,14 +9,13 @@
 	import com.touchlib.*;	
 	import flash.geom.*;			
 	
-	
+	import app.core.element.Wrapper;
+   
     import flash.filters.*;
 
 
 	public class PaintCanvas extends MovieClip
 	{
-//		[Embed(source="brush.swf", symbol="Brush")]
-//		public var Brush:Class;
 
 
 		private var blobs:Array;		// blobs we are currently interacting with		
@@ -26,7 +25,7 @@
 		private var paintBmpData2:BitmapData;		
 		private var buffer:BitmapData;		
 		private var paintBmp:Bitmap;
-		private var brush:MovieClip;
+		private var brush:Sprite;
 		private var filter:BitmapFilter;
 		private var filter2:BitmapFilter;
 		private var col:ColorTransform;
@@ -50,7 +49,9 @@
 			blobs = new Array();
 			paintBmpData = new BitmapData(800, 600, true, 0x00000000);
 			
-			brush = new BrushObj();
+			brush = new Sprite();
+			brush.graphics.beginFill(0xFFFFFF);
+			brush.graphics.drawCircle(0,0,15);			
 			
 			trace(brush);
 			this.addEventListener(TUIOEvent.TUIO_MOVE, this.moveHandler, false, 0, true);			
@@ -62,9 +63,9 @@
 			 var colorBar_0:Sprite = new Sprite();
 			 		
 				colorBar_0.graphics.beginFill(0xFFFFFF,0.65);
-				colorBar_0.graphics.drawRoundRect(0, 0, 80, 565,6);	
-				colorBar_0.y = 5;
-				colorBar_0.x = 5;	
+				colorBar_0.graphics.drawRoundRect(0, 0, 80, 565,6);	00;
+				colorBar_0.x = 800-100;	
+				colorBar_0.y = 15;	
 				
 			 var colorButton_0:Sprite = new Sprite();
 			 var colorButton_1:Sprite = new Sprite();		
@@ -76,7 +77,8 @@
 			 var colorButton_7:Sprite = new Sprite();		
 			 var colorButton_8:Sprite = new Sprite();	
 			 var colorButton_9:Sprite = new Sprite();	
-
+ 			 
+ 			
 			
 			colorButton_0.graphics.beginFill(0x000000);
 			colorButton_0.graphics.drawRoundRect(0, 0, 70, 50,6);			
@@ -128,16 +130,27 @@
 			colorButton_9.y = 505;	
 			colorButton_9.x = 5;
 			
-			colorButton_0.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(0.0, 0.0, 0.0);}, false, 0, true);									
-			colorButton_1.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(1.0, 0.0, 0.0);}, false, 0, true);	
-			colorButton_2.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(1.0, 0.5, 0.0);}, false, 0, true);									
-			colorButton_3.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(1.0, 1.0, 0.0);}, false, 0, true);
-			colorButton_4.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(0.0, 1.0, 0.0);}, false, 0, true);									
-			colorButton_5.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(0.5, 1.0, 0.5);}, false, 0, true);
-			colorButton_6.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(0.0, 0.0, 1.0);}, false, 0, true);									
-			colorButton_7.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(0.5, 0.0, 0.5);}, false, 0, true);									
-			colorButton_8.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(1.0, 0.0, 1.0);}, false, 0, true);
-			colorButton_9.addEventListener(TUIOEvent.TUIO_DOWN, function(){setColor(1.0, 1.0, 1.0);}, false, 0, true);
+			 var colorWrapper_0:Wrapper = new Wrapper(colorButton_0);
+			 var colorWrapper_1:Wrapper = new Wrapper(colorButton_1);
+			 var colorWrapper_2:Wrapper = new Wrapper(colorButton_2);
+			 var colorWrapper_3:Wrapper = new Wrapper(colorButton_3);
+			 var colorWrapper_4:Wrapper = new Wrapper(colorButton_4);
+			 var colorWrapper_5:Wrapper = new Wrapper(colorButton_5);
+			 var colorWrapper_6:Wrapper = new Wrapper(colorButton_6);
+			 var colorWrapper_7:Wrapper = new Wrapper(colorButton_7);
+			 var colorWrapper_8:Wrapper = new Wrapper(colorButton_8);
+			 var colorWrapper_9:Wrapper = new Wrapper(colorButton_9);	
+			 
+			colorWrapper_0.addEventListener(MouseEvent.CLICK, function(){trace("DOWN");setColor(0.0, 0.0, 0.0);}, false, 0, true);									
+			colorWrapper_1.addEventListener(MouseEvent.CLICK, function(){trace("DOWN");setColor(1.0, 0.0, 0.0);}, false, 0, true);	
+			colorWrapper_2.addEventListener(MouseEvent.CLICK, function(){trace("DOWN");setColor(1.0, 0.5, 0.0);}, false, 0, true);									
+			colorWrapper_3.addEventListener(MouseEvent.CLICK, function(){trace("DOWN");setColor(1.0, 1.0, 0.0);}, false, 0, true);
+			colorWrapper_4.addEventListener(MouseEvent.CLICK, function(){trace("DOWN");setColor(0.0, 1.0, 0.0);}, false, 0, true);									
+			colorWrapper_5.addEventListener(MouseEvent.CLICK, function(){trace("DOWN");setColor(0.5, 1.0, 0.5);}, false, 0, true);
+			colorWrapper_6.addEventListener(MouseEvent.CLICK, function(){trace("DOWN");setColor(0.0, 0.0, 1.0);}, false, 0, true);									
+			colorWrapper_7.addEventListener(MouseEvent.CLICK, function(){trace("DOWN");setColor(0.5, 0.0, 0.5);}, false, 0, true);									
+			colorWrapper_8.addEventListener(MouseEvent.CLICK, function(){trace("DOWN");setColor(1.0, 0.0, 1.0);}, false, 0, true);
+			colorWrapper_9.addEventListener(MouseEvent.CLICK, function(){trace("DOWN");setColor(1.0, 1.0, 1.0);}, false, 0, true);
 			
 			this.addEventListener(Event.ENTER_FRAME, this.update, false, 0, true);			
 			paintBmp = new Bitmap(paintBmpData);
@@ -152,20 +165,20 @@
 			addChild(paintBmp);					
 
 //			addChild(brush);
-			colorBar_0.addChild(colorButton_0);
-			colorBar_0.addChild(colorButton_1);
-			colorBar_0.addChild(colorButton_2);	
-			colorBar_0.addChild(colorButton_3);
-			colorBar_0.addChild(colorButton_4);
-			colorBar_0.addChild(colorButton_5);	
-			colorBar_0.addChild(colorButton_6);
-			colorBar_0.addChild(colorButton_7);
-			colorBar_0.addChild(colorButton_8);	
-			colorBar_0.addChild(colorButton_9);	
+			colorBar_0.addChild(colorWrapper_0);
+			colorBar_0.addChild(colorWrapper_1);
+			colorBar_0.addChild(colorWrapper_2);	
+			colorBar_0.addChild(colorWrapper_3);
+			colorBar_0.addChild(colorWrapper_4);
+			colorBar_0.addChild(colorWrapper_5);	
+			colorBar_0.addChild(colorWrapper_6);
+			colorBar_0.addChild(colorWrapper_7);
+			colorBar_0.addChild(colorWrapper_8);	
+			colorBar_0.addChild(colorWrapper_9);	
 				
 			this.addChild(colorBar_0);
 
-			setColor(0.0, 0.0, 1.0);
+			setColor(0.0, 1.0, 0.0);
 
 			
 		}

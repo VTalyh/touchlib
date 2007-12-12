@@ -55,8 +55,8 @@
 			}*/
 		}
 			else
-			{
-			//hide cursor
+			{			
+			/* hide cursor
 			graphics.lineStyle( 1, 0x000000 );
 			//graphics.drawRect((-thewidth/2)-10,(-theheight/2)-10,thewidth+20,theheight+20);
 			trace('--------------------------------------- w:' + width + ' h:' + height);
@@ -65,6 +65,7 @@
 			graphics.moveTo( -5, 0 );
 			graphics.lineTo( 5, 0 );
 			this.blendMode='invert';
+			*/
 			}	
 		}		
 	}

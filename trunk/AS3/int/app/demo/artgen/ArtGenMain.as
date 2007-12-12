@@ -26,6 +26,7 @@ package app.demo.artgen
 	import flash.geom.*;
 	
 	import app.core.element.XMLMenu;
+	import app.core.element.Wrapper;
 	import app.core.utl.FPS;
 	
 	public class ArtGenMain extends Multitouchable 
@@ -99,10 +100,17 @@ package app.demo.artgen
 			
 			addEventListener(Event.ENTER_FRAME, frameUpdate, false, 0, true);
 			addEventListener(Event.UNLOAD, unloadHandler, false, 0, true);
-			btSaveLayer.addEventListener(MouseEvent.CLICK, saveLayerHandler, false, 0, true);
-			btClearLayer.addEventListener(MouseEvent.CLICK, clearLayerHandler, false, 0, true);
-			btSwarmSettings.addEventListener(MouseEvent.CLICK, editSettingsHandler, false, 0, true);
 			
+			var wrap0:Wrapper = new Wrapper(btSaveLayer);
+			var wrap1:Wrapper = new Wrapper(btClearLayer);
+			var wrap2:Wrapper = new Wrapper(btSwarmSettings);			
+			wrap0.addEventListener(MouseEvent.CLICK, saveLayerHandler, false, 0, true);
+			wrap1.addEventListener(MouseEvent.CLICK, clearLayerHandler, false, 0, true);
+			wrap2.addEventListener(MouseEvent.CLICK, editSettingsHandler, false, 0, true);				
+			addChild(wrap0);
+			addChild(wrap1);
+			addChild(wrap2);
+						
 			// hide it for now, until I make it work.
 			btEditLayers.visible = false;
 			

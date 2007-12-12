@@ -83,18 +83,22 @@
 			blobs.push( {id: id, origX: origX, origY: origY, myOrigX: x, myOrigY:y} );
 			
 			if(blobs.length == 1)
-			{
-				
+			{				
 				state = "dragging";
-				trace("Drag :"+this);		
-				
+				trace("Drag :"+this);					
 				curScale = this.scaleX;
 				curAngle = this.rotation;					
 				curPosition.x = x;
-				curPosition.y = y;
-				
+				curPosition.y = y;				
 				blob1 = blobs[0];
-			} else if(blobs.length == 2)
+			} 
+			else if(blobs.length >= 3)
+			{
+				state = "dragging";
+				trace("Hand Drag :"+this);	
+				return;
+			}
+			else if(blobs.length == 2)
 			{
 				state = "rotatescale";
 				trace("Scale : "+this+" :"+this.scaleX);		
@@ -119,12 +123,7 @@
 				}				
 
 			}
-			/* NULLIFY 3rd BLOB... input error correction
-			else if(blobs.length == 3)
-			{
-				return;
-			}
-			 */
+			
 		}
 		
 		function removeBlob(id:Number):void
@@ -177,15 +176,15 @@
 						// if not found, then it must have died..
 						if(tuioobj1)
 						{
-							var curPt1:Point = parent.globalToLocal(new Point(tuioobj1.x, tuioobj1.y));									
-							
+							var curPt1:Point = parent.globalToLocal(new Point(tuioobj1.x, tuioobj1.y));						
 							blob1.origX = curPt1.x;
 							blob1.origY = curPt1.y;
 						}									
 					}
-				
-				return;
-					
+					//if(blobs.length >= 4) {
+					//Error Checking
+					//}
+				return;					
 				}
 			}			
 		}
@@ -398,8 +397,7 @@
 					removeBlob(blob1.id);
 					return;
 				}
-
-
+				
 				var curPt:Point = parent.globalToLocal(new Point(tuioobj.x, tuioobj.y));					//  this.globalToLocal(
 				
 //				this.x += tuioobj.dX;
@@ -485,11 +483,12 @@
 				if(!noScale)
 				{
 					//FIX THE WIGGLE
-					//trace(newscale-curScale);
-					//if((newscale-curScale)<=1 || (newscale-curScale)>=-1){
+					//var tmp = (curScale-newscale);
+					//trace(tmp);
+					//if(tmp >= 0.1 || tmp <= -0.1){
 					scaleX = newscale;
 					scaleY = newscale;	
-					//}			
+					//}			 
 				}
 	
 				var origLine:Point = origPt1;
@@ -505,10 +504,12 @@
 				
 				if(!noRotate)	
 				{		
-					//FIX THE WIGGLE
-					//trace(curAngle-oldAngle);	
-					//if((curAngle-oldAngle)<=50|| (curAngle-oldAngle)>=-50)
-					rotation = curAngle + (ang2 - ang1);			
+					//FIX THE WIGGLE	
+					//trace(this.rotation+'-----------------------o');	
+					//trace(curAngle-oldAngle+'-----------------------a');	
+					//if((curAngle-oldAngle)>=0.05 || (curAngle-oldAngle)<=-0.05){
+					rotation = curAngle + (ang2 - ang1);	
+					//}	
 				}
 				
 //				x = curPt1.x - ((curLine.x / len2) * len3 * newscale);
@@ -519,7 +520,8 @@
 				oldY = y;
 			
 				if(!noMove)
-				{
+				{	
+					//FIX THE WIGGLE
 					x = curPosition.x + (curCenter.x - centerOrig.x);	
 					y = curPosition.y + (curCenter.y - centerOrig.y);	
 				}

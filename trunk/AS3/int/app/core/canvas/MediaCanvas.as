@@ -54,16 +54,16 @@
 			this.addChild( clickgrabber_center );			
 			
 			
-			//TextObject_0 = new TextObject(_canvasName);	
-			//TextObject_0.noMove=true;
-			//TextObject_0.visible=false;
-			//this.addChild(TextObject_0);	
+			TextObject_0 = new TextObject(_canvasName, false);	
+			TextObject_0.noMove=true;
+			TextObject_0.visible=false;
+			this.addChild(TextObject_0);	
 			
-			//TextObject_0.visible=true;
-			//TextObject_0.scaleX = 2.5;
-			//TextObject_0.scaleY = 2.5;	
-			//TextObject_0.x=-clickgrabber.width/2+900;	
-			//TextObject_0.y=-clickgrabber.height/2+100;	
+			TextObject_0.visible=true;
+			TextObject_0.scaleX = 2.5;
+			TextObject_0.scaleY = 2.5;	
+			TextObject_0.x=-clickgrabber.width/2+900;	
+			TextObject_0.y=-clickgrabber.height/2+100;	
 		}
 		
 		public override function released(dx:Number, dy:Number, dang:Number)

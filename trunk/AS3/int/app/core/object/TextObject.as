@@ -22,10 +22,11 @@
 		public var t: TextField;
 		public var mc: Sprite;
 		public var inString:String;	
-		public var closeButton:Boolean = true;	
+		public var closeButton:Boolean;	
 			
-		public function TextObject(inVar:String)
-		{					
+		public function TextObject(inVar:String, _closeButton:Boolean)
+		{	
+			closeButton	= _closeButton;		
 			//var linkedFont:myFont = new myFont();
 			//var txt01:TextField = new TextField();
 			//txt01.defaultTextFormat = (new TextFormat(linkedFont.fontName));			
@@ -39,7 +40,6 @@
 			mc.graphics.drawRect(-200,-200,400,400);
 			//noScale = true;
 			//noRotate = true;
-			noSelection = true;			
 			noSelection = true;			
 			noMove = false;	
 			
@@ -73,6 +73,7 @@
 			
 			//mc.addChild(t);
 	  		this.addChild(t);	    
+			trace('TEXT----'+closeButton);
 			if(closeButton){
 			var buttonSprite = new Sprite();						
 			buttonSprite.graphics.beginFill(0xFFFFFF,0.75);

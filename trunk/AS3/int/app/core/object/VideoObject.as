@@ -115,8 +115,8 @@
 			volumeSlider.rotation-=90;	
 			volumeSlider.alpha = 0.5;	
 			
-			//scrubSlider.setValue(0.0);
-			//volumeSlider.setValue(0.5);
+			scrubSlider.setValue(0.0);
+			volumeSlider.setValue(0.5);
 			
 			scrubSlider.addEventListener(TUIOEvent.TUIO_DOWN, onMouseDown);
 			scrubSlider.addEventListener(TUIOEvent.TUIO_UP, onMouseUp);
@@ -241,7 +241,7 @@
 		 if(_Vscrubbing){
 		 stream1.soundTransform = new SoundTransform(volumeSlider.sliderValue);  
 		 volumeSlider.alpha = volumeSlider.sliderValue+0.25; 
-		  }	else{		  
+		  }	/*else{		  
 		  if(this.scaleX<=5)
 		  {  
 		  stream1.soundTransform = new SoundTransform((scaleX/2)-0.5);  
@@ -249,7 +249,7 @@
 		  } 
 		  else if(this.scaleX<=0.5){	  
 		  stream1.soundTransform = new SoundTransform(0);  }
-		  }
+		  }*/
 		}
 		
 		public override function released(dx:Number, dy:Number, dang:Number) {

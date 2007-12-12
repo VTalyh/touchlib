@@ -15,6 +15,7 @@
 		private var scores:Score = new Score();
 		
 		//private var aiPaddle:AIPaddle = new AIPaddle();
+		
 		private var userPaddle1:UserPaddle = new UserPaddle();		
 		private var userPaddle2:UserPaddle = new UserPaddle();
 		
@@ -28,11 +29,8 @@
 		
 		function PongGame()
 		{	
-			var fps = new FPS();
-			fps.x = fps.y = 50;
-			this.addChild(fps);	
+			TUIO.init( stage, 'localhost', 3000, '', true );	
 			
-			TUIO.init( this, 'localhost', 3000, '', true );	
 			var wallHeight:Number = 10;
 			
 			PongGame.playArea = new Rectangle(
