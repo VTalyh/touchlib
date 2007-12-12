@@ -24,7 +24,6 @@ public class XMLMenu extends Sprite {
 		private var __labels:Boolean;
 		private var __effects:Boolean;			
 		private var imageButtonUP:Loader;
-	 
 				
 public function XMLMenu(layout:String, xml_url:String, spacing:Number, sizeX:Number, sizeY:Number, menuX:Number, menuY:Number, labels:Boolean, effects:Boolean):void {	
 			loadXML(xml_url);
@@ -89,9 +88,11 @@ public function XMLMenu(layout:String, xml_url:String, spacing:Number, sizeX:Num
 			
 			for each (p in __menuList) {			
 				var button:Sprite = new Sprite();	
-				button.name = "button"+count;				
+				button.name = "button"+count;
+				trace(button.name+' p:'+button);				
 				button.mouseChildren = false;				
 				button.buttonMode = true;				
+				
 				var label:TextField = new TextField();				
 				if(!__labels){label.visible=false}			
 				label.autoSize = TextFieldAutoSize.LEFT;
@@ -228,7 +229,7 @@ public function XMLMenu(layout:String, xml_url:String, spacing:Number, sizeX:Num
 	   			MASKe.graphics.endFill();
 	   			this.addChild(MASKe);	
 	   			MASKe.name="maskit";
-	   			trace(this);
+	   			//trace(this);
 	   			}
 	
 		}	
@@ -250,7 +251,7 @@ public function XMLMenu(layout:String, xml_url:String, spacing:Number, sizeX:Num
 		trace('kill this radial menu!');
 		}
 		private function displayActiveState(e:Event):void {
-			Tweener.addTween(e.currentTarget.getChildByName("over"), {alpha:0.75, time:0.2, transition:"easeinoutquad"});
+			Tweener.addTween(e.currentTarget.getChildByName("over"), {alpha:1, time:0.2, transition:"easeinoutquad"});
 			e.stopPropagation();
 		}
 		private function displayInactiveState(e:Event):void {	

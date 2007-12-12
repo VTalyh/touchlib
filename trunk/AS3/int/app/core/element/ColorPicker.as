@@ -1,4 +1,4 @@
-﻿// TODO: two finger color blending
+﻿﻿// TODO: two finger color blending
 // ----- Still some minor bugs on the toggling of the colorBar
 // ----- make this class return a color value also.. similar to a slider
 
@@ -65,7 +65,7 @@ package app.core.element
 			sampleSprite.graphics.drawRect(0, 0, imgLoader.width, imgLoader.height)
 			sampleSprite.graphics.endFill();   
 			sampleSprite.visible=false;
-			sampleSprite.scaleY = 0;
+			//sampleSprite.scaleY = 0;
 			//sampleSprite.y=-25;
 			
 			selectedSpr = new Sprite();
@@ -80,15 +80,7 @@ package app.core.element
 			colorThumb = new Shape();
 			colorThumb.graphics.beginFill(0xFFFFFF);
 			colorThumb.graphics.drawRoundRect(0, -55, imgLoader.width, 50,6);
-			colorThumb.graphics.endFill();
-			
-			/*
-			colorThumbBlend = new Shape();
-			colorThumbBlend.graphics.beginFill(0xFFFFFF);
-			colorThumbBlend.graphics.drawRoundRect(0, -55, 50, 50,6);
-			colorThumbBlend.graphics.endFill();
-			*/
-			
+			colorThumb.graphics.endFill();		
 			
 			var colorThumbBorder = new Shape();
 			colorThumbBorder.graphics.lineStyle(1, 0xffffff);
@@ -96,7 +88,6 @@ package app.core.element
 			
 		
 			addChild(colorThumb);
-			//addChild(colorThumbBlend);			
 			addChild(colorThumbBorder);			
 			addChild(sampleSprite);		
 			addChild(label);		
@@ -108,13 +99,7 @@ package app.core.element
 			thumbColorTransform.color = c;
 			colorThumb.transform.colorTransform = thumbColorTransform;
 		}	
-		/*
-		function setThumbBlend(c) {
-			var thumbColorBlend:ColorTransform = new ColorTransform();
-			thumbColorBlend.color = c;
-			colorThumbBlend.transform.colorTransform = thumbColorBlend;
-		}
-		*/
+	
 		public override function handleDownEvent(id:int, mx:Number, my:Number, targetObj)
 		{	
 			//trace('---------------------------------------------------------------------------------------'+blobs.length);
@@ -124,33 +109,22 @@ package app.core.element
 				if(sampleSprite.alpha!=1){		
 				sampleSprite.visible=true;		
 				selectedSpr.visible=true;
-				Tweener.addTween(sampleSprite, {alpha:1, scaleY:1, time:0.35, transition:"easeinoutquad"});				
+				Tweener.addTween(sampleSprite, {alpha:1, time:0.35, transition:"easeinoutquad"});
 				}
 				else{				
-				Tweener.addTween(sampleSprite, {alpha:0,scaleY:0, time:0.35, transition:"easeinoutquad"});
+				Tweener.addTween(sampleSprite, {alpha:0, time:0.35, transition:"easeinoutquad"});
 				sampleSprite.visible=false;		
 				selectedSpr.visible=false;
 				}			
 			}
 			else{	
-			// hrmm if id > 0 then loop thru the current blobs and extract their X/Y... create a new color/crosshair at that point... 
-			// determine average of colors and draw it to the blending thumbnail (should each new point get a new thumbnail?)
-			
-			for(var i:int = 0; i<blobs.length; i++)
-			{
-			//trace(blobs[i].y+'-----------'+this.x);	
-			}
-			color1  = separateByPixels.getPixel(mx- this.x, my-this.y);		
-			color2 = color1;			
-			//color2  = separateByPixels.getPixel(250, 250);
-			setThumbColor(color1);		
-			//setThumbBlend((color2 + color1)/2);
-			color = color1;
-			//trace(color.toString(16).toUpperCase());
-			r = color1 >> 16;
-			g = (color1 & 0xff00) >> 8;
-			b = color1 & 0xff;
-			label.text = r + ", " + g + ", " + b;					
+			//color1  = separateByPixels.getPixel(mx- this.x, my-this.y);		
+			//setThumbColor(color1);		
+			//color = color1;
+			//r = color1 >> 16;
+			//g = (color1 & 0xff00) >> 8;
+			//b = color1 & 0xff;
+			//label.text = r + ", " + g + ", " + b;					
 			selectedSpr.x = mx- this.x;
 			selectedSpr.y = my- this.y;	
 			}
@@ -159,18 +133,37 @@ package app.core.element
 
 		public override function handleMoveEvent(id:int, mx:Number, my:Number, targetObj)
 		{
-			color1  = separateByPixels.getPixel(mx- this.x, my-this.y);
-			color2 = color1;
-			//color2  = separateByPixels.getPixel(250, 250);
-			setThumbColor(color1);		
-			//setThumbBlend((color2 + color1)/2);
-			color = color1;
-			r = color1 >> 16;
-			g = (color1 & 0xff00) >> 8;
-			b = color1 & 0xff;
-			label.text = r + ", " + g + ", " + b;					
-			selectedSpr.x = mx- this.x;
-			selectedSpr.y = my- this.y;
+			
+			for(var i:int = 0; i<blobs.length; i++)
+			{	//trace(blobs[i].history.length);
+					
+									
+				color = separateByPixels.getPixel(mx- this.x, my-this.y);
+				trace((mx-this.x)+', '+(my-this.y)+' --------------------ONE');		
+				
+				if(i >= 1){	
+					color1  = separateByPixels.getPixel((blobs[i-1].history[0].x-this.x), (blobs[i-1].history[0].y-this.y));	
+					color2  = separateByPixels.getPixel((blobs[i-0].history[0].x-this.x), (blobs[i-0].history[0].y-this.y));
+					trace((blobs[i].history[0].x-this.x)+', '+ (blobs[i].history[0].y-this.y)+' --------------------TWO+');		
+					color = (color2 + color1)/2;	
+						if((blobs[i-0].history[0].y-this.y) >=2){		setThumbColor(color);	}
+				}	
+				else{
+				
+				}		
+				if(my- this.y >=2){			
+				setThumbColor(color);	
+				selectedSpr.x = mx- this.x;
+				selectedSpr.y = my- this.y;
+				}
+			}	
+			
+			//r = color1 >> 16;
+			//g = (color1 & 0xff00) >> 8;
+			//b = color1 & 0xff;
+			//label.text = r + ", " + g + ", " + b;					
+			//selectedSpr.x = mx- this.x;
+			//selectedSpr.y = my- this.y;
 		}		
 
 	}
