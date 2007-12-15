@@ -1,7 +1,7 @@
 ﻿package app.demo.artgen
 {
 	import flash.display.Sprite;
-	import com.touchlib.*;
+	import flash.events.*;
 
 	public class ArtGenCanvas extends MovieClip {
 

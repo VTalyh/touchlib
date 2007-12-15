@@ -19,7 +19,7 @@ image information toggle
 */
 
 package app.core.canvas{
-import com.touchlib.*;
+import flash.events.*;
 import app.core.canvas.LiquidCanvas;
 import app.core.loader.*;
 import app.core.element.*;

@@ -2,7 +2,7 @@
 
 package app.demo.tank
 {
-	import com.touchlib.*;
+	import flash.events.*;
 	import app.demo.tank.*;
 	import app.core.element.*;
 	

@@ -3,7 +3,7 @@
 	import flash.display.*;
 	import flash.events.*;
 	
-	import com.touchlib.TUIO;
+	import flash.events.TUIO;
 	import app.demo.puzzle.*;		
 	import app.core.action.RotatableScalable;
 	

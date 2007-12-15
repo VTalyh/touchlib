@@ -1,5 +1,5 @@
 ﻿package app.core.canvas {
-	import com.touchlib.*;	
+	import flash.events.*;	
 	import app.core.action.RotatableScalable;	
 	import app.core.object.TextObject;	
 	import app.core.object.KeyboardObject;

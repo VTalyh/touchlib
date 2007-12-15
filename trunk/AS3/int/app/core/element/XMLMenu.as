@@ -290,7 +290,7 @@ public function XMLMenu(layout:String, xml_url:String, spacing:Number, sizeX:Num
 	import flash.xml.XML
 	import flash.events.Event;
 	import flash.error.Error;
-	import com.touchlib.*;
+	import flash.events.*;
 	import app.core.element.Wrapper; 
 	import app.core.utl.Wedge;	 
 	import flash.events.*;

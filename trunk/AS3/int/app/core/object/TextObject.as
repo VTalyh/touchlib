@@ -4,14 +4,11 @@
 	import flash.display.Sprite;
 	import flash.events.Event;	
 	import flash.events.MouseEvent;	
-	import app.core.utl.ColorUtil;	
-	
+
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
-	
-	import caurina.transitions.Tweener;
-	
+	import caurina.transitions.Tweener;	
 	import app.core.element.Wrapper;
 	
 	public class TextObject extends RotatableScalable
@@ -27,32 +24,19 @@
 		public function TextObject(inVar:String, _closeButton:Boolean)
 		{	
 			closeButton	= _closeButton;		
-			//var linkedFont:myFont = new myFont();
-			//var txt01:TextField = new TextField();
-			//txt01.defaultTextFormat = (new TextFormat(linkedFont.fontName));			
-			//var embeddedFontClass = getDefinitionByName("myFont");
-			//Font.registerFont(embeddedFontClass);			
-			
+
 			inString = inVar;
 			
 			mc = new Sprite();
 			mc.graphics.beginFill(0xFF00FF,1);
 			mc.graphics.drawRect(-200,-200,400,400);
-			//noScale = true;
-			//noRotate = true;
 			noSelection = true;			
-			noMove = false;	
-			
-			//color = ColorUtil.random(0,0,0);
-					
-			trace('Text Object Created');
-			
+		
 			var format:TextFormat= new TextFormat();
 			format.font= "myFont";
 			format.color= 0xFFFFFF;
-			format.size= 72;
+			format.size= 99;
 			
-
 			t = new TextField();
 			t.autoSize = TextFieldAutoSize.CENTER;
 			//t.wordWrap = true;

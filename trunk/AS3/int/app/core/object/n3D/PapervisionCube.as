@@ -73,7 +73,7 @@ public function PapervisionCube()
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import com.touchlib.*;
+	import flash.events.*;
 	import app.core.action.RotatableScalable;	
 	
 	import org.papervision3d.cameras.Camera3D;

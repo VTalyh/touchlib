@@ -23,7 +23,7 @@ package app.core.element{
 	import flash.events.*;
 	import flash.net.*;
 	
-	import com.touchlib.*;	
+	import flash.events.*;	
 	import flash.geom.*;			
 
 	public class Wrapper extends MovieClip

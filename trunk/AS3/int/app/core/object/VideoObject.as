@@ -1,6 +1,6 @@
 ﻿package app.core.object {
 	
-	import com.touchlib.*;
+	import flash.events.*;
 	import app.core.action.RotatableScalable;
 	import app.core.element.*;
 

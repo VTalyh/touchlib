@@ -1,10 +1,10 @@
 ﻿package app.demo.musicalSquares
 {
-	import com.touchlib.*;
+	import flash.events.*;
 	import flash.media.Sound;
 	import flash.media.SoundTransform;
 	import flash.net.URLRequest;
-	//import com.touchlib.*;
+	//import flash.events.*;
 
 
 	public class Sounds {

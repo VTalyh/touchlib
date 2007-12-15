@@ -31,7 +31,7 @@ import org.papervision3d.cameras.*;
 import org.papervision3d.objects.*;
 import org.papervision3d.materials.*;
 import org.papervision3d.materials.MaterialsList;
-import com.touchlib.*;
+import flash.events.*;
 import app.core.utl.ColorUtil;
 import app.core.element.*;
 

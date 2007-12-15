@@ -9,7 +9,7 @@
 		import flash.text.TextFieldAutoSize;
 		import flash.text.*;
 		import flash.geom.Point;
-		import com.touchlib.*;
+		import flash.events.*;
 	
 	
 		public class Colliding extends Sprite {

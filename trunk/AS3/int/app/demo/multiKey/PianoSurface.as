@@ -3,7 +3,7 @@
 	import flash.display.Shape;		
 	import flash.events.Event;
 	import flash.geom.Point;
-	import com.touchlib.*;
+	import flash.events.*;
 	import app.demo.multiKey.*;
 	
 	public class PianoSurface extends RotatableScalable {

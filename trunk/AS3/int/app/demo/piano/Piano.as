@@ -10,7 +10,7 @@ package app.demo.piano
 	import flash.display.Sprite;
 	import flash.system.Capabilities;
 	
-	import com.touchlib.TUIO;
+	import flash.events.TUIO;
 	import app.demo.piano.*;
 
 	public class Piano extends Sprite {

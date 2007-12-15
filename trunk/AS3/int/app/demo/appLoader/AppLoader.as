@@ -8,7 +8,7 @@ package app.demo.appLoader
 {
 	import flash.display.Sprite;
 	
-	import com.touchlib.*;
+	import flash.events.*;
 	import flash.display.*;
 	import flash.net.*;
 	import flash.events.*;

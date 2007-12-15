@@ -8,7 +8,7 @@ package app.demo.multiKey {
 	import flash.display.GradientType;
 	import flash.display.SpreadMethod;
 	import flash.geom.Matrix;
-	import com.touchlib.*;
+	import flash.events.*;
 	import app.demo.multiKey.*;
 
 

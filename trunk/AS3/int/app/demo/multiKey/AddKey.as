@@ -11,7 +11,7 @@
     import flash.filters.DropShadowFilter; 
 	import flash.geom.ColorTransform;
 
-	import com.touchlib.*;
+	import flash.events.*;
 	import app.createMultiKey.*;
 	import app.core.action.RotatableScalable;
 

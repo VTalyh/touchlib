@@ -3,7 +3,7 @@
 	import app.core.element.*;
 	import caurina.transitions.Tweener;
 	
-	import com.touchlib.TouchEvent;
+	import flash.events.TouchEvent;
 	
 	import flash.display.*;
 	import flash.events.*;
@@ -189,8 +189,8 @@
 			var TextObject_0: TextObject = new TextObject(' ',true);
 			TextObject_0.name = 'TextObject_0';
 			TextObject_0.rotation = rotation;
-			TextObject_0.x = 100;
-			TextObject_0.y = 100;
+			TextObject_0.x = 400;
+			TextObject_0.y = 150;
 			parent.addChild(TextObject_0);	
 			var t: TextField = parent.getChildByName('TextObject_0').getChildByName('t');			
 			var tmp:String = t.text;
@@ -210,7 +210,7 @@
 			Tweener.addTween(this, {x:parent.stage.stageWidth/2,y:(parent.stage.stageHeight/2),scaleX: 1.0, scaleY: 1.0, rotation:0, time:0.5, transition:"easeinoutquad"});	
 				
 			}else{
-			Tweener.addTween(this, {x:parent.stage.stageWidth+150,y:85,scaleX: 0.5, scaleY: 0.5, rotation:-0, time:0.5, transition:"easeinoutquad"});	
+			Tweener.addTween(this, {x:parent.stage.stageWidth+150,y:300,scaleX: 0.5, scaleY: 0.5, rotation:-0, time:0.5, transition:"easeinoutquad"});	
 			}
 		}
 		 

@@ -1,6 +1,6 @@
 ﻿package app.demo{
 	
-import com.touchlib.*;
+import flash.events.*;
 
 import app.core.canvas.*;
 import app.core.loader.*;
@@ -98,7 +98,7 @@ public class Debug extends Sprite
 
 
 /*
-import com.touchlib.TUIO;
+import flash.events.TUIO;
 import app.core.canvas.*;
 import app.core.loader.*;
 import app.core.utl.*;

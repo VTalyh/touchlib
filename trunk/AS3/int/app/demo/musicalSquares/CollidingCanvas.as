@@ -4,7 +4,7 @@
 	import flash.events.Event;
 	import fl.transitions.Tween;
 	import fl.transitions.easing.*;
-	import com.touchlib.*;
+	import flash.events.*;
 	import app.core.action.RotatableScalable;
 	
 	public class CollidingCanvas extends RotatableScalable

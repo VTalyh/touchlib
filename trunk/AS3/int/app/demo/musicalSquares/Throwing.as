@@ -6,11 +6,11 @@
 
 package app.demo.musicalSquares
 {
-	import com.touchlib.*;
+	import flash.events.*;
 	import app.core.action.RotatableScalable;
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import com.touchlib.*;
+	import flash.events.*;
 	import fl.transitions.Tween;
 	import fl.transitions.easing.*;
 	

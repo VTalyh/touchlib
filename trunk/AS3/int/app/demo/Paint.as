@@ -1,7 +1,7 @@
 ﻿package app.demo
 {
 	import flash.display.Sprite;
-	import com.touchlib.TUIO;
+	import flash.events.TUIO;
 	import app.core.canvas.PaintCanvas;
 
 	public class Paint extends Sprite {

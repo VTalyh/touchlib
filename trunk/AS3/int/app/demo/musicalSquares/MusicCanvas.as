@@ -2,7 +2,7 @@
 	
 	import flash.display.Shape;		
 	import flash.events.Event;
-	import com.touchlib.*;
+	import flash.events.*;
 	import fl.transitions.Tween;
 	import fl.transitions.easing.*;
 	import app.core.action.RotatableScalable;

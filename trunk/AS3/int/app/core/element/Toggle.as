@@ -4,12 +4,12 @@ package app.core.element
 	import flash.display.Sprite;		
 	import flash.events.MouseEvent;
 	import flash.events.Event;
-	import com.touchlib.*;	
+	import flash.events.*;	
 	import flash.geom.Point;			
 
 	public class Toggle extends Sprite
 	{
-		private var gfxSliderGrip:Sprite;
+		public var gfxSliderGrip:Sprite;
 		private var gfxActiveGrip:Sprite;
 		private var gfxActiveGlow:Sprite;
 		public var sliderValue:Number = 0.0;
@@ -18,7 +18,7 @@ package app.core.element
 		private var gfxHeight:Number = 0;
 		private var scrollableWidth:Number;
 		private var borderPixels:Number = 4;
-		private var roundnessPixels:Number = 5;
+		private var roundnessPixels:Number = 10;
 		
 		private var activeX:Number;
 		private var activeY:Number;		
@@ -26,7 +26,7 @@ package app.core.element
 		private var mouseActive:Boolean;
 		
 
-		public function Toggle(wd:Number, ht:Number)
+		public function Toggle(wd:Number, ht:Number, barwd:Number)
 		{
 
 					
@@ -37,8 +37,8 @@ package app.core.element
 			gfxWidth = wd;
 			gfxHeight = ht;
 			gfxSliderGrip = new Sprite();
-			gfxSliderGrip.graphics.beginFill(0x8C8C8C, 1);
-			gfxSliderGrip.graphics.drawRoundRect(-20, -(ht/2) + borderPixels,  40, ht-borderPixels*2, roundnessPixels, roundnessPixels);
+			gfxSliderGrip.graphics.beginFill(0xFF00FF, 1);
+			gfxSliderGrip.graphics.drawRoundRect(-barwd/2, -(ht/2) + borderPixels, barwd, ht-borderPixels*2, roundnessPixels, roundnessPixels);
 			gfxSliderGrip.y = (ht/2);
 			gfxSliderGrip.graphics.endFill();
 			//gfxSliderGrip.filters = [slider_Shadow];
@@ -47,7 +47,7 @@ package app.core.element
 			
 			gfxActiveGrip = new Sprite();
 			gfxActiveGrip.graphics.beginFill(0xFFFFFF, 1);
-			gfxActiveGrip.graphics.drawRoundRect(-20, -(ht/2) + borderPixels, 40, ht-borderPixels*2, roundnessPixels, roundnessPixels);
+			gfxActiveGrip.graphics.drawRoundRect(-barwd/2, -(ht/2) + borderPixels, barwd, ht-borderPixels*2, roundnessPixels, roundnessPixels);
 			gfxActiveGrip.graphics.endFill();
 			gfxSliderGrip.y = (ht/2);			
 			gfxActiveGrip.visible = false;
@@ -55,7 +55,7 @@ package app.core.element
 			
 			scrollableWidth = gfxWidth - 40 - borderPixels*2;
 			
-			this.graphics.beginFill(0x373737, 1);
+			this.graphics.beginFill(0x373737, 0.5);
 			this.graphics.drawRoundRect(0, 0, wd, ht, roundnessPixels, roundnessPixels);
 			
 			

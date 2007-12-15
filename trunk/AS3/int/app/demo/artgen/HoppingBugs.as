@@ -1,7 +1,7 @@
 ﻿package app.demo.artgen
 {
 	import flash.display.*;
-	import com.touchlib.*;
+	import flash.events.*;
 	import flash.geom.*;
 	
 	public class HoppingBugs extends ISwarmMember 

@@ -4,7 +4,7 @@
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
-	import com.touchlib.*;
+	import flash.events.*;
 	import app.core.utl.FPS;
 
 	public class PongGame extends MovieClip

@@ -1,5 +1,5 @@
 ﻿package app.core.action {
-	import com.touchlib.*;
+	import flash.events.*;
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.events.MouseEvent;

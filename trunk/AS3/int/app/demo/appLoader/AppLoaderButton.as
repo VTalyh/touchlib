@@ -2,7 +2,7 @@
 
 package app.demo.appLoader
 {
-	import com.touchlib.*;
+	import flash.events.*;
 	import app.demo.appLoader.*;
 	
 	import flash.events.*;

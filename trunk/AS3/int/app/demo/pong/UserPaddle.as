@@ -1,7 +1,7 @@
 ﻿package app.demo.pong
 {	import flash.events.Event;
 	import flash.events.MouseEvent;	
-	import com.touchlib.TouchEvent;
+	import flash.events.TouchEvent;
 	public class UserPaddle extends Paddle
 	{
 		function lockToMouse():void

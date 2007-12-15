@@ -7,7 +7,7 @@
 	import flash.net.*;
 	import flash.geom.*;
 	
-	import com.touchlib.*;	
+	import flash.events.*;	
 	import app.demo.nuiSurface.*;
 	import app.core.element.*;	
 	import app.core.action.*;		

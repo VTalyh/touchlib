@@ -1,7 +1,7 @@
 ﻿package app.demo.musicalSquares 
 {
 	import flash.display.Sprite;
-	import com.touchlib.*;
+	import flash.events.*;
 	import flash.events.*;
 	import app.demo.musicalSquares.*;
 

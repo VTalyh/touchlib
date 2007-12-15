@@ -5,7 +5,7 @@
 	
 	import flash.display.Sprite;		
 	import flash.events.*;
-	import com.touchlib.*;	
+	import flash.events.*;	
    	import flash.geom.*;	
    	import flash.filters.*;
    	

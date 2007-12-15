@@ -13,7 +13,7 @@ package app.core.element
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
-	import com.touchlib.*;
+	import flash.events.*;
 		
 	import flash.geom.Point;			
 

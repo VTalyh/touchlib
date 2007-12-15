@@ -68,8 +68,8 @@
 			buttonSprite.graphics.drawRoundRect((setWidth/2)+10,(-setHeight/2)-5,40,setHeight+10,6);
 			buttonSprite.addEventListener(MouseEvent.CLICK, fireFunc);	
 			var WrapperObject:Wrapper = new Wrapper(buttonSprite);					
-			this.addChild(WrapperObject);
 			
+			this.addChild(WrapperObject);
 			this.addChild( clickgrabber );		
 		
 			clickgrabber.x = setX;
@@ -200,10 +200,11 @@
 		
 		function fireFunc(e:Event)
 		{
-			if(this.x >= parent.stage.stageWidth-125)
-			Tweener.addTween(this, {x:parent.stage.stageWidth/2,y:(parent.stage.stageHeight/2),scaleX: 1.0, scaleY: 1.0, rotation:0, time:0.5, transition:"easeinoutquad"});	
-			else
-			Tweener.addTween(this, {x:parent.stage.stageWidth-100,y:-60,scaleX: 0.5, scaleY: 0.5, rotation:90, time:0.5, transition:"easeinoutquad"});			
+			if(this.x >= parent.stage.stageWidth-100){
+			Tweener.addTween(this, {x:parent.stage.stageWidth/2,y:(parent.stage.stageHeight/2),scaleX: 1.0, scaleY: 1.0, rotation:0, time:0.5, transition:"easeinoutquad"});		
+			}else{
+			Tweener.addTween(this, {x:parent.stage.stageWidth+65,y:435,scaleX: 0.5, scaleY: 0.5, rotation:-180, time:0.5, transition:"easeinoutquad"});	
+			}	
 		
 		/*
 			if(this.x >= parent.stage.stageWidth-100){

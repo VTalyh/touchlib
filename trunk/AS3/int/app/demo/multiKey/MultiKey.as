@@ -8,7 +8,7 @@ package app.demo.multiKey {
 
 	import flash.display.Sprite;
 	import flash.system.Capabilities;
-	import com.touchlib.*;
+	import flash.events.*;
 	import app.demo.multiKey.*;
 	import app.demo.musicalSquares.*;
 	

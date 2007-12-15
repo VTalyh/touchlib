@@ -6,7 +6,7 @@
 	import flash.display.*;		
 	import flash.events.*;
 	import flash.net.*;
-	import com.touchlib.*;	
+	import flash.events.*;	
 	import flash.geom.*;		
 		
 	import app.core.element.Wrapper;

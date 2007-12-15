@@ -6,7 +6,7 @@ package app.core.action
 {
 	import flash.display.*;		
 	import flash.events.*;
-	import com.touchlib.*;		
+	import flash.events.*;		
 	import flash.geom.Point;
 	
 	public class Multitouchable extends MovieClip

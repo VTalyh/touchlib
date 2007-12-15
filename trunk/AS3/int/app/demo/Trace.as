@@ -7,7 +7,7 @@
 package app.demo{
 	import flash.display.Sprite;
 	
-	import com.touchlib.TUIO;
+	import flash.events.TUIO;
 	import app.core.canvas.TraceCanvas;
 
 	public class Trace extends Sprite {

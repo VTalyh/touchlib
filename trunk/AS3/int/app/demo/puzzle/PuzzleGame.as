@@ -16,7 +16,7 @@ package app.demo.puzzle {
 	import flash.geom.*;
 	import flash.text.*;
 	
-	import com.touchlib.*;
+	import flash.events.*;
 	import app.demo.puzzle.*;
 	
 	public class PuzzleGame extends MovieClip
@@ -288,7 +288,7 @@ package app.demo.puzzle {
 		function multiMove(evt:TouchEvent)
 		{			
 			trace("Eventype: " + evt.type);
-			if(evt.type=="com.touchlib.TouchEvent.MOUSE_UP")
+			if(evt.type=="flash.events.TouchEvent.MOUSE_UP")
 			{				
 				var puzzlePieceIndex:Number = evt.target.parent.name;
 				var puzzleBoardSpaceClip:MovieClip;	

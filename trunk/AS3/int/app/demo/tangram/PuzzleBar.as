@@ -2,7 +2,7 @@
 
 package app.demo.tangram
 {	
-	import com.touchlib.*;
+	import flash.events.*;
 	import app.core.action.Scrollable;
 	
 	import flash.events.*;

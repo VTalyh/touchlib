@@ -7,7 +7,7 @@
 	import flash.net.*;
 	import flash.geom.*;
 
-	import com.touchlib.*;	
+	import flash.events.*;	
 
 	import app.core.element.*;
 	import app.core.action.*;
@@ -24,7 +24,7 @@
 
 		private var clearButton:Sprite;
 		private var bmp:Sprite;
-		private var exitButton:CloseTask;
+		private var exitButton:CornerButton;
 
 		public function PaintSurface() 
 		{

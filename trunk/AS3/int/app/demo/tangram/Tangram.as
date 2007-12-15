@@ -2,7 +2,7 @@
 // The objects are draggable and Rotatable, however they are not scalable
 package app.demo.tangram
 {	
-	import com.touchlib.*;
+	import flash.events.*;
 	import app.core.action.Rotatable;
 	import app.demo.tangram.*;
 	

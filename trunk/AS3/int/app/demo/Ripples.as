@@ -1,7 +1,7 @@
 ﻿package app.demo
 {
 	import flash.display.Sprite;
-	import com.touchlib.*;
+	import flash.events.*;
 	import app.core.canvas.RippleCanvas;
 	
 	public class Ripples extends Sprite {

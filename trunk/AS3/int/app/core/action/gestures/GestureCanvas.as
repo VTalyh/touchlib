@@ -237,7 +237,7 @@ trace("Construct ~ GestureCanvas.as");
 	}	
 	//IMPORTS -------------------------------------------------------------------------------
 	import flash.display.*;
-	import com.touchlib.*;  
+	import flash.events.*;  
 	import app.core.element.Wrapper;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;

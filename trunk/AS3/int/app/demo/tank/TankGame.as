@@ -1,7 +1,7 @@
 ﻿//
 
 package app.demo.tank {
-	import com.touchlib.TUIO;
+	import flash.events.TUIO;
 	import app.demo.tank.*;	
 	import flash.events.*;
 	import flash.geom.*;

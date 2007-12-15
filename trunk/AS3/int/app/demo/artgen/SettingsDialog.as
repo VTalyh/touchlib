@@ -1,7 +1,7 @@
 ﻿package app.demo.artgen
 {
 	import flash.display.*;
-	import com.touchlib.*;
+	import flash.events.*;
 	import app.demo.artgen.*;
 	import app.core.element.*;
 	import flash.events.*;

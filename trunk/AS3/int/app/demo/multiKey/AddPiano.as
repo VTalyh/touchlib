@@ -16,7 +16,7 @@
 	import fl.transitions.easing.*;
 	import app.core.action.RotatableScalable;
 
-	import com.touchlib.*;
+	import flash.events.*;
 	import app.demo.multiKey.*;
 	import flash.display.Sprite;	
 	

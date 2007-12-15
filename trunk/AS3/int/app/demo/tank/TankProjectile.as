@@ -3,7 +3,7 @@
 	import flash.events.*;
 	import flash.geom.*;
 	import flash.display.*;
-	import com.touchlib.*;
+	import flash.events.*;
 	import app.demo.tank.*;
 	
 	dynamic public class TankProjectile extends MovieClip

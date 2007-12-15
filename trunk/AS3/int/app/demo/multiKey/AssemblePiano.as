@@ -5,7 +5,7 @@ package app.demo.multiKey {
 	import flash.media.Sound;
 	import flash.media.SoundTransform;
 	import flash.net.URLRequest;
-	import com.touchlib.*;
+	import flash.events.*;
 	import app.demo.multiKey.*;
 
 	public class AssemblePiano extends Sprite {
