@@ -1,4 +1,7 @@
-﻿package com.touchlib {
+﻿//Rename to look like this:
+//closeButton.addEventListener(TouchEvent.MOUSE_OVER, confirmAdd);
+
+package com.touchlib {
 	
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;

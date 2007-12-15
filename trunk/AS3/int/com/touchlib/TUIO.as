@@ -26,8 +26,8 @@
 		static var FLOSCSocket:XMLSocket;		
 		static var FLOSCSocketHost:String;			
 		static var FLOSCSocketPort:Number;			
-		static var thestage:Stage;
-		static var objectArray:Array;
+		public static var thestage:Stage;
+		public static var objectArray:Array;
 		static var idArray:Array; 				
 		static var debugText:TextField;		
 		static var xmlPlaybackURL:String; 
@@ -342,7 +342,17 @@
 				var debugBtn = new Sprite();						
 				debugBtn.graphics.beginFill(0xFFFFFF,1);
 				//debugBtn.graphics.drawRect(thestage.stageWidth-210, 0, 200, 50);	
-				debugBtn.graphics.drawRect(10, 20, 50, 50);	
+				debugBtn.graphics.beginFill(0xFFFFFF, 0.65);	
+	   			debugBtn.graphics.drawRoundRect(-25, -25, 50,50,10);		
+	  		 	debugBtn.graphics.endFill();	
+	 		  	debugBtn.graphics.lineStyle( 4, 0x000000 );	   	
+				debugBtn.graphics.moveTo( 0, -12 );
+				debugBtn.graphics.lineTo( 0, 12 );
+				debugBtn.graphics.moveTo( -12, 0 );
+				debugBtn.graphics.lineTo( 12, 0 );	
+				debugBtn.x=50; 
+				debugBtn.y=50;  
+		
 				debugBtn.addEventListener(MouseEvent.CLICK, toggleDebug);
 				var debugBtnW:Wrapper = new Wrapper(debugBtn);			
 				debugBtnW.alpha = 0.85; 			 
@@ -393,7 +403,14 @@
 			e.target.parent.alpha=0.5;	
 			}
 		}
-		
+		public static function startSocket()
+		{ 	
+			FLOSCSocket.connect(FLOSCSocketHost, FLOSCSocketPort);
+		}
+		public static function stopSocket()
+		{ 	
+			FLOSCSocket.close();
+		}
 		private static function toggleRecord(e:Event)
 		{ 	
 			var responder = new Responder(saveSession_Result, onFault);
