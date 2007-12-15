@@ -141,7 +141,7 @@
 			
 			// Listen for the user pressing the mouse. When they do, reset and play again
 			this.stage.addEventListener(MouseEvent.CLICK, gameOverMouseListener);
-			this.stage.addEventListener(TUIOEvent.TUIO_DOWN, gameOverMouseListener);
+			this.stage.addEventListener(TouchEvent.MOUSE_DOWN, gameOverMouseListener);
 			
 			// Wait for the user to press the mouse
 			removeEventListener(Event.ENTER_FRAME, update);
@@ -156,7 +156,7 @@
 			// Reset the game and stop listening for the user to do so again
 			reset(true);
 			this.stage.removeEventListener(MouseEvent.CLICK, gameOverMouseListener);
-			this.stage.removeEventListener(TUIOEvent.TUIO_DOWN, gameOverMouseListener);
+			this.stage.removeEventListener(TouchEvent.MOUSE_DOWN, gameOverMouseListener);
 			// Play the game again
 			this.userPaddle1.lockToMouse();
 			addEventListener(Event.ENTER_FRAME, update);

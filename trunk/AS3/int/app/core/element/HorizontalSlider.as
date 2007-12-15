@@ -72,11 +72,11 @@
 			this.graphics.drawRoundRect(0, 0, wd, ht, roundnessPixels, roundnessPixels);
 			
 			
-			this.addEventListener(TUIOEvent.TUIO_MOVE, this.tuioMoveHandler, false, 0, true);			
-			this.addEventListener(TUIOEvent.TUIO_DOWN, this.tuioDownEvent, false, 0, true);						
-			this.addEventListener(TUIOEvent.TUIO_UP, this.tuioUpEvent, false, 0, true);									
-			this.addEventListener(TUIOEvent.TUIO_OVER, this.tuioRollOverHandler, false, 0, true);									
-			this.addEventListener(TUIOEvent.TUIO_OUT, this.tuioRollOutHandler, false, 0, true);
+			this.addEventListener(TouchEvent.MOUSE_MOVE, this.tuioMoveHandler, false, 0, true);			
+			this.addEventListener(TouchEvent.MOUSE_DOWN, this.tuioDownEvent, false, 0, true);						
+			this.addEventListener(TouchEvent.MOUSE_UP, this.tuioUpEvent, false, 0, true);									
+			this.addEventListener(TouchEvent.MOUSE_OVER, this.tuioRollOverHandler, false, 0, true);									
+			this.addEventListener(TouchEvent.MOUSE_OUT, this.tuioRollOutHandler, false, 0, true);
 
 			
 			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler, false, 0, true);									
@@ -162,7 +162,7 @@
 		}
 
 		
-		public function tuioDownEvent(e:TUIOEvent)
+		public function tuioDownEvent(e:TouchEvent)
 		{		
 
 			TUIO.listenForObject(e.ID, this);
@@ -170,13 +170,13 @@
 			e.stopPropagation();
 		}
 
-		public function tuioUpEvent(e:TUIOEvent)
+		public function tuioUpEvent(e:TouchEvent)
 		{		
 			sliderStopDrag();		
 			e.stopPropagation();
 		}		
 
-		public function tuioMoveHandler(e:TUIOEvent)
+		public function tuioMoveHandler(e:TouchEvent)
 		{
 			if(isActive)
 			{
@@ -191,12 +191,12 @@
 			e.stopPropagation();			
 		}
 		
-		public function tuioRollOverHandler(e:TUIOEvent)
+		public function tuioRollOverHandler(e:TouchEvent)
 		{
 			
 		}
 		
-		public function tuioRollOutHandler(e:TUIOEvent)
+		public function tuioRollOutHandler(e:TouchEvent)
 		{
 			e.stopPropagation();			
 		

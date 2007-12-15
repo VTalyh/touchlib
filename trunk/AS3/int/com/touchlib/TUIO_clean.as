@@ -148,7 +148,7 @@ public class TUIO
 		record_btn.graphics.lineStyle( 2, 0x202020 );
 		record_btn.graphics.beginFill( 0xF80101,0.5 );
 		record_btn.graphics.drawRoundRect( 10, 10, 200, 200, 6 );				 
-		record_btn.addEventListener( TUIOEvent.DOWN, stopRecording, false, 0, true );
+		record_btn.addEventListener( TouchEvent.DOWN, stopRecording, false, 0, true );
 		
 		STAGE.addChild( record_btn );
 	}
@@ -379,7 +379,7 @@ public class TUIO
 	 * STOP_RECORDING
 	***********************************************************/
 	
-	private static function stopRecording( e:TUIOEvent ):void
+	private static function stopRecording( e:TouchEvent ):void
 	{		
 		RECORD_MODE = false;
 		DEBUG_MODE = false;

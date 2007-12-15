@@ -17,11 +17,11 @@ package app.core.action
 		{
 			blobs = new Array();
 		
-			this.addEventListener(TUIOEvent.TUIO_MOVE, this.moveHandler, false, 0, true);			
-			this.addEventListener(TUIOEvent.TUIO_DOWN, this.downHandler, false, 0, true);						
-			this.addEventListener(TUIOEvent.TUIO_UP, this.upHandler, false, 0, true);									
-			this.addEventListener(TUIOEvent.TUIO_OVER, this.rollOverHandler, false, 0, true);									
-			this.addEventListener(TUIOEvent.TUIO_OUT, this.rollOutHandler, false, 0, true);		
+			this.addEventListener(TouchEvent.MOUSE_MOVE, this.moveHandler, false, 0, true);			
+			this.addEventListener(TouchEvent.MOUSE_DOWN, this.downHandler, false, 0, true);						
+			this.addEventListener(TouchEvent.MOUSE_UP, this.upHandler, false, 0, true);									
+			this.addEventListener(TouchEvent.MOUSE_OVER, this.rollOverHandler, false, 0, true);									
+			this.addEventListener(TouchEvent.MOUSE_OUT, this.rollOutHandler, false, 0, true);		
 			
 			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler, false, 0, true);
 			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownHandler, false, 0, true);			
@@ -104,7 +104,7 @@ package app.core.action
 			return null;
 		}
 		
-		public function downHandler(e:TUIOEvent):void
+		public function downHandler(e:TouchEvent):void
 		{
 			if(e.stageX == 0 && e.stageY == 0)
 				return;			
@@ -120,14 +120,14 @@ package app.core.action
 		}
 
 		
-		public function upHandler(e:TUIOEvent):void
+		public function upHandler(e:TouchEvent):void
 		{
 			handleUpEvent(e.ID);
 			removeBlob(e.ID);
 			e.stopPropagation();
 		}		
 		
-		public function moveHandler(e:TUIOEvent):void
+		public function moveHandler(e:TouchEvent):void
 		{
 			if(e.stageX == 0 && e.stageY == 0)
 				return;			
@@ -182,7 +182,7 @@ package app.core.action
 			e.stopPropagation();	
 		}		
 		
-		public function rollOverHandler(e:TUIOEvent):void
+		public function rollOverHandler(e:TouchEvent):void
 		{
 			if(e.stageX == 0 && e.stageY == 0)
 				return;			
@@ -200,7 +200,7 @@ package app.core.action
 			e.stopPropagation();									
 		}
 		
-		public function rollOutHandler(e:TUIOEvent):void
+		public function rollOutHandler(e:TouchEvent):void
 		{
 			if(e.stageX == 0 && e.stageY == 0)
 				return;			

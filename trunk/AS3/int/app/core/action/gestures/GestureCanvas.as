@@ -15,8 +15,8 @@ trace("Construct ~ GestureCanvas.as");
 	   		//thestage.removeEventListener(MouseEvent.MOUSE_MOVE,this.paintLine); 
 	   		thestage.removeEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent);															
 			thestage.removeEventListener(MouseEvent.MOUSE_UP, this.mouseUpEvent);
-			thestage.removeEventListener(TUIOEvent.TUIO_DOWN, this.downEvent);	
-			thestage.removeEventListener(TUIOEvent.TUIO_UP, this.mouseUpEvent);	
+			thestage.removeEventListener(TouchEvent.MOUSE_DOWN, this.downEvent);	
+			thestage.removeEventListener(TouchEvent.MOUSE_UP, this.mouseUpEvent);	
 			parent.removeChild(parent.getChildByName("GestureCanvas"));	
 
 		}
@@ -42,12 +42,12 @@ trace("Construct ~ GestureCanvas.as");
 		this.addChild(normalizedMC);	
 		
 		
-		var imageButton:Loader = new Loader();		
-		imageButton.load(new URLRequest("closeButton.png"));	
-		WrapperObject = new Wrapper(imageButton);		
-		WrapperObject.addEventListener(MouseEvent.CLICK, this.exit);		
-		WrapperObject.y = stage.stageHeight-150;	
-		this.addChild(WrapperObject);	
+		//var imageButton:Loader = new Loader();		
+		//imageButton.load(new URLRequest("closeButton.png"));	
+		//WrapperObject = new Wrapper(imageButton);		
+		//WrapperObject.addEventListener(MouseEvent.CLICK, this.exit);		
+		//WrapperObject.y = stage.stageHeight-150;	
+		//this.addChild(WrapperObject);	
 		//this.setChildIndex(WrapperObject, this.numChildren-1);
 					
 		//	parent.removeChild(parent.getChildByName("GestureButton"));
@@ -89,11 +89,11 @@ trace("Construct ~ GestureCanvas.as");
 			//trace("DICT:"+dictXML);
 			GestureDictionaryBuilder.populate(dict,dictXML);			
 		   	thestage.addEventListener(KeyboardEvent.KEY_DOWN, keyPressedDown);			
-			//stage.addEventListener(TUIOEvent.TUIO_MOVE, this.moveHandler, false, 0, true);			
-			thestage.addEventListener(TUIOEvent.TUIO_DOWN, this.downEvent);						
-			thestage.addEventListener(TUIOEvent.TUIO_UP, this.mouseUpEvent);									
-			//stage.addEventListener(TUIOEvent.TUIO_OVER, this.rollOverHandler, false, 0, true);									
-			//stage.addEventListener(TUIOEvent.TUIO_OUT, this.rollOutHandler, false, 0, true);		
+			//stage.addEventListener(TouchEvent.MOUSE_MOVE, this.moveHandler, false, 0, true);			
+			thestage.addEventListener(TouchEvent.MOUSE_DOWN, this.downEvent);						
+			thestage.addEventListener(TouchEvent.MOUSE_UP, this.mouseUpEvent);									
+			//stage.addEventListener(TouchEvent.MOUSE_OVER, this.rollOverHandler, false, 0, true);									
+			//stage.addEventListener(TouchEvent.MOUSE_OUT, this.rollOutHandler, false, 0, true);		
 		
 			//this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler);									
 			thestage.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent);															
@@ -117,7 +117,7 @@ trace("Construct ~ GestureCanvas.as");
 			capturer.startGesture();			
 		}
 		
-		function downEvent(e:TUIOEvent):void {			
+		function downEvent(e:TouchEvent):void {			
 			//Prep the paintingSurface
 			paintingSurface.graphics.clear();		
 			paintingSurface.graphics.beginFill(0x000000,0.0);	
@@ -127,7 +127,7 @@ trace("Construct ~ GestureCanvas.as");
 			paintingSurface.graphics.lineStyle(5,0xFF00FF,1.0);	
 			//Draw the all of the mouse movements to the screen
 			//this.mouseMove = this.paintLine;
-			thestage.addEventListener(TUIOEvent.TUIO_MOVE,this.paintTouchLine); 
+			thestage.addEventListener(TouchEvent.MOUSE_MOVE,this.paintTouchLine); 
 			//Start capturing the gesture
 			capturer.startGesture();			
 		}				
@@ -136,7 +136,7 @@ trace("Construct ~ GestureCanvas.as");
 			paintingSurface.graphics.lineTo(mouseX,mouseY);	
 		}
 		
-		function paintTouchLine(e:TUIOEvent):void {
+		function paintTouchLine(e:TouchEvent):void {
 			paintingSurface.graphics.lineTo(e.stageX,e.stageY);	
 		}
 		private function paintGesture(surface:Sprite,pnts:Array,clr:Number=0x000000):void { 
@@ -156,8 +156,8 @@ trace("Construct ~ GestureCanvas.as");
 			thestage.removeEventListener(MouseEvent.MOUSE_MOVE,this.paintLine); 
 	   		//stage.removeEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent);															
 			//stage.removeEventListener(MouseEvent.MOUSE_UP, this.mouseUpEvent);
-			//thestage.removeEventListener(TUIOEvent.TUIO_DOWN, this.downEvent);	
-			//thestage.removeEventListener(TUIOEvent.TUIO_UP, this.upEvent);	
+			//thestage.removeEventListener(TouchEvent.MOUSE_DOWN, this.downEvent);	
+			//thestage.removeEventListener(TouchEvent.MOUSE_UP, this.upEvent);	
 			capturer.stopGesture();
 			
 			//Grab the gesture and paint it to the screen

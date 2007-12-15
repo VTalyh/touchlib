@@ -41,10 +41,10 @@
 			
 			setDirection(dir);
 			
-			this.addEventListener(TUIOEvent.TUIO_DOWN, this.downHandler, false, 0, true);						
-			this.addEventListener(TUIOEvent.TUIO_UP, this.upHandler, false, 0, true);									
-			this.addEventListener(TUIOEvent.TUIO_OVER, this.rollOverHandler, false, 0, true);									
-			this.addEventListener(TUIOEvent.TUIO_OUT, this.rollOutHandler, false, 0, true);
+			this.addEventListener(TouchEvent.MOUSE_DOWN, this.downHandler, false, 0, true);						
+			this.addEventListener(TouchEvent.MOUSE_UP, this.upHandler, false, 0, true);									
+			this.addEventListener(TouchEvent.MOUSE_OVER, this.rollOverHandler, false, 0, true);									
+			this.addEventListener(TouchEvent.MOUSE_OUT, this.rollOutHandler, false, 0, true);
 
 			this.addEventListener(MouseEvent.MOUSE_DOWN, this.downHandler, false, 0, true);															
 			this.addEventListener(MouseEvent.MOUSE_UP, this.upHandler, false, 0, true);	
@@ -71,7 +71,7 @@
 		
 		public function upHandler(e:Event)
 		{
-			if(e.type == TUIOEvent.TUIO_UP)
+			if(e.type == TouchEvent.MOUSE_UP)
 				dispatchEvent(new MouseEvent(MouseEvent.CLICK));
 		}		
 		

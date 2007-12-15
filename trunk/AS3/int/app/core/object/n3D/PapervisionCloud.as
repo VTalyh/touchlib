@@ -205,9 +205,9 @@ public class PapervisionCloud extends MovieClip
 		trace("obj" + String( num ) );
 		var container:Sprite = plane.container;
 		container.buttonMode = true;
-		container.addEventListener( TUIOEvent.TUIO_OVER, doRollOver );
-		container.addEventListener( TUIOEvent.TUIO_OUT, doRollOut );
-		container.addEventListener( TUIOEvent.TUIO_DOWN, doPress );
+		container.addEventListener( TouchEvent.MOUSE_OVER, doRollOver );
+		container.addEventListener( TouchEvent.MOUSE_OUT, doRollOut );
+		container.addEventListener( TouchEvent.MOUSE_DOWN, doPress );
 		
 		container.addEventListener( MouseEvent.ROLL_OVER, doRollOver );
 		container.addEventListener( MouseEvent.ROLL_OUT, doRollOut );

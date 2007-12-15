@@ -64,7 +64,7 @@
 			exitButton.x = 20;
 			exitButton.y = 768 - 148;
 			exitButton.alpha = 0.8;
-			exitButton.addEventListener(TUIOEvent.TUIO_DOWN, this.exit);
+			exitButton.addEventListener(TouchEvent.MOUSE_DOWN, this.exit);
 			
 			this.addChild(exitButton);
 

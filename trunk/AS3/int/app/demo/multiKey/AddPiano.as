@@ -181,11 +181,11 @@
 			
 			addChild(scalePoints);
 
-			scalePoints.addEventListener(TUIOEvent.TUIO_DOWN, toggleRotateScale);
+			scalePoints.addEventListener(TouchEvent.MOUSE_DOWN, toggleRotateScale);
 		}		
 		
 			
-		public function toggleRotateScale(event:TUIOEvent):void {
+		public function toggleRotateScale(event:TouchEvent):void {
 			
 				//Move Mode sets all modes
 				if (noMove) {

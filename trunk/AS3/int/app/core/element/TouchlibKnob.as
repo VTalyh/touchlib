@@ -107,11 +107,11 @@ package app.core.element
 			
 			
 
-			this.addEventListener(TUIOEvent.TUIO_MOVE, this.tuioMoveHandler);			
-			this.addEventListener(TUIOEvent.TUIO_DOWN, this.tuioDownEvent);						
-			this.addEventListener(TUIOEvent.TUIO_UP, this.tuioUpEvent);									
-			this.addEventListener(TUIOEvent.TUIO_OVER, this.tuioRollOverHandler);									
-			this.addEventListener(TUIOEvent.TUIO_OUT, this.tuioRollOutHandler);
+			this.addEventListener(TouchEvent.MOUSE_MOVE, this.tuioMoveHandler);			
+			this.addEventListener(TouchEvent.MOUSE_DOWN, this.tuioDownEvent);						
+			this.addEventListener(TouchEvent.MOUSE_UP, this.tuioUpEvent);									
+			this.addEventListener(TouchEvent.MOUSE_OVER, this.tuioRollOverHandler);									
+			this.addEventListener(TouchEvent.MOUSE_OUT, this.tuioRollOutHandler);
 
 			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler);									
 			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent);															
@@ -200,7 +200,7 @@ package app.core.element
 		}
 
 		
-		public function tuioDownEvent(e:TUIOEvent)
+		public function tuioDownEvent(e:TouchEvent)
 		{		
 
 			TUIO.listenForObject(e.ID, this);
@@ -208,13 +208,13 @@ package app.core.element
 			e.stopPropagation();
 		}
 
-		public function tuioUpEvent(e:TUIOEvent)
+		public function tuioUpEvent(e:TouchEvent)
 		{		
 			knobStopDrag();		
 			e.stopPropagation();
 		}		
 
-		public function tuioMoveHandler(e:TUIOEvent)
+		public function tuioMoveHandler(e:TouchEvent)
 		{
 			if(isActive)
 			{
@@ -234,12 +234,12 @@ package app.core.element
 			e.stopPropagation();			
 		}
 		
-		public function tuioRollOverHandler(e:TUIOEvent)
+		public function tuioRollOverHandler(e:TouchEvent)
 		{
 			
 		}
 		
-		public function tuioRollOutHandler(e:TUIOEvent)
+		public function tuioRollOutHandler(e:TouchEvent)
 		{
 			e.stopPropagation();			
 		

@@ -74,7 +74,7 @@ package app.demo.puzzle {
 		    easy_mode_text.text = "Easy";			
 			easy_mode_text.setTextFormat(new TextFormat("Arial", 14));
 			easy_mode.addChild(easy_mode_text);			
-			easy_mode.addEventListener(TUIOEvent.TUIO_DOWN, addArguments(multibuttontouch, "easy"));
+			easy_mode.addEventListener(TouchEvent.MOUSE_DOWN, addArguments(multibuttontouch, "easy"));
 			easy_mode.addEventListener("mouseDown", addArguments2(mousebuttontouch, "easy"));
 			this.addChild(easy_mode);
 						
@@ -96,7 +96,7 @@ package app.demo.puzzle {
 		    medium_mode_text.text = "Medium";			
 			medium_mode_text.setTextFormat(new TextFormat("Arial", 14));
 			medium_mode.addChild(medium_mode_text);			
-			medium_mode.addEventListener(TUIOEvent.TUIO_DOWN, addArguments(multibuttontouch, "medium"));
+			medium_mode.addEventListener(TouchEvent.MOUSE_DOWN, addArguments(multibuttontouch, "medium"));
 			medium_mode.addEventListener("mouseDown", addArguments2(mousebuttontouch, "medium"));			
 			this.addChild(medium_mode);
 			
@@ -118,7 +118,7 @@ package app.demo.puzzle {
 		    hard_mode_text.text = "Hard";			
 			hard_mode_text.setTextFormat(new TextFormat("Arial", 14));
 			hard_mode.addChild(hard_mode_text);			
-			hard_mode.addEventListener(TUIOEvent.TUIO_DOWN, addArguments(multibuttontouch, "hard"));
+			hard_mode.addEventListener(TouchEvent.MOUSE_DOWN, addArguments(multibuttontouch, "hard"));
 			hard_mode.addEventListener("mouseDown", addArguments2(mousebuttontouch, "hard"));			
 			this.addChild(hard_mode);
 			
@@ -140,13 +140,13 @@ package app.demo.puzzle {
 		    insane_mode_text.text = "Insane";			
 			insane_mode_text.setTextFormat(new TextFormat("Arial", 14));
 			insane_mode.addChild(insane_mode_text);			
-			insane_mode.addEventListener(TUIOEvent.TUIO_DOWN, addArguments(multibuttontouch, "insane"));
+			insane_mode.addEventListener(TouchEvent.MOUSE_DOWN, addArguments(multibuttontouch, "insane"));
 			insane_mode.addEventListener("mouseDown", addArguments2(mousebuttontouch, "insane"));			
 			this.addChild(insane_mode);
 		}
 		
 		
-		function multibuttontouch(evt:TUIOEvent, button:String)		
+		function multibuttontouch(evt:TouchEvent, button:String)		
 		{						
 			while (this.numChildren > 0) 			
 				this.removeChildAt(0);				
@@ -184,7 +184,7 @@ package app.demo.puzzle {
 		
 		// Wrapper to pass values to an event.
 		public function addArguments(method:Function, additionalArguments:String):Function {
-			return function(evt:TUIOEvent):void {
+			return function(evt:TouchEvent):void {
 				method.apply(null, [evt].concat(additionalArguments));
 			}
 		}
@@ -269,7 +269,7 @@ package app.demo.puzzle {
 			var heightPuzzlePiece:Number = imageLoader.height / totalPuzzlePieces_y;
 			
 			var puzzlePieceClip:Bitmap = new Bitmap(puzzlePiece);
-			puzzlePieceClip.addEventListener(TUIOEvent.TUIO_UP, multiMove);			
+			puzzlePieceClip.addEventListener(TouchEvent.MOUSE_UP, multiMove);			
 				
 			var tmp2:PuzzleGameTile = new PuzzleGameTile();		
 			tmp2.name = String(index) 	// Added for Strict Mode		
@@ -285,10 +285,10 @@ package app.demo.puzzle {
 			puzzlePiecesFound.push(tmp2.name);		
 		}
 
-		function multiMove(evt:TUIOEvent)
+		function multiMove(evt:TouchEvent)
 		{			
 			trace("Eventype: " + evt.type);
-			if(evt.type=="com.touchlib.TUIOEvent.TUIO_UP")
+			if(evt.type=="com.touchlib.TouchEvent.MOUSE_UP")
 			{				
 				var puzzlePieceIndex:Number = evt.target.parent.name;
 				var puzzleBoardSpaceClip:MovieClip;	

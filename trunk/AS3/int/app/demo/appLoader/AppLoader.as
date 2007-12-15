@@ -72,11 +72,11 @@ package app.demo.appLoader
 
 			//addChild(appLoader);
 
-			this.addEventListener(TUIOEvent.TUIO_MOVE, this.tuioMoveHandler, false, 0, true);			
-			this.addEventListener(TUIOEvent.TUIO_DOWN, this.tuioDownEvent, false, 0, true);						
-			this.addEventListener(TUIOEvent.TUIO_UP, this.tuioUpEvent, false, 0, true);									
-			this.addEventListener(TUIOEvent.TUIO_OVER, this.tuioRollOverHandler, false, 0, true);									
-			this.addEventListener(TUIOEvent.TUIO_OUT, this.tuioRollOutHandler, false, 0, true);			
+			this.addEventListener(TouchEvent.MOUSE_MOVE, this.tuioMoveHandler, false, 0, true);			
+			this.addEventListener(TouchEvent.MOUSE_DOWN, this.tuioDownEvent, false, 0, true);						
+			this.addEventListener(TouchEvent.MOUSE_UP, this.tuioUpEvent, false, 0, true);									
+			this.addEventListener(TouchEvent.MOUSE_OVER, this.tuioRollOverHandler, false, 0, true);									
+			this.addEventListener(TouchEvent.MOUSE_OUT, this.tuioRollOutHandler, false, 0, true);			
 			
 			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler, false, 0, true);									
 			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent, false, 0, true);															
@@ -129,27 +129,27 @@ package app.demo.appLoader
 			}
 		}
 		
-		function tuioMoveHandler(e:TUIOEvent)
+		function tuioMoveHandler(e:TouchEvent)
 		{
 			var tuioobj:TUIOObject = TUIO.getObjectById(e.ID);							
 			
 			var localPt:Point = parent.globalToLocal(new Point(tuioobj.x, tuioobj.y));														
 			createParticles(1, localPt.x, localPt.y);
 		}
-		function tuioDownEvent(e:TUIOEvent)
+		function tuioDownEvent(e:TouchEvent)
 		{
 			var tuioobj:TUIOObject = TUIO.getObjectById(e.ID);							
 			
 			var localPt:Point = parent.globalToLocal(new Point(tuioobj.x, tuioobj.y));														
 			createParticles(1, localPt.x, localPt.y);			
 		}
-		function tuioUpEvent(e:TUIOEvent)
+		function tuioUpEvent(e:TouchEvent)
 		{
 		}
-		function tuioRollOverHandler(e:TUIOEvent)
+		function tuioRollOverHandler(e:TouchEvent)
 		{
 		}		
-		function tuioRollOutHandler(e:TUIOEvent)
+		function tuioRollOutHandler(e:TouchEvent)
 		{
 		}				
 		

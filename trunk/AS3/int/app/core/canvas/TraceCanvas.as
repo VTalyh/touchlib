@@ -47,11 +47,11 @@
 			
 			paintBmp = new Bitmap(paintBmpData,'auto',true);
 		
-			this.addEventListener(TUIOEvent.TUIO_MOVE, this.moveHandler);
-			this.addEventListener(TUIOEvent.TUIO_DOWN, this.downEvent);
-			this.addEventListener(TUIOEvent.TUIO_UP, this.upEvent);
-			this.addEventListener(TUIOEvent.TUIO_OVER, this.rollOverHandler);
-			this.addEventListener(TUIOEvent.TUIO_OUT, this.rollOutHandler);
+			this.addEventListener(TouchEvent.MOUSE_MOVE, this.moveHandler);
+			this.addEventListener(TouchEvent.MOUSE_DOWN, this.downEvent);
+			this.addEventListener(TouchEvent.MOUSE_UP, this.upEvent);
+			this.addEventListener(TouchEvent.MOUSE_OVER, this.rollOverHandler);
+			this.addEventListener(TouchEvent.MOUSE_OUT, this.rollOutHandler);
 
 			this.addEventListener(Event.ENTER_FRAME, this.update);
 			
@@ -62,7 +62,7 @@
 			exitButton.x = 20;
 			exitButton.y = 768 - 148;
 			exitButton.alpha = 0.8;
-			exitButton.addEventListener(TUIOEvent.TUIO_DOWN, this.exit);
+			exitButton.addEventListener(TouchEvent.MOUSE_DOWN, this.exit);
 			
 			this.addChild(exitButton);
 
@@ -145,7 +145,7 @@
 				}
 			}
 		}
-		public function downEvent(e:TUIOEvent) {
+		public function downEvent(e:TouchEvent) {
 			if (e.stageX == 0 && e.stageY == 0) {
 				return;
 			}
@@ -155,20 +155,20 @@
 
 			e.stopPropagation();
 		}
-		public function upEvent(e:TUIOEvent) {
+		public function upEvent(e:TouchEvent) {
 			
 			removeBlob(e.ID);
 			e.stopPropagation();
 
 		}
 
-		public function moveHandler(e:TUIOEvent) {
+		public function moveHandler(e:TouchEvent) {
 
 			e.stopPropagation();
 		}
-		public function rollOverHandler(e:TUIOEvent) {
+		public function rollOverHandler(e:TouchEvent) {
 		}
-		public function rollOutHandler(e:TUIOEvent) {
+		public function rollOutHandler(e:TouchEvent) {
 
 		}
 	}

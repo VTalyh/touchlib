@@ -3,7 +3,7 @@
 	import app.core.element.*;
 	import caurina.transitions.Tweener;
 	
-	import com.touchlib.TUIOEvent;
+	import com.touchlib.TouchEvent;
 	
 	import flash.display.*;
 	import flash.events.*;
@@ -51,30 +51,30 @@
 			var mc:MovieClip = keyboard.content;
 			
 			for (var i:int = 0; i< chars.length; i++) {
-				mc['button'+chars.charAt(i).toString().toUpperCase()].addEventListener(TUIOEvent.TUIO_DOWN, this.DownKey);
+				mc['button'+chars.charAt(i).toString().toUpperCase()].addEventListener(TouchEvent.MOUSE_DOWN, this.DownKey);
 				mc['button'+chars.charAt(i).toString().toUpperCase()].addEventListener(MouseEvent.CLICK, this.MouseDownKey);
 				mc['button'+chars.charAt(i).toString().toUpperCase()].char = chars.charAt(i).toString();
 			}
 
-			mc['buttonDot'].addEventListener(TUIOEvent.TUIO_DOWN, this.DownKey);
+			mc['buttonDot'].addEventListener(TouchEvent.MOUSE_DOWN, this.DownKey);
 			mc['buttonDot'].addEventListener(MouseEvent.CLICK, this.MouseDownKey);
 			mc['buttonDot'].char = ".".toString();
 
-			mc['buttonComma'].addEventListener(TUIOEvent.TUIO_DOWN, this.DownKey);
+			mc['buttonComma'].addEventListener(TouchEvent.MOUSE_DOWN, this.DownKey);
 			mc['buttonComma'].addEventListener(MouseEvent.CLICK, this.MouseDownKey);
 			mc['buttonComma'].char = ",".toString();
 			
-			mc['buttonSpace'].addEventListener(TUIOEvent.TUIO_DOWN, this.DownKey);
+			mc['buttonSpace'].addEventListener(TouchEvent.MOUSE_DOWN, this.DownKey);
 			mc['buttonSpace'].addEventListener(MouseEvent.CLICK, this.MouseDownKey);
 			mc['buttonSpace'].char = " ";
 			
-			mc['buttonBackSpace'].addEventListener(TUIOEvent.TUIO_DOWN, this.BackSpaceDown);
-			mc['buttonEnter'].addEventListener(TUIOEvent.TUIO_DOWN, this.EnterDown);
+			mc['buttonBackSpace'].addEventListener(TouchEvent.MOUSE_DOWN, this.BackSpaceDown);
+			mc['buttonEnter'].addEventListener(TouchEvent.MOUSE_DOWN, this.EnterDown);
 			mc['buttonBackSpace'].addEventListener(MouseEvent.CLICK, this.MouseBackSpaceDown);
 			mc['buttonEnter'].addEventListener(MouseEvent.CLICK, this.MouseEnterDown);
 			
-			mc['buttonShift'].addEventListener(TUIOEvent.TUIO_DOWN, this.ShiftDown);
-			mc['buttonShift'].addEventListener(TUIOEvent.TUIO_UP, this.ShiftUp);
+			mc['buttonShift'].addEventListener(TouchEvent.MOUSE_DOWN, this.ShiftDown);
+			mc['buttonShift'].addEventListener(TouchEvent.MOUSE_UP, this.ShiftUp);
 		}
 
 		function ShiftDown(e:Event) {

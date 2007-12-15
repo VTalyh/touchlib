@@ -79,7 +79,7 @@ public function XMLMenu(layout:String, xml_url:String, spacing:Number, sizeX:Num
 			format0.size = 10;			
 			
 			var format1:TextFormat = new TextFormat();
-			format1.font= "Arial";
+			format1.font= "myFont";
 			format1.color = 0xFFFFFF;
 			format1.size = 12;		
 			//format1.bold = true;			
@@ -89,9 +89,9 @@ public function XMLMenu(layout:String, xml_url:String, spacing:Number, sizeX:Num
 			for each (p in __menuList) {			
 				var button:Sprite = new Sprite();	
 				button.name = "button"+count;
-				trace(button.name+' p:'+button);				
+				//trace(button.name+' p:'+button);				
 				button.mouseChildren = false;				
-				button.buttonMode = true;				
+				button.buttonMode = false;				
 				
 				var label:TextField = new TextField();				
 				if(!__labels){label.visible=false}			
@@ -124,6 +124,8 @@ public function XMLMenu(layout:String, xml_url:String, spacing:Number, sizeX:Num
 				imageButtonOVER.load(new URLRequest(__menuList[count]..@over));		
 				imageButtonOVER.alpha = 0;
 				imageButtonOVER.name = "over";	
+				//imageButtonOVER.x = 30;
+				//imageButtonOVER.y = 50;
 					
 				button.addChild(imageButtonUP);			
 				button.addChild(imageButtonOVER);						
@@ -138,8 +140,8 @@ public function XMLMenu(layout:String, xml_url:String, spacing:Number, sizeX:Num
 				button.addChild(down);				
 				button.addChild(label);		
 				
-				label.x = (button.width/2) - (label.width/2);
-				label.y = (button.height/2) - (label.height/2)-0.5;				
+				label.x = (button.width/2) - (label.width/2)-1.5;
+				label.y = (button.height/2) - (label.height/2)-7.5;				
 							
 				}			
 				
@@ -167,70 +169,80 @@ public function XMLMenu(layout:String, xml_url:String, spacing:Number, sizeX:Num
 	   			radialHolderBG.graphics.endFill();	
 	   			//button.addChild(radialHolderBG);	
 	   				
-				var color = ColorUtil.random(0,50,0);					
+				//var color = ColorUtil.random(0,50,0);					
 				var temp1 = 360/6;							
 				
-				var wedge_0 = new Wedge(__sizeX, 0, 0, 0, temp1*Consts.DEG_TO_RAD);							
-	   			wedge_0.draw(radialHolderUP, 0.0, 0xCCCCCC, 0x000000, 0.40); 	   	
-	   			radialHolderUP.rotation += 60*(count+1); 	
-	   			button.addChild(radialHolderUP);	
-	   			radialHolderUP.name="up";
+			
 	   			
 	   			var wedge_1 = new Wedge(__sizeX, 0, 0, 0, temp1*Consts.DEG_TO_RAD);							
-	   			wedge_1.draw(radialHolderOVER, 2, 0xFFFFFF, 0x000000, 0.5); 	   	
+	   			wedge_1.draw(radialHolderOVER, 5, 0xFFFFFF, 0x000000, 1.0); 	   	
 	   			radialHolderOVER.rotation += 60*(count+1); 	
 	   			button.addChild(radialHolderOVER);	
 	   			radialHolderOVER.name="over";
 	   			radialHolderOVER.alpha=0;
-	   		
+	   			
+	   			var wedge_0 = new Wedge(__sizeX, 0, 0, 0, temp1*Consts.DEG_TO_RAD);							
+	   			wedge_0.draw(radialHolderUP, 0.0, 0xFFFFFF, 0x000000, 0.50); 	   	
+	   			radialHolderUP.rotation += 60*(count+1); 	
+	   			button.addChild(radialHolderUP);	
+	   			radialHolderUP.name="up";
+	   			
 	   			var wedge_2 = new Wedge(__sizeX, 0, 0, 0, temp1*Consts.DEG_TO_RAD);							
 	   			wedge_2.draw(radialHolderDOWN, 0.5, 0x000000, 0xFF0000, 0.5); 	   	
 	   			radialHolderDOWN.rotation += 60*(count+1); 	
 	   			button.addChild(radialHolderDOWN);		  
 	   			radialHolderDOWN.name="down";
 	   			radialHolderDOWN.alpha=0; 			   			
+	   				 	
 	   			
-	   			//radialHolderCLOSE.graphics.beginFill(0xFFFFFF, 0.5);	
-	   			//radialHolderCLOSE.graphics.drawCircle(0, 0, 30);		
-	   			//radialHolderCLOSE.graphics.endFill();
-	   			//button.addChild(radialHolderCLOSE);			
-	   			
-	   			var label:TextField = new TextField();				
+	   			var r = 400; 				
+	   			var x1 = r*Math.cos(__menuList[count]*p);
+				var y1 = r*Math.sin(__menuList[count]*p);
+				var tmp = p+10*Math.sin(__menuList[count]);
+				var label:TextField = new TextField();				
 				label.autoSize = TextFieldAutoSize.LEFT;	
 				label.defaultTextFormat = format1;
 				label.selectable = false;
-				//label.embedFonts = true;			
+				label.embedFonts = true;			
 				label.text = __menuList[count].text();
-				radialHolderDOWN.addChild(label);				
-				label.x = 15+(radialHolderUP.width/2) - (label.width/2);
-				label.y = -10+(radialHolderUP.height/2)- (label.height/2);	
-				//label.rotation = 34;			
+				radialHolderUP.addChild(label);				
+				label.x = count+1*5+(radialHolderUP.width/2) - (label.width/2);
+				label.y = -count+1*5+(radialHolderUP.height/2)- (label.height/2);	
+				//trace(count);
+				label.rotation -= 60*(count+1); 		
+	   			}		 			
 				
-	   			}				
-	   			
 				button.addEventListener(MouseEvent.MOUSE_OVER, displayActiveState);
 				button.addEventListener(MouseEvent.MOUSE_OUT, displayInactiveState);
 				button.addEventListener(MouseEvent.CLICK, displayMessage);					
 				
-				button.addEventListener(TUIOEvent.TUIO_OVER, displayActiveState);
-				button.addEventListener(TUIOEvent.TUIO_OUT, displayInactiveState);
-				button.addEventListener(TUIOEvent.TUIO_DOWN, displayMessage);			
+				button.addEventListener(TouchEvent.MOUSE_OVER, displayActiveState);
+				button.addEventListener(TouchEvent.MOUSE_OUT, displayInactiveState);
+				button.addEventListener(TouchEvent.MOUSE_DOWN, displayMessage);			
 				menuHolder.addChild(button);
+				
+				if(__layout == "radial"){
+	   		 	radialHolderCLOSE.graphics.beginFill(0xFFFFFF, 1);	
+	   			radialHolderCLOSE.graphics.drawCircle(0, 0, 30);		
+	   			radialHolderCLOSE.graphics.endFill();
+	   			radialHolderCLOSE.name="close";
+	   			menuHolder.addChild(radialHolderCLOSE);	}			
+				
 				count++;
 			}	
-				if(__layout == "radial"){	
+				/* if(__layout == "radial"){	
 				var MASKe = new Shape();				
 				//radialHolderUP.mask=MASK;	 
-	   			MASKe.graphics.lineStyle(1, 0x000000, 1);
+	   			//MASKe.graphics.lineStyle(0, 0x000000, 1);
 	   			MASKe.graphics.beginFill(0xFFFFFF, 1);	
 	   			//MASK.blendMode='invert';	
-	   			MASKe.graphics.drawCircle(0, 0, 45);	
+	   			MASKe.graphics.drawCircle(0, 0, 37);	
 	   			//MASK.addEventListener(MouseEvent.CLICK, killRadial);	
 	   			MASKe.graphics.endFill();
 	   			this.addChild(MASKe);	
 	   			MASKe.name="maskit";
 	   			//trace(this);
-	   			}
+	   			} */
 	
 		}	
 		private function onCompleteHandler(e:Event = null)
@@ -252,18 +264,18 @@ public function XMLMenu(layout:String, xml_url:String, spacing:Number, sizeX:Num
 		}
 		private function displayActiveState(e:Event):void {
 			Tweener.addTween(e.currentTarget.getChildByName("over"), {alpha:1, time:0.2, transition:"easeinoutquad"});
-			e.stopPropagation();
+			//e.stopPropagation();
 		}
 		private function displayInactiveState(e:Event):void {	
 			Tweener.addTween(e.currentTarget.getChildByName("over"), {alpha:0.0, time:0.65, transition:"easeinoutquad"});
 			Tweener.addTween(e.currentTarget.getChildByName("down"), {alpha:0.0, delay:0.40,time:0.25, transition:"easeinoutquad"});		
-			e.stopPropagation();
+			//e.stopPropagation();
 		}
 		private function displayMessage(e:Event):void {		
 			//e.currentTarget.getChildByName("down").alpha=1;
 			Tweener.addTween(e.currentTarget.getChildByName("down"), {alpha:1.0, time:0.35, transition:"easeinoutquad"});				
 			//e.currentTarget.removeChild(button);			
-			e.stopPropagation();
+			//e.stopPropagation();
 		}
 		
 	
@@ -278,11 +290,13 @@ public function XMLMenu(layout:String, xml_url:String, spacing:Number, sizeX:Num
 	import flash.xml.XML
 	import flash.events.Event;
 	import flash.error.Error;
-	import com.touchlib.TUIOEvent;
+	import com.touchlib.*;
 	import app.core.element.Wrapper; 
-	import app.core.utl.Wedge;	 import flash.events.*;
+	import app.core.utl.Wedge;	 
+	import flash.events.*;
 	import app.core.utl.Consts;
-	import caurina.transitions.Tweener;	import app.core.utl.ColorUtil;
+	import caurina.transitions.Tweener;	
+	import app.core.utl.ColorUtil;
 	import flash.text.*;	
 	import app.core.action.RotatableScalable;	
 	import flash.system.LoaderContext;

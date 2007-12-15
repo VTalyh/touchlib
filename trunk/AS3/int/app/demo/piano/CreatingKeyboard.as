@@ -58,8 +58,8 @@
 				outlineBox.graphics.drawRect(0, 0, kWidth, kHeight);
 				outlineBox.graphics.endFill();	
 				
-				//outlineBox.addEventListener (TUIOEvent.DownEvent, onMoveOn, false, 0, true);  // If on border, turn Scaling/Rotating On
-			    //outlineBox.addEventListener(TUIOEvent.UpEvent, onupEvent, false, 0, true);    // If not on border, turn Scaling/Rotating Off									
+				//outlineBox.addEventListener (TouchEvent.DownEvent, onMoveOn, false, 0, true);  // If on border, turn Scaling/Rotating On
+			    //outlineBox.addEventListener(TouchEvent.UpEvent, onupEvent, false, 0, true);    // If not on border, turn Scaling/Rotating Off									
 				
 			}
 			
@@ -105,9 +105,9 @@
 				
 				addChild(key); //add the Sprite key to the stage
 				
-				key.addEventListener (TUIOEvent.TUIO_OVER, onStartAudio, false, 0, true);  // if Finger rolls over key, go to onStartAudio function
-				key.addEventListener(TUIOEvent.TUIO_OUT, onKeyRelease, false, 0, true); // if Finger rolls off key, go to onSpriteRelease function
-				key.addEventListener(TUIOEvent.TUIO_OVER, onKeyPress, false, 0, true);  // if Finger rolls off key, go to onSpritePress function
+				key.addEventListener (TouchEvent.MOUSE_OVER, onStartAudio, false, 0, true);  // if Finger rolls over key, go to onStartAudio function
+				key.addEventListener(TouchEvent.MOUSE_OUT, onKeyRelease, false, 0, true); // if Finger rolls off key, go to onSpriteRelease function
+				key.addEventListener(TouchEvent.MOUSE_OVER, onKeyPress, false, 0, true);  // if Finger rolls off key, go to onSpritePress function
 			}		
 			
 			
@@ -134,7 +134,7 @@
 				
 	    //-----------------Event Functions-------------	//		
 		
-		private function onKeyPress(event:TUIOEvent):void {
+		private function onKeyPress(event:TouchEvent):void {
 			
 			//Flip gradient of natural keys when pressed
 	        if (event.target.name.substr(0, 1) == "n" ) {
@@ -154,7 +154,7 @@
 		
 		
 		
-		private function onKeyRelease(event:TUIOEvent):void {
+		private function onKeyRelease(event:TouchEvent):void {
 			
          
 		    //Flip gradient of natural keys back to original
@@ -186,7 +186,7 @@
 		
 		
 		
-		private function onStartAudio(event:TUIOEvent):void {
+		private function onStartAudio(event:TouchEvent):void {
 			
 	        var keyvolume:Number = (event.localY/event.target.height);	//Volume = Key pressed location/ height of key	
             if (keyvolume >= .9) {keyvolume = .9};
@@ -251,7 +251,7 @@
 		
 		
 		//This one works
-		private function onMoveOn(event:TUIOEvent):void {
+		private function onMoveOn(event:TouchEvent):void {
 			
 			trace("Scaling/Rotating ONNNNNNNNNNNN");
 			
@@ -264,7 +264,7 @@
 		
 		
 		//This one doesn't work. UpEvent doesn't work.
-		public function onMoveUp(e:TUIOEvent):void {
+		public function onMoveUp(e:TouchEvent):void {
 			
 			trace("Scaling/Rotating OFFFFFFFFFFFF");
 			

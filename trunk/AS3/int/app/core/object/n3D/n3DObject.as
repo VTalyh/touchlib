@@ -40,7 +40,7 @@
 			resetBT.graphics.endFill();
 			resetBT.x = 150;
 			resetBT.y = -250;
-			resetBT.addEventListener(TUIOEvent.TUIO_DOWN, resetPos);
+			resetBT.addEventListener(TouchEvent.MOUSE_DOWN, resetPos);
 			resetBT.addEventListener(MouseEvent.MOUSE_DOWN, resetPos);
 			
 			this.addChild(resetBT);

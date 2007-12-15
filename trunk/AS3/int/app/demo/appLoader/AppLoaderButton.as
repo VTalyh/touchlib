@@ -50,11 +50,11 @@ package app.demo.appLoader
 			addChild(buttonImage);
 			addChild(buttonOverlay);
 			
-			this.addEventListener(TUIOEvent.TUIO_MOVE, this.tuioMoveHandler, false, 0, true);			
-			this.addEventListener(TUIOEvent.TUIO_DOWN, this.tuioDownEvent, false, 0, true);						
-			this.addEventListener(TUIOEvent.TUIO_UP, this.tuioUpEvent, false, 0, true);									
-			this.addEventListener(TUIOEvent.TUIO_OVER, this.tuioRollOverHandler, false, 0, true);									
-			this.addEventListener(TUIOEvent.TUIO_OUT, this.tuioRollOutHandler, false, 0, true);			
+			this.addEventListener(TouchEvent.MOUSE_MOVE, this.tuioMoveHandler, false, 0, true);			
+			this.addEventListener(TouchEvent.MOUSE_DOWN, this.tuioDownEvent, false, 0, true);						
+			this.addEventListener(TouchEvent.MOUSE_UP, this.tuioUpEvent, false, 0, true);									
+			this.addEventListener(TouchEvent.MOUSE_OVER, this.tuioRollOverHandler, false, 0, true);									
+			this.addEventListener(TouchEvent.MOUSE_OUT, this.tuioRollOutHandler, false, 0, true);			
 			
 			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler, false, 0, true);									
 			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent, false, 0, true);															
@@ -95,7 +95,7 @@ package app.demo.appLoader
 			
 		}
 		
-		public function tuioDownEvent(e:TUIOEvent)
+		public function tuioDownEvent(e:TouchEvent)
 		{		
 		
 			if(buttonLocked)
@@ -108,7 +108,7 @@ package app.demo.appLoader
 			e.stopPropagation();
 		}
 
-		public function tuioUpEvent(e:TUIOEvent)
+		public function tuioUpEvent(e:TouchEvent)
 		{		
 			if(buttonLocked)
 			{
@@ -124,7 +124,7 @@ package app.demo.appLoader
 			e.stopPropagation();
 		}		
 
-		public function tuioMoveHandler(e:TUIOEvent)
+		public function tuioMoveHandler(e:TouchEvent)
 		{
 			if(buttonDown && !buttonLocked)
 			{
@@ -141,12 +141,12 @@ package app.demo.appLoader
 			e.stopPropagation();			
 		}
 		
-		public function tuioRollOverHandler(e:TUIOEvent)
+		public function tuioRollOverHandler(e:TouchEvent)
 		{
 			
 		}
 		
-		public function tuioRollOutHandler(e:TUIOEvent)
+		public function tuioRollOutHandler(e:TouchEvent)
 		{
 			e.stopPropagation();			
 		

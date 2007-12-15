@@ -118,13 +118,13 @@
 			scrubSlider.setValue(0.0);
 			volumeSlider.setValue(0.5);
 			
-			scrubSlider.addEventListener(TUIOEvent.TUIO_DOWN, onMouseDown);
-			scrubSlider.addEventListener(TUIOEvent.TUIO_UP, onMouseUp);
+			scrubSlider.addEventListener(TouchEvent.MOUSE_DOWN, onMouseDown);
+			scrubSlider.addEventListener(TouchEvent.MOUSE_UP, onMouseUp);
 			scrubSlider.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			scrubSlider.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);	
 			
-			volumeSlider.addEventListener(TUIOEvent.TUIO_DOWN, onMouseDownV);
-			volumeSlider.addEventListener(TUIOEvent.TUIO_UP, onMouseUpV);
+			volumeSlider.addEventListener(TouchEvent.MOUSE_DOWN, onMouseDownV);
+			volumeSlider.addEventListener(TouchEvent.MOUSE_UP, onMouseUpV);
 			volumeSlider.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownV);
 			volumeSlider.addEventListener(MouseEvent.MOUSE_UP, onMouseUpV);
 				

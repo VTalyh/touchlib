@@ -92,11 +92,11 @@ package app.demo.musicalSquares
 					this.thisState = "release"
 
 					this.removeEventListener(Event.ENTER_FRAME, slide);
-					this.addEventListener(TUIOEvent.TUIO_MOVE, this.moveHandler, false, 0, true);
-					this.addEventListener(TUIOEvent.TUIO_DOWN, this.downEvent, false, 0, true);
-					this.addEventListener(TUIOEvent.TUIO_UP, this.upEvent, false, 0, true);
-					this.addEventListener(TUIOEvent.TUIO_OVER, this.rollOverHandler, false, 0, true);
-					this.addEventListener(TUIOEvent.TUIO_OUT, this.rollOutHandler, false, 0, true);
+					this.addEventListener(TouchEvent.MOUSE_MOVE, this.moveHandler, false, 0, true);
+					this.addEventListener(TouchEvent.MOUSE_DOWN, this.downEvent, false, 0, true);
+					this.addEventListener(TouchEvent.MOUSE_UP, this.upEvent, false, 0, true);
+					this.addEventListener(TouchEvent.MOUSE_OVER, this.rollOverHandler, false, 0, true);
+					this.addEventListener(TouchEvent.MOUSE_OUT, this.rollOutHandler, false, 0, true);
 					//this.removeEventListener(Event.ENTER_FRAME, this.update);
 				}
 			}

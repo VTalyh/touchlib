@@ -37,11 +37,11 @@ package app.core.action
 			state = "none";
 
 			blobs = new Array();
-			this.addEventListener(TUIOEvent.TUIO_MOVE, this.moveHandler, false, 0, true);			
-			this.addEventListener(TUIOEvent.TUIO_DOWN, this.downEvent, false, 0, true);						
-			this.addEventListener(TUIOEvent.TUIO_UP, this.upEvent, false, 0, true);									
-			//this.addEventListener(TUIOEvent.RollOverEvent, this.rollOverHandler, false, 0, true);									
-			this.addEventListener(TUIOEvent.TUIO_OUT, this.rollOutHandler, false, 0, true);												
+			this.addEventListener(TouchEvent.MOUSE_MOVE, this.moveHandler, false, 0, true);			
+			this.addEventListener(TouchEvent.MOUSE_DOWN, this.downEvent, false, 0, true);						
+			this.addEventListener(TouchEvent.MOUSE_UP, this.upEvent, false, 0, true);									
+			//this.addEventListener(TouchEvent.RollOverEvent, this.rollOverHandler, false, 0, true);									
+			this.addEventListener(TouchEvent.MOUSE_OUT, this.rollOutHandler, false, 0, true);												
 			this.addEventListener(Event.ENTER_FRAME, this.update, false, 0, true);
 			
 			dX = 0;
@@ -162,7 +162,7 @@ package app.core.action
 			}			
 		}
 		
-		public function downEvent(e:TUIOEvent):void
+		public function downEvent(e:TouchEvent):void
 		{		
 			if(e.stageX == 0 && e.stageY == 0)
 				return;			
@@ -178,7 +178,7 @@ package app.core.action
 			e.stopPropagation();
 		}
 		
-		public function upEvent(e:TUIOEvent):void
+		public function upEvent(e:TouchEvent):void
 		{		
 							
 			removeBlob(e.ID);			
@@ -187,18 +187,18 @@ package app.core.action
 				
 		}		
 
-		public function moveHandler(e:TUIOEvent):void
+		public function moveHandler(e:TouchEvent):void
 		{
 //			e.stopPropagation();			
 		}
 		
-		public function rollOverHandler(e:TUIOEvent):void
+		public function rollOverHandler(e:TouchEvent):void
 		{
 //			e.stopPropagation();			
 			trace ("mother rollover");
 		}
 		
-		public function rollOutHandler(e:TUIOEvent):void
+		public function rollOutHandler(e:TouchEvent):void
 		{
 			//e.stopPropagation();
 			

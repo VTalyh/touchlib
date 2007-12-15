@@ -54,7 +54,7 @@ package app.demo.tangram
 		   sq2a = new s2a();this.addChild(sq2a);sq2a.x = 500-75 ; sq2a.y = 267; sq2a.filters = bevelfilter;
 			
 			// the flip gesture
-			//sq2a.sq_catch.addEventListener(TUIOEvent.RollOutEvent, function() {sq2a.scaleX= -sq2a.scaleX; },true, 0, true);			
+			//sq2a.sq_catch.addEventListener(TouchEvent.RollOutEvent, function() {sq2a.scaleX= -sq2a.scaleX; },true, 0, true);			
 		}						
 		
 	}//end class

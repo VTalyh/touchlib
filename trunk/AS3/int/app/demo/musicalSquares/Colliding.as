@@ -98,7 +98,7 @@
 				staticSquare.name = "ball" + j;
 
 				addChild(staticSquare);
-				staticSquare.addEventListener(TUIOEvent.TUIO_DOWN, addSquare, false, 0, true);				
+				staticSquare.addEventListener(TouchEvent.MOUSE_DOWN, addSquare, false, 0, true);				
 				}			
 				
 			for (var h:uint = 0; h < 36; h++) {				
@@ -122,7 +122,7 @@
 				staticSquare.name = "ball" + h;
 
 				addChild(staticSquare);
-				staticSquare.addEventListener(TUIOEvent.TUIO_DOWN, addSquare, false, 0, true);				
+				staticSquare.addEventListener(TouchEvent.MOUSE_DOWN, addSquare, false, 0, true);				
 				}				
 			}
 			
@@ -130,7 +130,7 @@
 			/**********************************************************
 			* When pressed, add new square
 			***********************************************************/			
-			private function addSquare(e:TUIOEvent):void {
+			private function addSquare(e:TouchEvent):void {
 				
 				switch (e.currentTarget.name) {								
 				
@@ -362,7 +362,7 @@
 				squares.push(square);	
 				
 				square.state = "dragging";				
-				square.dispatchEvent(new TUIOEvent (TUIOEvent.TUIO_DOWN, false, false, tuioobj.x, tuioobj.y, localPt.x, localPt.y, 0, 0, null, false, false, false, false, 0, "2Dcur", e.ID, e.sID, e.angle));
+				square.dispatchEvent(new TouchEvent (TouchEvent.MOUSE_DOWN, false, false, tuioobj.x, tuioobj.y, localPt.x, localPt.y, 0, 0, null, false, false, false, false, 0, "2Dcur", e.ID, e.sID, e.angle));
 			}
 
 		

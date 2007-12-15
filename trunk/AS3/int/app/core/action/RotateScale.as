@@ -34,11 +34,11 @@
 			state = "none";
 			blobs = new Array();
 			
-			this.addEventListener(TUIOEvent.TUIO_MOVE, this.moveHandler, false, 0, true);			
-			this.addEventListener(TUIOEvent.TUIO_DOWN, this.downEvent, false, 0, true);						
-			this.addEventListener(TUIOEvent.TUIO_UP, this.upEvent, false, 0, true);									
-			this.addEventListener(TUIOEvent.TUIO_OVER, this.rollOverHandler, false, 0, true);									
-			this.addEventListener(TUIOEvent.TUIO_OUT, this.rollOutHandler, false, 0, true);		
+			this.addEventListener(TouchEvent.MOUSE_MOVE, this.moveHandler, false, 0, true);			
+			this.addEventListener(TouchEvent.MOUSE_DOWN, this.downEvent, false, 0, true);						
+			this.addEventListener(TouchEvent.MOUSE_UP, this.upEvent, false, 0, true);									
+			this.addEventListener(TouchEvent.MOUSE_OVER, this.rollOverHandler, false, 0, true);									
+			this.addEventListener(TouchEvent.MOUSE_OUT, this.rollOutHandler, false, 0, true);		
 		
 			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler);									
 			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent);															
@@ -156,7 +156,7 @@
 			}			
 		}
 		
-		public function downEvent(e:TUIOEvent)
+		public function downEvent(e:TouchEvent)
 		{		
 			if(e.stageX == 0 && e.stageY == 0)
 				return;			
@@ -168,24 +168,24 @@
 			e.stopPropagation();
 		}
 		
-		public function upEvent(e:TUIOEvent)
+		public function upEvent(e:TouchEvent)
 		{		
 			removeBlob(e.ID);							
 			e.stopPropagation();		
 				
 		}		
 
-		public function moveHandler(e:TUIOEvent)
+		public function moveHandler(e:TouchEvent)
 		{
 //			e.stopPropagation();			
 		}
 		
-		public function rollOverHandler(e:TUIOEvent)
+		public function rollOverHandler(e:TouchEvent)
 		{
 //			e.stopPropagation();			
 		}
 		
-		public function rollOutHandler(e:TUIOEvent)
+		public function rollOutHandler(e:TouchEvent)
 		{
 			//e.stopPropagation();
 			

@@ -7,20 +7,22 @@
 	import flash.events.*;
 	import flash.net.*;
 	import com.touchlib.*;	
-	import flash.geom.*;			
-	
+	import flash.geom.*;		
+		
 	import app.core.element.Wrapper;
    
     import flash.filters.*;
 
 
-	public class PaintCanvas extends MovieClip
+	public class PaintCanvas extends Sprite
 	{
 
 
 		private var blobs:Array;		// blobs we are currently interacting with		
+		private var sourceBmp:BitmapData;	
 		
-		private var sourceBmp:BitmapData;		
+		private var m_stage:Stage;		
+	
 		private var paintBmpData:BitmapData;
 		private var paintBmpData2:BitmapData;		
 		private var buffer:BitmapData;		
@@ -43,29 +45,29 @@
 		private var colorButton_8:Sprite;	
 		private var colorButton_9:Sprite;		
 		
-		public function PaintCanvas():void
+		public function PaintCanvas(_stage:Stage):void
 		{
-
+			m_stage = _stage;
 			blobs = new Array();
-			paintBmpData = new BitmapData(800, 600, true, 0x00000000);
+			paintBmpData = new BitmapData(m_stage.stageWidth, m_stage.stageHeight, true, 0x00000000);
 			
 			brush = new Sprite();
 			brush.graphics.beginFill(0xFFFFFF);
 			brush.graphics.drawCircle(0,0,15);			
 			
 			trace(brush);
-			this.addEventListener(TUIOEvent.TUIO_MOVE, this.moveHandler, false, 0, true);			
-			this.addEventListener(TUIOEvent.TUIO_DOWN, this.downEvent, false, 0, true);						
-			this.addEventListener(TUIOEvent.TUIO_UP, this.upEvent, false, 0, true);									
-			this.addEventListener(TUIOEvent.TUIO_OVER, this.rollOverHandler, false, 0, true);									
-			this.addEventListener(TUIOEvent.TUIO_OUT, this.rollOutHandler, false, 0, true);
+			this.addEventListener(TouchEvent.MOUSE_MOVE, this.moveHandler, false, 0, true);			
+			this.addEventListener(TouchEvent.MOUSE_DOWN, this.downEvent, false, 0, true);						
+			this.addEventListener(TouchEvent.MOUSE_UP, this.upEvent, false, 0, true);									
+			this.addEventListener(TouchEvent.MOUSE_OVER, this.rollOverHandler, false, 0, true);									
+			this.addEventListener(TouchEvent.MOUSE_OUT, this.rollOutHandler, false, 0, true);
 			
 			 var colorBar_0:Sprite = new Sprite();
 			 		
-				colorBar_0.graphics.beginFill(0xFFFFFF,0.65);
-				colorBar_0.graphics.drawRoundRect(0, 0, 80, 565,6);	00;
-				colorBar_0.x = 800-100;	
-				colorBar_0.y = 15;	
+			 colorBar_0.graphics.beginFill(0xFFFFFF,0.65);
+			 colorBar_0.graphics.drawRoundRect(0, 0, 80,  m_stage.stageHeight-200,6);	00;
+			 colorBar_0.x = m_stage.stageWidth-100;	
+			 colorBar_0.y = 15;	
 				
 			 var colorButton_0:Sprite = new Sprite();
 			 var colorButton_1:Sprite = new Sprite();		
@@ -78,8 +80,6 @@
 			 var colorButton_8:Sprite = new Sprite();	
 			 var colorButton_9:Sprite = new Sprite();	
  			 
- 			
-			
 			colorButton_0.graphics.beginFill(0x000000);
 			colorButton_0.graphics.drawRoundRect(0, 0, 70, 50,6);			
 			colorButton_0.y = 10;
@@ -224,7 +224,8 @@
 				if(!tuioobj)
 				{
 					removeBlob(blobs[i].id);
-				} else {
+				} else if(parent != null) {
+					trace(parent);
 					var localPt:Point = parent.globalToLocal(new Point(tuioobj.x, tuioobj.y));										
 					var m:Matrix = new Matrix();
 					m.translate(localPt.x, localPt.y);
@@ -236,7 +237,7 @@
 		}
 		
 		
-		public function downEvent(e:TUIOEvent):void
+		public function downEvent(e:TouchEvent):void
 		{		
 			if(e.stageX == 0 && e.stageY == 0)
 				return;			
@@ -248,7 +249,7 @@
 			e.stopPropagation();
 		}
 		
-		public function upEvent(e:TUIOEvent):void
+		public function upEvent(e:TouchEvent):void
 		{		
 			
 				
@@ -258,15 +259,15 @@
 				
 		}		
 
-		public function moveHandler(e:TUIOEvent):void
+		public function moveHandler(e:TouchEvent):void
 		{
 		}
 		
-		public function rollOverHandler(e:TUIOEvent):void
+		public function rollOverHandler(e:TouchEvent):void
 		{
 		}
 		
-		public function rollOutHandler(e:TUIOEvent):void
+		public function rollOutHandler(e:TouchEvent):void
 		{
 		
 		}		

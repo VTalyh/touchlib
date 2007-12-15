@@ -1,29 +1,4 @@
-﻿/*////////////////////////////////////////////////////
-//////////////////////////////////////////////////////
-////
-////			Full Browser background image
-////
-////			by Josh Chernoff ( GFX Complex )
-////			Copy right ~ josh chernoff ~ 2007
-////  				   All rights reseverd
-////
-////
-////			May be redistobuted under The 
-////      GNU General Public License (GPL) Agreement
-////
-//////////////////////////////////////////////////////
-*/////////////////////////////////////////////////////
-
-/*
-Class constructor requires two arguments 
-(stage:Stage for refure to the stage) and 
-(url:String for loading the background)
-public class BrowserBackground(url:String);
-*/
-
-
-
-package app.core.canvas{
+﻿package app.core.canvas{
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.display.Shape;
@@ -81,7 +56,7 @@ package app.core.canvas{
 		private function completeHandler(event:Event):void {
 			var sW:Number = stage.stageWidth;
 			var sH:Number = stage.stageHeight;
-			timer = new Timer(28, 44);
+			timer = new Timer(0, 30);
 			//trace(_loader.contentLoaderInfo);
 			
 			var loader:Loader = Loader(event.target.loader);
@@ -153,8 +128,8 @@ package app.core.canvas{
 			//trace("openHandler: " + event);
 		}
 		private function timerListener(e:TimerEvent){
-			_imageHolder.alpha += .025;
-			if(_imageHolder.alpha == 1.10){
+			_imageHolder.alpha += .04;
+			if(_imageHolder.alpha == 1.2){
 				timer.removeEventListener(TimerEvent.TIMER, timerListener);
 			}
 			e.updateAfterEvent();

@@ -82,7 +82,7 @@
 						m.alpha = 0.15;
 						MenuItems[i].mc.addChild(m);
 
-						l.addEventListener(TUIOEvent.TUIO_DOWN, this.RunTrace);
+						l.addEventListener(TouchEvent.MOUSE_DOWN, this.RunTrace);
 						l.addEventListener(MouseEvent.MOUSE_DOWN, this.RunTrace);																	
 						
 						break;
@@ -97,7 +97,7 @@
 						m.alpha = 0.15;
 						MenuItems[i].mc.addChild(m);
 						
-						l.addEventListener(TUIOEvent.TUIO_DOWN, this.RunPaint);
+						l.addEventListener(TouchEvent.MOUSE_DOWN, this.RunPaint);
 						l.addEventListener(MouseEvent.MOUSE_DOWN, this.RunPaint);																							
 						break;
 					case (2) :
@@ -111,7 +111,7 @@
 						m.alpha = 0.15;
 						MenuItems[i].mc.addChild(m);
 						
-						l.addEventListener(TUIOEvent.TUIO_DOWN, this.RunPhoto);
+						l.addEventListener(TouchEvent.MOUSE_DOWN, this.RunPhoto);
 						l.addEventListener(MouseEvent.MOUSE_DOWN, this.RunPhoto);							
 						break;
 					case (3) :
@@ -136,7 +136,7 @@
 				var filter:BitmapFilter = new DropShadowFilter(5.0,90,0x000000,0.7,15,15,1.0,1);
 				MenuItems[i].mc.filters = [filter];
 
-				//MenuItems[i].mc.addEventListener(TUIOEvent.DownEvent, this.RunApp);
+				//MenuItems[i].mc.addEventListener(TouchEvent.DownEvent, this.RunApp);
 				//MenuItems[i].mc.graphics.beginFill(0xffffff,0.8);
 				//MenuItems[i].mc.graphics.drawRect(-100,-100,100,100);
 				//MenuItems[i].mc.graphics.loadMovie();

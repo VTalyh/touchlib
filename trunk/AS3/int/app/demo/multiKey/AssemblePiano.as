@@ -74,8 +74,8 @@ package app.demo.multiKey {
 				subobj.x = ((subobj.width) * i) + subobj.width/2 ;
 				subobj.y = subobj.height/2;
 				
-				subobj.addEventListener(TUIOEvent.TUIO_OVER, onStartAudio);  // if Finger rolls over key, go to onStartAudio function
-				subobj.addEventListener(TUIOEvent.TUIO_DOWN, onStartAudio);  // if Finger rolls over key, go to onStartAudio function
+				subobj.addEventListener(TouchEvent.MOUSE_OVER, onStartAudio);  // if Finger rolls over key, go to onStartAudio function
+				subobj.addEventListener(TouchEvent.MOUSE_DOWN, onStartAudio);  // if Finger rolls over key, go to onStartAudio function
 			}
 			
 			for (var j = 0; j < numSharpKeys; j++) {
@@ -106,14 +106,14 @@ package app.demo.multiKey {
 					subobj.y = subobj.height/2;
 				}
 				
-				subobj.addEventListener(TUIOEvent.TUIO_OVER, onStartAudio);  // if Finger rolls over key, go to onStartAudio function
-				subobj.addEventListener(TUIOEvent.TUIO_DOWN, onStartAudio);  // if Finger rolls over key, go to onStartAudio function
+				subobj.addEventListener(TouchEvent.MOUSE_OVER, onStartAudio);  // if Finger rolls over key, go to onStartAudio function
+				subobj.addEventListener(TouchEvent.MOUSE_DOWN, onStartAudio);  // if Finger rolls over key, go to onStartAudio function
 			}
 		}		
 		
 		
 		
-		public function onStartAudio(event:TUIOEvent):void {
+		public function onStartAudio(event:TouchEvent):void {
 			
 			
 			

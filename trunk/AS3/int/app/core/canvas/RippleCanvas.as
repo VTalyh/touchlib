@@ -3,35 +3,24 @@
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	
-	import flash.display.*;		
+	import flash.display.Sprite;		
 	import flash.events.*;
-	import flash.net.*;
 	import com.touchlib.*;	
-	import flash.geom.*;			
-	
-	import flash.text.*;
-	
-	
-    import flash.filters.*;
-
-
-	public class RippleCanvas extends MovieClip
+   	import flash.geom.*;	
+   	import flash.filters.*;
+   	
+	public class RippleCanvas extends Sprite
 	{
-//		[Embed(source="brush.swf", symbol="Brush")]
-//		public var Brush:Class;
-
-
 		
-		private var blobs:Array;		// blobs we are currently interacting with		
-		
+		private var blobs:Array;		
 		internal var sourceBmp:BitmapData;		
 		internal var paintBmpData:BitmapData;
 		internal var paintBmpData2:BitmapData;		
 		private var buffer:BitmapData;		
 		private var paintBmp:Bitmap;
 		private var output:Bitmap;
-		private var brush:MovieClip;
-		private var logo:MovieClip;
+		private var brush:Sprite;
+		private var logo:Sprite;
 		private var filter:BitmapFilter;
 		private var filter2:BitmapFilter;		
 
@@ -46,29 +35,41 @@
 		public function RippleCanvas()
 		{
 			blobs = new Array();
-			paintBmpData = new BitmapData(100, 75, false, 0x80);
-			paintBmpData2 = new BitmapData(100, 75, false, 0x80);			
+			paintBmpData = new BitmapData(128, 98, false, 0x80);
+			paintBmpData2 = new BitmapData(128, 98, false, 0x80);			
 			
-			logo = new Logo();			
+			logo = new Sprite();			
 			
-			surface = new BitmapData(100, 75, true, 0x000000);			
+			brush = new Sprite();
+			brush.graphics.beginFill(0xFFFFFF,1);
+			brush.graphics.drawCircle(0,0,4);
+					
+			
+			surface = new BitmapData(128, 98, true, 0x000000);			
 			surface.draw(logo);
 			
-			sourceBmp = new BitmapData(100, 75, false, 0x80);											
+			sourceBmp = new BitmapData(128, 98, false, 0x80);											
 			buffer = paintBmpData.clone();			
 			
-			outputBmpData = new BitmapData(100, 75, false, 0x80);
+			outputBmpData = new BitmapData(128, 98, false, 0x80);
 			
 			scaleX = 8.0;
 			scaleY = 8.0;
-			brush = new BrushObj();
 			
-			trace(brush);
-			this.addEventListener(TUIOEvent.TUIO_MOVE, this.moveHandler, false, 0, true);			
-			this.addEventListener(TUIOEvent.TUIO_DOWN, this.downEvent, false, 0, true);						
-			this.addEventListener(TUIOEvent.TUIO_UP, this.upEvent, false, 0, true);									
-			this.addEventListener(TUIOEvent.TUIO_OVER, this.rollOverHandler, false, 0, true);									
-			this.addEventListener(TUIOEvent.TUIO_OUT, this.rollOutHandler, false, 0, true);															
+			//trace(brush);
+			
+					
+			//this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler);									
+			//this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent);															
+			//this.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpEvent);	
+			//this.addEventListener(MouseEvent.MOUSE_OVER, this.mouseRollOverHandler);
+			//this.addEventListener(MouseEvent.MOUSE_OUT, this.mouseUpEvent);	
+			
+			this.addEventListener(TouchEvent.MOUSE_MOVE, this.moveHandler, false, 0, true);			
+			this.addEventListener(TouchEvent.MOUSE_DOWN, this.downEvent, false, 0, true);						
+			this.addEventListener(TouchEvent.MOUSE_UP, this.upEvent, false, 0, true);									
+			this.addEventListener(TouchEvent.MOUSE_OVER, this.rollOverHandler, false, 0, true);									
+			this.addEventListener(TouchEvent.MOUSE_OUT, this.rollOutHandler, false, 0, true);															
 			
 			this.addEventListener(Event.ENTER_FRAME, this.update, false, 0, true);			
 			paintBmp = new Bitmap(paintBmpData);
@@ -134,10 +135,12 @@
 				{
 					removeBlob(blobs[i].id);
 				} else {
+					if(parent!=null){
 					var localPt:Point = parent.globalToLocal(new Point(tuioobj.x*0.125, tuioobj.y*0.125));										
 					var m:Matrix = new Matrix();
 					m.translate(localPt.x, localPt.y);
 					sourceBmp.draw(brush, m, null, 'invert');
+					}
 				}
 				
 			}
@@ -160,7 +163,7 @@
 		}
 		
 		
-		public function downEvent(e:TUIOEvent)
+		public function downEvent(e:TouchEvent)
 		{		
 			if(e.stageX == 0 && e.stageY == 0)
 				return;			
@@ -175,7 +178,7 @@
 			e.stopPropagation();
 		}
 		
-		public function upEvent(e:TUIOEvent)
+		public function upEvent(e:TouchEvent)
 		{		
 			
 				
@@ -185,15 +188,15 @@
 				
 		}		
 
-		public function moveHandler(e:TUIOEvent)
+		public function moveHandler(e:TouchEvent)
 		{
 		}
 		
-		public function rollOverHandler(e:TUIOEvent)
+		public function rollOverHandler(e:TouchEvent)
 		{
 		}
 		
-		public function rollOutHandler(e:TUIOEvent)
+		public function rollOutHandler(e:TouchEvent)
 		{
 		
 		}		
