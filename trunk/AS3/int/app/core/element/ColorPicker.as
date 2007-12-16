@@ -23,7 +23,7 @@ package app.core.element
 	import caurina.transitions.Tweener;
 	
 	public class ColorPicker extends Multitouchable
-	{
+	{	trace('ColorPicker Created');
 		private var imgLoader:Loader = null;	     
 		private var separateByPixels:BitmapData; 	
 		private var label:TextField;
