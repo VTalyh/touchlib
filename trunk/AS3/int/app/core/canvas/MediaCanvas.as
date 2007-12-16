@@ -1,6 +1,12 @@
-﻿package app.core.canvas{
+﻿//Generally, this should be used along with ScaleCanvas. 
+//This should be the child of ScaleCanvas, but
+//all the photos, applications, and any other things will
+//be added to this canvas as usual.
+
+
+package app.core.canvas{
 	import app.core.object.ImageObject;
-	import app.core.action.RotatableScalable;
+	import app.core.action.Scalable;
 	import flash.display.Shape;		
 	import flash.events.Event;	
 	
@@ -11,7 +17,7 @@
 	import app.core.object.TextObject;	
 
 	
-	public class MediaCanvas extends RotatableScalable
+	public class MediaCanvas extends Scalable
 	{		
 		private var clickgrabber:Shape = new Shape();	
 		private var clickgrabber_center:Shape = new Shape();				
@@ -43,15 +49,17 @@
 			clickgrabber.graphics.beginFill(0xFF, 0.0);
 			clickgrabber.graphics.drawRect(-sizeX/2,-sizeY/2,sizeX,sizeY);
 			clickgrabber.graphics.endFill();						
-			
+/*			
 			clickgrabber_center.graphics.lineStyle(1,0xFF,0.0);
 			clickgrabber_center.graphics.beginFill(0xFF0000, 0.45);
 			clickgrabber_center.graphics.drawCircle(0,0,25);
 			clickgrabber_center.graphics.drawRect(0,0,3,45);
 			clickgrabber_center.graphics.endFill();
 			
+			this.addChild( clickgrabber_center );
+*/
 			this.addChild( clickgrabber );	
-			this.addChild( clickgrabber_center );			
+						
 			
 			
 			TextObject_0 = new TextObject(_canvasName, false);	
@@ -75,10 +83,16 @@
 		
 		public override function doubleTap()
 		{
-	   	if(this.scaleX>0.25)
-		Tweener.addTween(this, {scaleX: 0.25, scaleY: 0.25,rotation: 0, x:1024*0.5, y:768*0.5,time:0.25, transition:"easeinoutquad"});	
+	   
+	    if(parent.scaleX>0.25)
+			Tweener.addTween(this, {rotation: 0, x:400*0.5, y:300*0.5,time:0.25, transition:"easeinoutquad"});	
 		else
-		Tweener.addTween(this, {scaleX: 1, scaleY: 1,rotation: 0, x:1024*0.5, y:768*0.5,time:0.25, transition:"easeinoutquad"});		
+			Tweener.addTween(this, {rotation: 0, x:400*0.5, y:300*0.5,time:0.25, transition:"easeinoutquad"});		
+		if(parent.scaleX>0.25)
+			Tweener.addTween(parent, {scaleX: 0.25, scaleY: 0.25,time:0.25, transition:"easeinoutquad"});	
+		else
+			Tweener.addTween(parent, {scaleX: 1, scaleY: 1,time:0.25, transition:"easeinoutquad"});				
+		
 		}					
 	}
 }
