@@ -51,7 +51,7 @@ ext - external libraries (papervision, tweener, etc..)
 
 com.touchlib - TUIO socket (renders touch input)
 
-app.core.action - Actions for objects (Rotate/Scale, scroll, doubletap)
+app.core.action - Actions for objects (Rotate/Scale, scroll, doubletap, LockMedia)
 app.core.canvas - Container and lens objects (MediaCanvas, nCanvas, Zoom)
 app.core.element - Interactive objects that typically act as controllers (Knob, Slider, Toggle)
 app.core.loader - External content loaders
