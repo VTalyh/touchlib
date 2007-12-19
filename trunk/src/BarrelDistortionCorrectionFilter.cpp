@@ -1,10 +1,13 @@
 // Filter description
 // ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 // Name: Barrel Distortion Correction Filter
-// Purpose: Allows the user to crop the source image
+// Purpose: Correcting the barrel distortion of the lens
 // Original author: Laurence Muller (aka Falcon4ever)
 
 /*
+Tool url:
+http://www.multigesture.net/wp-content/uploads/2007/12/touchlib_barreldistortion_tool.zip
+
 example of usage:
 <barreldistortioncorrection label="barreldistortioncorrection1" />
 

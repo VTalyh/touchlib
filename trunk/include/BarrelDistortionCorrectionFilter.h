@@ -1,7 +1,7 @@
 // Filter description
 // ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 // Name: Barrel Distortion Correction Filter
-// Purpose: Allows the user to crop the source image
+// Purpose: Correcting the barrel distortion of the lens
 // Original author: Laurence Muller (aka Falcon4ever)
 
 #ifndef __TOUCHSCREEN_FILTER_BARRELDISTORTIONCORRECTION__
