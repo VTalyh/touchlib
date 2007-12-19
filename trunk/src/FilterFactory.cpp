@@ -19,6 +19,7 @@
 #include "InvertFilter.h"
 #include "ScalerFilter.h"
 #include "CropFilter.h"
+#include "BarrelDistortionCorrectionFilter.h"
 #include "SimpleHighpassFilter.h"
 #include "ShapeFilter.h"
 #include "ThresholdFilter.h"
@@ -69,6 +70,8 @@ Filter *FilterFactory::createFilter(const char *type, const char *label)
 		newFilter = (Filter *)new ResizeFilter((char*)label);
 	} else if(strcmp(type, "crop") == 0) {
 		newFilter = (Filter *)new CropFilter((char*)label);
+	} else if(strcmp(type, "barreldistortioncorrection") == 0) {
+		newFilter = (Filter *)new BarrelDistortionCorrectionFilter((char*)label);
 	} else if (strcmp(type, "threshold") == 0) {
 		newFilter = (Filter *) new ThresholdFilter((char *) label);
 	} else {
