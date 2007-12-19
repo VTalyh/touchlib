@@ -43,5 +43,30 @@ void BarrelDistortionCorrectionFilter::kernel()
         destination->origin = source->origin;  // same vertical flip as source
     }
  	
-	cvUndistort2( source, destination, camera, dist_coeffs );	
+	//cvUndistort2( source, destination, camera, dist_coeffs );	
+	destination = undistorted_with_border( source, camera, dist_coeffs, 20 );
+}
+
+IplImage*  BarrelDistortionCorrectionFilter::undistorted_with_border( const IplImage *image, const CvMat *intrinsic,const CvMat *distortion, short int border )
+{
+    assert( image );
+    assert( intrinsic && distortion );
+    assert( border >= 0 );
+
+    //add border to cx,cy
+    CvMat *b_intrinsic = cvCloneMat( intrinsic );
+    cvSetReal2D( b_intrinsic, 0,2, cvGetReal2D(b_intrinsic,0,2)+border );
+    cvSetReal2D( b_intrinsic, 1,2, cvGetReal2D(b_intrinsic,1,2)+border );
+
+    //add border to image
+    IplImage *bordered = cvCreateImage( cvSize(image->width+2*border,image->height+2*border), image->depth, image->nChannels );
+    cvCopyMakeBorder( image, bordered, cvPoint(border,border), IPL_BORDER_CONSTANT, cvScalarAll(0) );
+
+    //undistort
+    IplImage *bordered_corr = cvCreateImage( cvSize(image->width+2*border,image->height+2*border), image->depth, image->nChannels );
+    cvUndistort2( bordered, bordered_corr, b_intrinsic, distortion );
+
+    cvReleaseImage( &bordered );
+    return bordered_corr;
+
 }

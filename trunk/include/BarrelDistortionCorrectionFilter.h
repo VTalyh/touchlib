@@ -17,6 +17,7 @@ class TOUCHLIB_FILTER_EXPORT BarrelDistortionCorrectionFilter : public Filter
 		void kernel();
 
 	private:
+		IplImage* undistorted_with_border( const IplImage *image, const CvMat *intrinsic,const CvMat *distortion, short int border );
 		CvFileStorage *fs;
 		CvFileNode *node;		
 		CvMat *camera, *dist_coeffs;
