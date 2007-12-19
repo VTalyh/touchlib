@@ -9,7 +9,9 @@ Tool url:
 http://www.multigesture.net/wp-content/uploads/2007/12/touchlib_barreldistortion_tool.zip
 
 example of usage:
-<barreldistortioncorrection label="barreldistortioncorrection1" />
+<barreldistortioncorrection label="barreldistortioncorrection1">
+    <border_size value="20" />
+</barreldistortioncorrection>
 
 Place the camera.yml (created by the calibration tool) in the same directory as the config.xml
 */
@@ -29,10 +31,26 @@ BarrelDistortionCorrectionFilter::BarrelDistortionCorrectionFilter(char* s) : Fi
 	dist_coeffs = (CvMat *) cvRead (fs, node);
 
 	cvReleaseFileStorage (&fs);
+
+	border_size = 0;	
 }
 
 BarrelDistortionCorrectionFilter::~BarrelDistortionCorrectionFilter()
 {
+	
+}
+
+void BarrelDistortionCorrectionFilter::getParameters(ParameterMap& pMap)
+{
+	pMap[std::string("border_size")] = toString(border_size);	
+}
+
+void BarrelDistortionCorrectionFilter::setParameter(const char *name, const char *value)
+{
+	if(strcmp(name, "border_size") == 0)
+	{
+		border_size = (int) atof(value);		
+	}
 }
 
 void BarrelDistortionCorrectionFilter::kernel()
@@ -43,8 +61,10 @@ void BarrelDistortionCorrectionFilter::kernel()
         destination->origin = source->origin;  // same vertical flip as source
     }
  	
-	//cvUndistort2( source, destination, camera, dist_coeffs );	
-	destination = undistorted_with_border( source, camera, dist_coeffs, 20 );
+	if(border_size>0)
+		destination = undistorted_with_border( source, camera, dist_coeffs, border_size );
+	else
+		cvUndistort2( source, destination, camera, dist_coeffs );	
 }
 
 IplImage*  BarrelDistortionCorrectionFilter::undistorted_with_border( const IplImage *image, const CvMat *intrinsic,const CvMat *distortion, short int border )
