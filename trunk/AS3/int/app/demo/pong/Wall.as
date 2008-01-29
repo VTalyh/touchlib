@@ -1,8 +1,5 @@
 ﻿package app.demo.pong
 {
-	/**
-	 * A wall, which serves as a game boundary
-	 */
 	public class Wall extends RectangularMovieClip implements Bouncer
 	{
 		/**

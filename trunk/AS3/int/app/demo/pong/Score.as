@@ -1,12 +1,11 @@
 ﻿package app.demo.pong
 {	
 	import flash.display.Sprite;
-	import flash.display.MovieClip;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	import flash.text.TextFieldAutoSize;
 
-	public class Score extends MovieClip
+	public class Score extends Sprite
 	{
 		private var score:TextField;	
 		private var scoreP1:TextField;
