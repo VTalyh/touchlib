@@ -16,6 +16,7 @@
         private var _timer:Timer;
         private var _frameNum:int;
         private var _mem:String;
+        public var _frm:Number;
         
         public function FPS() {
             _fmt = new TextFormat("_sans", 10, 0xFFFFFF);
@@ -35,7 +36,8 @@
        
         private function displayFPS(te:TimerEvent):void {
             _mem = Number( System.totalMemory / 1024 / 1024 ).toFixed( 2 ) + 'MB'; 
-            _tf.text = _frameNum + " FPS" + "  \n"+  ""+ _mem+ " \n"+ Capabilities.version;         
+            _frm=		_frameNum;
+            _tf.text = "   " + _frameNum + " FPS" + "\n"+"   " +  _mem+ "\n"+ "   " + Capabilities.version+ "   " ;         
               _frameNum = 0;
             _mem = 0;
         }
@@ -50,8 +52,13 @@
             t.height = 0;
             t.autoSize = TextFieldAutoSize.LEFT;
             t.selectable = false;
-            t.defaultTextFormat = _fmt;
-            t.blendMode="invert";
+            t.defaultTextFormat = _fmt;			
+			t.background = true;	
+			t.backgroundColor = 0x000000;	
+			t.border = true;	
+			t.borderColor = 0x333333;	
+            
+           // t.blendMode="invert";
             return t;        
         }
        
