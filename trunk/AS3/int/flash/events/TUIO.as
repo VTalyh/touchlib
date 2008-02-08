@@ -51,8 +51,8 @@
 			FLOSCSocketHost=host;			
 			FLOSCSocketPort=port;					       
 			myService = new NetConnection();
-			myService.connect("http://nui.mine.nu/amfphp/gateway.php");
-			xmlPlaybackURL = "http://nui.mine.nu/amfphp/services/test.xml";			
+//			myService.connect("http://nui.mine.nu/amfphp/gateway.php");
+//			xmlPlaybackURL = "http://nui.mine.nu/amfphp/services/test.xml";			
 			bDebug = dbug;				
 			bInitialized = true;
 			bRecording = false;		

@@ -41,10 +41,14 @@
 					<body>ripples for fun</body>
 				</app>	
 				<app>
-					<name>Trace</name>
-					<body>visual tracer</body>
+					<name>ArtGen</name>
+					<body>Generative Art application</body>
 				</app>
-			</apps>			
+				<app>
+					<name>Fire</name>
+					<body>Make flames</body>
+				</app>
+			</apps>
 		</category>
 	</categories>
 

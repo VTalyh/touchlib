@@ -226,7 +226,7 @@ package app.core.action
 		
 		public function handleBlobRemoved(id:int)
 		{
-		}		
+		}
 		
 		public function handleDownEvent(id:int, mx:Number, my:Number, targetObj)
 		{

@@ -58,7 +58,7 @@
                 <project_file path="./int/app/core/element/TouchlibWrapper.as" filetype="as" />
                 <project_file path="./int/app/core/element/Wrapper.as" filetype="as" />
             </project_folder>
-            <project_folder name="action" expanded="true">
+            <project_folder name="action" expanded="false">
                 <project_file path="./int/app/core/action/3DRotate.as" filetype="as" />
                 <project_file path="./int/app/core/action/3DScale.as" filetype="as" />
                 <project_file path="./int/app/core/action/Rotatable.as" filetype="as" />
@@ -68,7 +68,7 @@
                 <project_file path="./int/app/core/action/Multitouchable.as" filetype="as" />
             </project_folder>
         </project_folder>
-        <project_folder name="demo" expanded="false">
+        <project_folder name="demo" expanded="true">
             <project_folder name="app" expanded="true">
                 <project_folder name="tank" expanded="false">
                     <project_file path="./int/app/demo/tank/PlayerTank.as" filetype="as" />
@@ -96,7 +96,7 @@
                     <project_file path="./int/app/demo/puzzle/PuzzleGame.as" filetype="as" />
                     <project_file path="./int/app/demo/puzzle/PuzzleGameTile.as" filetype="as" />
                 </project_folder>
-                <project_folder name="tangram" expanded="false">
+                <project_folder name="tangram" expanded="true">
                     <project_file path="./int/app/demo/tangram/PuzzleBar.as" filetype="as" />
                     <project_file path="./int/app/demo/tangram/Tangram.as" filetype="as" />
                 </project_folder>

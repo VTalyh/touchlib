@@ -43,7 +43,10 @@
 				variables.method = "flickr.photosets.getPhotos";
 				//72157594433368939
 				//72157594381857577
-				variables.photoset_id = "72157594203926920";
+				//72157594203926920
+				
+				//72157603423646710
+				variables.photoset_id = "72157603423646710";
 			}
 			request.data = variables;
 			rest = new URLLoader();
