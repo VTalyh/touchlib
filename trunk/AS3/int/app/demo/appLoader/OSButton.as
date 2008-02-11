@@ -11,7 +11,7 @@
 	import flash.text.*;
 	import flash.net.*;
 	
-	public dynamic class OSButton extends MovieClip
+	public class OSButton extends MovieClip
 	{
 		public var appName;
 		public var appDesc;
@@ -19,6 +19,8 @@
 		
 		private var appLoader:AppLoader;
 		private var bOpen:Boolean = false;
+		
+
 		
 		public function OSButton()
 		{
@@ -49,7 +51,7 @@
 			btClose.visible = false;
 			btInfo.visible = false;
 			btConfig.visible = false;	
-			mcExpanderBack.visible = false;			
+			mcExpanderBack.visible = false;						
 
 		}
 		

@@ -110,9 +110,11 @@ package app.demo.appLoader
 
 		public function tuioUpEvent(e:TouchEvent)
 		{		
+		trace("Upevent");
+		
 			if(buttonLocked)
 			{
-				apploader.buttonUnlock(this);				
+				//apploader.buttonUnlock(this);				
 				return;	
 			}
 
@@ -154,6 +156,8 @@ package app.demo.appLoader
 		
 		public function mouseDownEvent(e:MouseEvent)
 		{		
+		
+
 			if(buttonLocked)
 				return;		
 		
@@ -165,9 +169,10 @@ package app.demo.appLoader
 		
 		public function mouseUpEvent(e:MouseEvent)
 		{		
+		trace("Mouse up event");		
 			if(buttonLocked)
 			{
-				apploader.buttonUnlock(this);				
+				//apploader.buttonUnlock(this);				
 				return;	
 			}
 				

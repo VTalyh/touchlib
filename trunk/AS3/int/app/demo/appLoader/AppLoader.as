@@ -113,10 +113,7 @@ package app.demo.appLoader
 				osButton.x = osButton.stage.stageWidth + 14;
 				osButton.y = osButton.stage.stageHeight + 14;			
 			}
-			
-
 		}
-		
 		
 		function createParticles(n:int, px:Number, py:Number)
 		{
@@ -165,9 +162,11 @@ package app.demo.appLoader
 		function mouseUpEvent(e:MouseEvent)
 		{
 		}		
+		
 		function mouseRollOverHandler(e:MouseEvent)
 		{
 		}
+		
 		function mouseRollOutHandler(e:MouseEvent)
 		{
 		}

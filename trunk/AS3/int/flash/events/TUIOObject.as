@@ -139,13 +139,18 @@
 				obj.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_OUT, true, false, x, y, localPoint.x, localPoint.y, 0, 0, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));				
 				obj.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_UP, true, false, x, y, localPoint.x, localPoint.y, 0, 0, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));									
 			}			
-			obj = null;
+
 			
 			for(var i:int=0; i<aListeners.length; i++)
 			{
-				localPoint = aListeners[i].parent.globalToLocal(new Point(x, y));				
-				aListeners[i].dispatchEvent(new TouchEvent(TouchEvent.MOUSE_UP, true, false, x, y, localPoint.x, localPoint.y, 0, 0, aListeners[i], false,false,false, true, 0, TUIOClass, ID, sID, angle));								
+				if(aListeners[i] != obj)
+				{
+					localPoint = aListeners[i].parent.globalToLocal(new Point(x, y));				
+					aListeners[i].dispatchEvent(new TouchEvent(TouchEvent.MOUSE_UP, true, false, x, y, localPoint.x, localPoint.y, 0, 0, aListeners[i], false,false,false, true, 0, TUIOClass, ID, sID, angle));								
+				}
 			}
+			
+			obj = null;			
 			
 			aListeners = new Array();
 		}

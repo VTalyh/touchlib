@@ -11,6 +11,10 @@
 					<name>Tangram</name>
 					<body>puzzles</body>
 				</app>
+				<app>
+					<name>Physics</name>
+					<body>Physics demo</body>
+				</app>				
 			</apps>		
 		</category>
 		<category name="multimedia">
@@ -47,8 +51,8 @@
 				<app>
 					<name>Fire</name>
 					<body>Make flames</body>
-				</app>
-			</apps>
+				</app>				
+			</apps>			
 		</category>
 	</categories>
 

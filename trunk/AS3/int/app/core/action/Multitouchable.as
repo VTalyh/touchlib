@@ -51,7 +51,7 @@ package app.core.action
 			}
 
 			//trace("Creating new blob " + id + " " + origX + " " + origY);
-			blobs.push( {id: id, clicked:c, origX: origX, origY:origY, clicked:c, history:new Array(new Point(origX, origY)), dX:0.0, dY:0.0} );
+			blobs.push( {id: id, clicked:c, origX: origX, origY:origY, clicked:c, history:new Array(new Point(origX, origY)), dX:0.0, dY:0.0, x: origX, y:origY} );
 			
 			handleBlobCreated(id, origX, origY);			
 		}
@@ -63,8 +63,9 @@ package app.core.action
 				if(blobs[i].id == id) 
 				{
 					//trace("blob removed " + id);										
+					handleBlobRemoved(id);										
 					blobs.splice(i, 1);		
-					handleBlobRemoved(id);					
+
 
 					return;
 				}
@@ -78,11 +79,15 @@ package app.core.action
 				if(blobs[i].id == id) 
 				{
 					blobs[i].history.push(new Point(origX, origY));
+					blobs[i].x = origX;
+					blobs[i].y = origY;
+					
 					if(blobs[i].history.length >= 2)
 					{
 						var len:int = blobs[i].history.length;
 						blobs[i].dX = blobs[i].history[len-1].x - blobs[i].history[len-2].x;
 						blobs[i].dY = blobs[i].history[len-1].y - blobs[i].history[len-2].y;						
+
 //						trace("X: " + blobs[i].history[len-1].x + "," + blobs[i].history[len-2].x);
 						//trace("DELTA : " + blobs[i].dX + "," + blobs[i].dY);
 					}
@@ -93,7 +98,7 @@ package app.core.action
 			}
 		}			
 		
-		function getBlobInfo(id:int):Object
+		public function getBlobInfo(id:int):Object
 		{
 			for(var i=0; i<blobs.length; i++)
 			{

@@ -13,12 +13,12 @@
 		{
 			super();
 			if(TUIO.bDebug) { 
-			graphics.lineStyle( 2, 0x000000);
+				graphics.lineStyle( 2, 0x000000);
 			if(pressure >= 0 && pressure != null){			
-			graphics.drawCircle(0 ,0, pressure+10);
+				graphics.drawCircle(0 ,0, pressure+10);
 			}
 			else{
-			graphics.drawCircle(0 ,0, 15);
+				graphics.drawCircle(0 ,0, 15);
 			}
 			
 		
