@@ -195,6 +195,8 @@ package app.core.canvas {
 	
 					var p2:b2Vec2 = new b2Vec2(xworld, yworld);
 					blobs[i].m_Joint.SetTarget(p2);
+				} else {
+					handleBlobCreated(blobs[i].id, blobs[i].x, blobs[i].y);
 				}
 			}
 

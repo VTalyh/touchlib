@@ -23,6 +23,7 @@ package app.demo.appLoader
 	dynamic public class AppLoader extends MovieClip 
 	{
 		var appLoader:Loader;
+		var backLoader:Loader;
 		var xmlLoader:URLLoader;
 		var appButtons:Array;
 		
@@ -48,6 +49,10 @@ package app.demo.appLoader
 			xmlLoader = new URLLoader();
 			xmlLoader.addEventListener(Event.COMPLETE, this.xmlLoaded, false, 0, true); 			
 			xmlLoader.load(new URLRequest("www/xml/applist.xml"));
+			
+			backLoader = new Loader();
+			mcBack.addChild(backLoader);			
+			backLoader.load(new URLRequest("www/img/apploaderBack.jpg"));
 			
 			var b:SimpleButton = new AppLoadButton();
 
