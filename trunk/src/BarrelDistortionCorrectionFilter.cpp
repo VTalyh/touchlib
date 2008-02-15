@@ -33,11 +33,13 @@ BarrelDistortionCorrectionFilter::BarrelDistortionCorrectionFilter(char* s) : Fi
 	cvReleaseFileStorage (&fs);
 
 	border_size = 0;	
+	init = false;
 }
 
 BarrelDistortionCorrectionFilter::~BarrelDistortionCorrectionFilter()
-{
-	
+{	
+	cvReleaseMat(&b_intrinsic);
+
 }
 
 void BarrelDistortionCorrectionFilter::getParameters(ParameterMap& pMap)
@@ -67,26 +69,26 @@ void BarrelDistortionCorrectionFilter::kernel()
 		cvUndistort2( source, destination, camera, dist_coeffs );	
 }
 
-IplImage*  BarrelDistortionCorrectionFilter::undistorted_with_border( const IplImage *image, const CvMat *intrinsic,const CvMat *distortion, short int border )
+IplImage* BarrelDistortionCorrectionFilter::undistorted_with_border( const IplImage *image, const CvMat *intrinsic,const CvMat *distortion, short int border )
 {
-    assert( image );
-    assert( intrinsic && distortion );
-    assert( border >= 0 );
+	if(!init)
+	{
+		//move cx,cy (intrinsic point)	
+		b_intrinsic = cvCloneMat( intrinsic );		
+		cvSetReal2D( b_intrinsic, 0,2, cvGetReal2D(b_intrinsic,0,2)+border );
+		cvSetReal2D( b_intrinsic, 1,2, cvGetReal2D(b_intrinsic,1,2)+border );
+			
+		bordered = cvCreateImage( cvSize(image->width+2*border,image->height+2*border), image->depth, image->nChannels );
+		bordered_corr = cvCreateImage( cvSize(image->width+2*border,image->height+2*border), image->depth, image->nChannels );
 
-    //add border to cx,cy
-    CvMat *b_intrinsic = cvCloneMat( intrinsic );
-    cvSetReal2D( b_intrinsic, 0,2, cvGetReal2D(b_intrinsic,0,2)+border );
-    cvSetReal2D( b_intrinsic, 1,2, cvGetReal2D(b_intrinsic,1,2)+border );
+		init = true;
+	}
 
-    //add border to image
-    IplImage *bordered = cvCreateImage( cvSize(image->width+2*border,image->height+2*border), image->depth, image->nChannels );
+	//add border to image
     cvCopyMakeBorder( image, bordered, cvPoint(border,border), IPL_BORDER_CONSTANT, cvScalarAll(0) );
 
-    //undistort
-    IplImage *bordered_corr = cvCreateImage( cvSize(image->width+2*border,image->height+2*border), image->depth, image->nChannels );
+    //undistort	
     cvUndistort2( bordered, bordered_corr, b_intrinsic, distortion );
 
-    cvReleaseImage( &bordered );
     return bordered_corr;
-
 }

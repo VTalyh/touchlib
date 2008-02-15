@@ -25,6 +25,11 @@ class TOUCHLIB_FILTER_EXPORT BarrelDistortionCorrectionFilter : public Filter
 		CvMat *camera, *dist_coeffs;
 		short int border_size;
 
+		CvMat *b_intrinsic;
+		IplImage *bordered;
+		IplImage *bordered_corr;
+
+		bool init;
 };
 
 #endif // __TOUCHSCREEN_FILTER_BARRELDISTORTIONCORRECTION__
