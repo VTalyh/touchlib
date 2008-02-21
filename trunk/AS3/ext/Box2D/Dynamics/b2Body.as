@@ -16,8 +16,7 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
-package Box2D.Dynamics{
-
+package Box2D.Dynamics {
 
 import Box2D.Dynamics.*
 import Box2D.Dynamics.Joints.*

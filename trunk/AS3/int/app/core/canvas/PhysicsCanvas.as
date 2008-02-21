@@ -27,7 +27,7 @@ package app.core.canvas {
 		public var m_world:b2World;
 		public var m_bomb:b2Body;
 		public var m_mouseJoint:b2MouseJoint;
-		public var m_iterations:int = 10;
+		public var m_iterations:int = 15;
 		public var m_timeStep:Number = 1/30;
 		public var m_physScale:Number = 1;
 		// world mouse position
@@ -36,6 +36,13 @@ package app.core.canvas {
 		public var m_sprite:Sprite;
 		private var mousePVec:b2Vec2 = new b2Vec2();
 				
+		protected var leftWall:b2Body = null;
+		protected var topWall:b2Body = null;		
+		protected var rightWall:b2Body = null;
+		protected var bottomWall:b2Body = null;				
+		
+		protected var wallAreaWidth:int = 800;
+		protected var wallAreaHeight:int = 600;		
 		
 		public function PhysicsCanvas()
 		{
@@ -49,16 +56,16 @@ package app.core.canvas {
 			inputFixSprite.graphics.lineTo(10000, 10000);
 			inputFixSprite.graphics.lineTo(-10000, 10000);
 			inputFixSprite.graphics.endFill();
-			addChild(inputFixSprite);			
+			addChild(inputFixSprite);
 			
 			addEventListener(Event.ENTER_FRAME, updateFrame, false, 0, true);			
 			
 			var worldAABB:b2AABB = new b2AABB();
-			worldAABB.minVertex.Set(-1000.0, -1000.0);
-			worldAABB.maxVertex.Set(1000.0, 1000.0);
+			worldAABB.minVertex.Set(-2000.0, -2000.0);
+			worldAABB.maxVertex.Set(2000.0, 2000.0);
 			
 			// Define the gravity vector
-			var gravity:b2Vec2 = new b2Vec2(0.0, 300.0);
+			var gravity:b2Vec2 = new b2Vec2(0.0, 0.0);
 			
 			// Allow bodies to sleep
 			var doSleep:Boolean = true;
@@ -72,27 +79,92 @@ package app.core.canvas {
 			
 			m_sprite = drawSprite;
 			
-			// Create border of boxes
+			setWalls(800, 600);
+		}
+		
+		public function destroyBody(b:b2Body)
+		{
+			if(b.m_userData && b.m_userData.sprite)
+			{
+				removeChild(b.m_userData.sprite);
+				b.m_userData.sprite = null;
+			}
+			
+			m_world.DestroyBody(b);									
+		}
+		
+		public function clearWorld()
+		{
+			
+			for (var bb:b2Body = m_world.m_bodyList; bb; bb = bb.m_next){
+				if (bb.m_userData && bb.m_userData.sprite is Sprite){
+					removeChild(bb.m_userData.sprite);
+				} 
+			}						
+			
+			
+			var worldAABB:b2AABB = new b2AABB();
+			worldAABB.minVertex.Set(-2000.0, -2000.0);
+			worldAABB.maxVertex.Set(2000.0, 2000.0);
+			
+			m_world = new b2World(worldAABB, m_world.m_gravity, true);
+			
+			setWalls(wallAreaWidth, wallAreaHeight);
+		}
+		
+		public function setWalls(areaWidth:int, areaHeight:int)
+		{
+			
+			wallAreaWidth = areaWidth;
+			wallAreaHeight = areaHeight;
+			
+			if(leftWall)
+				m_world.DestroyBody(leftWall);			
+			if(topWall)
+				m_world.DestroyBody(topWall);			
+			if(rightWall)
+				m_world.DestroyBody(rightWall);			
+			if(bottomWall)
+				m_world.DestroyBody(bottomWall);
+				
+			//m_world.CleanBodyList();							
+				
 			var wallSd:b2BoxDef = new b2BoxDef();
 			var wallBd:b2BodyDef = new b2BodyDef();
 			wallBd.AddShape(wallSd);
 			
-			// Left
-			wallSd.extents.Set(100/m_physScale, 800/m_physScale/2);
-			wallBd.position.Set(-95 / m_physScale, 300/m_physScale/2);
-			m_world.CreateBody(wallBd);
+
+			
+			//left
+			wallSd.extents.Set(100/m_physScale, (areaHeight-10)/m_physScale/2);
+			wallBd.position.Set(-95 / m_physScale, areaHeight/m_physScale/2);
+			leftWall = m_world.CreateBody(wallBd);
+			leftWall.m_userData = { type: "WorldWall", orient: "left"};
 			// Right		
-			wallBd.position.Set((800+95) / m_physScale, 300/m_physScale/2);
-			m_world.CreateBody(wallBd);
+			wallBd.position.Set((areaWidth+95) / m_physScale, areaHeight/m_physScale/2);
+			rightWall = m_world.CreateBody(wallBd);
+			rightWall.m_userData = { type: "WorldWall", orient: "right"};
 			// Top
-			wallSd.extents.Set(800/m_physScale/2, 100/m_physScale);
-			wallBd.position.Set(640/m_physScale/2, -95/m_physScale);
-			m_world.CreateBody(wallBd);
+			wallSd.extents.Set(areaWidth/m_physScale/2, 100/m_physScale);
+			wallBd.position.Set(areaWidth/m_physScale/2, -95/m_physScale);
+			topWall = m_world.CreateBody(wallBd);
+			topWall.m_userData = { type: "WorldWall", orient: "top"};			
 			// Bottom
-			wallBd.position.Set(800/m_physScale/2, (600+95)/m_physScale);
-			m_world.CreateBody(wallBd);
+			wallBd.position.Set(areaWidth/m_physScale/2, (areaHeight+95)/m_physScale);
+			bottomWall = m_world.CreateBody(wallBd);			
+			bottomWall.m_userData = { type: "WorldWall", orient: "bottom"};						
+			
+
 		}
 		
+		public function setGravity( xgrav:Number, ygrav:Number )
+		{
+			m_world.m_gravity = new b2Vec2(xgrav, ygrav);
+		}
+		
+		public function frameCallback()
+		{
+		}
 		
 		public function Update():void{
 			
@@ -123,44 +195,61 @@ package app.core.canvas {
 				DrawJoint(jj);
 			}
 			// bodies
+		
+			// Go through body list and update sprite positions/rotations
 			for (var bb:b2Body = m_world.m_bodyList; bb; bb = bb.m_next){
-				for (var s:b2Shape = bb.GetShapeList(); s != null; s = s.GetNext()){
-					DrawShape(s);
+				if (bb.m_userData && bb.m_userData.sprite is Sprite){
+					bb.m_userData.sprite.x = bb.m_position.x;
+					bb.m_userData.sprite.y = bb.m_position.y;
+					bb.m_userData.sprite.rotation = bb.m_rotation * (180/Math.PI);
+				} else {
+					for (var s:b2Shape = bb.GetShapeList(); s != null; s = s.GetNext()){
+						DrawShape(s);
+					}					
+					
 				}
-			}
+			}			
+			
 			
 		}
 		
 		public function updateFrame(e:Event)
 		{
 			Update();
+			frameCallback();
 		}
 		
 		//======================
 		// Update mouseWorld
 		//======================
 
-		override public function handleBlobCreated(id:int, mx:Number, my:Number)
+		public function physDragBlob(id:int, mx:Number, my:Number)
 		{
-			trace("Handle blob created");
+			trace("Handle blob created " + id);
 			blobinfo = getBlobInfo(id);
-			
+
 			var xworld:Number = mx/m_physScale,
 				yworld:Number = my/m_physScale;			
 				
 			var body:b2Body = GetBodyAtPos(xworld, yworld);
 			
-			if (body)
+			if (body && !(body.m_userData && body.m_userData.grabbable == false))
 			{
 				var md:b2MouseJointDef = new b2MouseJointDef();
 				md.body1 = m_world.m_groundBody;
 				md.body2 = body;
 				md.target.Set(xworld, yworld);
-				md.maxForce = 30000.0 * body.m_mass;
+				md.maxForce = 20000.0 * body.m_mass;
 				md.timeStep = m_timeStep;
 				blobinfo.m_Joint = m_world.CreateJoint(md) as b2MouseJoint;
 				body.WakeUp();
-			}
+			}			
+			
+		}
+		override public function handleBlobCreated(id:int, mx:Number, my:Number)
+		{
+			physDragBlob(id, mx, my);
+
 
 		}
 		
@@ -196,7 +285,7 @@ package app.core.canvas {
 					var p2:b2Vec2 = new b2Vec2(xworld, yworld);
 					blobs[i].m_Joint.SetTarget(p2);
 				} else {
-					handleBlobCreated(blobs[i].id, blobs[i].x, blobs[i].y);
+					physDragBlob(blobs[i].id, blobs[i].x, blobs[i].y);
 				}
 			}
 

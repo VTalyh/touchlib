@@ -34,26 +34,21 @@ package app.core.action
 			{
 				if(blobs[i].id == id)
 					return true;
-			}			
+			}
 			
 			return false;
 		}
 	
 		function addBlob(id:int, origX:Number, origY:Number, c:Boolean):void
 		{
-			for(var i=0; i<blobs.length; i++)
-			{
-				if(blobs[i].id == id)
-				{
-					// blob exists.
-					return;
-				}
-			}
+			if(idExists(id))
+				return;
+			
 
 			//trace("Creating new blob " + id + " " + origX + " " + origY);
 			blobs.push( {id: id, clicked:c, origX: origX, origY:origY, clicked:c, history:new Array(new Point(origX, origY)), dX:0.0, dY:0.0, x: origX, y:origY} );
 			
-			handleBlobCreated(id, origX, origY);			
+			handleBlobCreated(id, origX, origY);
 		}
 		
 		function removeBlob(id:int):void
@@ -100,7 +95,7 @@ package app.core.action
 		
 		public function getBlobInfo(id:int):Object
 		{
-			for(var i=0; i<blobs.length; i++)
+			for(var i:int=0; i<blobs.length; i++)
 			{
 				if(blobs[i].id == id)
 					return blobs[i];
@@ -111,6 +106,7 @@ package app.core.action
 		
 		public function downHandler(e:TouchEvent):void
 		{
+			//trace("tuio down handler");			
 			if(e.stageX == 0 && e.stageY == 0)
 				return;			
 				
@@ -127,6 +123,7 @@ package app.core.action
 		
 		public function upHandler(e:TouchEvent):void
 		{
+			//trace("tuio up handler");			
 			handleUpEvent(e.ID);
 			removeBlob(e.ID);
 			e.stopPropagation();
@@ -134,6 +131,7 @@ package app.core.action
 		
 		public function moveHandler(e:TouchEvent):void
 		{
+			//trace("tuio Move handler");
 			if(e.stageX == 0 && e.stageY == 0)
 				return;			
 			
@@ -159,29 +157,33 @@ package app.core.action
 			var curPt:Point = parent.globalToLocal(new Point(e.stageX, e.stageY));			
 			addBlob(0, curPt.x, curPt.y, true);
 			
+			e.stopPropagation();								
 			handleDownEvent(0, curPt.x, curPt.y, e.target);
 			
-			e.stopPropagation();					
+
 		}
 		
 		public function mouseMoveHandler(e:MouseEvent):void
 		{
+			//trace("Mouse move");			
 			var curPt:Point = parent.globalToLocal(new Point(e.stageX, e.stageY));						
 			
 			if(!idExists(0))
 			{
+				e.stopPropagation();				
 				return;				
 			} else {
 				updateBlob(0, curPt.x, curPt.y);				
 			}
+			e.stopPropagation();			
 			
 			handleMoveEvent(0, curPt.x, curPt.y, e.target);
 			
-			e.stopPropagation();
 		}		
 		
 		public function mouseUpHandler(e:MouseEvent):void
 		{
+			//trace("Mouse up");
 			handleUpEvent(0);
 			removeBlob(0);			
 			e.stopPropagation();	
@@ -189,6 +191,7 @@ package app.core.action
 		
 		public function rollOverHandler(e:TouchEvent):void
 		{
+			//trace("Rollover");
 			if(e.stageX == 0 && e.stageY == 0)
 				return;			
 			
@@ -207,6 +210,7 @@ package app.core.action
 		
 		public function rollOutHandler(e:TouchEvent):void
 		{
+			//trace("Rollout");
 			if(e.stageX == 0 && e.stageY == 0)
 				return;			
 		

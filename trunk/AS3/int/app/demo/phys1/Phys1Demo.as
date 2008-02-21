@@ -40,6 +40,8 @@
 			
 			TUIO.init( this, 'localhost', 3000, '', false );		
 			TestRagdoll();
+			
+			setGravity(0, 300);
 		}
 		
 		
@@ -346,10 +348,10 @@
 				jd.body1 = upperLegR;
 				jd.body2 = lowerLegR;
 				m_world.CreateJoint(jd);
-				
+
 			}
 			
-			
+
 			// Add 10 random circles for them to hit
 			for (var j:int = 0; j < 5; j++){
 				circ.radius = (Math.random() * 30 + 30) / m_physScale;
@@ -382,6 +384,8 @@
 			this.y = 0;
 			var wd:int = stage.stageWidth;
 			var ht:int = stage.stageHeight;		
+			
+			setWalls(wd, ht);
 			
 		// fixme: scale to fit.. 
 			
