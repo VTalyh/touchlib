@@ -8,6 +8,7 @@ package app.core.action
 	import flash.events.*;
 	import flash.events.*;		
 	import flash.geom.Point;
+	import app.core.utl.*
 	
 	public class Multitouchable extends MovieClip
 	{
@@ -26,6 +27,77 @@ package app.core.action
 			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler, false, 0, true);
 			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownHandler, false, 0, true);			
 			this.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpHandler, false, 0, true);
+			//this.addEventListener(MouseEvent.MOUSE_OVER, this.mouserollOverHandler, false, 0, true);									
+			//this.addEventListener(MouseEvent.MOUSE_OUT, this.mouserollOutHandler, false, 0, true);
+			
+			this.addEventListener(Event.ADDED_TO_STAGE, this.mtAddedToStage, false, 0, true);			
+	
+			this.addEventListener(Event.ADDED_TO_STAGE, this.mtAddedToStage, false, 0, true);						
+			
+			
+
+			
+		}
+		
+		public function mtAddedToStage(e:Event)
+		{
+			if(this.stage)
+			{
+				this.stage.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpHandler, false, 0, true);
+				
+				this.stage.addEventListener(MouseEvent.MOUSE_MOVE, this.stageMouseMoveHandler, false, 0, true);				
+				
+				this.stage.addEventListener(KeyboardEvent.KEY_DOWN, this.mtKeyPressed, false, 0, true);				
+			}
+		}
+		
+		function mtKeyPressed(k:KeyboardEvent)
+		{
+			trace(k.keyCode);
+
+			if(k.keyCode == 32)
+			{
+				var pt:Point = new Point(mouseX, mouseY);
+				
+			
+				pt = this.localToGlobal(pt);
+				
+				if(!this.hitTestPoint(pt.x, pt.y))
+					return;			
+				
+				
+				g = new GestureSimulator(this, 2, pt.x, pt.y, 2, 100);
+
+			}
+			if(k.keyCode == 17)
+			{
+				var pt:Point = new Point(mouseX, mouseY);
+				
+			
+				pt = this.localToGlobal(pt);
+				
+				if(!this.hitTestPoint(pt.x, pt.y))
+					return;			
+				
+				
+				g = new GestureSimulator(this, 1, pt.x, pt.y, 2, 100);
+
+			}			
+			
+			if(k.keyCode == 16)
+			{
+				var pt:Point = new Point(mouseX, mouseY);
+				
+			
+				pt = this.localToGlobal(pt);
+				
+				if(!this.hitTestPoint(pt.x, pt.y))
+					return;			
+				
+				
+				g = new GestureSimulator(this, 0, pt.x, pt.y, 2, 100);
+
+			}			
 		}
 
 		function idExists(id:int):Boolean
@@ -43,9 +115,8 @@ package app.core.action
 		{
 			if(idExists(id))
 				return;
-			
 
-			//trace("Creating new blob " + id + " " + origX + " " + origY);
+			trace("Creating new blob " + id + " " + origX + " " + origY + " " + c) ;
 			blobs.push( {id: id, clicked:c, origX: origX, origY:origY, clicked:c, history:new Array(new Point(origX, origY)), dX:0.0, dY:0.0, x: origX, y:origY} );
 			
 			handleBlobCreated(id, origX, origY);
@@ -61,21 +132,23 @@ package app.core.action
 					handleBlobRemoved(id);										
 					blobs.splice(i, 1);		
 
-
 					return;
 				}
 			}
 		}	
 		
+		// One of the blobs changed position
 		private function updateBlob(id:int, origX:Number, origY:Number):void
 		{
-			for(var i:int = 0; i<blobs.length; i++)
+			var i:int = 0;
+			for(i=0; i<blobs.length; i++)
 			{
 				if(blobs[i].id == id) 
 				{
 					blobs[i].history.push(new Point(origX, origY));
 					blobs[i].x = origX;
 					blobs[i].y = origY;
+					//trace("Update blob " + id + " " + origX + "," + origY);
 					
 					if(blobs[i].history.length >= 2)
 					{
@@ -91,6 +164,8 @@ package app.core.action
 					return;
 				}
 			}
+			
+
 		}			
 		
 		public function getBlobInfo(id:int):Object
@@ -106,7 +181,7 @@ package app.core.action
 		
 		public function downHandler(e:TouchEvent):void
 		{
-			//trace("tuio down handler");			
+//			trace("tuio down handler");			
 			if(e.stageX == 0 && e.stageY == 0)
 				return;			
 				
@@ -123,7 +198,7 @@ package app.core.action
 		
 		public function upHandler(e:TouchEvent):void
 		{
-			//trace("tuio up handler");			
+//			trace("tuio up handler");			
 			handleUpEvent(e.ID);
 			removeBlob(e.ID);
 			e.stopPropagation();
@@ -131,7 +206,7 @@ package app.core.action
 		
 		public function moveHandler(e:TouchEvent):void
 		{
-			//trace("tuio Move handler");
+//			trace("tuio Move handler");
 			if(e.stageX == 0 && e.stageY == 0)
 				return;			
 			
@@ -164,6 +239,24 @@ package app.core.action
 		}
 		
 		public function mouseMoveHandler(e:MouseEvent):void
+		{
+			//trace("Mouse move");			
+			var curPt:Point = parent.globalToLocal(new Point(e.stageX, e.stageY));						
+			
+			if(!idExists(0))
+			{
+				e.stopPropagation();				
+				return;				
+			} else {
+				updateBlob(0, curPt.x, curPt.y);				
+			}
+			e.stopPropagation();			
+			
+			handleMoveEvent(0, curPt.x, curPt.y, e.target);
+			
+		}
+		
+		public function stageMouseMoveHandler(e:MouseEvent):void
 		{
 			//trace("Mouse move");			
 			var curPt:Point = parent.globalToLocal(new Point(e.stageX, e.stageY));						

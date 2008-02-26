@@ -268,7 +268,6 @@ package app.core.canvas {
 		}		
 		
 		
-		
 		//======================
 		// Input Drag 
 		//======================
@@ -288,8 +287,6 @@ package app.core.canvas {
 					physDragBlob(blobs[i].id, blobs[i].x, blobs[i].y);
 				}
 			}
-
-
 			
 		}
 		

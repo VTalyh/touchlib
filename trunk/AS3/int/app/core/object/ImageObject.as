@@ -10,9 +10,9 @@
 	
 	import app.core.loader.nLoader;	
 	//import app.core.object.TextObject;	
-	import app.core.action.RotatableScalable;
+	import app.core.action.Physical;
 	
-	public class ImageObject extends RotatableScalable 
+	public class ImageObject extends Physical 
 	{		
 		public var doubleTapEnabled: Boolean;
 		
@@ -46,6 +46,8 @@
 			
 			doubleTapEnabled = false;		
 			photoLoader = new Loader();		
+			photoLoader.scaleX = 0.1;
+			photoLoader.scaleY = 0.1;			
 			photoLoader.contentLoaderInfo.addEventListener( ProgressEvent.PROGRESS, onProgressHandler);	
 			photoLoader.contentLoaderInfo.addEventListener( Event.COMPLETE, arrange, false, 0, true);	
 			photoLoader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, onIOError);
@@ -97,15 +99,19 @@
 			//removeChild(progressBar);	
 			//this.x = 0;
 			//this.y = 0;	
-			this.scaleX = 0;
-			this.scaleY =0;	
+			//this.scaleX = 0;
+			//this.scaleY =0;	
 			this.alpha = 1;
 			this.rotation =  Math.random()*180 - 90;				
-	
+
+			
+//			photoLoader.scaleX = 0.01;
+//			photoLoader.scaleY = 0.01;						
 			photoLoader.x = -photoLoader.width/2;
 			photoLoader.y = -photoLoader.height/2;			
-			photoLoader.scaleX = 1.0;
-			photoLoader.scaleY = 1.0;			
+			
+
+
 			
 			clickgrabber.scaleX = photoLoader.width;
 			clickgrabber.scaleY = photoLoader.height;			
@@ -150,8 +156,11 @@
 			
 		 var image:Bitmap = Bitmap(photoLoader.content);
          image.smoothing=true;
-       	 image.x = -photoLoader.width/2;
-		 image.y = -photoLoader.height/2;	
+		 image.scaleX = 0.1
+		 image.scaleY = 0.1		 		 
+       	 image.x = -image.width/2;
+		 image.y = -image.height/2;	
+
          this.addChildAt(image,0);    	
          
          if(_thisScaleDown){
@@ -197,19 +206,20 @@
 			//parent.parent.photos.removeChild(getChildByName('ImageObject_0'));	
 			
 			}		
-		
+		/*
 		public override function released(dx:Number, dy:Number, dang:Number)
 		{
 			velX = dx;
 			velY = dy;				
 			velAng = dang;
 		}
+		*/
 		function onIOError(e:Event)
 		{
 			trace(e);
 		}
 		
-		public override function doubleTap()
+/*		public override function doubleTap()
 		{
 	   	if(!doubleTapEnabled){
 		//Tweener.addTween(this, {scaleX: 1, scaleY: 1,x:0, y:0,rotation: 0, time:0.30, transition:"easeinoutquad"});		
@@ -225,8 +235,8 @@
 	   	  doubleTapEnabled = false;	   	
 	   	  //Tweener.addTween(this, {scaleX: 1.0, scaleY: 1.0,  time:0.35,  transition:"easeinoutquad"}); 	
 	   	 }
-	   	}
-		
+	   	}*/
+		/*
 		private function slide(e:Event):void
 		{
 			if(this.state == "none")
@@ -251,6 +261,7 @@
 				}
 			}
 		}
+		*/
 		
 		
 	}

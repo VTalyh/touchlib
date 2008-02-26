@@ -23,10 +23,10 @@ package flash.events {
 		public var relatedObject:DisplayObject;
 
 		public static const MOUSE_MOVE:String = "flash.events.TouchEvent.MOUSE_MOVE";
-		public static const MOUSE_DOWN:String = "flash.events.TouchEvent.MOUSE_DOWN";				
-		public static const MOUSE_UP:String = "flash.events.TouchEvent.MOUSE_UP";				
-		public static const MOUSE_OVER:String = "flash.events.TouchEvent.MOUSE_OVER";						
-		public static const MOUSE_OUT:String = "flash.events.TouchEvent.MOUSE_OUT";		
+		public static const MOUSE_DOWN:String = "flash.events.TouchEvent.MOUSE_DOWN";
+		public static const MOUSE_UP:String = "flash.events.TouchEvent.MOUSE_UP";
+		public static const MOUSE_OVER:String = "flash.events.TouchEvent.MOUSE_OVER";
+		public static const MOUSE_OUT:String = "flash.events.TouchEvent.MOUSE_OUT";
 			
 		public function TouchEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false, stageX:Number = 0, stageY:Number = 0, localX:Number = 0, localY:Number = 0, oldX:Number = 0, oldY:Number = 0, relatedObject:DisplayObject = null, ctrlKey:Boolean = false, altKey:Boolean = false, shiftKey:Boolean = false, buttonDown:Boolean = false, delta:int = 0, TUIOClass:String = "2Dcur", ID:int = -1, sID:int = -1, angle:Number = 0.0)
 		{

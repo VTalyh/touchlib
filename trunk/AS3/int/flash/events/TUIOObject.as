@@ -1,5 +1,5 @@
-﻿package flash.events {
-
+﻿package flash.events 
+{
 	import flash.display.Sprite;
 	import flash.display.DisplayObject;	
 	import flash.geom.Point;
@@ -7,7 +7,7 @@
 	public class TUIOObject 
 	{
 		public var x:Number;
-		public var y:Number;		
+		public var y:Number;
 		public var oldX:Number;
 		public var oldY:Number;		
 		public var dX:Number;
@@ -70,8 +70,8 @@
 				{
 					var localPoint:Point = obj.parent.globalToLocal(new Point(x, y));				
 					//trace("Down : " + localPoint.x + "," + localPoint.y);
-					obj.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_OVER, true, false, x, y, localPoint.x, localPoint.y, 0, 0, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));													
 					obj.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_DOWN, true, false, x, y, localPoint.x, localPoint.y, 0, 0, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));									
+					obj.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_OVER, true, false, x, y, localPoint.x, localPoint.y, 0, 0, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));																		
 				} catch (e)
 				{
 					trace("Failed : " + e);

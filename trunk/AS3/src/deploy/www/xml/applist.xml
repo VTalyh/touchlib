@@ -12,9 +12,13 @@
 					<body>puzzles</body>
 				</app>
 				<app>
-					<name>Physics</name>
+					<name>Phys1</name>
 					<body>Physics demo</body>
 				</app>				
+				<app>
+					<name>Pegs</name>
+					<body>Pegs</body>
+				</app>					
 			</apps>		
 		</category>
 		<category name="multimedia">
