@@ -34,12 +34,24 @@ BarrelDistortionCorrectionFilter::BarrelDistortionCorrectionFilter(char* s) : Fi
 
 	border_size = 0;	
 	init = false;
+	init2 = false;
+
+	MapX = NULL;
+	MapY = NULL;
 }
 
 BarrelDistortionCorrectionFilter::~BarrelDistortionCorrectionFilter()
 {	
 	cvReleaseMat(&b_intrinsic);
+	
+	if(init2)
+	{
+		cvReleaseImage(&MapX);
+		cvReleaseImage(&MapY);
 
+		cvReleaseImage(&bordered);
+		cvReleaseImage(&bordered_corr);
+	}		
 }
 
 void BarrelDistortionCorrectionFilter::getParameters(ParameterMap& pMap)
@@ -63,10 +75,13 @@ void BarrelDistortionCorrectionFilter::kernel()
         destination->origin = source->origin;  // same vertical flip as source
     }
  	
+	// Make option to choose method
 	if(border_size>0)
-		destination = undistorted_with_border( source, camera, dist_coeffs, border_size );
+		//destination = undistorted_with_border( source, camera, dist_coeffs, border_size );	
+		destination = undistorted_with_border2( source, camera, dist_coeffs, border_size );
 	else
-		cvUndistort2( source, destination, camera, dist_coeffs );	
+		//cvUndistort2( source, destination, camera, dist_coeffs );
+		destination = undistorted_with_border2( source, camera, dist_coeffs, 0);
 }
 
 IplImage* BarrelDistortionCorrectionFilter::undistorted_with_border( const IplImage *image, const CvMat *intrinsic,const CvMat *distortion, short int border )
@@ -89,6 +104,38 @@ IplImage* BarrelDistortionCorrectionFilter::undistorted_with_border( const IplIm
 
     //undistort	
     cvUndistort2( bordered, bordered_corr, b_intrinsic, distortion );
+
+    return bordered_corr;
+}
+
+IplImage* BarrelDistortionCorrectionFilter::undistorted_with_border2( const IplImage *image, const CvMat *intrinsic,const CvMat *distortion, short int border )
+{
+	if(!init2)
+	{
+		//move cx,cy (intrinsic point)	
+		b_intrinsic = cvCloneMat( intrinsic );		
+		cvSetReal2D( b_intrinsic, 0,2, cvGetReal2D(b_intrinsic,0,2)+border );
+		cvSetReal2D( b_intrinsic, 1,2, cvGetReal2D(b_intrinsic,1,2)+border );
+			
+		bordered = cvCreateImage( cvSize(image->width+2*border,image->height+2*border), image->depth, image->nChannels );
+		bordered_corr = cvCreateImage( cvSize(image->width+2*border,image->height+2*border), image->depth, image->nChannels );
+
+		// Create a undistort map
+		MapX = cvCreateImage(cvSize(bordered_corr->width,bordered_corr->height), IPL_DEPTH_32F, 1);
+		MapY = cvCreateImage(cvSize(bordered_corr->width,bordered_corr->height), IPL_DEPTH_32F, 1);
+		cvInitUndistortMap( b_intrinsic, distortion, MapX, MapY);
+
+		init2 = true;
+	}
+
+	//add border to image
+    cvCopyMakeBorder( image, bordered, cvPoint(border,border), IPL_BORDER_CONSTANT, cvScalarAll(0) );
+
+    //undistort	
+	cvRemap(bordered, bordered_corr, MapX, MapY, CV_INTER_LINEAR, cvScalarAll(0));
+
+	// Fix origin
+	bordered_corr->origin = image->origin;
 
     return bordered_corr;
 }
