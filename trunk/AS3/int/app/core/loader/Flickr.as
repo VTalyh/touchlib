@@ -25,7 +25,7 @@
 			thestage = d;
 			fetchCount = fetchIn;
 			allPics = new Array();
-			fetch("mine");
+
 		}
 		public function fetch(type:String):void 
 		{			
@@ -39,14 +39,15 @@
 			{
 				variables.method = "flickr.photos.getRecent";
 			} 
-			else if(type == "mine") {
+			else 
+			{
 				variables.method = "flickr.photosets.getPhotos";
 				//72157594433368939
 				//72157594381857577
 				//72157594203926920
 				
 				//72157603423646710
-				variables.photoset_id = "72157603423646710";
+				variables.photoset_id = type;
 			}
 			request.data = variables;
 			rest = new URLLoader();
