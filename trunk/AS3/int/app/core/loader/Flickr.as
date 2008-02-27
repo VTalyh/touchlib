@@ -18,7 +18,7 @@
 		private var thestage:Sprite;
 		private var fetchCount:Number;
 		private var allPics:Array;	
-		public var photo:ImageObject;	
+		public var photo:ImageObject;
 		
 		public function Flickr(d:Sprite,fetchIn:Number) 
 		{
@@ -86,6 +86,10 @@
 	
 				photo = new ImageObject( url , true,false,true,false);
 				photo.name="ImageObject_"+i;
+				photo.scaleX = 0.1 + Math.random()*0.4;
+				photo.scaleY = photo.scaleX;
+				photo.x = (Math.random()*2500) - 1250;
+				photo.y = (Math.random()*2500) - 1250;				
 				thestage.addChild(photo);
 				allPics.push(photo);
 			}

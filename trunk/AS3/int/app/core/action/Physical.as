@@ -12,7 +12,7 @@
 	import Box2D.Common.Math.*
 	import Box2D.Common.*
 	
-
+	import caurina.transitions.Tweener;
 	
 	public class Physical extends Multitouchable
 	{
@@ -20,6 +20,8 @@
 		
 		public var m_mass:Number;
 		public var m_invMass:Number;
+		
+		public var m_worldScale:Number = 1.0;
 		
 		public var m_linearVelocity:b2Vec2;
 		public var m_angularVelocity:Number;
@@ -32,12 +34,21 @@
 		public var lastScaleAmt:Number;
 		
 		public var m_stretch:Number;
-				
+		
+		public var scalefactor:Number = 0.0;
+		
+		public var scaleBehavior:String = "Discrete";
+		public var scaleGestureOccurring:Boolean = false;
+		
 		private var centroid:Point
+		
+
+		
 		public function Physical()
 		{
+			m_worldScale = 1.0;
 				centroid = new Point();			
-			m_mass = 3.0;
+			m_mass = 1.0;
 			m_invMass = 1/m_mass;
 			
 			m_angularVelocity = 0.0;
@@ -56,11 +67,13 @@
 		
 		public function applyForce(force:b2Vec2, point:b2Vec2) : void
 		{
-			m_position = new b2Vec2(x,y);
-			var vec1:b2Vec2 = b2Math.MulFV(1/scaleX, b2Math.SubtractVV(point, m_position));
+			
+			
+			var vec1:b2Vec2 = b2Math.SubtractVV(b2Math.MulFV(m_worldScale, point), m_position);
 
-			m_force.Add( force );
-			force = b2Math.MulFV(1/scaleX, force);			
+			force = b2Math.MulFV(m_worldScale, force);						
+			m_force.Add( force );			
+
 			m_torque += b2Math.b2CrossVV(vec1, force);
 		}
 		
@@ -68,18 +81,35 @@
 		{
 			trace("Blob created " + id);
 			var blobinf:Object = getBlobInfo(id);
-			blobinf.origRelativePt = this.globalToLocal(new Point(mx, my));			
+			if(blobinf.clicked)
+			{
+				blobinf.origRelativePt = new Point(mx, my);			
+				
+//				parent.swapChildrenAt(parent.getChildIndex(this), parent.numChildren-1);
+
+				var p:DisplayObjectContainer = parent; 
+				p.removeChild(this);
+				p.addChild(this);
+			}
 		}
 		
-		override public function handleBlobRemoved(id:int)
+		public function beginScaleGesture()
 		{
-			trace("Blob removed " + id);			
+			scaleGestureOccurring = true;
 		}		
+		
+
 
 		public function physicalUpdate(e:Event)
 		{
 			var i:int, j:int;
 			
+			if(width > height)
+				this.m_worldScale = 100 / width;
+			else
+				this.m_worldScale = 100 / height;					
+
+			m_position =  b2Math.MulFV(m_worldScale, new b2Vec2(x,y));			
 			
 			// dragging / rotation code
 			for(i=0; i<blobs.length; i++)
@@ -89,17 +119,20 @@
 				var blobpt:Point;
 				var bloborigpt:Point;
 				
-				blobpt = this.localToGlobal(new Point(blobs[i].origRelativePt.x, blobs[i].origRelativePt.y ));
+				
+				blobpt = parent.globalToLocal(this.localToGlobal(new Point(blobs[i].x, blobs[i].y )));				
+				// FIXME: this could be done on blob creation..
+				bloborigpt = parent.globalToLocal(this.localToGlobal(new Point(blobs[i].origRelativePt.x, blobs[i].origRelativePt.y )));
 
-				var point:b2Vec2 = new b2Vec2(blobpt.x, blobpt.y);
-				var force:b2Vec2 = new b2Vec2((blobs[i].x - blobpt.x), (blobs[i].y - blobpt.y));				
+				var point:b2Vec2 = new b2Vec2(bloborigpt.x, bloborigpt.y);
+				var force:b2Vec2 = new b2Vec2((blobpt.x - bloborigpt.x), (blobpt.y - bloborigpt.y));				
 
 //				var force:b2Vec2 = new b2Vec2(blobs[i].dX, blobs[i].dY);
-				
+
 				applyForce(force, point);
 			}
 
-			rotated( m_torque * m_invMass * 0.01 );
+			rotated( m_torque * m_invMass * 0.01);
 			dragged(  m_force.x * m_invMass ,  m_force.y * m_invMass );
 			
 			m_force.x *= 0.1;
@@ -112,10 +145,10 @@
 			var divisor:Number = 0;
 
 			var avgOrigDist:Number = 0.0;
-			var avgCurDist:Number = 0.0;				
+			var avgCurDist:Number = 0.0;
 			var dist:Number = 0;
-			var dx:Number = 0;				
-			var dy:Number = 0;					
+			var dx:Number = 0;
+			var dy:Number = 0;
 		
 			if(blobs.length > 1)
 			{
@@ -123,10 +156,10 @@
 				centroid.x = 0;
 				centroid.y = 0;
 					
-				for(i=0; i<blobs.length; i++)
+				for(i=0; i<blobs.length && blobschecked < 4; i++)
 				if(blobs[i].clicked)
 				{
-					for(j=i+1; j<blobs.length; j++)
+					for(j=i+1; j<blobs.length && blobschecked < 4; j++)
 					if(blobs[j].clicked)
 					{
 						// not the real distance.. (for speed).
@@ -161,15 +194,14 @@
 			
 			if(blobschecked > 1)
 			{
-				trace(avgCurDist);
-				trace(avgOrigDist);
-				m_stretch = ((avgCurDist / avgOrigDist) - lastScaleAmt);
+
+				m_stretch += 0.4 * ((avgCurDist / avgOrigDist) - lastScaleAmt);
 
 				if(Math.abs(m_stretch) > 0.001)
-					scaled(m_stretch, centroid.x, centroid.y);
+					scaled(m_stretch, centroid.x, centroid.y, (avgCurDist / avgOrigDist));
 				else 
 					m_stretch = 0.0;
-				m_stretch *= 0.9;
+				m_stretch *= 0.4;
 
 				lastScaleAmt = (avgCurDist / avgOrigDist);
 
@@ -177,7 +209,7 @@
 				lastScaleAmt = 1.0;
 		
 				if(Math.abs(m_stretch) > 0.001)
-					scaled(m_stretch, centroid.x, centroid.y);
+					scaled(m_stretch, centroid.x, centroid.y, 0);
 				else 
 					m_stretch = 0.0;
 					
@@ -197,36 +229,67 @@
 			this.rotation += dr;
 		}
 		
-		public function scaled(amt:Number, posX:Number, posY:Number)
+		override public function handleBlobRemoved(id:int)
 		{
-			if(amt == null)
+			if(blobs.length == 1)
+			{
+				trace("Blob removed " + id);
+				scaleGestureOccurring = false;
+			}
+		}
+	
+		public function scaled(amt:Number, posX:Number, posY:Number, rawScale:Number)
+		{
+			if(amt == 0)
 				return;
 				
-			if(amt < -0.1)
-				amt = -0.1;
-			if(amt > 0.1)
-				amt = 0.1;
+			if(scaleBehavior == "Continuous")
+			{
 				
-			var oldScale:Number = scaleX;
-							
-//			if(scaleX + amt > 6.0)
-//				return;				
-
-			trace("Scaled " + amt);
-			
-			if(scaleX + amt < 0.25)
-				scaleX = 0.25;
-			else if (scaleX + amt > 6.0)
-				scaleX = 6.0
-			else
-				this.scaleX += amt;
+				if(amt < -0.1)
+					amt = -0.1;
+				if(amt > 0.1)
+					amt = 0.1;
+					
+				var oldScale:Number = scaleX;
+								
+	//			if(scaleX + amt > 6.0)
+	//				return;				
+	
+				trace("Scaled " + amt);
 				
-			scaleY = scaleX;
-			
+				if(scaleX + amt < 0.25)
+					scaleX = 0.25;
+				else if (scaleX + amt > 6.0)
+					scaleX = 6.0
+				else
+					this.scaleX += amt;
+	
+				scaleY = scaleX;
 				
-			this.x += (posX - this.x) * (scaleX - oldScale);
-			this.y += (posY - this.y) * (scaleX - oldScale);
-
+					
+				m_force.x += (posX - this.x) * (scaleX - oldScale);
+				m_force.y += (posY - this.y) * (scaleX - oldScale);
+			} else if(scaleBehavior == "Discrete")
+			{
+				
+				trace(rawScale);
+				if(rawScale == 0 || scaleGestureOccurring)
+					return;
+				
+				if( rawScale > 2.0 )
+				{
+				    scaleGestureOccurring = true;
+					Tweener.addTween(this, {scaleX: scaleX*2, scaleY: scaleY*2, delay:0, time:0.75, transition:"easeinoutquad" });	
+				} else if (rawScale < 0.5)
+				{
+					scaleGestureOccurring = true;
+					Tweener.addTween(this, {scaleX: scaleX*0.5, scaleY: scaleY*0.5, delay:0, time:0.75, transition:"easeinoutquad" });	
+	
+	
+				}				
+				
+			}
 		}
 	}
 	

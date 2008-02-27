@@ -1,4 +1,4 @@
-﻿package app.core.object{
+﻿package app.core.object {
 
 	import flash.events.*;
 	import flash.system.LoaderContext;
@@ -35,6 +35,7 @@
 		private var friction:Number = 0.85;
 		private var angFriction:Number = 0.92;
 		
+	
 		//private var TextObject_0:TextObject;	
 		
 		public function ImageObject (url:String, mouseSelect:Boolean, thisTweenX:Boolean, thisSlideX:Boolean, thisScaleDown:Boolean)
@@ -44,10 +45,12 @@
 			thisTween=thisTweenX;
 			thisSlide=thisSlideX;		
 			
+			scaleBehavior = "Discrete";
+			
+		
 			doubleTapEnabled = false;		
 			photoLoader = new Loader();		
-			photoLoader.scaleX = 0.1;
-			photoLoader.scaleY = 0.1;			
+
 			photoLoader.contentLoaderInfo.addEventListener( ProgressEvent.PROGRESS, onProgressHandler);	
 			photoLoader.contentLoaderInfo.addEventListener( Event.COMPLETE, arrange, false, 0, true);	
 			photoLoader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, onIOError);
@@ -102,7 +105,7 @@
 			//this.scaleX = 0;
 			//this.scaleY =0;	
 			this.alpha = 1;
-			this.rotation =  Math.random()*180 - 90;				
+			//this.rotation =  Math.random()*180 - 90;				
 
 			
 //			photoLoader.scaleX = 0.01;
@@ -110,9 +113,7 @@
 			photoLoader.x = -photoLoader.width/2;
 			photoLoader.y = -photoLoader.height/2;			
 			
-
-
-			
+		
 			clickgrabber.scaleX = photoLoader.width;
 			clickgrabber.scaleY = photoLoader.height;			
 			clickgrabber.x = -photoLoader.width/2;
@@ -130,7 +131,7 @@
 		//	TextObject_0.x=0;	
 		//	TextObject_0.y=photoLoader.height/2+15;	 			
 			
-		if(thisTween){						
+		if(thisTween) {						
 			var targetX:int = this.x;	
 			var targetY:int = this.y;		
 			var targetRotation:int = Math.random()*180 - 90;	 
@@ -138,43 +139,44 @@
 			Tweener.addTween(this, {x:targetX, y:targetY,scaleX: targetScale, scaleY: targetScale, delay:0,time:1, transition:"easeinoutquad"});	
 		}
 		else {			
-		//random
-		this.scaleX = (Math.random()*0.4) + 0.3;
-		this.scaleY = this.scaleX;
-		this.rotation = Math.random()*180 - 90;
-		this.x = 700 * Math.random() - 350;
-		this.y = 700 * Math.random() - 350;	
-		this.alpha = 1.0;
-		
-		//static
-		this.scaleX = 0.5;
-		this.scaleY = 0.5;	
-		//this.rotation = 0;		
-		//this.x = 0;
-	    //this.y = 0;	
+			//random
+//			this.scaleX = (Math.random()*0.4) + 0.3;
+//			this.scaleY = this.scaleX;
+//			this.rotation = Math.random()*180 - 90;
+//			this.x = 700 * Math.random() - 350;
+//			this.y = 700 * Math.random() - 350;	
+			this.alpha = 1.0;
+			
+			//static
+			//this.scaleX = 0.5;
+			//this.scaleY = 0.5;	
+			//this.rotation = 0;		
+			//this.x = 0;
+			//this.y = 0;	
 		}  
 			
-		 var image:Bitmap = Bitmap(photoLoader.content);
-         image.smoothing=true;
-		 image.scaleX = 0.1
-		 image.scaleY = 0.1		 		 
-       	 image.x = -image.width/2;
-		 image.y = -image.height/2;	
-
-         this.addChildAt(image,0);    	
-         
-         if(_thisScaleDown){
-         this.x = 0;
-         this.y = 0;        
-         this.scaleX=0.1;
-		 this.scaleY=0.1;
-		} 	
+		var image:Bitmap = Bitmap(photoLoader.content);
+		image.smoothing=true;
 		
-		/*nLoad_0 = new Loader();		
-		nLoad_0.load(new URLRequest("www/swf/stack.swf"));			
+		image.x = -image.width/2;
+		image.y = -image.height/2;	
+		
+		this.addChildAt(image,0);    	
+		
+		if(_thisScaleDown) 
+		{
+			this.x = 0;
+			this.y = 0;        
+			this.scaleX=0.1;
+			this.scaleY=0.1;
+		}
+		
+		/*
+		nLoad_0 = new Loader();
+		nLoad_0.load(new URLRequest("www/swf/stack.swf"));
 		//var nLoad_0 = new nLoader("www/swf/stack.swf",0,0);
- 		nLoad_0.contentLoaderInfo.addEventListener( Event.COMPLETE, swfLoaded ); 
-		//nLoad_0.x=-250;	
+ 		nLoad_0.contentLoaderInfo.addEventListener( Event.COMPLETE, swfLoaded );
+		//nLoad_0.x=-250;
 		//nLoad_0.y=-190;
 		
 		nLoad_0.x=clickgrabber.width*0.5-49;	
@@ -185,16 +187,14 @@
 		}				
 		
 		public function swfLoaded(e:Event)
-		{	
-			
+		{		
 			//trace('Sub-Menu Object Created');
 			//var mc:MovieClip = nLoad_0.content;	
-		//	mc['stack1'].addEventListener(MouseEvent.CLICK, MouseDownKey);
+			//mc['stack1'].addEventListener(MouseEvent.CLICK, MouseDownKey);
 		}
 		
-
-		
-		public function MouseDownKey(e:Event) {					
+		public function MouseDownKey(e:Event) 
+		{					
 			trace('target parent :'+e.target.parent.parent.parent.parent.parent.name);
 			trace('target :'+e.target.name);
 			trace('parent :'+parent);
@@ -204,8 +204,8 @@
 			//e.target.parent.parent.parent.parent.parent=null;
 			//trace(parent.getChildByName('TextObject_0'));
 			//parent.parent.photos.removeChild(getChildByName('ImageObject_0'));	
-			
-			}		
+		}
+		
 		/*
 		public override function released(dx:Number, dy:Number, dang:Number)
 		{
@@ -219,6 +219,7 @@
 			trace(e);
 		}
 		
+
 /*		public override function doubleTap()
 		{
 	   	if(!doubleTapEnabled){

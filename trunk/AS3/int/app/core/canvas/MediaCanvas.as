@@ -17,7 +17,7 @@ package app.core.canvas{
 	import app.core.object.TextObject;	
 
 	
-	public class MediaCanvas extends Scalable
+	public class MediaCanvas extends Phyiscal
 	{		
 		private var clickgrabber:Shape = new Shape();	
 		private var clickgrabber_center:Shape = new Shape();				

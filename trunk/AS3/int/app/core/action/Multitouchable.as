@@ -32,7 +32,7 @@ package app.core.action
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, this.mtAddedToStage, false, 0, true);			
 	
-			this.addEventListener(Event.ADDED_TO_STAGE, this.mtAddedToStage, false, 0, true);						
+			this.addEventListener(Event.REMOVED_FROM_STAGE, this.mtRemovedFromStage, false, 0, true);						
 			
 			
 
@@ -50,6 +50,18 @@ package app.core.action
 				this.stage.addEventListener(KeyboardEvent.KEY_DOWN, this.mtKeyPressed, false, 0, true);				
 			}
 		}
+		
+		public function mtRemovedFromStage(e:Event)
+		{
+			if(this.stage)
+			{
+				this.stage.removeEventListener(MouseEvent.MOUSE_UP, this.mouseUpHandler);
+				
+				this.stage.addEventListener(MouseEvent.MOUSE_MOVE, this.stageMouseMoveHandler);				
+				
+				this.stage.addEventListener(KeyboardEvent.KEY_DOWN, this.mtKeyPressed);				
+			}
+		}		
 		
 		function mtKeyPressed(k:KeyboardEvent)
 		{
@@ -187,7 +199,7 @@ package app.core.action
 				
 			TUIO.listenForObject(e.ID, this);							
 			
-			var curPt:Point = parent.globalToLocal(new Point(e.stageX, e.stageY));												
+			var curPt:Point = this.globalToLocal(new Point(e.stageX, e.stageY));												
 
 			addBlob(e.ID, curPt.x, curPt.y, true);
 			
@@ -210,7 +222,7 @@ package app.core.action
 			if(e.stageX == 0 && e.stageY == 0)
 				return;			
 			
-			var curPt:Point = parent.globalToLocal(new Point(e.stageX, e.stageY));															
+			var curPt:Point = this.globalToLocal(new Point(e.stageX, e.stageY));															
 			
 			if(!idExists(e.ID))
 			{
@@ -229,7 +241,7 @@ package app.core.action
 		public function mouseDownHandler(e:MouseEvent):void
 		{
 			//trace("Mouse down");
-			var curPt:Point = parent.globalToLocal(new Point(e.stageX, e.stageY));			
+			var curPt:Point = this.globalToLocal(new Point(e.stageX, e.stageY));			
 			addBlob(0, curPt.x, curPt.y, true);
 			
 			e.stopPropagation();								
@@ -241,7 +253,7 @@ package app.core.action
 		public function mouseMoveHandler(e:MouseEvent):void
 		{
 			//trace("Mouse move");			
-			var curPt:Point = parent.globalToLocal(new Point(e.stageX, e.stageY));						
+			var curPt:Point = this.globalToLocal(new Point(e.stageX, e.stageY));						
 			
 			if(!idExists(0))
 			{
@@ -259,7 +271,7 @@ package app.core.action
 		public function stageMouseMoveHandler(e:MouseEvent):void
 		{
 			//trace("Mouse move");			
-			var curPt:Point = parent.globalToLocal(new Point(e.stageX, e.stageY));						
+			var curPt:Point = this.globalToLocal(new Point(e.stageX, e.stageY));						
 			
 			if(!idExists(0))
 			{
@@ -288,7 +300,7 @@ package app.core.action
 			if(e.stageX == 0 && e.stageY == 0)
 				return;			
 			
-			var curPt:Point = parent.globalToLocal(new Point(e.stageX, e.stageY));																		
+			var curPt:Point = this.globalToLocal(new Point(e.stageX, e.stageY));																		
 			
 			if(!idExists(e.ID))
 			{
@@ -308,7 +320,7 @@ package app.core.action
 				return;			
 		
 		// FIXME: only remove if not clicked?
-			var curPt:Point = parent.globalToLocal(new Point(e.stageX, e.stageY));												
+			var curPt:Point = this.globalToLocal(new Point(e.stageX, e.stageY));												
 			handleRollOutEvent(e.ID, curPt.x, curPt.y);			
 			
 			//if(!getBlobInfo(e.id).clicked)
@@ -316,7 +328,6 @@ package app.core.action
 			
 			e.stopPropagation();									
 		}		
-		
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		

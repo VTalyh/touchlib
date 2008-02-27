@@ -80,7 +80,7 @@
 				{
 					var m:Matrix = new Matrix();
 					var p:Point = new Point(aBlobs[i].x - centerX, aBlobs[i].y - centerY);
-					m.scale(0.97, 0.97);
+					m.scale(0.95, 0.95);
 					p = m.transformPoint(p);
 
 					aBlobs[i].x = p.x + centerX;
