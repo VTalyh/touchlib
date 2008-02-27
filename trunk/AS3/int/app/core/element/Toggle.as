@@ -37,7 +37,7 @@ package app.core.element
 			gfxWidth = wd;
 			gfxHeight = ht;
 			gfxSliderGrip = new Sprite();
-			gfxSliderGrip.graphics.beginFill(0xFF00FF, 1);
+			gfxSliderGrip.graphics.beginFill(0xFFFFFF, 0.5);
 			gfxSliderGrip.graphics.drawRoundRect(-barwd/2, -(ht/2) + borderPixels, barwd, ht-borderPixels*2, roundnessPixels, roundnessPixels);
 			gfxSliderGrip.y = (ht/2);
 			gfxSliderGrip.graphics.endFill();
@@ -46,7 +46,7 @@ package app.core.element
 			
 			
 			gfxActiveGrip = new Sprite();
-			gfxActiveGrip.graphics.beginFill(0xFFFFFF, 1);
+			gfxActiveGrip.graphics.beginFill(0xFFFFFF, 0.85);
 			gfxActiveGrip.graphics.drawRoundRect(-barwd/2, -(ht/2) + borderPixels, barwd, ht-borderPixels*2, roundnessPixels, roundnessPixels);
 			gfxActiveGrip.graphics.endFill();
 			gfxSliderGrip.y = (ht/2);			

@@ -87,8 +87,11 @@ public function XMLMenu(layout:String, xml_url:String, spacing:Number, sizeX:Num
 				
 			
 			for each (p in __menuList) {			
-				var button:Sprite = new Sprite();	
-				button.name = "button"+count;
+				var button:Sprite = new Sprite();
+				//trace(__menuList[count].text());	
+				if(__menuList[count].text() == "~")
+				{button.name = "Task"+count;}
+				else{button.name = __menuList[count].text()+"Task";}
 				//trace(button.name+' p:'+button);				
 				button.mouseChildren = false;				
 				button.buttonMode = false;				
@@ -100,7 +103,10 @@ public function XMLMenu(layout:String, xml_url:String, spacing:Number, sizeX:Num
 				label.defaultTextFormat = format0;
 				label.embedFonts = false;
 				label.text = __menuList[count].text();
-			
+				
+				//trace(__menuList[count]..@color);
+				//trace(__menuList[count]..@showtext);
+					
 				if(__layout != "radial"){				
 						
 				/*imageButtonUP = new Loader();
@@ -126,23 +132,37 @@ public function XMLMenu(layout:String, xml_url:String, spacing:Number, sizeX:Num
 				imageButtonOVER.name = "over";	
 				//imageButtonOVER.x = 30;
 				//imageButtonOVER.y = 50;
-					
 				button.addChild(imageButtonUP);			
 				button.addChild(imageButtonOVER);						
 				button.addChild(imageButtonDOWN);
 				
-				var down:Sprite = new Sprite();
-				down.graphics.beginFill(0xFF0000, 0);
-				down.graphics.drawRect(0, 0, __sizeX, __sizeY);
-				down.alpha = 0;
-				//down.name = "down";				
-			
-				button.addChild(down);				
-				button.addChild(label);		
+				var color = ColorUtil.random(0,0,0);	
+				var m_color:Sprite = new Sprite();
+				m_color.graphics.beginFill(color, 1);
+				m_color.graphics.drawRect(0, 0, __sizeX, __sizeY+10);	
+				m_color.x=5;	
+				m_color.scaleX= m_color.scaleY = 0.85;		
+				button.addChild(m_color);		
+				m_color.alpha = 0.25;
 				
-				label.x = (button.width/2) - (label.width/2)-1.5;
-				label.y = (button.height/2) - (label.height/2)-7.5;				
-							
+				var m_gloss:Sprite = new Sprite();
+				m_gloss.graphics.beginFill(0xFFFFFF, 0.15);
+				m_gloss.graphics.drawRect(6, 0, __sizeX-15, __sizeY/2-3);	
+				button.addChild(m_gloss);	
+				
+				if(__menuList[count]..@color == "~"){					
+				m_color.alpha=0;	
+				m_gloss.alpha=0;
+				}		
+						
+				if(__menuList[count]..@showtext == false){
+				button.addChild(label);				
+				label.x = (m_color.width/2) - (label.width/2)+3.7;
+				label.y = (m_color.height/2) - (label.height/2)-3;
+				//label.x = (m_color.width/2) - (label.width/2)-1.5;
+				//label.y = (m_color.height/2) - (label.height/2)-7.5;		
+				}	
+									
 				}			
 				
 				if(__layout == "horizontal"){
@@ -206,8 +226,8 @@ public function XMLMenu(layout:String, xml_url:String, spacing:Number, sizeX:Num
 				label.embedFonts = true;			
 				label.text = __menuList[count].text();
 				radialHolderUP.addChild(label);				
-				label.x = count+1*5+(radialHolderUP.width/2) - (label.width/2);
-				label.y = -count+1*5+(radialHolderUP.height/2)- (label.height/2);	
+				//label.x = count+1*5+(radialHolderUP.width/2) - (label.width/2);
+				//label.y = -count+1*5+(radialHolderUP.height/2)- (label.height/2);	
 				//trace(count);
 				label.rotation -= 60*(count+1); 		
 	   			}		 			
@@ -225,7 +245,7 @@ public function XMLMenu(layout:String, xml_url:String, spacing:Number, sizeX:Num
 	   		 	radialHolderCLOSE.graphics.beginFill(0xFFFFFF, 1);	
 	   			radialHolderCLOSE.graphics.drawCircle(0, 0, 30);		
 	   			radialHolderCLOSE.graphics.endFill();
-	   			radialHolderCLOSE.name="close";
+	   			radialHolderCLOSE.name="CloseRadial";
 	   			menuHolder.addChild(radialHolderCLOSE);	}			
 				
 				count++;
@@ -268,7 +288,7 @@ public function XMLMenu(layout:String, xml_url:String, spacing:Number, sizeX:Num
 		}
 		private function displayInactiveState(e:Event):void {	
 			Tweener.addTween(e.currentTarget.getChildByName("over"), {alpha:0.0, time:0.65, transition:"easeinoutquad"});
-			Tweener.addTween(e.currentTarget.getChildByName("down"), {alpha:0.0, delay:0.40,time:0.25, transition:"easeinoutquad"});		
+			Tweener.addTween(e.currentTarget.getChildByName("down"), {alpha:0.0, time:2.0, transition:"easeinoutquad"});		
 			//e.stopPropagation();
 		}
 		private function displayMessage(e:Event):void {		
