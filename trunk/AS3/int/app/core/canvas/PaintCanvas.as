@@ -2,23 +2,16 @@
 {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
-	
-	import flash.display.*;		
+	import flash.display.Stage;
+	import flash.display.Sprite;		
 	import flash.events.*;
-	import flash.net.*;
-	import flash.events.*;	
 	import flash.geom.*;		
-		
-	import app.core.element.Wrapper;
    
     import flash.filters.*;
-
-
+    
 	public class PaintCanvas extends Sprite
 	{
-
-
-		private var blobs:Array;		// blobs we are currently interacting with		
+		private var blobs:Array;		
 		private var sourceBmp:BitmapData;	
 		
 		private var m_stage:Stage;		
@@ -53,9 +46,8 @@
 			
 			brush = new Sprite();
 			brush.graphics.beginFill(0xFFFFFF);
-			brush.graphics.drawCircle(0,0,15);			
-			
-			trace(brush);
+			brush.graphics.drawCircle(0,0,15);	
+					
 			this.addEventListener(TouchEvent.MOUSE_MOVE, this.moveHandler, false, 0, true);			
 			this.addEventListener(TouchEvent.MOUSE_DOWN, this.downEvent, false, 0, true);						
 			this.addEventListener(TouchEvent.MOUSE_UP, this.upEvent, false, 0, true);									
@@ -66,8 +58,8 @@
 			 		
 			 colorBar_0.graphics.beginFill(0xFFFFFF,0.65);
 			 colorBar_0.graphics.drawRoundRect(0, 0, 80,  m_stage.stageHeight-200,6);	00;
-			 colorBar_0.x = m_stage.stageWidth-100;	
-			 colorBar_0.y = 15;	
+			 colorBar_0.x = 50;	
+			 colorBar_0.y = 100;	
 				
 			 var colorButton_0:Sprite = new Sprite();
 			 var colorButton_1:Sprite = new Sprite();		
@@ -129,30 +121,31 @@
 			colorButton_9.graphics.drawRoundRect(0, 0, 70, 50,6);									
 			colorButton_9.y = 505;	
 			colorButton_9.x = 5;
-			
-			 var colorWrapper_0:Wrapper = new Wrapper(colorButton_0);
-			 var colorWrapper_1:Wrapper = new Wrapper(colorButton_1);
-			 var colorWrapper_2:Wrapper = new Wrapper(colorButton_2);
-			 var colorWrapper_3:Wrapper = new Wrapper(colorButton_3);
-			 var colorWrapper_4:Wrapper = new Wrapper(colorButton_4);
-			 var colorWrapper_5:Wrapper = new Wrapper(colorButton_5);
-			 var colorWrapper_6:Wrapper = new Wrapper(colorButton_6);
-			 var colorWrapper_7:Wrapper = new Wrapper(colorButton_7);
-			 var colorWrapper_8:Wrapper = new Wrapper(colorButton_8);
-			 var colorWrapper_9:Wrapper = new Wrapper(colorButton_9);	
 			 
-			colorWrapper_0.addEventListener(MouseEvent.CLICK, function(){trace("DOWN");setColor(0.0, 0.0, 0.0);}, false, 0, true);									
-			colorWrapper_1.addEventListener(MouseEvent.CLICK, function(){trace("DOWN");setColor(1.0, 0.0, 0.0);}, false, 0, true);	
-			colorWrapper_2.addEventListener(MouseEvent.CLICK, function(){trace("DOWN");setColor(1.0, 0.5, 0.0);}, false, 0, true);									
-			colorWrapper_3.addEventListener(MouseEvent.CLICK, function(){trace("DOWN");setColor(1.0, 1.0, 0.0);}, false, 0, true);
-			colorWrapper_4.addEventListener(MouseEvent.CLICK, function(){trace("DOWN");setColor(0.0, 1.0, 0.0);}, false, 0, true);									
-			colorWrapper_5.addEventListener(MouseEvent.CLICK, function(){trace("DOWN");setColor(0.5, 1.0, 0.5);}, false, 0, true);
-			colorWrapper_6.addEventListener(MouseEvent.CLICK, function(){trace("DOWN");setColor(0.0, 0.0, 1.0);}, false, 0, true);									
-			colorWrapper_7.addEventListener(MouseEvent.CLICK, function(){trace("DOWN");setColor(0.5, 0.0, 0.5);}, false, 0, true);									
-			colorWrapper_8.addEventListener(MouseEvent.CLICK, function(){trace("DOWN");setColor(1.0, 0.0, 1.0);}, false, 0, true);
-			colorWrapper_9.addEventListener(MouseEvent.CLICK, function(){trace("DOWN");setColor(1.0, 1.0, 1.0);}, false, 0, true);
+			colorButton_0.addEventListener(MouseEvent.MOUSE_DOWN, function(){trace("DOWN");setColor(0.0, 0.0, 0.0);}, false, 0, true);									
+			colorButton_1.addEventListener(MouseEvent.MOUSE_DOWN, function(){trace("DOWN");setColor(1.0, 0.0, 0.0);}, false, 0, true);	
+			colorButton_2.addEventListener(MouseEvent.MOUSE_DOWN, function(){trace("DOWN");setColor(1.0, 0.5, 0.0);}, false, 0, true);									
+			colorButton_3.addEventListener(MouseEvent.MOUSE_DOWN, function(){trace("DOWN");setColor(1.0, 1.0, 0.0);}, false, 0, true);
+			colorButton_4.addEventListener(MouseEvent.MOUSE_DOWN, function(){trace("DOWN");setColor(0.0, 1.0, 0.0);}, false, 0, true);									
+			colorButton_5.addEventListener(MouseEvent.MOUSE_DOWN, function(){trace("DOWN");setColor(0.5, 1.0, 0.5);}, false, 0, true);
+			colorButton_6.addEventListener(MouseEvent.MOUSE_DOWN, function(){trace("DOWN");setColor(0.0, 0.0, 1.0);}, false, 0, true);									
+			colorButton_7.addEventListener(MouseEvent.MOUSE_DOWN, function(){trace("DOWN");setColor(0.5, 0.0, 0.5);}, false, 0, true);									
+			colorButton_8.addEventListener(MouseEvent.MOUSE_DOWN, function(){trace("DOWN");setColor(1.0, 0.0, 1.0);}, false, 0, true);
+			colorButton_9.addEventListener(MouseEvent.MOUSE_DOWN, function(){trace("DOWN");setColor(1.0, 1.0, 1.0);}, false, 0, true);
+			
+			colorButton_0.addEventListener(TouchEvent.MOUSE_DOWN, function(){trace("DOWN");setColor(0.0, 0.0, 0.0);}, false, 0, true);									
+			colorButton_1.addEventListener(TouchEvent.MOUSE_DOWN, function(){trace("DOWN");setColor(1.0, 0.0, 0.0);}, false, 0, true);	
+			colorButton_2.addEventListener(TouchEvent.MOUSE_DOWN, function(){trace("DOWN");setColor(1.0, 0.5, 0.0);}, false, 0, true);									
+			colorButton_3.addEventListener(TouchEvent.MOUSE_DOWN, function(){trace("DOWN");setColor(1.0, 1.0, 0.0);}, false, 0, true);
+			colorButton_4.addEventListener(TouchEvent.MOUSE_DOWN, function(){trace("DOWN");setColor(0.0, 1.0, 0.0);}, false, 0, true);									
+			colorButton_5.addEventListener(TouchEvent.MOUSE_DOWN, function(){trace("DOWN");setColor(0.5, 1.0, 0.5);}, false, 0, true);
+			colorButton_6.addEventListener(TouchEvent.MOUSE_DOWN, function(){trace("DOWN");setColor(0.0, 0.0, 1.0);}, false, 0, true);									
+			colorButton_7.addEventListener(TouchEvent.MOUSE_DOWN, function(){trace("DOWN");setColor(0.5, 0.0, 0.5);}, false, 0, true);									
+			colorButton_8.addEventListener(TouchEvent.MOUSE_DOWN, function(){trace("DOWN");setColor(1.0, 0.0, 1.0);}, false, 0, true);
+			colorButton_9.addEventListener(TouchEvent.MOUSE_DOWN, function(){trace("DOWN");setColor(1.0, 1.0, 1.0);}, false, 0, true);
 			
 			this.addEventListener(Event.ENTER_FRAME, this.update, false, 0, true);			
+			
 			paintBmp = new Bitmap(paintBmpData);
 			
 			var cmat:Array = [ 1, 1, 1,
@@ -163,24 +156,20 @@
 			
 //			filter = new BlurFilter(5, 5);
 			addChild(paintBmp);					
-
-//			addChild(brush);
-			colorBar_0.addChild(colorWrapper_0);
-			colorBar_0.addChild(colorWrapper_1);
-			colorBar_0.addChild(colorWrapper_2);	
-			colorBar_0.addChild(colorWrapper_3);
-			colorBar_0.addChild(colorWrapper_4);
-			colorBar_0.addChild(colorWrapper_5);	
-			colorBar_0.addChild(colorWrapper_6);
-			colorBar_0.addChild(colorWrapper_7);
-			colorBar_0.addChild(colorWrapper_8);	
-			colorBar_0.addChild(colorWrapper_9);	
+			
+			colorBar_0.addChild(colorButton_0);
+			colorBar_0.addChild(colorButton_1);
+			colorBar_0.addChild(colorButton_2);	
+			colorBar_0.addChild(colorButton_3);
+			colorBar_0.addChild(colorButton_4);
+			colorBar_0.addChild(colorButton_5);	
+			colorBar_0.addChild(colorButton_6);
+			colorBar_0.addChild(colorButton_7);
+			colorBar_0.addChild(colorButton_8);	
+			colorBar_0.addChild(colorButton_9);	
 				
 			this.addChild(colorBar_0);
-
-			setColor(0.0, 1.0, 0.0);
-
-			
+			setColor(0.0, 1.0, 0.0);		
 		}
 		
 		function setColor(r:Number, g:Number, b:Number):void
@@ -211,7 +200,10 @@
 				}
 			}
 		}
-		
+		public function clearLayer(e:Event) {
+			paintBmpData.dispose(); 
+			init();
+		}
 		function update(e:Event):void
 		{
 			var pt = new Point(0,0);
@@ -229,7 +221,7 @@
 					var localPt:Point = parent.globalToLocal(new Point(tuioobj.x, tuioobj.y));										
 					var m:Matrix = new Matrix();
 					m.translate(localPt.x, localPt.y);
-					paintBmpData.draw(brush, m, col, 'add');
+					paintBmpData.draw(brush, m, col, 'normal');
 				}
 			}
 			
