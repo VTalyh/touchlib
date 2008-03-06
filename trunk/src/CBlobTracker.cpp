@@ -70,7 +70,7 @@ unsigned int getTag(CvSeq *curCont, int level=0)
 }
 
 
-void CBlobTracker::findBlobs_contour(BwImage &img)
+void CBlobTracker::findBlobs(BwImage &img)
 {
 
 	blobList.clear();
@@ -198,7 +198,7 @@ void CBlobTracker::findBlobs_contour(BwImage &img)
 //////////////////////////////////////////
 // blob tracking stuff below
 
-void CBlobTracker::ProcessResults()
+void CBlobTracker::trackBlobs()
 {
 	// Fire off events, set id's..
 	unsigned int i, j, k;
