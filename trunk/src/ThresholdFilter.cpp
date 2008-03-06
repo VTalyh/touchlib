@@ -53,7 +53,7 @@ void ThresholdFilter::setParameter(const char *name, const char *value)
 	} else if (strcmp(name, PARAMETER_THRESHOLD) == 0) {
 		setMode(MODE_MANUAL);
 		threshold = atof(value);
-		thresholdSlider = threshold;
+		thresholdSlider = (int) threshold;
 		if (threshold > 1.0f) {
 			threshold = 1.0f;
 		}

@@ -3,6 +3,7 @@
 
 #include "ITouchListener.h"
 #include "ITouchEvent.h"
+#include "IBlobTracker.h"
 
 #include "Image.h"
 #include "vector2d.h"
@@ -19,9 +20,6 @@ namespace touchlib
 	class TOUCHLIB_EXPORT ITouchScreen
 	{
 	public:
-		//! A client queries the host for a specific finger ID
-		virtual bool getFingerInfo(int ID, TouchData *data) = 0;
-
 		//! A client registers itself as a listener for touch events
 		virtual void registerListener(ITouchListener *listener) = 0;
 
@@ -86,7 +84,10 @@ namespace touchlib
 		// start the processing and video capturing
 		virtual void beginTracking() = 0;
 
-
+		/**
+		 * Sets the blob tracker.
+		 */
+		virtual void setBlobTracker(IBlobTracker* blobTracker) = 0;
 	};
 
 }

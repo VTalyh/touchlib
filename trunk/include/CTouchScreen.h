@@ -2,12 +2,11 @@
 #define __TOUCHLIB_CTOUCHSCREEN__
 
 #include "ITouchScreen.h"
-#include "CBlobTracker.h"
 #include "ITouchEvent.h"
 #include "TouchlibFilter.h"
 #include "ITouchListener.h"
 #include "mesh2d.h"
-
+#include "IBlobTracker.h"
 
 
 #include <vector>
@@ -30,9 +29,6 @@ namespace touchlib
 		~CTouchScreen();
 
 // ITouchScreen
-
-		//! A client queries the host for a specific finger ID
-		virtual bool getFingerInfo(int ID, TouchData *data);
 
 		//! A client registers itself as a listener for touch events
 		virtual void registerListener(ITouchListener *listener);
@@ -100,6 +96,8 @@ namespace touchlib
 		virtual IplImage* getFilterImage(int step);
 
 
+		void setBlobTracker(IBlobTracker* blobTracker);
+
 // ITouchListener
 		//! Notify that a finger has just been made active. 
 		virtual void fingerDown(TouchData data);
@@ -138,7 +136,7 @@ namespace touchlib
 		static THREAD_MUTEX_HANDLE eventListMutex;
 
 
-		CBlobTracker tracker;
+		IBlobTracker* tracker;
 
 		bool bCalibrating;		
 		int calibrationStep;

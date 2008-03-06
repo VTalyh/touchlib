@@ -118,3 +118,4 @@ void SimpleHighpassFilter::kernel()
 	int noiseParameter = noiseLevel*2+1;
 	cvSmooth(buffer, destination, noiseSmoothType, noiseParameter, noiseParameter);
 }
+

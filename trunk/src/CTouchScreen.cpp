@@ -12,6 +12,7 @@
 */
 
 #include "CTouchScreen.h"
+#include "CBlobTracker.h"
 #include "FilterFactory.h"
 #include "tinyxml.h"
 #include <highgui.h>
@@ -32,8 +33,6 @@ CTouchScreen::CTouchScreen()
 {
 	frame = 0;
 
-	tracker.registerListener((ITouchListener *)this);
-
 #ifdef WIN32
 	eventListMutex = CreateMutex(NULL, 0, NULL);
 #else
@@ -45,7 +44,7 @@ CTouchScreen::CTouchScreen()
 	reject_max_dimension = 250;
 
 	ghost_frames = 0;
-	minimumDisplacementThreshold = CBlobTracker::DEFAULT_MINIMUM_DISPLACEMENT_THRESHOLD;
+	minimumDisplacementThreshold = IBlobTracker::DEFAULT_MINIMUM_DISPLACEMENT_THRESHOLD;
 
 	screenBB = rect2df(vector2df(0.0f, 0.0f), vector2df(1.0f, 1.0f));
 	initScreenPoints();
@@ -80,6 +79,24 @@ CTouchScreen::CTouchScreen()
 	bCalibrating = false;
 	calibrationStep = 0;
 
+        // create a default blob tracker
+        setBlobTracker(new CBlobTracker());
+}
+
+void CTouchScreen::setBlobTracker(IBlobTracker* blobTracker)
+{
+	// check so that the tracker isn't in use
+	// FIXME: add a mutex so that it is interchangable
+	if (bTracking) {
+		return;
+	}
+
+	// free the old tracker
+	delete tracker;
+
+	// save the new tracker and register with it
+	tracker = blobTracker;
+	tracker->registerListener((ITouchListener *)this);
 }
 
 CTouchScreen::~CTouchScreen()
@@ -106,6 +123,7 @@ CTouchScreen::~CTouchScreen()
 		delete filterChain[i];
 
 		
+	delete tracker;
 }
 
 void CTouchScreen::initScreenPoints()
@@ -195,12 +213,6 @@ void CTouchScreen::setScreenBBox(rect2df &box)
 	initScreenPoints();
 }
 
-bool CTouchScreen::getFingerInfo(int ID, TouchData *data)
-{
-	return tracker.getFingerInfo(ID, data);
-}
-
-
 void CTouchScreen::registerListener(ITouchListener *listener)
 {
 	listenerList.push_back(listener);
@@ -210,31 +222,22 @@ void CTouchScreen::registerListener(ITouchListener *listener)
 bool CTouchScreen::process()
 {
 
-	while(1)
-	{
-
+	while(1) {
 		if(filterChain.size() == 0)
 			return false;
 		//printf("Process chain\n");
 		filterChain[0]->process(NULL);
 		IplImage *output = filterChain.back()->getOutput();
 
-		if(output)		
-		{
+		if(output != NULL) {
 			//printf("Process chain complete\n");
 			frame = output;
-
-			if(labelImg.getHeight() == 0) 
-			{
-				labelImg = cvCreateImage(cvSize(output->width,output->height), 8, 1);
-			}
-			cvZero(labelImg.imgp);
 
 			if(bTracking == true)
 			{
 				//printf("Tracking 1\n");
-				tracker.findBlobs_contour(frame, labelImg);
-				tracker.ProcessResults();
+				tracker->findBlobs_contour(frame);
+				tracker->ProcessResults();
 
 #ifdef WIN32				
 				DWORD dw = WaitForSingleObject(eventListMutex, INFINITE);
@@ -248,7 +251,7 @@ bool CTouchScreen::process()
 				else 
 				{
 					//printf("Tracking 2\n");
-					tracker.gatherEvents();
+					tracker->gatherEvents();
 					ReleaseMutex(eventListMutex);
 				}
 #else
@@ -257,7 +260,7 @@ bool CTouchScreen::process()
 					// some error occured
 					fprintf(stderr,"locking of mutex failed\n");
 				}else{
-					tracker.gatherEvents();
+					tracker->gatherEvents();
 					pthread_mutex_unlock(&eventListMutex);
 				}
 #endif
@@ -376,7 +379,7 @@ bool CTouchScreen::loadConfig(const char* filename)
 	}
 
 	// set up some configuration variables
-	this->tracker.setup(reject_distance_threshold, reject_min_dimension, reject_max_dimension, ghost_frames, minimumDisplacementThreshold);
+	tracker->setup(reject_distance_threshold, reject_min_dimension, reject_max_dimension, ghost_frames, minimumDisplacementThreshold);
 
 	TiXmlElement* bboxRoot = doc.FirstChildElement("bbox");
 	if(bboxRoot){

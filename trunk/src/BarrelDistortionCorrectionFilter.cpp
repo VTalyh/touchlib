@@ -139,3 +139,4 @@ IplImage* BarrelDistortionCorrectionFilter::undistorted_with_border2( const IplI
 
     return bordered_corr;
 }
+

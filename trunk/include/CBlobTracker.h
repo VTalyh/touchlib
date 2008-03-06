@@ -11,6 +11,8 @@
 #include "ITouchListener.h"
 #include "TouchData.h"
 
+#include "IBlobTracker.h"
+
 
 #define HISTORY_FRAMES	10
 
@@ -124,34 +126,21 @@ namespace touchlib
 
 
 
-	class TOUCHLIB_EXPORT CBlobTracker 
+	class TOUCHLIB_EXPORT CBlobTracker : public IBlobTracker
 	{
 	public:
-                static const float DEFAULT_MINIMUM_DISPLACEMENT_THRESHOLD;
-
 		CBlobTracker();
-		void findBlobs(BwImage &img, BwImage &label_img);
-		void findBlobs_contour(BwImage &img, BwImage &label_img);
+
+		void findBlobs_contour(BwImage &img);
 		void ProcessResults();
 		void gatherEvents();
 
-		virtual bool getFingerInfo(int ID, TouchData *data);
-		virtual void registerListener(ITouchListener *listener);
-		void setup(int r_dist, int r_min_dim, int r_max_dim, int g_frames, float minimumDisplacementThreshold);
-
 	private:
-		void doTouchEvent(TouchData data);
-		void doUpdateEvent(TouchData data);
-		void doUntouchEvent(TouchData data);
-		inline void recordEquiv(unsigned char from, unsigned char to, int x, int y);
 		inline void permute2(int k);
-		inline void permute(int k);
 		inline bool checkValid(int start);
 		inline bool checkValidNew(int start);
-		void labelFill(BwImage &label_img, int x, int y, unsigned char from, unsigned char to);
 
 		int level;
-		CFinger *findFinger(int hist, int id);
 		float getError(CFinger &old, CFinger &cur);
 
 
@@ -163,20 +152,11 @@ namespace touchlib
 		int extraIDs;
 		int numcheck;
 
-		int reject_distance_threshold;
-		int reject_min_dimension;
-		int reject_max_dimension;
-		int ghost_frames;
-
-		float minimumDisplacementThreshold;
-
 		std::vector<std::vector<int> > matrix;
 		std::vector<int> ids;
 		std::vector<std::vector<CFinger> > history;
 		std::vector<CBlob> blobList;
-		std::vector<BlobEquiv> equivalences;
 		std::vector<CFinger> current;
-		std::vector<ITouchListener *> listenerList;
 
 #ifdef WIN32
 #pragma warning( default : 4251 )
