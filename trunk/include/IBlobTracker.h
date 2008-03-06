@@ -19,8 +19,8 @@ public:
 
 	// ----  pure virtual functions  -----------------------------------------
 
-	virtual void findBlobs_contour(BwImage& frame) = 0;
-	virtual void ProcessResults() = 0;
+	virtual void findBlobs(BwImage& frame) = 0;
+	virtual void trackBlobs() = 0;
 	virtual void gatherEvents() = 0;
 
 	// ----  public members  -------------------------------------------------

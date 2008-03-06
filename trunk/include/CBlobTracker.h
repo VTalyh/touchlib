@@ -131,8 +131,8 @@ namespace touchlib
 	public:
 		CBlobTracker();
 
-		void findBlobs_contour(BwImage &img);
-		void ProcessResults();
+		void findBlobs(BwImage &img);
+		void trackBlobs();
 		void gatherEvents();
 
 	private:
