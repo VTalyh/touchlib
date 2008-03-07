@@ -393,6 +393,7 @@ void CBlobTracker::gatherEvents()
 			doTouchEvent(current[i].getTouchData());
 		} else {
 			if (current[i].displacement.getLength() >= minimumDisplacementThreshold) {
+				current[i].delta = current[i].displacement;
 				doUpdateEvent(current[i].getTouchData());
 				current[i].displacement = vector2df(0.0f, 0.0f);
 			}
