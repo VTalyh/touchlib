@@ -277,14 +277,14 @@
 				if(rawScale == 0 || scaleGestureOccurring)
 					return;
 				
-				if( rawScale > 2.0 )
+				if( rawScale > 1.5 )
 				{
 				    scaleGestureOccurring = true;
-					Tweener.addTween(this, {scaleX: scaleX*2, scaleY: scaleY*2, delay:0, time:0.75, transition:"easeinoutquad" });	
-				} else if (rawScale < 0.5)
+					Tweener.addTween(this, {scaleX: scaleX*2, scaleY: scaleY*2, delay:0, time:0.5, transition:"easeinoutquad" });	
+				} else if (rawScale < 0.75)
 				{
 					scaleGestureOccurring = true;
-					Tweener.addTween(this, {scaleX: scaleX*0.5, scaleY: scaleY*0.5, delay:0, time:0.75, transition:"easeinoutquad" });	
+					Tweener.addTween(this, {scaleX: scaleX*0.5, scaleY: scaleY*0.5, delay:0, time:0.5, transition:"easeinoutquad" });	
 	
 	
 				}				

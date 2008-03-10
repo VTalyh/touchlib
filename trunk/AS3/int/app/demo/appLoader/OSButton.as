@@ -19,53 +19,30 @@
 		
 		private var appLoader:AppLoader;
 		private var bOpen:Boolean = false;
-		
-
-		
+			
 		public function OSButton()
 		{
 			appName = "not set";
 
+			btClose.addEventListener(TouchEvent.MOUSE_DOWN, closeClicked, false, 0, true);						
+			btInfo.addEventListener(TouchEvent.MOUSE_DOWN, infoClicked, false, 0, true);			
 			
-			var wrap:Wrapper;
-			wrap = new Wrapper(btClose);
-			wrap.name = "btClose";
-			btClose.addEventListener(MouseEvent.CLICK, closeClicked, false, 0, true);						
-			addChild(wrap);
-			
-			wrap = new Wrapper(btInfo);
-			wrap.name = "btInfo";
-			btInfo.addEventListener(MouseEvent.CLICK, infoClicked, false, 0, true);			
-			addChild(wrap);
-			
-			wrap = new Wrapper(btConfig);
-			wrap.name = "btConfig";
-			btConfig.addEventListener(MouseEvent.CLICK, configClicked, false, 0, true);
-			addChild(wrap);
-			
-			wrap = new Wrapper(btExpander);
-			wrap.name = "btExpander";
-			btExpander.addEventListener(MouseEvent.CLICK, expanderClicked, false, 0, true);
-			addChild(wrap);	
-			
-			btClose.visible = false;
-			btInfo.visible = false;
-			btConfig.visible = false;	
-			mcExpanderBack.visible = false;						
-
+			btConfig.addEventListener(TouchEvent.MOUSE_DOWN, configClicked, false, 0, true);
+			btApp.addEventListener(TouchEvent.MOUSE_DOWN, expanderClicked, false, 0, true);
 		}
 		
-		function closeClicked(e:MouseEvent)
+		function closeClicked(e:Event)
 		{
+			trace("Close Clicked");
 			appQuit();
 			toggleOpen();
 		}
 		
-		function infoClicked(e:MouseEvent)
+		function infoClicked(e:Event)
 		{
 			toggleOpen();
 		}
-		function configClicked(e:MouseEvent)
+		function configClicked(e:Event)
 		{
 			toggleOpen();
 		}
@@ -74,27 +51,18 @@
 		{
 			if(bOpen)
 			{
-				btClose.visible = false;
-				btInfo.visible = false;
-				btConfig.visible = false;
-				mcExpanderBack.visible = false;
-				gotoAndStop("closed");
+				this.visible = false;
 				bOpen = false;
 			} else {
 				gotoAndStop("open");				
 				bOpen = true;
 				
-				btClose.visible = true;
-				btInfo.visible = true;
-				btConfig.visible = true;
-				mcExpanderBack.visible = true;
-				
+				this.visible = true;
 			}			
 		}
 		
-		function expanderClicked(e:MouseEvent)
+		function expanderClicked(e:Event)
 		{
-
 			toggleOpen();
 		}
 		

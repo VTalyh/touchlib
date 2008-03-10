@@ -87,10 +87,10 @@
 	
 				photo = new ImageObject( url , true,false,true,false);
 				photo.name="ImageObject_"+i;
-				photo.scaleX = 0.1 + Math.random()*0.4;
+				photo.scaleX = 0.5 + Math.random();
 				photo.scaleY = photo.scaleX;
-				photo.x = (Math.random()*2500) - 1250;
-				photo.y = (Math.random()*2500) - 1250;				
+				photo.x = (Math.random()*2000) - 1000;
+				photo.y = (Math.random()*2000) - 1000;				
 				thestage.addChild(photo);
 				allPics.push(photo);
 			}

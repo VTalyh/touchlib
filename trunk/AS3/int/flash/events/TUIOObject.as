@@ -26,6 +26,8 @@
 		public var spr:Sprite;
 		public var trlx:Sprite;		
 		public var color:int;
+		public var startTime:Number;
+		public var lastModifiedTime:Number;
 		
 		private var aListeners:Array;
 
@@ -60,6 +62,12 @@
 			}
 			
 			isNew = true;
+			
+			var d:Date = new Date();
+			
+			startTime = d.time;
+			lastModifiedTime = startTime;
+
 		}
 		
 		public function notifyCreated()
@@ -80,7 +88,7 @@
 				}
 			}			
 		}
-		
+
 		public function setObjOver(o:DisplayObject)
 		{
 			try {
@@ -95,15 +103,15 @@
 					}
 				} else if(obj != o) 
 				{
-					
-					var localPoint:Point = obj.parent.globalToLocal(new Point(x, y));								
+
+					var localPoint:Point = obj.parent.globalToLocal(new Point(x, y));
 					obj.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_OUT, true, false, x, y, localPoint.x, localPoint.y, 0, 0, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));
 					if(o)
 					{
 						localPoint = obj.parent.globalToLocal(new Point(x, y));
 						o.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_OVER, true, false, x, y, localPoint.x, localPoint.y, 0, 0, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));
 					}
-					obj = o;								
+					obj = o;
 				}
 			} catch (e)
 			{
@@ -128,7 +136,7 @@
 				if(aListeners[i] == reciever)
 					aListeners.splice(i, 1);
 			}
-		}		
+		}
 		
 		public function kill()
 		{
@@ -140,7 +148,6 @@
 				obj.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_UP, true, false, x, y, localPoint.x, localPoint.y, 0, 0, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));									
 			}			
 
-			
 			for(var i:int=0; i<aListeners.length; i++)
 			{
 				if(aListeners[i] != obj)
@@ -149,7 +156,7 @@
 					aListeners[i].dispatchEvent(new TouchEvent(TouchEvent.MOUSE_UP, true, false, x, y, localPoint.x, localPoint.y, 0, 0, aListeners[i], false,false,false, true, 0, TUIOClass, ID, sID, angle));								
 				}
 			}
-			
+
 			obj = null;			
 			
 			aListeners = new Array();
@@ -157,13 +164,32 @@
 		
 		public function notifyMoved()
 		{
-			var localPoint:Point;	
+			//var d:Date = new Date();
+			//lastModifiedTime = d.time;
+			
+			var localPoint:Point;
 			for(var i:int=0; i<aListeners.length; i++)
-			{			
+			{
 				localPoint = aListeners[i].parent.globalToLocal(new Point(x, y));			
-				//trace("Notify moved"+ localPoint);			
-				aListeners[i].dispatchEvent(new TouchEvent(TouchEvent.MOUSE_MOVE, true, false, x, y, localPoint.x, localPoint.y, 0, 0, aListeners[i], false,false,false, true, 0, TUIOClass, ID, sID, angle));								
+				//trace("Notify moved"+ localPoint);
+				aListeners[i].dispatchEvent(new TouchEvent(TouchEvent.MOUSE_MOVE, true, false, x, y, localPoint.x, localPoint.y, 0, 0, aListeners[i], false,false,false, true, 0, TUIOClass, ID, sID, angle));	
 			}			
+		}
+		
+		// FIXME: we could use this function to replace a bunch of the stuff above.. 
+		public function getTouchEvent(szeventname:String):TouchEvent
+		{
+			var localPoint:Point;
+			
+			if(obj && obj.parent)
+			{
+				localPoint = obj.parent.globalToLocal(new Point(x, y));							
+			} else {
+				localPoint = new Point(x, y);
+			}
+			
+
+			return new TouchEvent(szeventname, true, false, x, y, localPoint.x, localPoint.y, 0, 0, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle);
 		}
 	}
 }

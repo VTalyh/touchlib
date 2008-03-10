@@ -28,38 +28,40 @@ package app.demo.appLoader
 		var appButtons:Array;
 		
 		var screenshotLoader:Loader;
-		
 		var selectedButton:AppLoaderButton;
-		
 		var loadbtn:Wrapper;
 		
 		var osButton:OSButton;
+		
+		var bAppLoaded:Boolean = false;
 
 		public function AppLoader()
 		{
+
 			osButton = new OSButton();
 			osButton.x = stage.stageWidth;
 			osButton.y = stage.stageHeight;
-
+			addChild(osButton);
 			selectedButton = null;
 			appButtons = new Array();
 			
-			TUIO.init( this, '127.0.0.1', 3000, '', false );
-			
+			TUIO.init( this, '127.0.0.1', 3000, 'www/xml/tableData.xml', true );
+			TUIO.addEventListener(this);
 			xmlLoader = new URLLoader();
 			xmlLoader.addEventListener(Event.COMPLETE, this.xmlLoaded, false, 0, true); 			
 			xmlLoader.load(new URLRequest("www/xml/applist.xml"));
 			
+		
 			backLoader = new Loader();
-			mcBack.addChild(backLoader);			
+			mcBack.addChild(backLoader);
 			backLoader.load(new URLRequest("www/img/apploaderBack.jpg"));
 			
 			var b:SimpleButton = new AppLoadButton();
 
 			loadbtn = new Wrapper(b);
 			loadbtn.x = 571;
-			loadbtn.y = 515;			
-			loadbtn.visible = false;		
+			loadbtn.y = 515;
+			loadbtn.visible = false;
 			
 			tfAppInfo.visible = false;
 			
@@ -73,10 +75,7 @@ package app.demo.appLoader
 			
 			loadbtn.addEventListener(MouseEvent.CLICK, loadClicked, false, 0, true);
 			
-
-
 			//addChild(appLoader);
-
 			this.addEventListener(TouchEvent.MOUSE_MOVE, this.tuioMoveHandler, false, 0, true);			
 			this.addEventListener(TouchEvent.MOUSE_DOWN, this.tuioDownEvent, false, 0, true);						
 			this.addEventListener(TouchEvent.MOUSE_UP, this.tuioUpEvent, false, 0, true);									
@@ -89,15 +88,14 @@ package app.demo.appLoader
 			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOverHandler, false, 0, true);
 			this.addEventListener(MouseEvent.ROLL_OVER, this.mouseRollOutHandler, false, 0, true);
 			
+			this.addEventListener(TouchEvent.LONG_PRESS, this.longPress, false, 0, true);
+			
 			if(this.stage)
 			{
 				addedToStage(new Event(Event.ADDED_TO_STAGE));
 			} else {
 				this.addEventListener(Event.ADDED_TO_STAGE, addedToStage, false, 0, true);
 			}
-
-			
-
 		}
 		
 		function addedToStage(e:Event)
@@ -117,6 +115,18 @@ package app.demo.appLoader
 			{			
 				osButton.x = osButton.stage.stageWidth + 14;
 				osButton.y = osButton.stage.stageHeight + 14;			
+			}
+		}
+		
+		function longPress(e:TouchEvent)
+		{
+			trace("Long press");
+
+			if(bAppLoaded)
+			{
+				osButton.visible = true;
+				osButton.x = e.stageX;
+				osButton.y = e.stageY;
 			}
 		}
 		
@@ -189,12 +199,13 @@ package app.demo.appLoader
 		{
 
 			osButton.setAppInfo(this, selectedButton.appName,  selectedButton.appDescription, "");
+			osButton.visible = false;
 			loadbtn.visible = false;						
 			appLoader = new Loader();
 			appLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, stageResized, false, 0, true);									
 			appLoader.load(new URLRequest(selectedButton.appName + ".swf"));			
 			//this.setChildIndex(appLoader, this.numChildren-1);
-				
+			bAppLoaded = true;
 			parent.addChild(appLoader);
 			parent.addChild(osButton);
 			parent.removeChild(this);
@@ -215,6 +226,7 @@ package app.demo.appLoader
 			appLoader.unload();
 
 			appLoader = null;
+			bAppLoaded = false;
 			buttonUnlock(selectedButton);			
 			/*
 			// GC Hack?
@@ -236,7 +248,7 @@ package app.demo.appLoader
 			this.mcAppArea.visible = false;
 			this.mcCatArea.visible = false;
 		}
-		
+
 		public function buttonDropped(b:AppLoaderButton)
 		{
 			if(selectedButton == null && b.hitTestObject(this.mcAppTarget))

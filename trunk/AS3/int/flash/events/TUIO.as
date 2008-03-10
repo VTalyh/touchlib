@@ -20,6 +20,7 @@
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;	
 	import caurina.transitions.Tweener;
+	import app.core.element.Wrapper;
 
 	public class TUIO
 	{		
@@ -40,6 +41,9 @@
 		static var bDebug:Boolean;			
 		static var myService:NetConnection;
     	static var responder:Responder;
+		static var eventListeners:Array;
+		
+		static var LONG_PRESS_TIME:Number = 4000;
     	
 	public static function init (s:DisplayObjectContainer, host:String, port:Number, debugXMLFile:String, dbug:Boolean = true):void
 	{
@@ -53,12 +57,16 @@
 			myService = new NetConnection();
 //			myService.connect("http://nui.mine.nu/amfphp/gateway.php");
 //			xmlPlaybackURL = "http://nui.mine.nu/amfphp/services/test.xml";			
+			
+			xmlPlaybackURL = debugXMLFile;
 			bDebug = dbug;				
 			bInitialized = true;
 			bRecording = false;		
 			bPlayback = false;									
 			objectArray = new Array();
 			idArray = new Array();
+			
+			eventListeners = new Array();
 			
 			try
 			{
@@ -82,6 +90,11 @@
 				recordedXML = <OSCPackets></OSCPackets>;
 				bRecording = false;			
 			}			
+		}
+		
+		public static function addEventListener(e:EventDispatcher)
+		{
+			eventListeners.push(e);
 		}
 		
 		public static function processMessage(msg:XML)
@@ -185,8 +198,6 @@
 							} catch (e)
 							{
 							}
-
-		
 						}
 						*/
 						
@@ -243,18 +254,37 @@
 							} else {
 								tuioobj.spr.x = x;
 								tuioobj.spr.y = y;
-								tuioobj.x = x;
-								tuioobj.y = y;
 								tuioobj.oldX = tuioobj.x;
 								tuioobj.oldY = tuioobj.y;
+								tuioobj.x = x;
+								tuioobj.y = y;
+
 								tuioobj.width = wd;
 								tuioobj.height = ht;
 								tuioobj.area = wd * ht;								
 								tuioobj.dX = X;
 								tuioobj.dY = Y;
 								tuioobj.setObjOver(dobj);
-								tuioobj.notifyMoved();
-							}  
+								
+								var d:Date = new Date();																
+								if(!( int(Y*1000) == 0 && int(Y*1000) == 0) )
+								{
+									tuioobj.notifyMoved();
+								}
+								
+								if( int(Y*250) == 0 && int(Y*250) == 0) {
+	
+									if(Math.abs(d.time - tuioobj.lastModifiedTime) > LONG_PRESS_TIME)
+									{
+										for(var ndx:int=0; ndx<eventListeners.length; ndx++)
+										{
+											eventListeners[ndx].dispatchEvent(tuioobj.getTouchEvent(TouchEvent.LONG_PRESS));
+										}
+
+										tuioobj.lastModifiedTime = d.time;																		
+									}
+								}
+							}
 
 							try
 							{
@@ -265,8 +295,8 @@
 								}
 							} catch (e)
 							{
-								trace("(" + e + ")Dispatch event failed " + tuioobj.ID);
-							}	
+								trace("(" + e + ") Dispatch event failed " + tuioobj.ID);
+							}
 						}
 					}
 				}
@@ -326,6 +356,7 @@
 		
         private static function activateDebugMode():void 
         {
+			
   				var format:TextFormat = new TextFormat("Verdana", 10, 0xFFFFFF);
 				debugText = new TextField();       
 				debugText.defaultTextFormat = format;
@@ -345,21 +376,21 @@
 				debugBtn.x=debugBtn.y=50;			 
 				thestage.addChildAt(debugBtn, thestage.numChildren-1);								
 				
-/* 				var recordBtn = new Sprite();						
+ 				var recordBtn = new Sprite();						
 				recordBtn.graphics.beginFill(0xFF0000);
-				recordBtn.graphics.drawRect(10, 70, 50, 50);	
+				recordBtn.graphics.drawRect(10, 90, 50, 50);	
 				recordBtn.addEventListener(MouseEvent.CLICK, toggleRecord);
 				var recordBtnW:Wrapper = new Wrapper(recordBtn);			
 				recordBtnW.alpha = 0.25; //recordBtnW.y = 120;				
-				//thestage.addChildAt(recordBtnW, thestage.numChildren-1);	
+				thestage.addChildAt(recordBtnW, thestage.numChildren-1);	
 				
 				var playbackBtn = new Sprite();						
 				playbackBtn.graphics.beginFill(0x00FF00);
-				playbackBtn.graphics.drawRect(10, 120, 50, 50);	
+				playbackBtn.graphics.drawRect(10, 140, 50, 50);	
 				playbackBtn.addEventListener(MouseEvent.CLICK, togglePlayback);
 				var playbackBtnW:Wrapper = new Wrapper(playbackBtn);			
 				playbackBtnW.alpha = 0.25; //playbackBtnW.y = 70;				
-				//thestage.addChildAt(playbackBtnW, thestage.numChildren-1); */
+				thestage.addChildAt(playbackBtnW, thestage.numChildren-1); 
         }	
         
         private static function xmlPlaybackLoaded(evt:Event) 
