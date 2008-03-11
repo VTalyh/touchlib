@@ -97,7 +97,7 @@ package app.demo.appLoader
 		
 		public function tuioDownEvent(e:TouchEvent)
 		{		
-		
+	
 			if(buttonLocked)
 				return;
 
@@ -110,11 +110,12 @@ package app.demo.appLoader
 
 		public function tuioUpEvent(e:TouchEvent)
 		{		
-		trace("Upevent");
-		
+			TUIO.removeObjectListener(e.ID, this);
+			trace("Upevent");
+
 			if(buttonLocked)
 			{
-				//apploader.buttonUnlock(this);				
+				apploader.buttonUnlock(this);				
 				return;	
 			}
 

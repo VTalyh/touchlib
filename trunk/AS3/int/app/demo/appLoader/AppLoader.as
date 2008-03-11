@@ -41,7 +41,7 @@ package app.demo.appLoader
 			osButton = new OSButton();
 			osButton.x = stage.stageWidth;
 			osButton.y = stage.stageHeight;
-			addChild(osButton);
+//			addChild(osButton);
 			selectedButton = null;
 			appButtons = new Array();
 			
@@ -228,13 +228,7 @@ package app.demo.appLoader
 			appLoader = null;
 			bAppLoaded = false;
 			buttonUnlock(selectedButton);			
-			/*
-			// GC Hack?
-			try {
-				new LocalConnection().connect('foo');
-				new LocalConnection().connect('foo');
-			} catch (e:*) {}
-			*/
+	
 			
 		}
 		

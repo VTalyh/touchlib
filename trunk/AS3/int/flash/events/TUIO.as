@@ -338,6 +338,15 @@
 			}
 		}
 		
+		public static function removeObjectListener(id:Number, reciever:Object)
+		{
+			var tmpObj:TUIOObject = getObjectById(id);			
+			if(tmpObj)
+			{
+				tmpObj.removeListener(reciever);				
+			}
+		}		
+		
 		public static function getObjectById(id:Number): TUIOObject
 		{
 			if(id == 0)
