@@ -34,6 +34,7 @@ CTouchScreen::CTouchScreen()
 	frame = 0;
 
 #ifdef WIN32
+	tracker = 0;	// just reset the pointer to be safe...
 	eventListMutex = CreateMutex(NULL, 0, NULL);
 #else
 	pthread_mutex_init(&eventListMutex, NULL);
@@ -91,8 +92,14 @@ void CTouchScreen::setBlobTracker(IBlobTracker* blobTracker)
 		return;
 	}
 
-	// free the old tracker
+	// free the old tracker	
+#ifdef WIN32
+	// Do not delete if it hasnt been allocated Seeb!
+	if(tracker)
+		delete tracker;
+#else
 	delete tracker;
+#endif
 
 	// save the new tracker and register with it
 	tracker = blobTracker;
