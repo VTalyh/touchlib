@@ -64,7 +64,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/NODEFAULTLIB:LIBCMTD.lib"
-				AdditionalDependencies="cv.lib cxcore.lib highgui.lib tinyxmld.lib cvcam.lib winmm.lib VideoWrapper.lib DSVLd.lib 1394camerad.lib"
+				AdditionalDependencies="cv.lib cxcore.lib highgui.lib tinyxmld.lib cvcam.lib winmm.lib ole32.lib VideoWrapper.lib DSVLd.lib 1394camerad.lib"
 				OutputFile="$(SolutionDir)\..\..\bin\$(ProjectName)d.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)/../../tinyxml/lib&quot;;&quot;$(OPENCV_HOME)/lib&quot;;&quot;$(VIDEOWRAPPER_HOME)\lib&quot;;&quot;$(DSVL_HOME)\lib&quot;;&quot;$(CMU_PATH)/lib&quot;"
