@@ -5,25 +5,25 @@
 	//import flash.text.TextField;
 	//import flash.text.TextFieldAutoSize;
 
-	public class TUIOCursor extends Sprite
+	internal class TUIOCursor extends Sprite
 	{
 		//private var DEBUG_TEXT:TextField;	
-		
+//---------------------------------------------------------------------------------------------------------------------------------------------	
 		public function TUIOCursor(debugText:String,color:int,pressure:Number,thewidth:Number, theheight:Number)
 		{
+			// FIXME: DO NOT!!!! PUT A FILL ON THIS CAUSE IT WILL CAUSE BUG IN UP/OVER/OUT Events...
 			super();
-			if(TUIO.bDebug) { 
-				graphics.lineStyle( 2, 0x000000);
-			if(pressure >= 0 && pressure != null){			
-				graphics.drawCircle(0 ,0, pressure+10);
-			}
-			else{
-				graphics.drawCircle(0 ,0, 15);
-			}
-			
-		
-			/*//graphics.beginFill(color , 1);	
-			// Draw us the lil' circle
+			if (TUIO.DEBUG) { 			
+				this.blendMode="invert";
+				this.graphics.lineStyle( 2, 0x000000);				
+				if(pressure > 0 && pressure != null){			
+					this.graphics.drawCircle(0 ,0, pressure+10);
+				} else {
+					this.graphics.drawCircle(0 ,0, 10);
+				}
+			/*	
+			// Draw a cross and filled circle
+			//graphics.beginFill(color , 1);	
 			graphics.beginFill(0xFF00FF , 1);	
 			graphics.drawCircle(0 ,0, 10);	
 			graphics.lineStyle( 1, 0x000000 );
@@ -31,12 +31,11 @@
 			graphics.lineTo( 0, 6 );
 			graphics.moveTo( -6, 0 );
 			graphics.lineTo( 6, 0 );
-			graphics.endFill();*/
-			this.blendMode="invert";
-			
+			graphics.endFill();
+			*/
 			/*
 			if (debugText != '' || debugText != null)
-			{
+			{	//TODO: GET ID/X/Y/Area Data into this text
 				var format:TextFormat = new TextFormat();
 				DEBUG_TEXT = new TextField();
 	        	format.font = 'Verdana';
@@ -53,20 +52,10 @@
 				DEBUG_TEXT.y = -13;  				
 				addChild(DEBUG_TEXT);
 			}*/
-		}
-			else
-			{			
-			/* hide cursor
-			graphics.lineStyle( 1, 0x000000 );
-			//graphics.drawRect((-thewidth/2)-10,(-theheight/2)-10,thewidth+20,theheight+20);
-			trace('--------------------------------------- w:' + width + ' h:' + height);
-			graphics.moveTo( 0, -5 );
-			graphics.lineTo( 0, 5 );
-			graphics.moveTo( -5, 0 );
-			graphics.lineTo( 5, 0 );
-			this.blendMode='invert';
-			*/
-			}	
+		} else {			
+			// HIDE CURSOR
+			   }	
 		}		
+//---------------------------------------------------------------------------------------------------------------------------------------------	
 	}
 }

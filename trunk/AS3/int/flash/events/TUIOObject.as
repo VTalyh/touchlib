@@ -24,13 +24,13 @@
 		public var isAlive:Boolean;		
 		public var obj:Object;
 		public var spr:Sprite;
-		public var trlx:Sprite;		
-		public var color:int;
+		//public var trlx:Sprite;		
+		//public var color:int;
 		public var startTime:Number;
 		public var lastModifiedTime:Number;
-		
 		private var aListeners:Array;
-
+		
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		public function TUIOObject (cls:String, id:int, px:Number, py:Number, dx:Number, dy:Number, sid:int = -1, ang:Number = 0, ht:Number=0.0, wd:Number=0.0, o:Object = null)
 		{
 			aListeners = new Array();
@@ -49,8 +49,8 @@
 			height = ht;
 			area = ht * wd;
 
-			spr = new TUIOCursor(ID.toString(),0xFFFFFF, int(area/-100000), int(ht/10000), int(ht/10000));			
-			
+			//spr = new TUIOCursor(ID.toString(),0xFFFFFF, int(area/-100000), int(ht/10000), int(ht/10000));			
+			spr = new TUIOCursor(ID.toString(),0xFFFFFF, int(area), int(wd), int(ht));		
 			spr.x = x;
 			spr.y = y;  		
 			
@@ -67,9 +67,8 @@
 			
 			startTime = d.time;
 			lastModifiedTime = startTime;
-
 		}
-		
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		public function notifyCreated()
 		{
 			if(obj)
@@ -88,7 +87,45 @@
 				}
 			}			
 		}
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------		
+		public function notifyMoved()
+		{
+			//var d:Date = new Date();
+			//lastModifiedTime = d.time;
+			
+			var localPoint:Point;
+			for(var i:int=0; i<aListeners.length; i++)
+			{
+				localPoint = aListeners[i].parent.globalToLocal(new Point(x, y));			
+				//trace("Notify moved"+ localPoint);
+				aListeners[i].dispatchEvent(new TouchEvent(TouchEvent.MOUSE_MOVE, true, false, x, y, localPoint.x, localPoint.y, 0, 0, aListeners[i], false,false,false, true, 0, TUIOClass, ID, sID, angle));	
+			}			
+		}
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		public function notifyRemoved()
+		{
+			isAlive = false;
+			var localPoint:Point;			
+			if(obj && obj.parent)
+			{				
+				localPoint = obj.parent.globalToLocal(new Point(x, y));				
+				obj.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_OUT, true, false, x, y, localPoint.x, localPoint.y, 0, 0, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));				
+				obj.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_UP, true, false, x, y, localPoint.x, localPoint.y, 0, 0, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));									
+			}			
+			for(var i:int=0; i<aListeners.length; i++)
+			{
+				if(aListeners[i] != obj)
+				{
+					localPoint = aListeners[i].parent.globalToLocal(new Point(x, y));				
+					aListeners[i].dispatchEvent(new TouchEvent(TouchEvent.MOUSE_UP, true, false, x, y, localPoint.x, localPoint.y, 0, 0, aListeners[i], false,false,false, true, 0, TUIOClass, ID, sID, angle));								
+				}
+			}
 
+			obj = null;			
+			
+			aListeners = new Array();
+		}
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		public function setObjOver(o:DisplayObject)
 		{
 			try {
@@ -118,7 +155,7 @@
 //				trace("ERROR " + e);
 			}
 		}
-		
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		public function addListener(reciever:Object)
 		{
 			for(var i:int = 0; i<aListeners.length; i++)
@@ -126,9 +163,9 @@
 				if(aListeners[i] == reciever)			
 					return;
 			}
-			
 			aListeners.push(reciever);
 		}
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		public function removeListener(reciever:Object)
 		{
 			for(var i:int = 0; i<aListeners.length; i++)
@@ -137,51 +174,9 @@
 					aListeners.splice(i, 1);
 			}
 		}
-		
-		public function kill()
-		{
-			isAlive = false;
-			var localPoint:Point;			
-			if(obj && obj.parent)
-			{				
-				localPoint = obj.parent.globalToLocal(new Point(x, y));				
-				obj.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_OUT, true, false, x, y, localPoint.x, localPoint.y, 0, 0, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));				
-				obj.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_UP, true, false, x, y, localPoint.x, localPoint.y, 0, 0, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle));									
-
-
-			}			
-
-			for(var i:int=0; i<aListeners.length; i++)
-			{
-				if(aListeners[i] != obj)
-				{
-					localPoint = aListeners[i].parent.globalToLocal(new Point(x, y));				
-					aListeners[i].dispatchEvent(new TouchEvent(TouchEvent.MOUSE_UP, true, false, x, y, localPoint.x, localPoint.y, 0, 0, aListeners[i], false,false,false, true, 0, TUIOClass, ID, sID, angle));								
-
-				}
-			}
-
-			obj = null;			
-			
-			aListeners = new Array();
-		}
-
-		public function notifyMoved()
-		{
-			//var d:Date = new Date();
-			//lastModifiedTime = d.time;
-			
-			var localPoint:Point;
-			for(var i:int=0; i<aListeners.length; i++)
-			{
-				localPoint = aListeners[i].parent.globalToLocal(new Point(x, y));			
-				//trace("Notify moved"+ localPoint);
-				aListeners[i].dispatchEvent(new TouchEvent(TouchEvent.MOUSE_MOVE, true, false, x, y, localPoint.x, localPoint.y, 0, 0, aListeners[i], false,false,false, true, 0, TUIOClass, ID, sID, angle));	
-			}			
-		}
-		
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// FIXME: we could use this function to replace a bunch of the stuff above.. 
-		public function getTouchEvent(szeventname:String):TouchEvent
+		public function getTouchEvent(event:String):TouchEvent
 		{
 			var localPoint:Point;
 			
@@ -191,9 +186,8 @@
 			} else {
 				localPoint = new Point(x, y);
 			}
-			
-
-			return new TouchEvent(szeventname, true, false, x, y, localPoint.x, localPoint.y, 0, 0, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle);
+			return new TouchEvent(event, true, false, x, y, localPoint.x, localPoint.y, 0, 0, obj, false,false,false, true, 0, TUIOClass, ID, sID, angle);
 		}
-	}
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	} 
 }
