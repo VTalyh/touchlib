@@ -112,7 +112,7 @@
 		{
 			for(i=0; i<aBlobs.length; i++)
 			{
-				aBlobs[i].kill();
+				aBlobs[i].notifyRemoved();
 			}			
 			
 			aBlobs = null;
