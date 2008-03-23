@@ -13,33 +13,44 @@ package app.core.action
 	public class Multitouchable extends MovieClip
 	{
 		protected var blobs:Array;		// blobs we are currently interacting with			
-		
-		function Multitouchable()
+//---------------------------------------------------------------------------------------------------------------------------------------------
+// CONSTRUCTOR
+//---------------------------------------------------------------------------------------------------------------------------------------------
+		public function Multitouchable()
 		{
 			blobs = new Array();
-		
+			// MOUSE
 			this.addEventListener(TouchEvent.MOUSE_MOVE, this.moveHandler, false, 0, true);			
 			this.addEventListener(TouchEvent.MOUSE_DOWN, this.downHandler, false, 0, true);						
 			this.addEventListener(TouchEvent.MOUSE_UP, this.upHandler, false, 0, true);									
 			this.addEventListener(TouchEvent.MOUSE_OVER, this.rollOverHandler, false, 0, true);									
 			this.addEventListener(TouchEvent.MOUSE_OUT, this.rollOutHandler, false, 0, true);		
-			
+			// TOUCH
 			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveHandler, false, 0, true);
 			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownHandler, false, 0, true);			
 			this.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpHandler, false, 0, true);
 			//this.addEventListener(MouseEvent.MOUSE_OVER, this.mouserollOverHandler, false, 0, true);									
 			//this.addEventListener(MouseEvent.MOUSE_OUT, this.mouserollOutHandler, false, 0, true);
-			
 			this.addEventListener(Event.ADDED_TO_STAGE, this.mtAddedToStage, false, 0, true);			
-	
 			this.addEventListener(Event.REMOVED_FROM_STAGE, this.mtRemovedFromStage, false, 0, true);						
-			
-			
-
-			
 		}
-		
-		public function mtAddedToStage(e:Event)
+//---------------------------------------------------------------------------------------------------------------------------------------------
+// PUBLIC METHODS
+//---------------------------------------------------------------------------------------------------------------------------------------------
+		public function getBlobInfo(id:int):Object
+		{
+			for(var i:int=0; i<blobs.length; i++)
+			{
+				if(blobs[i].id == id)
+					return blobs[i];
+			}			
+			
+			return null;
+		}
+//---------------------------------------------------------------------------------------------------------------------------------------------
+// PRIVATE METHODS
+//---------------------------------------------------------------------------------------------------------------------------------------------
+		private function mtAddedToStage(e:Event)
 		{
 			if(this.stage)
 			{
@@ -50,8 +61,8 @@ package app.core.action
 				this.stage.addEventListener(KeyboardEvent.KEY_DOWN, this.mtKeyPressed, false, 0, true);				
 			}
 		}
-		
-		public function mtRemovedFromStage(e:Event)
+//---------------------------------------------------------------------------------------------------------------------------------------------
+		private function mtRemovedFromStage(e:Event)
 		{
 			if(this.stage)
 			{
@@ -62,68 +73,50 @@ package app.core.action
 				this.stage.addEventListener(KeyboardEvent.KEY_DOWN, this.mtKeyPressed);				
 			}
 		}		
-		
-		function mtKeyPressed(k:KeyboardEvent)
+//---------------------------------------------------------------------------------------------------------------------------------------------
+		private function mtKeyPressed(k:KeyboardEvent)
 		{
-			trace(k.keyCode);
+			//trace(k.keyCode);
 
 			if(k.keyCode == 32)
 			{
+				trace('rotate');
 				var pt:Point = new Point(mouseX, mouseY);
-				
-			
 				pt = this.localToGlobal(pt);
-				
 				if(!this.hitTestPoint(pt.x, pt.y))
 					return;			
-				
-				
-				g = new GestureSimulator(this, 2, pt.x, pt.y, 2, 100);
-
+				g = new TUIOSimulator(this, 2, pt.x, pt.y, 2, 100);
 			}
 			if(k.keyCode == 17)
 			{
 				var pt:Point = new Point(mouseX, mouseY);
-				
-			
 				pt = this.localToGlobal(pt);
-				
 				if(!this.hitTestPoint(pt.x, pt.y))
 					return;			
-				
-				
-				g = new GestureSimulator(this, 1, pt.x, pt.y, 2, 100);
-
+				g = new TUIOSimulator(this, 1, pt.x, pt.y, 2, 100);
 			}			
 			
 			if(k.keyCode == 16)
 			{
 				var pt:Point = new Point(mouseX, mouseY);
-				
-			
 				pt = this.localToGlobal(pt);
-				
 				if(!this.hitTestPoint(pt.x, pt.y))
 					return;			
-				
-				
-				g = new GestureSimulator(this, 0, pt.x, pt.y, 2, 100);
-
+				g = new TUIOSimulator(this, 0, pt.x, pt.y, 2, 100);
 			}			
 		}
-
-		function idExists(id:int):Boolean
+//---------------------------------------------------------------------------------------------------------------------------------------------
+		private function idExists(id:int):Boolean
 		{
 			for(var i=0; i<blobs.length; i++)
 			{
 				if(blobs[i].id == id)
 					return true;
 			}
-			
 			return false;
 		}
-	
-		function addBlob(id:int, origX:Number, origY:Number, c:Boolean):void
+//---------------------------------------------------------------------------------------------------------------------------------------------
+		private function addBlob(id:int, origX:Number, origY:Number, c:Boolean):void
 		{
 			if(idExists(id))
 				return;
@@ -133,8 +126,8 @@ package app.core.action
 			
 			handleBlobCreated(id, origX, origY);
 		}
-		
-		function removeBlob(id:int):void
+//---------------------------------------------------------------------------------------------------------------------------------------------
+		private function removeBlob(id:int):void
 		{
 			for(var i=0; i<blobs.length; i++)
 			{
@@ -148,7 +141,7 @@ package app.core.action
 				}
 			}
 		}	
-		
+//---------------------------------------------------------------------------------------------------------------------------------------------
 		// One of the blobs changed position
 		private function updateBlob(id:int, origX:Number, origY:Number):void
 		{
@@ -178,20 +171,9 @@ package app.core.action
 			}
 			
 
-		}			
-		
-		public function getBlobInfo(id:int):Object
-		{
-			for(var i:int=0; i<blobs.length; i++)
-			{
-				if(blobs[i].id == id)
-					return blobs[i];
-			}			
-			
-			return null;
 		}
-		
-		public function downHandler(e:TouchEvent):void
+//---------------------------------------------------------------------------------------------------------------------------------------------
+		private function downHandler(e:TouchEvent):void
 		{
 //			trace("tuio down handler");			
 			if(e.stageX == 0 && e.stageY == 0)
@@ -206,17 +188,16 @@ package app.core.action
 			handleDownEvent(e.ID, curPt.x, curPt.y, e.target);
 			e.stopPropagation();			
 		}
-
-		
-		public function upHandler(e:TouchEvent):void
+//---------------------------------------------------------------------------------------------------------------------------------------------
+		private function upHandler(e:TouchEvent):void
 		{
 //			trace("tuio up handler");			
 			handleUpEvent(e.ID);
 			removeBlob(e.ID);
 			e.stopPropagation();
 		}		
-		
-		public function moveHandler(e:TouchEvent):void
+//---------------------------------------------------------------------------------------------------------------------------------------------
+		private function moveHandler(e:TouchEvent):void
 		{
 //			trace("tuio Move handler");
 			if(e.stageX == 0 && e.stageY == 0)
@@ -237,8 +218,8 @@ package app.core.action
 			
 			e.stopPropagation();						
 		}		
-		
-		public function mouseDownHandler(e:MouseEvent):void
+//---------------------------------------------------------------------------------------------------------------------------------------------
+		private function mouseDownHandler(e:MouseEvent):void
 		{
 			//trace("Mouse down");
 			var curPt:Point = this.globalToLocal(new Point(e.stageX, e.stageY));			
@@ -249,8 +230,8 @@ package app.core.action
 			
 
 		}
-		
-		public function mouseMoveHandler(e:MouseEvent):void
+//---------------------------------------------------------------------------------------------------------------------------------------------
+		private function mouseMoveHandler(e:MouseEvent):void
 		{
 			//trace("Mouse move");			
 			var curPt:Point = this.globalToLocal(new Point(e.stageX, e.stageY));						
@@ -263,12 +244,11 @@ package app.core.action
 				updateBlob(0, curPt.x, curPt.y);				
 			}
 			e.stopPropagation();			
-			
 			handleMoveEvent(0, curPt.x, curPt.y, e.target);
 			
 		}
-		
-		public function stageMouseMoveHandler(e:MouseEvent):void
+//---------------------------------------------------------------------------------------------------------------------------------------------
+		private function stageMouseMoveHandler(e:MouseEvent):void
 		{
 			//trace("Mouse move");			
 			var curPt:Point = this.globalToLocal(new Point(e.stageX, e.stageY));						
@@ -281,20 +261,19 @@ package app.core.action
 				updateBlob(0, curPt.x, curPt.y);				
 			}
 			e.stopPropagation();			
-			
 			handleMoveEvent(0, curPt.x, curPt.y, e.target);
 			
 		}		
-		
-		public function mouseUpHandler(e:MouseEvent):void
+//---------------------------------------------------------------------------------------------------------------------------------------------
+		private function mouseUpHandler(e:MouseEvent):void
 		{
 			//trace("Mouse up");
 			handleUpEvent(0);
 			removeBlob(0);			
 			e.stopPropagation();	
 		}		
-		
-		public function rollOverHandler(e:TouchEvent):void
+//---------------------------------------------------------------------------------------------------------------------------------------------
+		private function rollOverHandler(e:TouchEvent):void
 		{
 			//trace("Rollover");
 			if(e.stageX == 0 && e.stageY == 0)
@@ -307,13 +286,11 @@ package app.core.action
 				TUIO.listenForObject(e.ID, this);			
 				addBlob(e.ID, curPt.x, curPt.y, false);
 			}
-
 			handleRollOverEvent(e.ID, curPt.x, curPt.y);			
-			
 			e.stopPropagation();									
 		}
-		
-		public function rollOutHandler(e:TouchEvent):void
+//---------------------------------------------------------------------------------------------------------------------------------------------
+		private function rollOutHandler(e:TouchEvent):void
 		{
 			//trace("Rollout");
 			if(e.stageX == 0 && e.stageY == 0)
@@ -327,12 +304,12 @@ package app.core.action
 			//	removeBlob(e.ID);			
 			
 			e.stopPropagation();									
-		}		
-		
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		
-		/* override these events */
-		
+		}
+//---------------------------------------------------------------------------------------------------------------------------------------------
+// PUBLIC OVERRIDES 
+// TODO: Use "interface" [RotateScale extends Touchable implements ITouch]
+// TODO: MAKE ALL IDENTICAL (other than first two)
+//---------------------------------------------------------------------------------------------------------------------------------------------
 		public function handleBlobCreated(id:int, mx:Number, my:Number)
 		{
 		}
@@ -340,7 +317,7 @@ package app.core.action
 		public function handleBlobRemoved(id:int)
 		{
 		}
-		
+		//	REST MAKE IDENTICAL
 		public function handleDownEvent(id:int, mx:Number, my:Number, targetObj)
 		{
 		}
@@ -359,7 +336,7 @@ package app.core.action
 
 		public function handleMoveEvent(id:int, mx:Number, my:Number, targetObj)
 		{
-//			trace("Handle move event");
 		}
+//---------------------------------------------------------------------------------------------------------------------------------------------
 	}
 }

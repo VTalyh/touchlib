@@ -1,12 +1,11 @@
 ﻿package flash.events {
 	
 	import flash.display.DisplayObject;
-	import flash.display.DisplayObjectContainer;
 	import flash.events.Event;	
 	
 	public class TouchEvent extends Event
 	{
-		public var TUIOClass:String;
+		public var TUIO_TYPE:String;
 		public var sID:int;
 		public var ID:int;
 		public var angle:Number;
@@ -39,11 +38,12 @@
 		public static const SWIPE_RIGHT:String = "flash.events.TouchEvent.SWIPE_RIGHT";
 		public static const SWIPE_UP:String = "flash.events.TouchEvent.SWIPE_UP";
 		public static const SWIPE_DOWN:String = "flash.events.TouchEvent.SWIPE_DOWN";
-		
+//---------------------------------------------------------------------------------------------------------------------------------------------	
+// CONSTRUCTOR
 //---------------------------------------------------------------------------------------------------------------------------------------------
-		public function TouchEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false, stageX:Number = 0, stageY:Number = 0, localX:Number = 0, localY:Number = 0, oldX:Number = 0, oldY:Number = 0, relatedObject:DisplayObject = null, ctrlKey:Boolean = false, altKey:Boolean = false, shiftKey:Boolean = false, buttonDown:Boolean = false, delta:int = 0, TUIOClass:String = "2Dcur", ID:int = -1, sID:int = -1, angle:Number = 0.0)
+		public function TouchEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false, stageX:Number = 0, stageY:Number = 0, localX:Number = 0, localY:Number = 0, oldX:Number = 0, oldY:Number = 0, relatedObject:DisplayObject = null, ctrlKey:Boolean = false, altKey:Boolean = false, shiftKey:Boolean = false, buttonDown:Boolean = false, delta:int = 0, TUIO_TYPE:String = "2Dcur", ID:int = -1, sID:int = -1, angle:Number = 0.0)
 		{
-			this.TUIOClass = TUIOClass;
+			this.TUIO_TYPE = TUIO_TYPE;
 			this.sID = sID;
 			this.ID = ID;
 			this.angle = angle;

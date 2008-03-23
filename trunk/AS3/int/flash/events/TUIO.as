@@ -48,18 +48,21 @@ package flash.events {
 		private static var RECORDED_XML:XML;		
 		private static var SERVICE:NetConnection;
     	private static var RESPONDER:Responder;
-		//--------------------------------------
+		//--------------------------------------		
+		private static var ID_ARRAY:Array; 		
 		private static var EVENT_ARRAY:Array;		
-		private static var ID_ARRAY:Array; 			
-		public static var objectArray:Array;		
+		private static var OBJECT_ARRAY:Array;		
 		//--------------------------------------
 		private static var SWIPE_THRESHOLD:Number = 1000;
 		private static var HOLD_THRESHOLD:Number = 4000;
+//---------------------------------------------------------------------------------------------------------------------------------------------	
+// CONSTRUCTOR - SINGLETON
 //---------------------------------------------------------------------------------------------------------------------------------------------		
 		public static function init ($STAGE:DisplayObjectContainer, $HOST:String, $PORT:Number, $PLAYBACK_URL:String, $DEBUG:Boolean = true):void
 		{
 			if (INITIALIZED) { trace("TUIO Already Initialized!"); return; }	
 			
+			// FIXME: VERIFY STAGE IS AVAILABLE
 			STAGE = $STAGE.stage;
 			STAGE.align = "TL";
 			STAGE.scaleMode = "noScale";				
@@ -75,7 +78,7 @@ package flash.events {
 			INITIALIZED = true;
 			RECORDING = false;		
 			//PLAYBACK = false;									
-			objectArray = new Array();
+			OBJECT_ARRAY = new Array();
 			ID_ARRAY = new Array();
 			
 			EVENT_ARRAY = new Array();
@@ -104,6 +107,49 @@ package flash.events {
 			}			
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
+// PUBLIC METHODS
+//---------------------------------------------------------------------------------------------------------------------------------------------
+		public static function addEventListener(e:EventDispatcher)
+		{
+			EVENT_ARRAY.push(e);
+		}
+//---------------------------------------------------------------------------------------------------------------------------------------------
+		public static function listenForObject(id:Number, reciever:Object)
+		{
+			var tmpObj:TUIOObject = getObjectById(id);			
+			if(tmpObj)
+			{
+				tmpObj.addListener(reciever);				
+			}
+		}
+//---------------------------------------------------------------------------------------------------------------------------------------------
+		public static function getObjectById(id:Number): TUIOObject
+		{
+			if(id == 0)
+			{
+				return new TUIOObject("mouse", 0, STAGE.mouseX, STAGE.mouseY, 0, 0, 0, 0, 10, 10, null);
+			}
+			for(var i=0; i<OBJECT_ARRAY.length; i++)
+			{
+				if(OBJECT_ARRAY[i].ID == id)
+				{
+					return OBJECT_ARRAY[i];
+				}
+			}
+			return null;
+		}
+//---------------------------------------------------------------------------------------------------------------------------------------------
+		public static function removeObjectListener(id:Number, reciever:Object)
+		{
+			var tmpObj:TUIOObject = getObjectById(id);			
+			if(tmpObj)
+			{
+				tmpObj.removeListener(reciever);				
+			}
+		}		
+//---------------------------------------------------------------------------------------------------------------------------------------------
+// PRIVATE METHODS
+//---------------------------------------------------------------------------------------------------------------------------------------------
 		private static function processMessage(msg:XML)
 		{
 			var fseq:String;
@@ -118,16 +164,16 @@ package flash.events {
 			{
 				if(node.ARGUMENT[0] && node.ARGUMENT[0].@VALUE == "alive")
 				{
-					for each (var obj1:TUIOObject in objectArray)
+					for each (var obj1:TUIOObject in OBJECT_ARRAY)
 					{
-						obj1.isAlive = false;
+						obj1.TUIO_ALIVE = false;
 					}
 					
 					var newIdArray:Array = new Array();					
 					for each(var aliveItem:XML in node.ARGUMENT.(@VALUE != "alive"))
 					{
 						if(getObjectById(aliveItem.@VALUE))
-							getObjectById(aliveItem.@VALUE).isAlive = true;
+							getObjectById(aliveItem.@VALUE).TUIO_ALIVE = true;
 
 					}   
 					ID_ARRAY = newIdArray;
@@ -176,13 +222,13 @@ package flash.events {
 							if(tuioobj == null)
 							{
 								tuioobj = new TUIOObject("2Dobj", id, x, y, X, Y, sID, a, 0, 0, dobj);
-								STAGE.addChild(tuioobj.spr);
+								STAGE.addChild(tuioobj.TUIO_CURSOR);
 								
-								objectArray.push(tuioobj);
+								OBJECT_ARRAY.push(tuioobj);
 								tuioobj.notifyCreated();								
 							} else {
-								tuioobj.spr.x = x;
-								tuioobj.spr.y = y;								
+								tuioobj.TUIO_CURSOR.x = x;
+								tuioobj.TUIO_CURSOR.y = y;								
 								tuioobj.x = x;
 								tuioobj.y = y;
 								tuioobj.oldX = tuioobj.x;
@@ -196,11 +242,11 @@ package flash.events {
 							
 							try
 							{
-								if(tuioobj.obj && tuioobj.obj.parent)
+								if(tuioobj.TUIO_OBJECT && tuioobj.TUIO_OBJECT.parent)
 								{							
 									
-									var localPoint:Point = tuioobj.obj.parent.globalToLocal(stagePoint);							
-									tuioobj.obj.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_MOVE, true, false, x, y, localPoint.x, localPoint.y, tuioobj.oldX, tuioobj.oldY, tuioobj.obj, false,false,false, true, m, "2Dobj", id, sID, a));
+									var localPoint:Point = tuioobj.TUIO_OBJECT.parent.globalToLocal(stagePoint);							
+									tuioobj.TUIO_OBJECT.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_MOVE, true, false, x, y, localPoint.x, localPoint.y, tuioobj.oldX, tuioobj.oldY, tuioobj.TUIO_OBJECT, false,false,false, true, m, "2Dobj", id, sID, a));
 								}
 							} catch (e)
 							{
@@ -239,7 +285,7 @@ package flash.events {
 									ht = Number(node.ARGUMENT[8].@VALUE) * STAGE.stageHeight;
 							} catch (e)
 							{
-								trace("Error parsing");
+								trace("Error Parsing TUIO XML");
 							}
 							
 							//trace("Blob : ("+id + ")" + x + " " + y + " " + wd + " " + ht);
@@ -255,12 +301,12 @@ package flash.events {
 							if(tuioobj == null)
 							{
 								tuioobj = new TUIOObject("2Dcur", id, x, y, X, Y, -1, 0, wd, ht, dobj);
-								STAGE.addChild(tuioobj.spr);								
-								objectArray.push(tuioobj);
+								STAGE.addChild(tuioobj.TUIO_CURSOR);								
+								OBJECT_ARRAY.push(tuioobj);
 								tuioobj.notifyCreated();
 							} else {
-								tuioobj.spr.x = x;
-								tuioobj.spr.y = y;
+								tuioobj.TUIO_CURSOR.x = x;
+								tuioobj.TUIO_CURSOR.y = y;
 								tuioobj.oldX = tuioobj.x;
 								tuioobj.oldY = tuioobj.y;
 								tuioobj.x = x;
@@ -299,14 +345,12 @@ package flash.events {
 								 */
 								
 								if( int(Y*250) == 0 && int(Y*250) == 0) {
-	
 									if(Math.abs(d.time - tuioobj.lastModifiedTime) > HOLD_THRESHOLD)
 									{
 										for(var ndx:int=0; ndx<EVENT_ARRAY.length; ndx++)
 										{
 											EVENT_ARRAY[ndx].dispatchEvent(tuioobj.getTouchEvent(TouchEvent.LONG_PRESS));
 										}
-
 										tuioobj.lastModifiedTime = d.time;																		
 									}
 								}
@@ -314,10 +358,10 @@ package flash.events {
 
 							try
 							{
-								if(tuioobj.obj && tuioobj.obj.parent)
+								if(tuioobj.TUIO_OBJECT && tuioobj.TUIO_OBJECT.parent)
 								{							
-									var localPoint:Point = tuioobj.obj.parent.globalToLocal(stagePoint);							
-									tuioobj.obj.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_MOVE, true, false, x, y, localPoint.x, localPoint.y, tuioobj.oldX, tuioobj.oldY, tuioobj.obj, false,false,false, true, m, "2Dcur", id, 0, 0));
+									var localPoint:Point = tuioobj.TUIO_OBJECT.parent.globalToLocal(stagePoint);							
+									tuioobj.TUIO_OBJECT.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_MOVE, true, false, x, y, localPoint.x, localPoint.y, tuioobj.oldX, tuioobj.oldY, tuioobj.TUIO_OBJECT, false,false,false, true, m, "2Dcur", id, 0, 0));
 								}
 							} catch (e)
 							{
@@ -333,65 +377,26 @@ package flash.events {
 				DEBUG_TEXT.y = -2000;
 				DEBUG_TEXT.x = -2000;		
 			}	
-			for (var i=0; i<objectArray.length; i++ )
+			for (var i=0; i<OBJECT_ARRAY.length; i++ )
 			{	
-				if(objectArray[i].isAlive == false)
+				if(OBJECT_ARRAY[i].TUIO_ALIVE == false)
 				{
-					objectArray[i].notifyRemoved();
-					STAGE.removeChild(objectArray[i].spr);
-					objectArray.splice(i, 1);
+					OBJECT_ARRAY[i].notifyRemoved();
+					STAGE.removeChild(OBJECT_ARRAY[i].TUIO_CURSOR);
+					OBJECT_ARRAY.splice(i, 1);
 					i--;
 
 				} else {
 					if(DEBUG)
-					{	var tmp = (int(objectArray[i].area)/-100000);
+					{	var tmp = (int(OBJECT_ARRAY[i].area)/-100000);
 						//trace('area: '+tmp);
-						DEBUG_TEXT.appendText("  " + (i + 1) +" - " +objectArray[i].ID + "  X:" + int(objectArray[i].x) + "  Y:" + int(objectArray[i].y) +
+						DEBUG_TEXT.appendText("  " + (i + 1) +" - " +OBJECT_ARRAY[i].ID + "  X:" + int(OBJECT_ARRAY[i].x) + "  Y:" + int(OBJECT_ARRAY[i].y) +
 						"  A:" + int(tmp) + "  \n");						
 						DEBUG_TEXT.x = STAGE.stageWidth-200;
 						DEBUG_TEXT.y = 25;	
 					}
 					}
 			}
-		}
-//---------------------------------------------------------------------------------------------------------------------------------------------
-		public static function addEventListener(e:EventDispatcher)
-		{
-			EVENT_ARRAY.push(e);
-		}
-//---------------------------------------------------------------------------------------------------------------------------------------------
-		public static function listenForObject(id:Number, reciever:Object)
-		{
-			var tmpObj:TUIOObject = getObjectById(id);			
-			if(tmpObj)
-			{
-				tmpObj.addListener(reciever);				
-			}
-		}
-//---------------------------------------------------------------------------------------------------------------------------------------------
-		public static function removeObjectListener(id:Number, reciever:Object)
-		{
-			var tmpObj:TUIOObject = getObjectById(id);			
-			if(tmpObj)
-			{
-				tmpObj.removeListener(reciever);				
-			}
-		}		
-//---------------------------------------------------------------------------------------------------------------------------------------------
-		public static function getObjectById(id:Number): TUIOObject
-		{
-			if(id == 0)
-			{
-				return new TUIOObject("mouse", 0, STAGE.mouseX, STAGE.mouseY, 0, 0, 0, 0, 10, 10, null);
-			}
-			for(var i=0; i<objectArray.length; i++)
-			{
-				if(objectArray[i].ID == id)
-				{
-					return objectArray[i];
-				}
-			}
-			return null;
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
         private static function activateDebugMode():void 
@@ -454,10 +459,9 @@ package flash.events {
         {
 			trace("Playing from XML file...");
 			PLAYBACK_XML = new XML(PLAYBACK_LOADER.data);	
-			trace(PLAYBACK_XML.element.length);
 			STAGE.addEventListener(Event.ENTER_FRAME, frameUpdate);
 			FRAME_RATE = STAGE.frameRate;
-			STAGE.frameRate = 40;		
+			STAGE.frameRate = 30;		
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
 		private static function frameUpdate(evt:Event)
@@ -512,7 +516,7 @@ package flash.events {
 			if(!RECORDING){
 			RECORDING = true;
 			e.target.alpha = 0.9;		
-			trace(e.target.parent);
+			//trace(e.target.parent);
 			trace('-----------------------------------------------------------------------------------------------------');		
 			trace('-------------------------------------- Record ON ----------------------------------------------------');
 			trace('-----------------------------------------------------------------------------------------------------');	
@@ -534,7 +538,7 @@ package flash.events {
 		{	
 		DEBUG_TEXT.x = DEBUG_TEXT.y = 5;
 		DEBUG_TEXT.text = result;
-		trace(result);
+		//trace(result);
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
         private static function dataHandler(event:DataEvent):void 

@@ -9,6 +9,8 @@
 	{
 		//private var DEBUG_TEXT:TextField;	
 //---------------------------------------------------------------------------------------------------------------------------------------------	
+// CONSTRUCTOR
+//---------------------------------------------------------------------------------------------------------------------------------------------	
 		public function TUIOCursor(debugText:String,color:int,pressure:Number,thewidth:Number, theheight:Number)
 		{
 			// FIXME: DO NOT!!!! PUT A FILL ON THIS CAUSE IT WILL CAUSE BUG IN UP/OVER/OUT Events...
