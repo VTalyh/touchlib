@@ -23,6 +23,7 @@ package flash.events {
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;	
+	import flash.utils.getTimer;
 	//import caurina.transitions.Tweener;
 
 	public class TUIO
@@ -36,7 +37,7 @@ package flash.events {
 		//-------------------------------------- DEBUG VARS			
 		internal static var DEBUG:Boolean;				
 		private static var INITIALIZED:Boolean;		
-		private static var PLAYBACK:Boolean;			
+		//private static var PLAYBACK:Boolean;			
 		private static var RECORDING:Boolean;			
 		private static var DEBUG_TEXT:TextField;	
 		private static var DEBUG_BUTTON:Sprite;			
@@ -80,7 +81,6 @@ package flash.events {
 			//PLAYBACK = false;									
 			OBJECT_ARRAY = new Array();
 			ID_ARRAY = new Array();
-			
 			EVENT_ARRAY = new Array();
 			
 			try
@@ -152,6 +152,10 @@ package flash.events {
 //---------------------------------------------------------------------------------------------------------------------------------------------
 		private static function processMessage(msg:XML)
 		{
+			// SPEEDTEST: For speed testing the function
+			if (DEBUG)
+			var time:Number = getTimer();
+			
 			var fseq:String;
 			var node:XML;
 			for each(node in msg.MESSAGE)
@@ -184,12 +188,10 @@ package flash.events {
 			{
 				if(node.ARGUMENT[0])
 				{
-					var type:String;
-										
+					var type:String;	
 					if(node.@NAME == "/tuio/2Dobj")
 					{
 						/*
-						
 						// fixme: ensure everything is working properly here.
 						
 						type = node.ARGUMENT[0].@VALUE;				
@@ -253,7 +255,6 @@ package flash.events {
 							}
 						}
 						*/
-						
 					} 
 					else if(node.@NAME == "/tuio/2Dcur")
 					{
@@ -374,8 +375,7 @@ package flash.events {
 			if(DEBUG)
 			{
 				DEBUG_TEXT.text = "";
-				DEBUG_TEXT.y = -2000;
-				DEBUG_TEXT.x = -2000;		
+				DEBUG_TEXT.visible = false;
 			}	
 			for (var i=0; i<OBJECT_ARRAY.length; i++ )
 			{	
@@ -388,15 +388,18 @@ package flash.events {
 
 				} else {
 					if(DEBUG)
-					{	var tmp = (int(OBJECT_ARRAY[i].area)/-100000);
-						//trace('area: '+tmp);
+					{	
+						var tmp = (int(OBJECT_ARRAY[i].area)/-100000);
 						DEBUG_TEXT.appendText("  " + (i + 1) +" - " +OBJECT_ARRAY[i].ID + "  X:" + int(OBJECT_ARRAY[i].x) + "  Y:" + int(OBJECT_ARRAY[i].y) +
-						"  A:" + int(tmp) + "  \n");						
-						DEBUG_TEXT.x = STAGE.stageWidth-200;
-						DEBUG_TEXT.y = 25;	
+						"  A:" + int(tmp) + "  \n");	
+						DEBUG_TEXT.visible = true;
 					}
 					}
 			}
+		// SPEEDTEST END
+		//trace("SPEEDTEST: " +  time + " - "  + getTimer() + " = " + (getTimer() - time));
+		if(DEBUG)
+		DEBUG_TEXT.appendText("  T - " + (getTimer() - time)+"  \n");	
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
         private static function activateDebugMode():void 
@@ -408,7 +411,9 @@ package flash.events {
 				DEBUG_TEXT.background = true;	
 				DEBUG_TEXT.backgroundColor = 0x000000;	
 				DEBUG_TEXT.border = true;	
-				DEBUG_TEXT.borderColor = 0x333333;	
+				DEBUG_TEXT.borderColor = 0x333333;							
+				DEBUG_TEXT.x = STAGE.stageWidth-200;
+				DEBUG_TEXT.y = 25;
 				STAGE.addChild( DEBUG_TEXT );						
 				STAGE.setChildIndex(DEBUG_TEXT, STAGE.numChildren-1);	
 		
@@ -442,7 +447,6 @@ package flash.events {
 		private static function togglePlayback(e:Event)
 		{ 	
 			PLAYBACK_URL = "http://nui.mine.nu/amfphp/services/test.xml";		
-			
 			if(PLAYBACK_URL != "")
 				 {	
 					PLAYBACK_BUTTON.alpha = 0.9;
@@ -472,7 +476,6 @@ package flash.events {
 				delete PLAYBACK_XML.OSCPACKET[0];		
 				
 				//if (PLAYBACK_XML.length) { }
-
 				PLAYBACK_BUTTON.alpha = 0.25;		
 				//STAGE.frameRate = FRAME_RATE;
 				//trace(STAGE.frameRate);
@@ -488,7 +491,8 @@ package flash.events {
 			e.target.alpha = 0.85;		
 			//e.target.scaleX = e.target.scaleY = 1.0;		
 			RECORD_BUTTON.visible = true;
-			PLAYBACK_BUTTON.visible = true;
+			PLAYBACK_BUTTON.visible = true;	
+			DEBUG_TEXT.visible = true;
 			}
 			else{
 			DEBUG=false;
@@ -497,6 +501,7 @@ package flash.events {
 			//e.target.scaleX = e.target.scaleY = 0.5;		
 			RECORD_BUTTON.visible = false;
 			PLAYBACK_BUTTON.visible = false;
+			DEBUG_TEXT.visible = false;
 			}
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
@@ -510,9 +515,8 @@ package flash.events {
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
 		private static function toggleRecord(e:Event)
-		{ 	
+		{ 		
 			var RESPONDER = new Responder(saveSession_Result, onFault);
-			
 			if(!RECORDING){
 			RECORDING = true;
 			e.target.alpha = 0.9;		
@@ -520,7 +524,8 @@ package flash.events {
 			trace('-----------------------------------------------------------------------------------------------------');		
 			trace('-------------------------------------- Record ON ----------------------------------------------------');
 			trace('-----------------------------------------------------------------------------------------------------');	
-			SERVICE.call("touchlib.clearSession", RESPONDER);
+			SERVICE.call("touchlib.clearSession", RESPONDER);			
+			RECORDED_XML = <OSCPackets></OSCPackets>;	
 			}
 			else{
 			RECORDING = false;
@@ -530,15 +535,14 @@ package flash.events {
 			trace('-----------------------------------------------------------------------------------------------------');	
 			SERVICE.call("touchlib.saveSession", RESPONDER, RECORDED_XML.toXMLString());
 			//trace(RECORDED_XML.toString());		
-			trace('-------------------------------------- Recording END ------------------------------------------------');
+			trace('-------------------------------------- Recording END ------------------------------------------------');			
 			}
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
 		private static function saveSession_Result(result)
 		{	
-		DEBUG_TEXT.x = DEBUG_TEXT.y = 5;
 		DEBUG_TEXT.text = result;
-		//trace(result);
+		trace(result);			
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
         private static function dataHandler(event:DataEvent):void 
