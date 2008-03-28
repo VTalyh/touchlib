@@ -81,6 +81,7 @@ CTouchScreen::CTouchScreen()
 	calibrationStep = 0;
 
         // create a default blob tracker
+	this->tracker = NULL;
         setBlobTracker(new CBlobTracker());
 }
 
@@ -93,13 +94,9 @@ void CTouchScreen::setBlobTracker(IBlobTracker* blobTracker)
 	}
 
 	// free the old tracker	
-#ifdef WIN32
-	// Do not delete if it hasnt been allocated Seeb!
-	if(tracker)
+	if (tracker != NULL) {
 		delete tracker;
-#else
-	delete tracker;
-#endif
+	}
 
 	// save the new tracker and register with it
 	tracker = blobTracker;
