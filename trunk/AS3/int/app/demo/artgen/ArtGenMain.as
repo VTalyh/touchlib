@@ -251,7 +251,7 @@ package app.demo.artgen
 
 		}
 		
-		public override function handleBlobCreated(id:int, mx:Number, my:Number)
+		public override function handleBlobCreated(id:int, mx:Number, my:Number):void
 		{
 			var swarm:Swarm;
 			swarm = new Swarm(id, mx, my);
@@ -264,7 +264,7 @@ package app.demo.artgen
 			aSwarms.push(swarm);
 		}
 		
-		public override function handleBlobRemoved(id:int)
+		public override function handleBlobRemoved(id:int):void
 		{
 			for(var i:int = 0; i<aSwarms.length; i++)
 			{
@@ -278,7 +278,7 @@ package app.demo.artgen
 			
 		}		
 
-		public override function handleMoveEvent(id:int, mx:Number, my:Number, targetObj)
+		public override function handleMoveEvent(id:int, mx:Number, my:Number, targetObj):void
 		{
 			for(var i:int = 0; i<aSwarms.length; i++)
 			{
