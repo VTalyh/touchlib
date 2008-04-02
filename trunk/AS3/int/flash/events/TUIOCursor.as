@@ -11,19 +11,20 @@
 //---------------------------------------------------------------------------------------------------------------------------------------------	
 // CONSTRUCTOR
 //---------------------------------------------------------------------------------------------------------------------------------------------	
-		public function TUIOCursor(debugText:String,color:int,pressure:Number,thewidth:Number, theheight:Number)
+		public function TUIOCursor($text:String, $color:int, $pressure:Number, $width:Number, $height:Number)
 		{
-			// FIXME: DO NOT!!!! PUT A FILL ON THIS CAUSE IT WILL CAUSE BUG IN UP/OVER/OUT Events...
+			// FIXME: DO NOT!!!! PUT A FILL ON THIS CAUSE IT WILL CAUSE BUG IN UP/OVER/OUT Events... ------------------------
 			super();
 			if (TUIO.DEBUG) { 			
 				this.blendMode="invert";
-				this.graphics.lineStyle( 2, 0x000000);				
-				if(pressure > 0 && pressure != null){			
+				this.graphics.lineStyle( 2, 0x000000);	
+				this.graphics.drawCircle(0 ,0, 10);			
+				/*	
+				* if(pressure > 0 && pressure != null){			
 					this.graphics.drawCircle(0 ,0, pressure+10);
 				} else {
-					this.graphics.drawCircle(0 ,0, 10);
+					
 				}
-			/*	
 			// Draw a cross and filled circle
 			//graphics.beginFill(color , 1);	
 			graphics.beginFill(0xFF00FF , 1);	
@@ -36,8 +37,9 @@
 			graphics.endFill();
 			*/
 			/*
-			if (debugText != '' || debugText != null)
-			{	//TODO: GET ID/X/Y/Area Data into this text
+			if ($text != '' || $text != null)
+			{	
+			//TODO: GET ID/X/Y/Area Data into this text ------------------------
 				var format:TextFormat = new TextFormat();
 				DEBUG_TEXT = new TextField();
 	        	format.font = 'Verdana';
@@ -49,7 +51,7 @@
 				DEBUG_TEXT.backgroundColor = 0x000000;	
 				DEBUG_TEXT.border = true;	
 				DEBUG_TEXT.text = '';
-				DEBUG_TEXT.appendText(' '+debugText+'  ');				
+				DEBUG_TEXT.appendText(' '+$text+'  ');				
 				DEBUG_TEXT.x = 12;
 				DEBUG_TEXT.y = -13;  				
 				addChild(DEBUG_TEXT);

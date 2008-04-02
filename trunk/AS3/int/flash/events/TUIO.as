@@ -7,6 +7,7 @@ package flash.events {
 	import flash.display.Stage;
 	import flash.display.Sprite;	
 	import flash.display.Shape;
+	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.events.DataEvent;
 	import flash.events.Event;	
@@ -94,7 +95,7 @@ package flash.events {
 				SOCKET.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);	
 				startSocket();		
 			} 
-			catch(e){}			
+			catch(e:Error){}			
 			if(DEBUG)
 			{
 				activateDebugMode();				
@@ -109,12 +110,12 @@ package flash.events {
 //---------------------------------------------------------------------------------------------------------------------------------------------
 // PUBLIC METHODS
 //---------------------------------------------------------------------------------------------------------------------------------------------
-		public static function addEventListener(e:EventDispatcher)
+		public static function addEventListener(e:EventDispatcher):void
 		{
 			EVENT_ARRAY.push(e);
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
-		public static function listenForObject(id:Number, reciever:Object)
+		public static function listenForObject(id:Number, reciever:Object):void
 		{
 			var tmpObj:TUIOObject = getObjectById(id);			
 			if(tmpObj)
@@ -123,13 +124,13 @@ package flash.events {
 			}
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
-		public static function getObjectById(id:Number): TUIOObject
+		public static function getObjectById(id:Number):TUIOObject
 		{
 			if(id == 0)
 			{
 				return new TUIOObject("mouse", 0, STAGE.mouseX, STAGE.mouseY, 0, 0, 0, 0, 10, 10, null);
 			}
-			for(var i=0; i<OBJECT_ARRAY.length; i++)
+			for(var i:int=0; i<OBJECT_ARRAY.length; i++)
 			{
 				if(OBJECT_ARRAY[i].ID == id)
 				{
@@ -139,7 +140,7 @@ package flash.events {
 			return null;
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
-		public static function removeObjectListener(id:Number, reciever:Object)
+		public static function removeObjectListener(id:Number, reciever:Object):void
 		{
 			var tmpObj:TUIOObject = getObjectById(id);			
 			if(tmpObj)
@@ -150,7 +151,7 @@ package flash.events {
 //---------------------------------------------------------------------------------------------------------------------------------------------
 // PRIVATE METHODS
 //---------------------------------------------------------------------------------------------------------------------------------------------
-		private static function processMessage(msg:XML)
+		private static function processMessage(msg:XML):void
 		{
 			// SPEEDTEST: For speed testing the function
 			if (DEBUG)
@@ -284,7 +285,7 @@ package flash.events {
 								
 								if(node.ARGUMENT[8])
 									ht = Number(node.ARGUMENT[8].@VALUE) * STAGE.stageHeight;
-							} catch (e)
+							} catch (e:Error)
 							{
 								trace("Error Parsing TUIO XML");
 							}
@@ -293,12 +294,12 @@ package flash.events {
 							
 							var stagePoint:Point = new Point(x,y);					
 							var displayObjArray:Array = STAGE.getObjectsUnderPoint(stagePoint);
-							var dobj = null;
+							var dobj:DisplayObject = null;
 							
 							if(displayObjArray.length > 0)								
 							dobj = displayObjArray[displayObjArray.length-1];	
 																				
-							var tuioobj = getObjectById(id);
+							var tuioobj:TUIOObject = getObjectById(id);
 							if(tuioobj == null)
 							{
 								tuioobj = new TUIOObject("2Dcur", id, x, y, X, Y, -1, 0, wd, ht, dobj);
@@ -326,6 +327,19 @@ package flash.events {
 									tuioobj.notifyMoved();
 								}
 								
+
+								
+								if( int(Y*250) == 0 && int(Y*250) == 0) {
+									if(Math.abs(d.time - tuioobj.lastModifiedTime) > HOLD_THRESHOLD)
+									{
+										for(var ndx:int=0; ndx<EVENT_ARRAY.length; ndx++)
+										{
+											EVENT_ARRAY[ndx].dispatchEvent(tuioobj.getTouchEvent(TouchEvent.LONG_PRESS));
+										}
+										tuioobj.lastModifiedTime = d.time;																		
+									}
+								}								
+								
 								/*
 								 * // SWIP RIGHT OR LEFT (with thresholds)
 								if(blobs.length == 1)
@@ -344,17 +358,6 @@ package flash.events {
 								}
 								} 								 
 								 */
-								
-								if( int(Y*250) == 0 && int(Y*250) == 0) {
-									if(Math.abs(d.time - tuioobj.lastModifiedTime) > HOLD_THRESHOLD)
-									{
-										for(var ndx:int=0; ndx<EVENT_ARRAY.length; ndx++)
-										{
-											EVENT_ARRAY[ndx].dispatchEvent(tuioobj.getTouchEvent(TouchEvent.LONG_PRESS));
-										}
-										tuioobj.lastModifiedTime = d.time;																		
-									}
-								}
 							}
 
 							try
@@ -364,7 +367,7 @@ package flash.events {
 									var localPoint:Point = tuioobj.TUIO_OBJECT.parent.globalToLocal(stagePoint);							
 									tuioobj.TUIO_OBJECT.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_MOVE, true, false, x, y, localPoint.x, localPoint.y, tuioobj.oldX, tuioobj.oldY, tuioobj.TUIO_OBJECT, false,false,false, true, m, "2Dcur", id, 0, 0));
 								}
-							} catch (e)
+							} catch (e:Error)
 							{
 								trace("(" + e + ") Dispatch event failed " + tuioobj.ID);
 							}
@@ -377,7 +380,7 @@ package flash.events {
 				DEBUG_TEXT.text = "";
 				DEBUG_TEXT.visible = false;
 			}	
-			for (var i=0; i<OBJECT_ARRAY.length; i++ )
+			for (var i:int=0; i<OBJECT_ARRAY.length; i++ )
 			{	
 				if(OBJECT_ARRAY[i].TUIO_ALIVE == false)
 				{
@@ -389,7 +392,7 @@ package flash.events {
 				} else {
 					if(DEBUG)
 					{	
-						var tmp = (int(OBJECT_ARRAY[i].area)/-100000);
+						var tmp:int = (int(OBJECT_ARRAY[i].area)/-100000);
 						DEBUG_TEXT.appendText("  " + (i + 1) +" - " +OBJECT_ARRAY[i].ID + "  X:" + int(OBJECT_ARRAY[i].x) + "  Y:" + int(OBJECT_ARRAY[i].y) +
 						"  A:" + int(tmp) + "  \n");	
 						DEBUG_TEXT.visible = true;
@@ -444,7 +447,7 @@ package flash.events {
 				STAGE.addChildAt(PLAYBACK_BUTTON, STAGE.numChildren-1); 
         }
 //---------------------------------------------------------------------------------------------------------------------------------------------
-		private static function togglePlayback(e:Event)
+		private static function togglePlayback(e:Event):void
 		{ 	
 			PLAYBACK_URL = "http://nui.mine.nu/amfphp/services/test.xml";		
 			if(PLAYBACK_URL != "")
@@ -459,7 +462,7 @@ package flash.events {
 				 }
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
-		private static function xmlPlaybackLoaded(evt:Event) 
+		private static function xmlPlaybackLoaded(evt:Event):void 
         {
 			trace("Playing from XML file...");
 			PLAYBACK_XML = new XML(PLAYBACK_LOADER.data);	
@@ -468,7 +471,7 @@ package flash.events {
 			STAGE.frameRate = 30;		
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
-		private static function frameUpdate(evt:Event)
+		private static function frameUpdate(evt:Event):void
 		{
 			if(PLAYBACK_XML && PLAYBACK_XML.OSCPACKET && PLAYBACK_XML.OSCPACKET[0])
 			{
@@ -483,7 +486,7 @@ package flash.events {
 			}
 		}		
 //---------------------------------------------------------------------------------------------------------------------------------------------
-		private static function toggleDebug(e:Event)
+		private static function toggleDebug(e:Event):void
 		{ 
 			if(!DEBUG){
 			DEBUG=true;		
@@ -505,18 +508,18 @@ package flash.events {
 			}
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
-		public static function startSocket()
+		public static function startSocket():void
 		{ 	
 			SOCKET.connect(HOST, PORT);
 		}
-		public static function stopSocket()
+		public static function stopSocket():void
 		{ 	
 			SOCKET.close();
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
-		private static function toggleRecord(e:Event)
+		private static function toggleRecord(e:Event):void
 		{ 		
-			var RESPONDER = new Responder(saveSession_Result, onFault);
+			var RESPONDER:Responder = new Responder(saveSession_Result, onFault);
 			if(!RECORDING){
 			RECORDING = true;
 			e.target.alpha = 0.9;		
@@ -539,20 +542,20 @@ package flash.events {
 			}
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
-		private static function saveSession_Result(result)
+		private static function saveSession_Result(result:String):void
 		{	
 		DEBUG_TEXT.text = result;
 		trace(result);			
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
-        private static function dataHandler(event:DataEvent):void 
+        private static function dataHandler(e:DataEvent):void 
         {           			
 			if(RECORDING)
-			RECORDED_XML.appendChild( XML(event.data) );			
-			processMessage(XML(event.data));
+			RECORDED_XML.appendChild( XML(e.data) );			
+			processMessage(XML(e.data));
         } 
 //---------------------------------------------------------------------------------------------------------------------------------------------   			
-        private static function onFault(e:Event )
+        private static function onFault(e:Event ):void
 		{
 			//trace("There was a problem: " + e.description);
 		}

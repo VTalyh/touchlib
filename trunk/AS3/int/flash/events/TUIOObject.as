@@ -6,10 +6,17 @@
 	public class TUIOObject 
 	{		
 		private var NEW:Boolean;	
-		private var EVENT_ARRAY:Array;	
+		private var EVENT_ARRAY:Array;			
 		
+		internal var TUIO_ALIVE:Boolean;		
+		internal var TUIO_TYPE:String;		
+		internal var TUIO_CURSOR:TUIOCursor;		
+		internal var TUIO_OBJECT:DisplayObject;
+		
+		//------FIX ME: NO PUBLIC
 		public var x:Number;
 		public var y:Number;
+		//-----------------------
 		internal var oldX:Number;
 		internal var oldY:Number;		
 		internal var dX:Number;
@@ -23,14 +30,11 @@
 		internal var pressure:Number;		
 		internal var startTime:Number;
 		internal var lastModifiedTime:Number;		
-		internal var TUIO_ALIVE:Boolean;		
-		internal var TUIO_TYPE:String;		
-		internal var TUIO_CURSOR:TUIOCursor;		
-		internal var TUIO_OBJECT:Object;
+
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // CONSTRUCTOR
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-		public function TUIOObject ($type:String, $id:int, $px:Number, $py:Number, $dx:Number, $dy:Number, $sid:int = -1, $angle:Number = 0, $height:Number=0.0, $width:Number=0.0, $TUIO_OBJECT:Object = null)
+		public function TUIOObject ($type:String, $id:int, $px:Number, $py:Number, $dx:Number, $dy:Number, $sid:int = -1, $angle:Number = 0, $height:Number=0.0, $width:Number=0.0, $TUIO_OBJECT:DisplayObject = null)
 		{
 			EVENT_ARRAY = new Array();
 			TUIO_TYPE = $type;
@@ -54,7 +58,7 @@
 			
 			try {
  	 			TUIO_OBJECT = $TUIO_OBJECT;
-			} catch (e)
+			} catch (e:Error)
 			{
 				TUIO_OBJECT = null;
 			}
@@ -84,7 +88,7 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // INTERNAL METHODS
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-		internal function notifyCreated()
+		internal function notifyCreated():void
 		{
 			if(TUIO_OBJECT)
 			{
@@ -93,7 +97,7 @@
 					var localPoint:Point = TUIO_OBJECT.parent.globalToLocal(new Point(x, y));				
 					TUIO_OBJECT.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_DOWN, true, false, x, y, localPoint.x, localPoint.y, 0, 0, TUIO_OBJECT, false,false,false, true, 0, TUIO_TYPE, ID, sID, angle));									
 					TUIO_OBJECT.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_OVER, true, false, x, y, localPoint.x, localPoint.y, 0, 0, TUIO_OBJECT, false,false,false, true, 0, TUIO_TYPE, ID, sID, angle));																		
-				} catch (e)
+				} catch (e:Error)
 				{
 					trace("Failed : " + e);
 					TUIO_OBJECT = null;
@@ -101,7 +105,7 @@
 			}			
 		}
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------		
-		internal function notifyMoved()
+		internal function notifyMoved():void
 		{
 			//var d:Date = new Date();
 			//lastModifiedTime = d.time;
@@ -115,7 +119,7 @@
 			}			
 		}
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-		internal function notifyRemoved()
+		internal function notifyRemoved():void
 		{
 			TUIO_ALIVE = false;
 			var localPoint:Point;			
@@ -138,8 +142,9 @@
 			TUIO_OBJECT = null;		
 		}
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-		internal function setObjOver(o:DisplayObject)
-		{
+		internal function setObjOver(o:DisplayObject):void
+		{	
+			var localPoint:Point;	
 			try {
 				
 				if(TUIO_OBJECT == null)
@@ -147,13 +152,13 @@
 					TUIO_OBJECT = o;				
 					if(TUIO_OBJECT) 
 					{
-						var localPoint:Point = TUIO_OBJECT.parent.globalToLocal(new Point(x, y));				
+						localPoint = TUIO_OBJECT.parent.globalToLocal(new Point(x, y));				
 						TUIO_OBJECT.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_OVER, true, false, x, y, localPoint.x, localPoint.y, 0, 0, TUIO_OBJECT, false,false,false, true, 0, TUIO_TYPE, ID, sID, angle));					
 					}
 				} else if(TUIO_OBJECT != o) 
 				{
 
-					var localPoint:Point = TUIO_OBJECT.parent.globalToLocal(new Point(x, y));
+					localPoint = TUIO_OBJECT.parent.globalToLocal(new Point(x, y));
 					TUIO_OBJECT.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_OUT, true, false, x, y, localPoint.x, localPoint.y, 0, 0, TUIO_OBJECT, false,false,false, true, 0, TUIO_TYPE, ID, sID, angle));
 					if(o)
 					{
@@ -162,13 +167,13 @@
 					}
 					TUIO_OBJECT = o;
 				}
-			} catch (e)
+			} catch (e:Error)
 			{
 			//trace("ERROR " + e);
 			}
 		}
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-		internal function addListener(reciever:Object)
+		internal function addListener(reciever:Object):void
 		{
 			for(var i:int = 0; i<EVENT_ARRAY.length; i++)
 			{
@@ -178,7 +183,7 @@
 			EVENT_ARRAY.push(reciever);
 		}
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-		internal function removeListener(reciever:Object)
+		internal function removeListener(reciever:Object):void
 		{
 			for(var i:int = 0; i<EVENT_ARRAY.length; i++)
 			{
