@@ -50,7 +50,7 @@ package app.core.action
 //---------------------------------------------------------------------------------------------------------------------------------------------
 // PRIVATE METHODS
 //---------------------------------------------------------------------------------------------------------------------------------------------
-		private function mtAddedToStage(e:Event)
+		private function mtAddedToStage(e:Event):void
 		{
 			if(this.stage)
 			{
@@ -62,7 +62,7 @@ package app.core.action
 			}
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
-		private function mtRemovedFromStage(e:Event)
+		private function mtRemovedFromStage(e:Event):void
 		{
 			if(this.stage)
 			{
@@ -74,41 +74,43 @@ package app.core.action
 			}
 		}		
 //---------------------------------------------------------------------------------------------------------------------------------------------
-		private function mtKeyPressed(k:KeyboardEvent)
+		private function mtKeyPressed(k:KeyboardEvent):void
 		{
 			//trace(k.keyCode);
-
+			var ts:TUIOSimulator;
+			var pt:Point;
+			
 			if(k.keyCode == 32)
 			{
 				trace('rotate');
-				var pt:Point = new Point(mouseX, mouseY);
+				pt = new Point(mouseX, mouseY);
 				pt = this.localToGlobal(pt);
 				if(!this.hitTestPoint(pt.x, pt.y))
 					return;			
-				g = new TUIOSimulator(this, 2, pt.x, pt.y, 2, 100);
+				ts = new TUIOSimulator(this, "2", pt.x, pt.y, 2, 100);
 			}
 			if(k.keyCode == 17)
 			{
-				var pt:Point = new Point(mouseX, mouseY);
+				pt = new Point(mouseX, mouseY);
 				pt = this.localToGlobal(pt);
 				if(!this.hitTestPoint(pt.x, pt.y))
 					return;			
-				g = new TUIOSimulator(this, 1, pt.x, pt.y, 2, 100);
+				ts = new TUIOSimulator(this, "1", pt.x, pt.y, 2, 100);
 			}			
 			
 			if(k.keyCode == 16)
 			{
-				var pt:Point = new Point(mouseX, mouseY);
+				pt = new Point(mouseX, mouseY);
 				pt = this.localToGlobal(pt);
 				if(!this.hitTestPoint(pt.x, pt.y))
 					return;			
-				g = new TUIOSimulator(this, 0, pt.x, pt.y, 2, 100);
+				ts = new TUIOSimulator(this, "0", pt.x, pt.y, 2, 100);
 			}			
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
 		private function idExists(id:int):Boolean
 		{
-			for(var i=0; i<blobs.length; i++)
+			for(var i:int=0; i<blobs.length; i++)
 			{
 				if(blobs[i].id == id)
 					return true;
@@ -129,7 +131,7 @@ package app.core.action
 //---------------------------------------------------------------------------------------------------------------------------------------------
 		private function removeBlob(id:int):void
 		{
-			for(var i=0; i<blobs.length; i++)
+			for(var i:int=0; i<blobs.length; i++)
 			{
 				if(blobs[i].id == id) 
 				{
@@ -310,31 +312,31 @@ package app.core.action
 // TODO: Use "interface" [RotateScale extends Touchable implements ITouch]
 // TODO: MAKE ALL IDENTICAL (other than first two)
 //---------------------------------------------------------------------------------------------------------------------------------------------
-		public function handleBlobCreated(id:int, mx:Number, my:Number)
+		public function handleBlobCreated(id:int, mx:Number, my:Number):void
 		{
 		}
 		
-		public function handleBlobRemoved(id:int)
+		public function handleBlobRemoved(id:int):void
 		{
 		}
-		//	REST MAKE IDENTICAL
-		public function handleDownEvent(id:int, mx:Number, my:Number, targetObj)
-		{
-		}
-		
-		public function handleUpEvent(id:int)
+		//-------- REST MAKE IDENTICAL ---------------------------------------------------------------------------------------------------
+		public function handleDownEvent(id:int, mx:Number, my:Number, targetObj:Object):void
 		{
 		}
 		
-		public function handleRollOverEvent(id:int, mx:Number, my:Number)
+		public function handleUpEvent(id:int):void
 		{
 		}
 		
-		public function handleRollOutEvent(id:int, mx:Number, my:Number)
+		public function handleRollOverEvent(id:int, mx:Number, my:Number):void
+		{
+		}
+		
+		public function handleRollOutEvent(id:int, mx:Number, my:Number):void
 		{
 		}				
 
-		public function handleMoveEvent(id:int, mx:Number, my:Number, targetObj)
+		public function handleMoveEvent(id:int, mx:Number, my:Number, targetObj:Object):void
 		{
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
