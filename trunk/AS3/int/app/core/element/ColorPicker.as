@@ -100,7 +100,7 @@ package app.core.element
 			colorThumb.transform.colorTransform = thumbColorTransform;
 		}	
 	
-		public override function handleDownEvent(id:int, mx:Number, my:Number, targetObj)
+		public override function handleDownEvent(id:int, mx:Number, my:Number, targetObj:Object):void
 		{	
 			//trace('---------------------------------------------------------------------------------------'+blobs.length);
 			if(targetObj is ColorPicker || targetObj is Shape)
@@ -131,7 +131,7 @@ package app.core.element
 		
 		}		
 
-		public override function handleMoveEvent(id:int, mx:Number, my:Number, targetObj)
+		public override function handleMoveEvent(id:int, mx:Number, my:Number, targetObj:Object):void
 		{
 			
 			for(var i:int = 0; i<blobs.length; i++)

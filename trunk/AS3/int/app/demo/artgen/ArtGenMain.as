@@ -278,7 +278,7 @@ package app.demo.artgen
 			
 		}		
 
-		public override function handleMoveEvent(id:int, mx:Number, my:Number, targetObj):void
+		public override function handleMoveEvent(id:int, mx:Number, my:Number, targetObj:Object):void
 		{
 			for(var i:int = 0; i<aSwarms.length; i++)
 			{

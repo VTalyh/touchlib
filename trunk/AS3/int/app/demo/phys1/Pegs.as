@@ -233,7 +233,7 @@
 		}
 		
 		// override default dragging behavior.. 
-		override public function handleBlobCreated(id:int, mx:Number, my:Number)
+		override public function handleBlobCreated(id:int, mx:Number, my:Number):void
 		{
 			if(balls <= 0)
 				return;
