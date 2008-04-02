@@ -66,8 +66,8 @@ void CropFilter::setParameter(const char *name, const char *value)
 		img_rect.width  = (int) atof(value);
 		level_width_slider = img_rect.width;
 
-		if(show)
-			cvSetTrackbarPos("width", this->name.c_str(), level_width_slider);
+		//if(show)
+		//	cvSetTrackbarPos("width", this->name.c_str(), level_width_slider);
 
 		if(destination)
 			cvReleaseImage(&destination);
@@ -79,8 +79,8 @@ void CropFilter::setParameter(const char *name, const char *value)
 		img_rect.height  = (int) atof(value);
 		level_height_slider = img_rect.height;
 
-		if(show)
-			cvSetTrackbarPos("height", this->name.c_str(), level_height_slider);
+		//if(show)
+		//	cvSetTrackbarPos("height", this->name.c_str(), level_height_slider);
 
 		if(destination)
 			cvReleaseImage(&destination);
