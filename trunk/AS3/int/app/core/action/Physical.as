@@ -77,7 +77,7 @@
 			m_torque += b2Math.b2CrossVV(vec1, force);
 		}
 		
-		override public function handleBlobCreated(id:int, mx:Number, my:Number)
+		override public function handleBlobCreated(id:int, mx:Number, my:Number):void
 		{
 			trace("Blob created " + id);
 			var blobinf:Object = getBlobInfo(id);
@@ -229,7 +229,7 @@
 			this.rotation += dr;
 		}
 		
-		override public function handleBlobRemoved(id:int)
+		override public function handleBlobRemoved(id:int):void
 		{
 			if(blobs.length == 1)
 			{

@@ -246,14 +246,14 @@ package app.core.canvas {
 			}			
 			
 		}
-		override public function handleBlobCreated(id:int, mx:Number, my:Number)
+		override public function handleBlobCreated(id:int, mx:Number, my:Number):void
 		{
 			physDragBlob(id, mx, my);
 
 
 		}
 		
-		override public function handleBlobRemoved(id:int)
+		override public function handleBlobRemoved(id:int):void
 		{
 			trace("Handle blob removed");			
 			blobinfo = getBlobInfo(id);		
