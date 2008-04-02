@@ -5,6 +5,8 @@
 
 	public class TUIOObject 
 	{		
+		
+		//FIXME: NAMES SHOULD NOT BE ALL CAPS UNLESS STATIC OR CONST
 		private var NEW:Boolean;	
 		private var EVENT_ARRAY:Array;			
 		
@@ -52,7 +54,7 @@
 			area = $width * $height;
 			
 			TUIO_ALIVE = true;					
-			TUIO_CURSOR = new TUIOCursor(ID.toString(),0xFFFFFF, int(area), int($width), int($height));		
+			TUIO_CURSOR = new TUIOCursor(ID,0xFFFFFF, int(area), int($width), int($height));		
 			TUIO_CURSOR.x = x;
 			TUIO_CURSOR.y = y;  		
 			
@@ -68,6 +70,7 @@
 			var d:Date = new Date();
 			startTime = d.time;
 			lastModifiedTime = startTime;
+			//trace(startTime);
 		}
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // PUBLIC METHODS

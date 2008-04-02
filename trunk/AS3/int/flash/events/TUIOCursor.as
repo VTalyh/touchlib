@@ -11,14 +11,14 @@
 //---------------------------------------------------------------------------------------------------------------------------------------------	
 // CONSTRUCTOR
 //---------------------------------------------------------------------------------------------------------------------------------------------	
-		public function TUIOCursor($text:String, $color:int, $pressure:Number, $width:Number, $height:Number)
+		public function TUIOCursor($text:int, $color:int, $pressure:Number, $width:Number, $height:Number)
 		{
 			// FIXME: DO NOT!!!! PUT A FILL ON THIS CAUSE IT WILL CAUSE BUG IN UP/OVER/OUT Events... ------------------------
 			super();
 			if (TUIO.DEBUG) { 			
 				this.blendMode="invert";
-				this.graphics.lineStyle( 2, 0x000000);	
-				this.graphics.drawCircle(0 ,0, 10);			
+				this.graphics.lineStyle( 0, 0x000000);	
+				this.graphics.drawCircle(0 ,0, 15);			
 				/*	
 				* if(pressure > 0 && pressure != null){			
 					this.graphics.drawCircle(0 ,0, pressure+10);

@@ -25,12 +25,14 @@
 		public static const MOUSE_OUT:String = "flash.events.TouchEvent.MOUSE_OUT";
 		//
 		public static const CLICK:String = "flash.events.TouchEvent.MOUSE_UP";
+	
 		public static const DOUBLE_CLICK:String = "flash.events.TouchEvent.DOUBLE_CLICK";
-		//
+	
+		// SHOULD THESE BE MOVED TO MULTITOUCHABLE???------------------------------------------------
 		// TODO: RENAME LONG_PRESS to HOLD
 		// Dynamic HOLD times [addEventListner(TouchEvent.HOLD, function, setHoldTime)]
 		public static const LONG_PRESS:String = "flash.events.TouchEvent.LONG_PRESS";	
-		
+			/*
 		// TODO: SEE David's Physical.fla test (continuous vs discrete pinching)
 		public static const PINCH_IN:String = "flash.events.TouchEvent.PINCH_IN";		
 		public static const PINCH_OUT:String = "flash.events.TouchEvent.PINCH_OUT";	
@@ -38,6 +40,10 @@
 		public static const SWIPE_RIGHT:String = "flash.events.TouchEvent.SWIPE_RIGHT";
 		public static const SWIPE_UP:String = "flash.events.TouchEvent.SWIPE_UP";
 		public static const SWIPE_DOWN:String = "flash.events.TouchEvent.SWIPE_DOWN";
+		
+		// TAP COUNTING
+		
+		*/
 //---------------------------------------------------------------------------------------------------------------------------------------------	
 // CONSTRUCTOR
 //---------------------------------------------------------------------------------------------------------------------------------------------

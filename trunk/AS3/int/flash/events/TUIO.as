@@ -6,11 +6,11 @@
 package flash.events {		
 	import flash.display.Stage;
 	import flash.display.Sprite;	
-	import flash.display.Shape;
+	//import flash.display.Shape;
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
+	import flash.events.Event;		
 	import flash.events.DataEvent;
-	import flash.events.Event;	
 	import flash.events.MouseEvent;
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
@@ -31,14 +31,16 @@ package flash.events {
 	{	
 		//private static var INSTANCE:TUIO;			
 		private static var STAGE:Stage;
-		private static var SOCKET:XMLSocket;		
+		private static var SOCKET:XMLSocket;	
+		private static var SOCKET_STATUS:Boolean;	
 		private static var HOST:String;			
 		private static var PORT:Number;				
-		private static var FRAME_RATE:Number;	
+		private static var FRAME_RATE:Number;			
+		private static var FRAME_COUNT:Number;
 		//-------------------------------------- DEBUG VARS			
 		internal static var DEBUG:Boolean;				
 		private static var INITIALIZED:Boolean;		
-		//private static var PLAYBACK:Boolean;			
+		private static var PLAYBACK:Boolean;			
 		private static var RECORDING:Boolean;			
 		private static var DEBUG_TEXT:TextField;	
 		private static var DEBUG_BUTTON:Sprite;			
@@ -73,49 +75,49 @@ package flash.events {
 			PORT=$PORT;					       
 			
 			SERVICE = new NetConnection();
-			SERVICE.connect("http://nui.mine.nu/amfphp/gateway.php");
+			SERVICE.connect("http://touchlib.com/amfphp/gateway.php");
 			
 			PLAYBACK_URL = $PLAYBACK_URL;
 			DEBUG = $DEBUG;				
 			INITIALIZED = true;
 			RECORDING = false;		
-			//PLAYBACK = false;									
+			PLAYBACK = false;									
 			OBJECT_ARRAY = new Array();
 			ID_ARRAY = new Array();
 			EVENT_ARRAY = new Array();
 			
-			try
-			{
-				SOCKET = new XMLSocket();	
-				SOCKET.addEventListener(Event.CLOSE, closeHandler);
-				SOCKET.addEventListener(Event.CONNECT, connectHandler);
-				SOCKET.addEventListener(DataEvent.DATA, dataHandler);
-				SOCKET.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
-				SOCKET.addEventListener(ProgressEvent.PROGRESS, progressHandler);
-				SOCKET.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);	
-				startSocket();		
-			} 
-			catch(e:Error){}			
 			if(DEBUG)
 			{
-				activateDebugMode();				
+				activateDebugMode();						
 			}  
 			else 
 			{		
 				RECORDED_XML = new XML();	
 				RECORDED_XML = <OSCPackets></OSCPackets>;
 				RECORDING = false;			
-			}			
+			}				
+			
+			SOCKET = new XMLSocket();	
+			SOCKET.addEventListener(Event.CLOSE, closeHandler);
+			SOCKET.addEventListener(Event.CONNECT, connectHandler);
+			SOCKET.addEventListener(DataEvent.DATA, dataHandler);
+			SOCKET.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+			//SOCKET.addEventListener(ProgressEvent.PROGRESS, progressHandler);
+			SOCKET.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);	
+			startSocket(null);				
+			socketStatus(null);						
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
 // PUBLIC METHODS
 //---------------------------------------------------------------------------------------------------------------------------------------------
-		public static function addEventListener(e:EventDispatcher):void
+/*
+	public static function addEventListener(e:EventDispatcher):void
 		{
 			EVENT_ARRAY.push(e);
 		}
+*/
 //---------------------------------------------------------------------------------------------------------------------------------------------
-		public static function listenForObject(id:Number, reciever:Object):void
+		public static function addObjectListener(id:Number, reciever:Object):void
 		{
 			var tmpObj:TUIOObject = getObjectById(id);			
 			if(tmpObj)
@@ -123,6 +125,15 @@ package flash.events {
 				tmpObj.addListener(reciever);				
 			}
 		}
+//---------------------------------------------------------------------------------------------------------------------------------------------
+		public static function removeObjectListener(id:Number, reciever:Object):void
+		{
+			var tmpObj:TUIOObject = getObjectById(id);			
+			if(tmpObj)
+			{
+				tmpObj.removeListener(reciever);				
+			}
+		}		
 //---------------------------------------------------------------------------------------------------------------------------------------------
 		public static function getObjectById(id:Number):TUIOObject
 		{
@@ -140,14 +151,22 @@ package flash.events {
 			return null;
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
-		public static function removeObjectListener(id:Number, reciever:Object):void
-		{
-			var tmpObj:TUIOObject = getObjectById(id);			
-			if(tmpObj)
-			{
-				tmpObj.removeListener(reciever);				
-			}
-		}		
+		public static function startSocket(e:Event):void
+		{ 
+			try
+			{			
+				SOCKET.connect(HOST, PORT);
+			} 
+			catch (e:Error) { }		
+		}
+		public static function stopSocket(e:Event):void
+		{ 	
+				try
+			{			
+				SOCKET.close();
+			} 
+			catch (e:Error) { }	
+		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
 // PRIVATE METHODS
 //---------------------------------------------------------------------------------------------------------------------------------------------
@@ -444,105 +463,151 @@ package flash.events {
 				PLAYBACK_BUTTON.addEventListener(MouseEvent.CLICK, togglePlayback);		
 				PLAYBACK_BUTTON.addEventListener(TouchEvent.CLICK, togglePlayback);	
 				PLAYBACK_BUTTON.alpha = 0.25;			
-				STAGE.addChildAt(PLAYBACK_BUTTON, STAGE.numChildren-1); 
+				STAGE.addChildAt(PLAYBACK_BUTTON, STAGE.numChildren - 1); 
+				
+				//STAGE.addEventListener(MouseEvent.MOUSE_MOVE, socketStatus);		
+				//STAGE.addEventListener(TouchEvent.MOUSE_MOVE, socketStatus);					
         }
+//---------------------------------------------------------------------------------------------------------------------------------------------
+		private static function socketStatus(e:Event):void
+		{ 		
+				SOCKET_STATUS = SOCKET.connected;
+				
+				if (!SOCKET_STATUS) 
+				{	
+					DEBUG_TEXT.text = " TUIO Socket Not Found... \n Host - "+HOST+"\n Port - "+PORT+" ";
+					STAGE.addEventListener(Event.ENTER_FRAME, startSocket);
+					//STAGE.removeEventListener(MouseEvent.MOUSE_MOVE, socketStatus);		
+					//STAGE.removeEventListener(TouchEvent.MOUSE_MOVE, socketStatus);
+					DEBUG_BUTTON.graphics.clear();
+					DEBUG_BUTTON.graphics.beginFill(0xFF0000,0.5);
+					DEBUG_BUTTON.graphics.drawRect(10, 25, 50, 50);	
+					DEBUG_TEXT.x = 65;
+				} else 
+				{
+					DEBUG_TEXT.x = STAGE.stageWidth-200;
+					DEBUG_TEXT.text = "";
+					STAGE.removeEventListener(Event.ENTER_FRAME, startSocket);
+					DEBUG_BUTTON.graphics.clear();
+					DEBUG_BUTTON.graphics.beginFill(0xFFFFFF,1);
+					DEBUG_BUTTON.graphics.drawRect(10, 25, 50, 50);	
+				}
+		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
 		private static function togglePlayback(e:Event):void
 		{ 	
-			PLAYBACK_URL = "http://nui.mine.nu/amfphp/services/test.xml";		
+			if (PLAYBACK) return;
+			PLAYBACK_URL = "http://touchlib.com/amfphp/services/test.xml";		
 			if(PLAYBACK_URL != "")
 				 {	
 					PLAYBACK_BUTTON.alpha = 0.9;
-				 	//Tweener.addTween(e.target, {alpha:1, time:0.45, transition:"easeinoutquad"});	
-				 	//Tweener.addTween(e.target, {alpha:0.25, delay:0.45,time:0.45, transition:"easeinoutquad"});	
 					PLAYBACK_LOADER = new URLLoader();
-					PLAYBACK_LOADER.addEventListener("complete", xmlPlaybackLoaded);
-					PLAYBACK_LOADER.load(new URLRequest(PLAYBACK_URL));					
+					PLAYBACK_LOADER.addEventListener("complete", xmlPlaybackLoaded);	
+					PLAYBACK_LOADER.addEventListener( ProgressEvent.PROGRESS, onProgressHandler);		
 					PLAYBACK_LOADER.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);	
-				 }
+					PLAYBACK_LOADER.load(new URLRequest(PLAYBACK_URL));					
+				}
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
-		private static function xmlPlaybackLoaded(evt:Event):void 
+		private static function xmlPlaybackLoaded(e:Event):void 
         {
 			trace("Playing from XML file...");
-			PLAYBACK_XML = new XML(PLAYBACK_LOADER.data);	
+			PLAYBACK_XML = new XML(PLAYBACK_LOADER.data);						
+			PLAYBACK_LOADER.close();	
+			FRAME_COUNT = PLAYBACK_XML.OSCPACKET.length();
 			STAGE.addEventListener(Event.ENTER_FRAME, frameUpdate);
 			FRAME_RATE = STAGE.frameRate;
-			STAGE.frameRate = 30;		
+			STAGE.frameRate = 30;				
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
-		private static function frameUpdate(evt:Event):void
+		private static function frameUpdate(e:Event):void
 		{
 			if(PLAYBACK_XML && PLAYBACK_XML.OSCPACKET && PLAYBACK_XML.OSCPACKET[0])
-			{
+			{	
+				RECORD_BUTTON.removeEventListener(MouseEvent.CLICK, toggleRecord);		
+				RECORD_BUTTON.removeEventListener(TouchEvent.CLICK, toggleRecord);	
+				//
+				PLAYBACK = true;
 				processMessage(PLAYBACK_XML.OSCPACKET[0]);
 				delete PLAYBACK_XML.OSCPACKET[0];		
-				
-				//if (PLAYBACK_XML.length) { }
+				DEBUG_TEXT.visible = true;
+				DEBUG_TEXT.appendText ("  " + "F - " + PLAYBACK_XML.OSCPACKET.length() + " / " + FRAME_COUNT + "  ");
+				if (PLAYBACK_XML.OSCPACKET.length() < 1) 
+				{ 					
+				RECORD_BUTTON.addEventListener(MouseEvent.CLICK, toggleRecord);		
+				RECORD_BUTTON.addEventListener(TouchEvent.CLICK, toggleRecord);	
+				//
+				PLAYBACK = false;	
+				DEBUG_TEXT.text = '';
 				PLAYBACK_BUTTON.alpha = 0.25;		
-				//STAGE.frameRate = FRAME_RATE;
-				//trace(STAGE.frameRate);
-				//STAGE.removeEventListener(Event.ENTER_FRAME, frameUpdate);		
+				STAGE.removeEventListener(Event.ENTER_FRAME, frameUpdate);		
+				trace('START FPS - ' + FRAME_RATE);
+				trace('PLAYBACK FPS - ' + STAGE.frameRate);	
+				STAGE.frameRate = FRAME_RATE;
+				trace('END FPS - '+STAGE.frameRate);
+				}				
 			}
 		}		
 //---------------------------------------------------------------------------------------------------------------------------------------------
 		private static function toggleDebug(e:Event):void
-		{ 
+		{ 	
+			stopSocket(null);
+			startSocket(null);		
+			
 			if(!DEBUG){
-			DEBUG=true;		
-			startSocket();
+			DEBUG=true;	
 			e.target.alpha = 0.85;		
 			//e.target.scaleX = e.target.scaleY = 1.0;		
 			RECORD_BUTTON.visible = true;
 			PLAYBACK_BUTTON.visible = true;	
-			DEBUG_TEXT.visible = true;
+			DEBUG_TEXT.visible = true;		
+			//DEBUG_TEXT.text = '';
 			}
 			else{
 			DEBUG=false;
-			startSocket();
 			e.target.alpha = 0.25;		
 			//e.target.scaleX = e.target.scaleY = 0.5;		
 			RECORD_BUTTON.visible = false;
 			PLAYBACK_BUTTON.visible = false;
 			DEBUG_TEXT.visible = false;
-			}
-		}
-//---------------------------------------------------------------------------------------------------------------------------------------------
-		public static function startSocket():void
-		{ 	
-			SOCKET.connect(HOST, PORT);
-		}
-		public static function stopSocket():void
-		{ 	
-			SOCKET.close();
+			//DEBUG_TEXT.text = '';
+			}	
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
 		private static function toggleRecord(e:Event):void
-		{ 		
-			var RESPONDER:Responder = new Responder(saveSession_Result, onFault);
+		{ 	
+			//
+			var RESPONDER:Responder = new Responder(saveSessionResult, onFault);
 			if(!RECORDING){
+			PLAYBACK_BUTTON.removeEventListener(MouseEvent.CLICK, togglePlayback);		
+			PLAYBACK_BUTTON.removeEventListener(TouchEvent.CLICK, togglePlayback);	
+			//
 			RECORDING = true;
 			e.target.alpha = 0.9;		
-			//trace(e.target.parent);
 			trace('-----------------------------------------------------------------------------------------------------');		
 			trace('-------------------------------------- Record ON ----------------------------------------------------');
 			trace('-----------------------------------------------------------------------------------------------------');	
 			SERVICE.call("touchlib.clearSession", RESPONDER);			
-			RECORDED_XML = <OSCPackets></OSCPackets>;	
+			RECORDED_XML = <OSCPackets></OSCPackets>;			
+			//
 			}
-			else{
+			else {
+			PLAYBACK_BUTTON.addEventListener(MouseEvent.CLICK, togglePlayback);		
+			PLAYBACK_BUTTON.addEventListener(TouchEvent.CLICK, togglePlayback);	
+			//
 			RECORDING = false;
 			e.target.alpha = 0.25;			
 			trace('-----------------------------------------------------------------------------------------------------');		
 			trace('-------------------------------------- Record OFF ---------------------------------------------------');
 			trace('-----------------------------------------------------------------------------------------------------');	
 			SERVICE.call("touchlib.saveSession", RESPONDER, RECORDED_XML.toXMLString());
-			//trace(RECORDED_XML.toString());		
+			//trace(RECORDED_XML.toString());					
+			RECORDED_XML = <OSCPackets></OSCPackets>;
 			trace('-------------------------------------- Recording END ------------------------------------------------');			
 			}
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
-		private static function saveSession_Result(result:String):void
+		private static function saveSessionResult(result:String):void
 		{	
 		DEBUG_TEXT.text = result;
 		trace(result);			
@@ -555,26 +620,30 @@ package flash.events {
 			processMessage(XML(e.data));
         } 
 //---------------------------------------------------------------------------------------------------------------------------------------------   			
-        private static function onFault(e:Event ):void
+		private static function closeHandler(event:Event):void 
+        {
+            //trace("closeHandler: " + event);				
+			socketStatus(null);		
+        }
+     	private static function connectHandler(event:Event):void 
+     	{	
+			//trace("connectHandler: " + event);				
+			socketStatus(null);			
+        }               
+		private static function onFault(e:Event ):void
 		{
 			//trace("There was a problem: " + e.description);
-		}
-     	private static function connectHandler(event:Event):void 
-     	{
-            //trace("connectHandler: " + event);
-        }       
+		}	
         private static function ioErrorHandler(event:IOErrorEvent):void 
         {
             //trace("ioErrorHandler: " + event);
         }
-        private static function progressHandler(event:ProgressEvent):void 
-        {
-            //trace("Debug XML Loading..." + event.bytesLoaded + " out of: " + event.bytesTotal);
-        }
-        private static function closeHandler(event:Event):void 
-        {
-            //trace("closeHandler: " + event);
-        }
+		private static function onProgressHandler(e:ProgressEvent):void
+		{	
+		var percent:Number = 100*(e.target.bytesLoaded/e.target.bytesTotal);			
+		DEBUG_TEXT.visible = true;
+		DEBUG_TEXT.text = "  Loading... "+int(percent)+"% ";
+		}
         private static function securityErrorHandler(event:SecurityErrorEvent):void 
         {
             //trace("securityErrorHandler: " + event);
