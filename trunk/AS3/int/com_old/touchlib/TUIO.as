@@ -299,7 +299,7 @@
 			}
 		}
 		
-		public static function listenForObject(id:Number, reciever:Object)
+		public static function addObjectListener(id:Number, reciever:Object)
 		{
 			var tmpObj:TUIOObject = getObjectById(id);			
 			if(tmpObj)

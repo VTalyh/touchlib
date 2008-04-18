@@ -119,7 +119,7 @@ package app.core.element
 			var tuioobj:TUIOObject = TUIO.getObjectById(e.ID);
 			var localPt:Point = globalToLocal(new Point(tuioobj.x, tuioobj.y));	
 			
-			TUIO.listenForObject(e.ID, this);
+			TUIO.addObjectListener(e.ID, this);
 			touchStartDrag();			
 			
 			wrappedComponent.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_DOWN, true, false, localPt.x, localPt.y));

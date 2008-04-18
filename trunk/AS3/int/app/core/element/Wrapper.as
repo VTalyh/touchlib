@@ -100,7 +100,7 @@ package app.core.element{
 			var tuioobj:TUIOObject = TUIO.getObjectById(e.ID);
 			var localPt:Point = globalToLocal(new Point(tuioobj.x, tuioobj.y));	
 			
-			TUIO.listenForObject(e.ID, this);
+			TUIO.addObjectListener(e.ID, this);
 			touchStartDrag();			
 			
 			if(this.visible && wrappedComponent.visible)			

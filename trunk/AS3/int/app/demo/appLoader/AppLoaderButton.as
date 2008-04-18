@@ -101,7 +101,7 @@ package app.demo.appLoader
 			if(buttonLocked)
 				return;
 
-			TUIO.listenForObject(e.ID, this);
+			TUIO.addObjectListener(e.ID, this);
 			buttonDown = true;
 			buttonOverlay.gotoAndStop(2);
 			this.parent.setChildIndex(this, this.parent.numChildren-1);

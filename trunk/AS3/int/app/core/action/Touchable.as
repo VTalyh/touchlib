@@ -110,7 +110,7 @@ package app.core.action
 			if(e.stageX == 0 && e.stageY == 0)
 				return;			
 				
-			TUIO.listenForObject(e.ID, this);							
+			TUIO.addObjectListener(e.ID, this);							
 			
 			var curPt:Point = parent.globalToLocal(new Point(e.stageX, e.stageY));												
 
@@ -139,7 +139,7 @@ package app.core.action
 			if(!idExists(e.ID))
 			{
 				trace("Error, shouldn't this blob already be in the list?");
-				//TUIO.listenForObject(e.ID, this);			
+				//TUIO.addObjectListener(e.ID, this);			
 				addBlob(e.ID, curPt.x, curPt.y, false);
 			} else {
 				updateBlob(e.ID, curPt.x, curPt.y);				
@@ -194,7 +194,7 @@ package app.core.action
 			
 			if(!idExists(e.ID))
 			{
-				TUIO.listenForObject(e.ID, this);			
+				TUIO.addObjectListener(e.ID, this);			
 				addBlob(e.ID, curPt.x, curPt.y, false);
 			}
 

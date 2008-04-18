@@ -23,6 +23,8 @@ package app.demo.piano
 			
 			trace("Piano Initialized");
 			
+			TUIO.init( this, 'localhost', 3000, '', true );			
+			
 			var wd:int;
 			var ht:int;
 			

@@ -79,7 +79,7 @@
 		
 		// FIXME: handle paths stuff using blob added and blob removed functions.. (see multitouchable.. 
 		
-		public override function handleBlobCreated(id:int, mx:Number, my:Number)
+		public override function handleBlobCreated(id:int, mx:Number, my:Number):void
 		{
 			var holder: MovieClip = new MovieClip();
 			
@@ -87,7 +87,7 @@
 			addChild(Paths[Paths.length -1].mc);			
 		}
 		
-		public override function handleBlobRemoved(id:int)
+		public override function handleBlobRemoved(id:int):void
 		{
 			for(var j:int = 0; j<Paths.length; j++) {
 				trace(Paths[j].blobID);

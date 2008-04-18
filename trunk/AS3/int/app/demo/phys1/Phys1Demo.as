@@ -17,8 +17,7 @@
 	import Box2D.Dynamics.Contacts.*;
 	import Box2D.Common.*;
 	import Box2D.Common.Math.*;
-		
-	
+			
 
 	public class Phys1Demo extends PhysicsCanvas
 	{
@@ -38,7 +37,7 @@
 			}			
 
 			
-			TUIO.init( this, 'localhost', 3000, '', false );		
+			TUIO.init( this, 'localhost', 3000, '', true );
 			TestRagdoll();
 			
 			setGravity(0, 300);

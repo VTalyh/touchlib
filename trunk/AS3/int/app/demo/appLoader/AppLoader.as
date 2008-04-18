@@ -46,7 +46,7 @@ package app.demo.appLoader
 			appButtons = new Array();
 			
 			TUIO.init( this, '127.0.0.1', 3000, 'www/xml/tableData.xml', true );
-			TUIO.addEventListener(this);
+			//TUIO.addEventListener(this);
 			xmlLoader = new URLLoader();
 			xmlLoader.addEventListener(Event.COMPLETE, this.xmlLoaded, false, 0, true); 			
 			xmlLoader.load(new URLRequest("www/xml/applist.xml"));

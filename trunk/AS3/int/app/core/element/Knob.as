@@ -201,7 +201,7 @@ package app.core.element
 		public function tuioDownEvent(e:TouchEvent)
 		{		
 
-			TUIO.listenForObject(e.ID, this);
+			TUIO.addObjectListener(e.ID, this);
 			knobStartDrag();			
 			e.stopPropagation();
 		}
