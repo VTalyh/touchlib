@@ -75,6 +75,10 @@ void CBlobTracker::findBlobs(BwImage &img)
 
 	blobList.clear();
 	CvMemStorage* storage = cvCreateMemStorage(0);
+
+	//pressure
+	//IplImage *origImg = cvCloneImage(img.imgp);
+
 	CvSeq* cont = 0; 
 	CvBox2D32f box;
 	float halfx,halfy;
@@ -135,12 +139,27 @@ void CBlobTracker::findBlobs(BwImage &img)
 				blob.box.lowerRightCorner.set(box.center.x+halfx,box.center.y+halfy);
 
 				blob.area = blob.box.getArea();
-
-				// FIXME: it might be nice if we could get the actual weight.. 
-				// It also might be nice to find the weighted center..
-
-				blob.weight = 0;
-
+				/*pressure
+				unsigned char imgPixel;
+				int widthStep = img.getWidth();
+				float tempWeight = 0;
+				int numPixels = 0;
+				for(int i1 = blob.box.upperLeftCorner.Y; i1 <= blob.box.lowerRightCorner.Y; i1++)
+				{
+					for(int j1 = blob.box.upperLeftCorner.X; j1 <= blob.box.lowerRightCorner.X; j1++)
+					{
+						
+						imgPixel = ((uchar*)(origImg->imageData + origImg->widthStep*i1))[j1];
+						if((int)imgPixel > 0)
+						{
+							tempWeight += imgPixel;
+							numPixels++;
+						}
+						//printf("%d ",imgPixel);
+					}
+				}
+				blob.weight = tempWeight / (float)numPixels;
+				end pressure*/
 
 				// use v_next.. 
 
@@ -179,8 +198,40 @@ void CBlobTracker::findBlobs(BwImage &img)
 
 			blob.area = blob.box.getArea();
 			
-			// FIXME: it might be nice if we could get the actual weight.. 
-			// It also might be nice to
+			/*pressure
+			unsigned char imgPixel;
+			int imgWidth = img.getWidth();
+			int widthStep = img.getWidth();
+			int imgHeight = img.getHeight();
+			float tempWeight = 0;
+			int numPixels = 0;
+			int ulcY = blob.box.upperLeftCorner.Y;
+			int lrcY = blob.box.lowerRightCorner.Y;
+			int ulcX = blob.box.upperLeftCorner.X;
+			int lrcX = blob.box.lowerRightCorner.X;
+			if(ulcY >= 0 && ulcX >=0 && lrcY <= imgHeight && lrcX <= imgWidth)
+			{
+				for(int i1 = ulcY; i1 <= lrcY; i1++)
+				{
+					for(int j1 = ulcX; j1 <= lrcX; j1++)
+					{
+						
+						imgPixel = ((uchar*)(origImg->imageData + origImg->widthStep*i1))[j1];
+						if((int)imgPixel > 0)
+						{
+							tempWeight += imgPixel;
+							numPixels++;
+						}
+						//printf("%d ",imgPixel);
+					}
+				}
+			}
+			//else
+			//	printf("garbage. Something that shouldn't happen did !");
+
+				
+			blob.weight = tempWeight / (float)numPixels;
+			end pressure*/
 			blob.weight = 0;
 			blob.tagID = 0;
 
@@ -190,7 +241,8 @@ void CBlobTracker::findBlobs(BwImage &img)
 		}
 
 	}		// end cont for loop
-
+	//pressure
+	//cvReleaseImage(&origImg);
 	cvReleaseMemStorage(&storage);
 
 }

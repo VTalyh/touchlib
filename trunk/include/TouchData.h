@@ -16,6 +16,8 @@ struct TouchData
 
 	float dX;
 	float dY;
+	
+	float weight;
 
 };
 

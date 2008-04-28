@@ -69,6 +69,7 @@ namespace touchlib
 			area = b.area;
 			box = b.box;
 			angle = b.angle;
+			weight = b.weight;
 			tagID = b.tagID;
 		}
 
@@ -103,6 +104,8 @@ namespace touchlib
 			data.dX = delta.X;
 			data.dY = delta.Y;
 
+			data.weight = weight;
+			
 			data.tagID = tagID;
 
 			return data;

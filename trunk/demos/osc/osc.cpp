@@ -78,10 +78,11 @@ public:
 		c.g = 255;
 		c.b = 255;
 
-		fingerList[data.ID] = data;
-
-		
-		printf("Blob Detected | X: %f Y: %f Area: %f\n", data.X, data.Y, data.area);
+		if(!(data.X == 0.00 && data.Y == 0.00))
+		{
+			fingerList[data.ID] = data;
+			printf("Blob Detected | X: %f Y: %f Area: %f Weight: %f\n", data.X, data.Y, data.area, data.weight);
+		}
 
 	}
 
@@ -158,6 +159,9 @@ public:
 							p << osc::BeginMessage( "/tuio/2Dcur" ) << "set" << d.ID << d.X << d.Y << d.dX << d.dY << m << osc::EndMessage;
 #else
 							p << osc::BeginMessage( "/tuio/2Dcur" ) << "set" << d.ID << d.X << d.Y << d.dX << d.dY << m << d.width << d.height << osc::EndMessage;
+							//pressure
+							//p << osc::BeginMessage( "/tuio/2Dcur" ) << "set" << d.ID << d.X << d.Y << d.dX << d.dY << m << d.width << d.height << d.weight << osc::EndMessage;
+							
 #endif
 						} else {
 							// is a fiducial tag
