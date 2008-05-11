@@ -3,7 +3,7 @@
 
 
 #include "CBlobTracker.h"
-
+#include <cstdio>
 #include <map>
 
 #define MIN_AREA 2.0
