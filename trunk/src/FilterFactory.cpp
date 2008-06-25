@@ -4,6 +4,7 @@
 #ifdef WIN32
 	#include "VideoWrapperFilter.h"
 	#include "DSVLCaptureFilter.h"
+#define CMUCAM
 #ifdef CMUCAM
 	#include "CMUCapturefilter.h"
 #endif

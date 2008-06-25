@@ -1,3 +1,4 @@
+#define CMUCAM
 #ifdef CMUCAM
 
 #include <CMUCaptureFilter.h>

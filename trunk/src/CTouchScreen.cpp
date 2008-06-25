@@ -271,7 +271,7 @@ bool CTouchScreen::process()
 			}
 			//return true;
 		}
-		SLEEP(32);
+		//SLEEP(32);
 	}
 
 }
