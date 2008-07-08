@@ -1,5 +1,5 @@
 /*
-	
+
 	Touchlib
 
 	An open-source library for Multitouch input using computer vision techniques.
@@ -14,15 +14,19 @@
 #include "CTouchScreen.h"
 #include "CBlobTracker.h"
 #include "FilterFactory.h"
-#include "tinyxml.h"
-#include <highgui.h>
+#include "tinyxml.h"		// http://www.sourceforge.net/projects/tinyxml
+#include <highgui.h>		// Intel Open Source Computer Vision Library
 
 using namespace touchlib;
 
+// If we are using Windows
 #ifdef WIN32
+// create a thread and mutex
 HANDLE CTouchScreen::hThread = 0;
 HANDLE CTouchScreen::eventListMutex = 0;
+// If Linux or Apple
 #else
+// create a thread and mutex
 pthread_t CTouchScreen::hThread = 0;
 pthread_mutex_t CTouchScreen::eventListMutex = PTHREAD_MUTEX_INITIALIZER;
 #endif
@@ -31,31 +35,34 @@ pthread_mutex_t CTouchScreen::eventListMutex = PTHREAD_MUTEX_INITIALIZER;
 
 CTouchScreen::CTouchScreen()
 {
+	// Initialize BwImage frame
 	frame = 0;
 
 #ifdef WIN32
 	tracker = 0;	// just reset the pointer to be safe...
-	eventListMutex = CreateMutex(NULL, 0, NULL);
+	eventListMutex = CreateMutex(NULL, 0, NULL);	// Initialize Windows mutex
 #else
-	pthread_mutex_init(&eventListMutex, NULL);
+	pthread_mutex_init(&eventListMutex, NULL);	// Initialize Linux/Apple mutex
 #endif
 
-	reject_distance_threshold = 250;
-	reject_min_dimension = 2;
-	reject_max_dimension = 250;
+/** These are all initializations of default config.xml variables	*/
+	reject_distance_threshold = 250;	// The distance and
+	reject_min_dimension = 2;			// min
+	reject_max_dimension = 250;			// max dimension limits on blobs
 
 	ghost_frames = 0;
 	minimumDisplacementThreshold = IBlobTracker::DEFAULT_MINIMUM_DISPLACEMENT_THRESHOLD;
 
-	screenBB = rect2df(vector2df(0.0f, 0.0f), vector2df(1.0f, 1.0f));
-	initScreenPoints();
-	initCameraPoints();
+	screenBB = rect2df(vector2df(0.0f, 0.0f), vector2df(1.0f, 1.0f));	// Initialize the screen bounding box
+	initScreenPoints();		// Calculates the calibration points based on a 4:3 aspect ratio
+	initCameraPoints();		// Calculates the camera resolution or defaults to 640x480
 
-	debugMode = true;
-	bTracking = false;
+	debugMode = true;		// Initialization assumes you want to show trackbar sliders in your windows for manual calibration
+	bTracking = false;		// We are not yet tracking any blobs, so we initialize this flag to false
 
-	screenMesh.recalcBoundingBox();
+	screenMesh.recalcBoundingBox();		// Initialize the screen mesh
 
+	// Initialize the triangles[72] with the [GRID_X * GRID_Y * 2t * 3i] indices for the points
 	int i,j;
 	int t = 0;
 	for(j=0; j<GRID_Y; j++)
@@ -77,28 +84,28 @@ CTouchScreen::CTouchScreen()
 	}
 
 
-	bCalibrating = false;
-	calibrationStep = 0;
+	bCalibrating = false;		// Set the calibration flag to false (toggled when recording finger data as new mesh points)
+	calibrationStep = 0;		// Start at the beginning
 
-        // create a default blob tracker
-	this->tracker = NULL;
+
+	this->tracker = NULL;	// create a default blob tracker
         setBlobTracker(new CBlobTracker());
 }
 
 void CTouchScreen::setBlobTracker(IBlobTracker* blobTracker)
 {
-	// check so that the tracker isn't in use
+	// Check that the tracker isn't in use
 	// FIXME: add a mutex so that it is interchangable
 	if (bTracking) {
 		return;
 	}
 
-	// free the old tracker	
+	// Free the old tracker
 	if (tracker != NULL) {
 		delete tracker;
 	}
 
-	// save the new tracker and register with it
+	// Save the new tracker and register with it
 	tracker = blobTracker;
 	tracker->registerListener((ITouchListener *)this);
 }
@@ -108,45 +115,44 @@ CTouchScreen::~CTouchScreen()
 	unsigned int i;
 
 #ifdef WIN32
-	if(hThread)
-		TerminateThread(hThread, 0);
+	if(hThread)							// Check for existing thread
+		TerminateThread(hThread, 0);	// if it exists, then terminate it and reinitialize hThread with 0
 
-	CloseHandle(eventListMutex);
+	CloseHandle(eventListMutex);		// Uninitialize the mutex
 #else
-	if(hThread){
-		pthread_kill(hThread,15);
-		hThread = 0;
+	if(hThread){					// Check for existing thread
+		pthread_kill(hThread,15);	// if it exists, then terminate it
+		hThread = 0;				// and reinitialize hThread with 0
 	}
-	
-	pthread_mutex_destroy(&eventListMutex);
+
+	pthread_mutex_destroy(&eventListMutex);	// Uninitialize the mutex
 #endif
 
 
-	
-	for(i=0; i<filterChain.size(); i++)
+	for(i=0; i<filterChain.size(); i++)		// Go through and delete each filter
 		delete filterChain[i];
 
-		
+
 	delete tracker;
 }
 
 void CTouchScreen::initScreenPoints()
 {
-	int p = 0;
+	int p = 0;	// Create some local variable placeholders
 
 	int i,j;
 
-	vector2df xd(screenBB.lowerRightCorner.X-screenBB.upperLeftCorner.X,0.0f);
+	vector2df xd(screenBB.lowerRightCorner.X-screenBB.upperLeftCorner.X,0.0f);		// Get the bounding box dimensions
 	vector2df yd(0.0f, screenBB.lowerRightCorner.Y-screenBB.upperLeftCorner.Y);
-	xd /= (float) GRID_X;
-	yd /= (float) GRID_Y;
-	
+	xd /= (float) GRID_X;		// divide and assign by
+	yd /= (float) GRID_Y;		// the default 4:3 aspect ratio from ITouchScreen.h
+
 	for(j=0; j<=GRID_Y; j++)
 	{
-		for(i=0; i<=GRID_X; i++)
-		{			
-			screenPoints[p] = screenBB.upperLeftCorner + xd*i + yd*j;			
-			printf("(%d, %d) = (%f, %f)\n", i, j, screenPoints[p].X, screenPoints[p].Y);
+		for(i=0; i<=GRID_X; i++)	// For each point
+		{
+			screenPoints[p] = screenBB.upperLeftCorner + xd*i + yd*j;			// Set each screen point to the corrosponding grid index
+			printf("(%d, %d) = (%f, %f)\n", i, j, screenPoints[p].X, screenPoints[p].Y);	// Display a little feedback to the terminal
 			p++;
 		}
 	}
@@ -155,22 +161,24 @@ void CTouchScreen::initScreenPoints()
 void CTouchScreen::initCameraPoints()
 {
 	int p = 0;
-	
-	float cw = 640.0, ch = 480.0; // defaults if no frame is available
+
+	float cw = 640.0, ch = 480.0; // 640x480 default if no frame is available
+
 	// try and get a frame from the filter stack, and we'll use that as our frame size
-	if(filterChain.size() > 0) {
-		filterChain[0]->process(NULL);
-		IplImage *output = filterChain.back()->getOutput();
-		
-		cw = (float)output->width;
-		ch = (float)output->height;
+	if(filterChain.size() > 0) {		// If we have a filter
+		filterChain[0]->process(NULL);	// send process on a dry run to initialize the camera resolution parameters
+		IplImage *output = filterChain.back()->getOutput();		// return the captured frame from the last filter as a IplImage object
+
+		cw = (float)output->width;		// extract the camera frame width
+		ch = (float)output->height;		// and height from the IplImage object
 	}
 
 	int i,j;
 	for(j=0; j<=GRID_Y; j++)
 	{
-		for(i=0; i<=GRID_X; i++)
+		for(i=0; i<=GRID_X; i++)		// For each point in the grid
 		{
+			// Set each camera point the the corrosponding grid index
 			cameraPoints[p] = vector2df((i * cw) / (float)GRID_X, (j * ch) / (float)GRID_Y);
 			p++;
 		}
@@ -180,17 +188,17 @@ void CTouchScreen::initCameraPoints()
 
 IplImage* CTouchScreen::getFilterImage(std::string & label)
 {
-	std::map<std::string,Filter*>::iterator iter = filterMap.find(label);
-	if(iter == filterMap.end())
-		return NULL;
-	return iter->second->getOutput();	
+	std::map<std::string,Filter*>::iterator iter = filterMap.find(label);		// Get the chosen filter
+	if(iter == filterMap.end())				// If we have reached the last filter
+		return NULL;						// then exit
+	return iter->second->getOutput();		// otherwise, return the next IplImage from the filter
 }
 
 IplImage* CTouchScreen::getFilterImage(int step)
 {
-	step = step >= filterChain.size() ? filterChain.size()-1:step;
-	step = step < 0? 0:step;
-	return filterChain[step]->getOutput();	
+	step = step >= filterChain.size() ? filterChain.size()-1:step;		// If the requested step is greater than the total number of filters, reduce until equal
+	step = step < 0? 0:step;											// If the requested step is less than 0, step now equals 0
+	return filterChain[step]->getOutput();								// Return the latest IplImage from the filter
 }
 
 void CTouchScreen::setScreenScale(float s)
@@ -208,7 +216,7 @@ float CTouchScreen::getScreenScale()
 	minValL = 1.0f - minValL;
 	float minValU = MAX(screenBB.upperLeftCorner.X,screenBB.upperLeftCorner.Y);
 	float minVal = MIN(minValL,minValU);
-	return 1.0f - (2.0f * minVal);	
+	return 1.0f - (2.0f * minVal);
 }
 
 void CTouchScreen::setScreenBBox(rect2df &box)
@@ -219,44 +227,45 @@ void CTouchScreen::setScreenBBox(rect2df &box)
 
 void CTouchScreen::registerListener(ITouchListener *listener)
 {
+	// Add new ITouchListener to the end of the list
 	listenerList.push_back(listener);
 }
 
 
 bool CTouchScreen::process()
 {
-
+	// The main event loop for this CTouchScreen instance
 	while(1) {
-		if(filterChain.size() == 0)
-			return false;
+		if(filterChain.size() == 0)		// If there are no filters
+			return false;				// error out
 		//printf("Process chain\n");
-		filterChain[0]->process(NULL);
-		IplImage *output = filterChain.back()->getOutput();
+		filterChain[0]->process(NULL);	// Otherwise go to the first filter
+		IplImage *output = filterChain.back()->getOutput(); // and get the first frame
 
-		if(output != NULL) {
+		if(output != NULL) {			// If there is output to get
 			//printf("Process chain complete\n");
-			frame = output;
+			frame = output;		// assign it to the private CTouchScreen::frame variable
 
-			if(bTracking == true)
+			if(bTracking == true)		// If we are currently tracking blobs
 			{
 				//printf("Tracking 1\n");
-				tracker->findBlobs(frame);
-				tracker->trackBlobs();
+				tracker->findBlobs(frame);		// Locate the blobs
+				tracker->trackBlobs();			// and update their location
 
-#ifdef WIN32				
+#ifdef WIN32
 				DWORD dw = WaitForSingleObject(eventListMutex, INFINITE);
 				//dw == WAIT_OBJECT_0
-				if(dw == WAIT_TIMEOUT || dw == WAIT_FAILED) {
+				if(dw == WAIT_TIMEOUT || dw == WAIT_FAILED) {		// If locking the mutex failed
 					// handle time-out error
 					//throw TimeoutExcp();
-					printf("Failed %d", dw);
-					
-				} 
-				else 
+					printf("Failed %d", dw);						// output result to terminal
+
+				}
+				else 		// Locking the mutex succeeds
 				{
 					//printf("Tracking 2\n");
-					tracker->gatherEvents();
-					ReleaseMutex(eventListMutex);
+					tracker->gatherEvents();			// then find out which blobs are new and track the old blob's movement
+					ReleaseMutex(eventListMutex);		// and unlock the mutex
 				}
 #else
 				int err;
@@ -264,8 +273,8 @@ bool CTouchScreen::process()
 					// some error occured
 					fprintf(stderr,"locking of mutex failed\n");
 				}else{
-					tracker->gatherEvents();
-					pthread_mutex_unlock(&eventListMutex);
+					tracker->gatherEvents();	// then find out which blobs are new and track the old blob's movement
+					pthread_mutex_unlock(&eventListMutex);		// and unlock the mutex
 				}
 #endif
 			}
@@ -279,161 +288,161 @@ bool CTouchScreen::process()
 
 void CTouchScreen::getRawImage(char **img, int &width, int &height)
 {
-	*img = ((IplImage *)frame.imgp)->imageData;
-	width = frame.getWidth();
-	height = frame.getHeight();
+	*img = ((IplImage *)frame.imgp)->imageData;		// *img gets assigned the pointer to the aligned image data
+	width = frame.getWidth();						// then assign the width
+	height = frame.getHeight();						// and height from the frame data
 	return;
 }
 
 
 void CTouchScreen::saveConfig(const char* filename)
 {
-	ParameterMap pMap;
-	ParameterMap::iterator pMapItr;
+	ParameterMap pMap;					// Create a pMap to store the filter attributes
+	ParameterMap::iterator pMapItr;		// Create an iterator to cycle through each attribute
 
-	TiXmlDocument doc(filename);
-	TiXmlDeclaration* decl = new TiXmlDeclaration("1.0", "", "");
-	doc.LinkEndChild(decl);
-
-
-	char sztmp[50];
-
-	TiXmlElement* configElement = new TiXmlElement("blobconfig");
-	doc.LinkEndChild(configElement);	
+	TiXmlDocument doc(filename);		// Create a TinyXML document and assign it an xml file
+	TiXmlDeclaration* decl = new TiXmlDeclaration("1.0", "", "");		// Make the <?xml version="1.0" ?> tag
+	doc.LinkEndChild(decl);												// Add the tag to the document
 
 
-	configElement->SetAttribute("distanceThreshold", reject_distance_threshold);
-	configElement->SetAttribute("minDimension", reject_min_dimension);
-	configElement->SetAttribute("maxDimension", reject_max_dimension);
-	configElement->SetAttribute("ghostFrames", ghost_frames);
-	sprintf(sztmp, "%f", minimumDisplacementThreshold);
-	configElement->SetAttribute("minDisplacementThreshold", sztmp);
+	char sztmp[50];			// Create sztmp[] to convert each attribute value to a (char *)
+
+	TiXmlElement* configElement = new TiXmlElement("blobconfig");		// Create the <blobconfig> tag
+	doc.LinkEndChild(configElement);		// Add the tag to the document
+
+
+	configElement->SetAttribute("distanceThreshold", reject_distance_threshold);		// Add distanceThreshold="250"
+	configElement->SetAttribute("minDimension", reject_min_dimension);					// Add minDimension="2"
+	configElement->SetAttribute("maxDimension", reject_max_dimension);					// Add maxDimension="250"
+	configElement->SetAttribute("ghostFrames", ghost_frames);							// Add ghostFrames="0"
+	sprintf(sztmp, "%f", minimumDisplacementThreshold);									// Convert minimumDisplacementThreshold float to a (char *)
+	configElement->SetAttribute("minDisplacementThreshold", sztmp);						// Add minDisplacementThreshold="2.000000"
 
 
 
-	TiXmlElement* bbelement = new TiXmlElement("bbox");
-	sprintf(sztmp, "%f", screenBB.upperLeftCorner.X);
-	bbelement->SetAttribute("ulX", sztmp);	
-	sprintf(sztmp, "%f", screenBB.upperLeftCorner.Y);
-	bbelement->SetAttribute("ulY", sztmp);	
-	sprintf(sztmp, "%f", screenBB.lowerRightCorner.X);
-	bbelement->SetAttribute("lrX", sztmp);	
-	sprintf(sztmp, "%f", screenBB.lowerRightCorner.Y);
-	bbelement->SetAttribute("lrY", sztmp);	
-	doc.LinkEndChild(bbelement);
+	TiXmlElement* bbelement = new TiXmlElement("bbox");		// Create the <bbox> tag
+	sprintf(sztmp, "%f", screenBB.upperLeftCorner.X);		// Convert screenBB.upperLeftCorner.X float to a (char *)
+	bbelement->SetAttribute("ulX", sztmp);					// Add ulX="0.000000"
+	sprintf(sztmp, "%f", screenBB.upperLeftCorner.Y);		// Convert screenBB.upperLeftCorner.Y float to a (char *)
+	bbelement->SetAttribute("ulY", sztmp);					// Add ulY="0.000000"
+	sprintf(sztmp, "%f", screenBB.lowerRightCorner.X);		// Convert screenBB.lowerRightCorner.X float to a (char *)
+	bbelement->SetAttribute("lrX", sztmp);					// Add lrX="1.000000"
+	sprintf(sztmp, "%f", screenBB.lowerRightCorner.Y);		// Convert screenBB.lowerRightCorner.Y float to a (char *)
+	bbelement->SetAttribute("lrY", sztmp);					// Add lrY="1.000000"
+	doc.LinkEndChild(bbelement);							// Add the tag to the document
 
-	TiXmlElement* screenRoot = new TiXmlElement("screen");
-	doc.LinkEndChild(screenRoot);
+	TiXmlElement* screenRoot = new TiXmlElement("screen");	// Create <screen> tag
+	doc.LinkEndChild(screenRoot);		// Add the tag to the document
 	int i;
 
-	for(i=0; i<GRID_POINTS; i++)
+	for(i=0; i<GRID_POINTS; i++)		// Cycle through each grid point
 	{
 
-		TiXmlElement* element = new TiXmlElement("point");
-		sprintf(sztmp, "%f", cameraPoints[i].X);
-		element->SetAttribute("X", sztmp);
-		sprintf(sztmp, "%f", cameraPoints[i].Y);
-		element->SetAttribute("Y", sztmp);
-		screenRoot->LinkEndChild(element);
+		TiXmlElement* element = new TiXmlElement("point");		// Create <point> tag
+		sprintf(sztmp, "%f", cameraPoints[i].X);				// Convert cameraPoints[i].X vector2df to a (char *)
+		element->SetAttribute("X", sztmp);						// Add X="[each grid point]"
+		sprintf(sztmp, "%f", cameraPoints[i].Y);				// Convert cameraPoints[i].Y vector2df to a (char *)
+		element->SetAttribute("Y", sztmp);						// Add Y="[each grid point]"
+		screenRoot->LinkEndChild(element);						// Insert tag between <screen> and </screen>
 	}
-	
 
-	TiXmlElement* fgRoot = new TiXmlElement("filtergraph");
-	doc.LinkEndChild(fgRoot);
-	
-	for(i = 0; i < filterChain.size(); i++)
+
+	TiXmlElement* fgRoot = new TiXmlElement("filtergraph");		// Create <filtergraph> tag
+	doc.LinkEndChild(fgRoot);									// Add the tag to the document
+
+	for(i = 0; i < filterChain.size(); i++)		// Cycle through each filter
 	{
-		TiXmlElement* element = new TiXmlElement(filterChain[i]->getType());
-		element->SetAttribute("label", filterChain[i]->getName());
+		TiXmlElement* element = new TiXmlElement(filterChain[i]->getType());		// Create <[filter type]> tag
+		element->SetAttribute("label", filterChain[i]->getName());					// Add label="[filter name]"
 
-		filterChain[i]->getParameters(pMap);
+		filterChain[i]->getParameters(pMap);		// load filter attributes into pMap
 
-		for(pMapItr = pMap.begin(); pMapItr != pMap.end(); pMapItr++)
+		for(pMapItr = pMap.begin(); pMapItr != pMap.end(); pMapItr++)		// Cycle through each attribute
 		{
-			TiXmlElement* param = new TiXmlElement(pMapItr->first.c_str());
-			param->SetAttribute("value", pMapItr->second.c_str());
-			element->LinkEndChild(param);
+			TiXmlElement* param = new TiXmlElement(pMapItr->first.c_str());		// Create a <[attribute type]> tag
+			param->SetAttribute("value", pMapItr->second.c_str());				// Add value="[attribute value]"
+			element->LinkEndChild(param);										// Insert tag between <[filter type]> and </[filter type]>
 		}
 
-		fgRoot->LinkEndChild(element);
-		pMap.clear();
+		fgRoot->LinkEndChild(element);		// Insert between <filtergraph> and </filtergraph>
+		pMap.clear();						// Reinitialize pMap for next filter
 	}
-	doc.SaveFile();
+	doc.SaveFile();							// Write document to file
 }
 
 
 
 bool CTouchScreen::loadConfig(const char* filename)
 {
-	TiXmlDocument doc(filename);
+	TiXmlDocument doc(filename);		// Create a TinyXML document and load xml file
 
-	if(!doc.LoadFile())
-		return false;
+	if(!doc.LoadFile())			// Check <?xml version="1.0" ?> tag
+		return false;			// If the tag is wrong, then exit out
 
-	TiXmlElement* configElement = doc.FirstChildElement("blobconfig");
-	if(configElement){
-		configElement->Attribute("distanceThreshold", &reject_distance_threshold);
-		configElement->Attribute("minDimension", &reject_min_dimension);
-		configElement->Attribute("maxDimension", &reject_max_dimension);
-		configElement->Attribute("ghostFrames", &ghost_frames);
+	TiXmlElement* configElement = doc.FirstChildElement("blobconfig");					// Begin with the <blobconfig> tag
+	if(configElement){																	// and if it exists
+		configElement->Attribute("distanceThreshold", &reject_distance_threshold);		// Get the distanceThreshold
+		configElement->Attribute("minDimension", &reject_min_dimension);				// Get the minDimension
+		configElement->Attribute("maxDimension", &reject_max_dimension);				// Get the maxDimension
+		configElement->Attribute("ghostFrames", &ghost_frames);							// Get the ghostFrames
 
 		double temp;
-		configElement->Attribute("minDisplacementThreshold", &temp);
-		minimumDisplacementThreshold = (float) temp;
+		configElement->Attribute("minDisplacementThreshold", &temp);					// Get the minDisplacementThreshold
+		minimumDisplacementThreshold = (float) temp;									// Set the minimumDisplacementThreshold
 	}
 
 	// set up some configuration variables
 	tracker->setup(reject_distance_threshold, reject_min_dimension, reject_max_dimension, ghost_frames, minimumDisplacementThreshold);
 
-	TiXmlElement* bboxRoot = doc.FirstChildElement("bbox");
-	if(bboxRoot){
-		vector2df ul(atof(bboxRoot->Attribute("ulX")),atof(bboxRoot->Attribute("ulY")));
-		vector2df lr(atof(bboxRoot->Attribute("lrX")),atof(bboxRoot->Attribute("lrY")));
-		rect2df bb(ul,lr);
-		setScreenBBox(bb);
-	}else{
-		setScreenScale(1.0f);
+	TiXmlElement* bboxRoot = doc.FirstChildElement("bbox");									// Get <bbox> tag
+	if(bboxRoot){																			// and if it exists
+		vector2df ul(atof(bboxRoot->Attribute("ulX")),atof(bboxRoot->Attribute("ulY")));	// Get the upper left X,Y
+		vector2df lr(atof(bboxRoot->Attribute("lrX")),atof(bboxRoot->Attribute("lrY")));	// Get the lower right X,Y
+		rect2df bb(ul,lr);																	// Create a bounding box variable
+		setScreenBBox(bb);																	// Load screenBB and initialize the new screen points
+	}else{																					// and if it doesn't exist
+		setScreenScale(1.0f);																// Load screenBB to default and initialize the new screen points
 	}
 
-	TiXmlElement* screenRoot = doc.FirstChildElement("screen");
+	TiXmlElement* screenRoot = doc.FirstChildElement("screen");			// Get <screen> tag
 
-	printf("Reading camera points\n");
-	if(screenRoot)
+	printf("Reading camera points\n");									// Announce to terminal
+	if(screenRoot)														// and if it exists
 	{
 
 		int i=0;
-		for(TiXmlElement* pointElement = screenRoot->FirstChildElement(); 
+		for(TiXmlElement* pointElement = screenRoot->FirstChildElement();	// Cycle through each <point> tag
 			pointElement != NULL;
-			pointElement = pointElement->NextSiblingElement()) 
+			pointElement = pointElement->NextSiblingElement())
 		{
-			cameraPoints[i] = vector2df(atof(pointElement->Attribute("X")),atof(pointElement->Attribute("Y")));
-			printf("%f, %f\n", cameraPoints[i].X,cameraPoints[i].Y);
+			cameraPoints[i] = vector2df(atof(pointElement->Attribute("X")),atof(pointElement->Attribute("Y")));		// and extract each X,Y value
+			printf("%f, %f\n", cameraPoints[i].X,cameraPoints[i].Y);		// Announce coordinates to terminal
 			i++;
 
 		}
 	}
 
-	TiXmlElement* fgRoot = doc.FirstChildElement("filtergraph");
-	
-	if(fgRoot)
+	TiXmlElement* fgRoot = doc.FirstChildElement("filtergraph");		// Get <filtergraph> tag
+
+	if(fgRoot)															// and if it exists
 	{
 
 
-		for(TiXmlElement* filterElement = fgRoot->FirstChildElement(); 
+		for(TiXmlElement* filterElement = fgRoot->FirstChildElement();					// Cycle through each filter
 			filterElement != NULL;
-			filterElement = filterElement->NextSiblingElement()) 
+			filterElement = filterElement->NextSiblingElement())
 		{
-			pushFilter(filterElement->Value(), filterElement->Attribute("label"));
+			pushFilter(filterElement->Value(), filterElement->Attribute("label"));		// Create a new Filter window [filter type] and [filter name] from tag
 			// fixme: we should check to see whether pushfilter succeeded.
-			if(filterChain.size() > 0)
+			if(filterChain.size() > 0)													// If there are any Filter attributes
 			{
-				Filter* curFilter = filterChain[filterChain.size()-1];
+				Filter* curFilter = filterChain[filterChain.size()-1];					// Apply them to the new Filter
 
-				for(TiXmlElement* paramElement = filterElement->FirstChildElement();
+				for(TiXmlElement* paramElement = filterElement->FirstChildElement();	// Cycle through each Filter attribute
 					paramElement != NULL;
-					paramElement = paramElement->NextSiblingElement()) 
+					paramElement = paramElement->NextSiblingElement())
 				{
-						curFilter->setParameter(paramElement->Value(), paramElement->Attribute("value"));
+						curFilter->setParameter(paramElement->Value(), paramElement->Attribute("value"));		// Load the value of each Filter attribute found
 				}
 			}
 		}
@@ -444,54 +453,54 @@ bool CTouchScreen::loadConfig(const char* filename)
 
 std::list<std::string> CTouchScreen::findFilters(const char * type)
 {
-	std::list<std::string> filters;
-	for(std::vector<Filter*>::iterator iter = filterChain.begin();iter!=filterChain.end();iter++){
-		if(!strcmp((*iter)->getType(),type)){
-			filters.push_back(std::string((*iter)->getName()));
+	std::list<std::string> filters;																		// Make a list
+	for(std::vector<Filter*>::iterator iter = filterChain.begin();iter!=filterChain.end();iter++){		// and for each Filter
+		if(!strcmp((*iter)->getType(),type)){															// if the type is the one sought
+			filters.push_back(std::string((*iter)->getName()));											// add the name to the list
 		}
 	}
-	return filters;
+	return filters;																						// and return the list
 }
 
 std::string CTouchScreen::findFirstFilter(const char * type)
 {
 	std::string filter;
-	for(std::vector<Filter*>::iterator iter = filterChain.begin();iter!=filterChain.end();iter++){
-		if(!strcmp((*iter)->getType(),type)){
-			filter = (*iter)->getName();
-			break;
+	for(std::vector<Filter*>::iterator iter = filterChain.begin();iter!=filterChain.end();iter++){		// Cycle through each Filter
+		if(!strcmp((*iter)->getType(),type)){															// if the type is the one sought
+			filter = (*iter)->getName();																// Get the Filter name
+			break;																						// stop cycling through the list
 		}
 	}
-	return filter;
+	return filter;																						// and return it
 }
 
 void CTouchScreen::setParameter(std::string & label, char *param, char *value)
 {
-	std::map<std::string,Filter*>::iterator iter = filterMap.find(label);
-	if(iter == filterMap.end())
-		return;
-	iter->second->setParameter(param, value);	
+	std::map<std::string,Filter*>::iterator iter = filterMap.find(label);		// Cycle through list until Filter found
+	if(iter == filterMap.end())													// If at the end of the list
+		return;																	// then exit
+	iter->second->setParameter(param, value);									// Otherwise assign the parameter and value to the Filter
 }
 
 std::string CTouchScreen::pushFilter(const char *type, const char * inlabel)
 {
-	std::string label;
-	unsigned int n = filterChain.size();
-	if(inlabel){
-		label = inlabel;
-	}else{	
-		label = type;
+	std::string label;							// Filter label
+	unsigned int n = filterChain.size();		// Number of Filters
+	if(inlabel){								// If label name is passed
+		label = inlabel;						// Set Filter label to name
+	}else{										// Otherwise
+		label = type;							// Set Filter label to type
 		// ugly, but a pain with safe functions because of windows function names
-		char buffer[20];
-		sprintf(buffer,"%d",n);
-		label += buffer;
+		char buffer[20];						// Create buffer
+		sprintf(buffer,"%d",n);					// Set buffer to number of Filters
+		label += buffer;						// Append the number to the new label name
 	}
-	Filter *newfilt = FilterFactory::createFilter(type, label.c_str());
-	
-	if(newfilt)
+	Filter *newfilt = FilterFactory::createFilter(type, label.c_str());		// Create a new Filter and pointer to it
+
+	if(newfilt)												// If the pointer was successfully created
 	{
 		// lets tile all the output windows nicely
-	
+
 
 		// FIXME: we are assuming 1024 x 768 screen res. We should
 		// have a cross platform way to get the current screen res.
@@ -500,25 +509,25 @@ std::string CTouchScreen::pushFilter(const char *type, const char * inlabel)
 		int num_per_row = 1024 / 320;
 		int i = n % num_per_row;
 		int j = n / num_per_row;
-		newfilt->showOutput(debugMode, i*320, j * 200);
+		newfilt->showOutput(debugMode, i*320, j * 200);		// Display Filter window
 
-		if(filterChain.size() > 0)
-			filterChain.back()->connectTo(newfilt);
+		if(filterChain.size() > 0)							// If there exists at least one other Filter in the list
+			filterChain.back()->connectTo(newfilt);			// then point the end of the list to the new Filter
 
-		filterChain.push_back(newfilt);
-		filterMap.insert(std::make_pair(label,newfilt));
-		return label;
+		filterChain.push_back(newfilt);						// Make the new Filter the end of the list
+		filterMap.insert(std::make_pair(label,newfilt));	// Add new Filter to the filter map
+		return label;										// and return the name of the Filter
 	}
-	return std::string();
+	return std::string();									// If no pointer to a new filter then return a NULL string
 }
 
 
 void CTouchScreen::doTouchEvent(TouchData data)
 {
 	unsigned int i;
-	for(i=0; i<listenerList.size(); i++)
+	for(i=0; i<listenerList.size(); i++)		// Cycle through all the ITouchListeners
 	{
-		listenerList[i]->fingerDown(data);
+		listenerList[i]->fingerDown(data);		// and check for new finger blobs
 	}
 }
 
@@ -526,9 +535,9 @@ void CTouchScreen::doTouchEvent(TouchData data)
 void CTouchScreen::doUpdateEvent(TouchData data)
 {
 	unsigned int i;
-	for(i=0; i<listenerList.size(); i++)
+	for(i=0; i<listenerList.size(); i++)		// Cycle through all the ITouchListeners
 	{
-		listenerList[i]->fingerUpdate(data);
+		listenerList[i]->fingerUpdate(data);	// and check for finger blob movement
 	}
 }
 
@@ -536,81 +545,81 @@ void CTouchScreen::doUpdateEvent(TouchData data)
 void CTouchScreen::doUntouchEvent(TouchData data)
 {
 	unsigned int i;
-	for(i=0; i<listenerList.size(); i++)
+	for(i=0; i<listenerList.size(); i++)		// Cycle through all the ITouchListeners
 	{
-		listenerList[i]->fingerUp(data);
+		listenerList[i]->fingerUp(data);		// and check for finger blobs gone
 	}
 }
 
 void CTouchScreen::fingerDown(TouchData data)
 {
-	CTouchEvent e;
+	CTouchEvent e;														// Create a CTouchEvent variable
 
-	if(bCalibrating) {
-		cameraPoints[calibrationStep] = vector2df(data.X, data.Y);
+	if(bCalibrating) {													// If we are calibrating the camera points
+		cameraPoints[calibrationStep] = vector2df(data.X, data.Y);		// assign the data to the current point
 		//printf("%d (%f, %f)\n", calibrationStep, data.X, data.Y);
 	}
 
-	transformDimension(data.width, data.height, data.X, data.Y);
-	data.area = data.width * data.height;
+	transformDimension(data.width, data.height, data.X, data.Y);		// Calculate and assign width and height from data X,Y
+	data.area = data.width * data.height;								// Calculate and assign area from width and height
 
-	cameraToScreenSpace(data.X, data.Y);
-	
-	e.data = data;
-	e.type = TOUCH_PRESS;
+	cameraToScreenSpace(data.X, data.Y);								// Align camera and screen grids
 
-	e.data.dX = 0;
-	e.data.dY = 0;
+	e.data = data;														// Assign the data to the CTouchEvent
+	e.type = TOUCH_PRESS;												// Assign the event to the fingerDown type
 
-	eventList.push_back(e);
+	e.data.dX = 0;														// We are not tracking a moving blob yet
+	e.data.dY = 0;														// so we will initialize the movement deltas
+
+	eventList.push_back(e);												// Add the CTouchEvent to the end of the eventList
 }
 
 
 void CTouchScreen::fingerUp(TouchData data)
 {
-	CTouchEvent e;
+	CTouchEvent e;														// Create local CTouchEvent variable
 
-	float tx, ty;
+	float tx, ty;														// Create local X,Y variable
 
-	tx = data.X + data.dX;
-	ty = data.Y + data.dY;
+	tx = data.X + data.dX;												// Add blob movement delta to last blob position
+	ty = data.Y + data.dY;												// for both X,Y and assign it to the local X,Y
 
-	transformDimension(data.width, data.height, data.X, data.Y);
-	data.area = data.width * data.height;
+	transformDimension(data.width, data.height, data.X, data.Y);		// Calculate and assign width and height from data X,Y
+	data.area = data.width * data.height;								// Calculate and assign area from width and height
 
-	cameraToScreenSpace(data.X, data.Y);
-	cameraToScreenSpace(tx, ty);
+	cameraToScreenSpace(data.X, data.Y);								// Convert camera data X,Y coordinates to screen coordinates
+	cameraToScreenSpace(tx, ty);										// Convert local X,Y coordinates to screen coordinates
 
-	e.data = data;
-	e.type = TOUCH_RELEASE;
-	e.data.dX = tx - data.X;
-	e.data.dY = ty - data.Y;
+	e.data = data;														// Assign the data to the CTouchEvent
+	e.type = TOUCH_RELEASE;												// Assign the event the fingerUp type
+	e.data.dX = tx - data.X;											// Assign both X,Y blob movement delta
+	e.data.dY = ty - data.Y;											// now that they have been converted to screen coordinates
 
-	eventList.push_back(e);
+	eventList.push_back(e);												// Add the CTouchEvent to the end of the eventList
 }
 
 
 void CTouchScreen::fingerUpdate(TouchData data)
 {
-	CTouchEvent e;
+	CTouchEvent e;														// Create local CTouchEvent variable
 
-	float tx, ty;
+	float tx, ty;														// Create local X,Y variable
 
-	tx = data.X + data.dX;
-	ty = data.Y + data.dY;
+	tx = data.X + data.dX;												// Add blob movement delta to last blob position
+	ty = data.Y + data.dY;												// for both X,Y and assign it to the local X,Y
 
-	transformDimension(data.width, data.height, data.X, data.Y);
-	data.area = data.width * data.height;
+	transformDimension(data.width, data.height, data.X, data.Y);		// Calculate and assign width and height from data X,Y
+	data.area = data.width * data.height;								// Calculate and assign area from width and height
 
-	cameraToScreenSpace(data.X, data.Y);
-	cameraToScreenSpace(tx, ty);
+	cameraToScreenSpace(data.X, data.Y);								// Convert camera data X,Y coordinates to screen coordinates
+	cameraToScreenSpace(tx, ty);										// Convert local X,Y coordinates to screen coordinates
 
-	e.data = data;
-	e.type = TOUCH_UPDATE;
-	e.data.dX = tx - data.X;
-	e.data.dY = ty - data.Y;
+	e.data = data;														// Assign the data to the CTouchEvent
+	e.type = TOUCH_UPDATE;												// Assign the event the fingerUpdate type
+	e.data.dX = tx - data.X;											// Assign both X,Y blob movement delta
+	e.data.dY = ty - data.Y;											// now that they have been converted to screen coordinates
 
-	eventList.push_back(e);
+	eventList.push_back(e);												// Add the CTouchEvent to the end of the eventList
 }
 
 void CTouchScreen::transformDimension(float &width, float &height, float centerX, float centerY)
@@ -637,7 +646,7 @@ bool isPointInTriangle(vector2df p, vector2df a, vector2df b, vector2df c)
 {
 	if (vector2df::isOnSameSide(p,a, b,c) && vector2df::isOnSameSide(p,b, a,c) && vector2df::isOnSameSide(p, c, a, b))
 		return true;
-    else 
+    else
 		return false;
 }
 
@@ -662,58 +671,56 @@ int CTouchScreen::findTriangleWithin(vector2df pt)
 // Transforms a camera space coordinate into a screen space coord
 void CTouchScreen::cameraToScreenSpace(float &x, float &y)
 {
+	vector2df pt(x, y);						// Put coordinates into a vector
+	int t = findTriangleWithin(pt);			// so you can find which triangle contains it
 
-	vector2df pt(x, y);
-	int t = findTriangleWithin(pt);
-
-	if(t != -1)
+	if(t != -1)								// If the right triangle is found
 	{
 
-		vector2df A = cameraPoints[triangles[t+0]];
-		vector2df B = cameraPoints[triangles[t+1]];
+		vector2df A = cameraPoints[triangles[t+0]];			// Place camera vector triangle points
+		vector2df B = cameraPoints[triangles[t+1]];			// into some local vectors
 		vector2df C = cameraPoints[triangles[t+2]];
-		float total_area = (A.X - B.X) * (A.Y - C.Y) - (A.Y - B.Y) * (A.X - C.X);
+		float total_area = (A.X - B.X) * (A.Y - C.Y) - (A.Y - B.Y) * (A.X - C.X);		// Calculate the total area of the triangle
 
 		// pt,B,C
-		float area_A = (pt.X - B.X) * (pt.Y - C.Y) - (pt.Y - B.Y) * (pt.X - C.X);
+		float area_A = (pt.X - B.X) * (pt.Y - C.Y) - (pt.Y - B.Y) * (pt.X - C.X);		// and find the area enclosed by the
 
 		// A,pt,C
-		float area_B = (A.X - pt.X) * (A.Y - C.Y) - (A.Y - pt.Y) * (A.X - C.X);
+		float area_B = (A.X - pt.X) * (A.Y - C.Y) - (A.Y - pt.Y) * (A.X - C.X);			// three camera vector triangle points
 
-		float bary_A = area_A / total_area;
+		float bary_A = area_A / total_area;												// so we can find three fractions of the total area
 		float bary_B = area_B / total_area;
 		float bary_C = 1.0f - bary_A - bary_B;	// bary_A + bary_B + bary_C = 1
 
-		vector2df sA = screenPoints[triangles[t+0]];
-		vector2df sB = screenPoints[triangles[t+1]];
+		vector2df sA = screenPoints[triangles[t+0]];									// Place screen vector triangle points
+		vector2df sB = screenPoints[triangles[t+1]];									// into some local vectors
 		vector2df sC = screenPoints[triangles[t+2]];
 
-		vector2df transformedPos;
+		vector2df transformedPos;														// Create a temporary vector variable
 
-		transformedPos = (sA*bary_A) + (sB*bary_B) + (sC*bary_C);
+		transformedPos = (sA*bary_A) + (sB*bary_B) + (sC*bary_C);						// Calculate the new vector adjustment
 
-		x = transformedPos.X;
-		y = transformedPos.Y;
+		x = transformedPos.X;															// Change the value of x
+		y = transformedPos.Y;															// Change the value of y
 		return;
 	}
 
-	x = 0;
-	y = 0;
+	x = 0;			// If the right triangle is not found
+	y = 0;			// then initialize x,y = 0
+
 	// FIXME: what to do in the case that it's outside the mesh?
-
-
 }
 
 THREAD_RETURN_TYPE CTouchScreen::_processEntryPoint(void * obj)
 {
-	((CTouchScreen *)obj)->process();
+	((CTouchScreen *)obj)->process();									// Make a handle for this CTouchScreen
 }
 
 
 void CTouchScreen::beginProcessing()
 {
 #ifdef WIN32
-	hThread = (HANDLE)_beginthread(_processEntryPoint, 0, this);
+	hThread = (HANDLE)_beginthread(_processEntryPoint, 0, this);		// Get the handle for _this_ CTouchScreen object and assign to local handle
 	//SetThreadPriority(hThread, THREAD_PRIORITY_ABOVE_NORMAL);
 #else
 	pthread_create(&hThread,0,_processEntryPoint,this);
@@ -725,15 +732,15 @@ void CTouchScreen::getEvents()
 {
 	unsigned int i=0;
 
-#ifdef WIN32				
-	DWORD dw = WaitForSingleObject(eventListMutex, INFINITE);		// 
+#ifdef WIN32
+	DWORD dw = WaitForSingleObject(eventListMutex, INFINITE);		// Wait for the mutex
 	//dw == WAIT_OBJECT_0
-	if(dw == WAIT_TIMEOUT || dw == WAIT_FAILED) {
+	if(dw == WAIT_TIMEOUT || dw == WAIT_FAILED) {					// If you don't lock the mutex
 		// handle time-out error
 		//throw TimeoutExcp();
-		printf("Failed %d", dw);
-		return;
-	} 
+		printf("Failed %d", dw);									// announce it to the terminal
+		return;														// and exit
+	}
 #else
 	int err;
 	if((err = pthread_mutex_lock(&eventListMutex)) != 0){
@@ -741,26 +748,26 @@ void CTouchScreen::getEvents()
 		fprintf(stderr,"locking of mutex failed\n");
 		return;
 	}
-#endif		
-	for(i=0; i<eventList.size(); i++)
+#endif
+	for(i=0; i<eventList.size(); i++)							// Cycle through each event in the eventList
 		{
-			switch(eventList[i].type)
+			switch(eventList[i].type)							// Retrieve the event type
 				{
-				case TOUCH_PRESS:
-					doTouchEvent(eventList[i].data);
+				case TOUCH_PRESS:								// For new blobs
+					doTouchEvent(eventList[i].data);			// Send new blob data to the ITouchListener
 					break;
-				case TOUCH_RELEASE:
-					doUntouchEvent(eventList[i].data);
+				case TOUCH_RELEASE:								// For blob gone
+					doUntouchEvent(eventList[i].data);			// Send blob gone data to the ITouchListener
 					break;
-				case TOUCH_UPDATE:
-					doUpdateEvent(eventList[i].data);
+				case TOUCH_UPDATE:								// For moving blobs
+					doUpdateEvent(eventList[i].data);			// Send blob moved data to the ITouchListener
 					break;
 				};
 		}
-	
-	eventList.clear();
+
+	eventList.clear();											// Then clear the eventList
 #ifdef WIN32
-	ReleaseMutex(eventListMutex);
+	ReleaseMutex(eventListMutex);								// and unlock the mutex
 #else
 	pthread_mutex_unlock(&eventListMutex);
 #endif
@@ -770,8 +777,8 @@ void CTouchScreen::getEvents()
 
 void CTouchScreen::beginCalibration()
 {
-	 bCalibrating = true;
-	 calibrationStep = 0;
+	 bCalibrating = true;				// Set the calibration flag to true
+	 calibrationStep = 0;				// and reset the step counter
 }
 
 
@@ -818,7 +825,7 @@ void CTouchScreen::cameraToScreenSpace(float &x, float &y)
 	float ax = screenPoints[0].X;
 	float ay = screenPoints[0].Y;
 
-	float bx = screenPoints[1].X -  screenPoints[0].X; 
+	float bx = screenPoints[1].X -  screenPoints[0].X;
 	float by = screenPoints[1].Y -  screenPoints[0].Y;
 
 	float cx = screenPoints[3].X - screenPoints[0].X;
@@ -836,9 +843,9 @@ void CTouchScreen::cameraToScreenSpace(float &x, float &y)
 
 	if (K == 0.0)
 		v = -M / L;
-	else 
+	else
 		v = (float) ((-L - sqrtf((L*L) - (4.0 * K*M) ) ) / (2.0 * K)) ;
-	
+
 	u = (float) ((x - ax - (cx * v)) / (bx + (dx * v)));
 
 
