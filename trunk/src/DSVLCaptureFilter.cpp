@@ -110,7 +110,8 @@ bool DSVLCaptureFilter::isRunning()
 
 void DSVLCaptureFilter::kernel()
 {
-	DWORD wait_result = dsvl_vs->WaitForNextSample(100/60);//);
+	//DWORD wait_result = dsvl_vs->WaitForNextSample(100/60);//);
+	DWORD wait_result = dsvl_vs->WaitForNextSample(200); // Fix by AlexP, http://nuigroup.com/forums/viewthread/2135/
 	//if(wait_result == WAIT_OBJECT_0)
 	{
 
