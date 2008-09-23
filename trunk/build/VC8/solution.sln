@@ -2,14 +2,29 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSC", "OSC.vcproj", "{CB7AFF78-8086-495C-A334-1DAB9AA2179A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A4325213-6505-4E16-B543-8FB0FC059A1A} = {A4325213-6505-4E16-B543-8FB0FC059A1A}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "configapp", "configapp.vcproj", "{DB85049C-2E10-4085-82E0-C30E778F4A59}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A4325213-6505-4E16-B543-8FB0FC059A1A} = {A4325213-6505-4E16-B543-8FB0FC059A1A}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demo_pong", "demo_pong.vcproj", "{FCE6BE73-8667-45B5-BC6C-987EA279C9B6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A4325213-6505-4E16-B543-8FB0FC059A1A} = {A4325213-6505-4E16-B543-8FB0FC059A1A}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demo_smoke", "demo_smoke.vcproj", "{DDCFF849-ABEF-4634-B572-CA0E1D0A3FDA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A4325213-6505-4E16-B543-8FB0FC059A1A} = {A4325213-6505-4E16-B543-8FB0FC059A1A}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mousedriver", "mousedriver.vcproj", "{D1140388-CB37-40FC-B47C-F1A990A2C4FA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A4325213-6505-4E16-B543-8FB0FC059A1A} = {A4325213-6505-4E16-B543-8FB0FC059A1A}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "touchlib", "touchlib.vcproj", "{A4325213-6505-4E16-B543-8FB0FC059A1A}"
 EndProject
