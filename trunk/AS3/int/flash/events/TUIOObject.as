@@ -32,12 +32,17 @@
 		internal var pressure:Number;		
 		internal var startTime:Number;
 		internal var lastModifiedTime:Number;		
+		
+		internal var downX:Number;
+		internal var downY:Number;	
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // CONSTRUCTOR
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		public function TUIOObject ($type:String, $id:int, $px:Number, $py:Number, $dx:Number, $dy:Number, $sid:int = -1, $angle:Number = 0, $height:Number=0.0, $width:Number=0.0, $TUIO_OBJECT:DisplayObject = null)
 		{
+			trace("yooooooooooooooooooooo");
+			
 			EVENT_ARRAY = new Array();
 			TUIO_TYPE = $type;
 			ID = $id;
@@ -86,7 +91,7 @@
 			} else {
 				localPoint = new Point(x, y);
 			}
-			return new TouchEvent(event, true, false, x, y, localPoint.x, localPoint.y, 0, 0, TUIO_OBJECT, false,false,false, true, 0, TUIO_TYPE, ID, sID, angle);
+			return new TouchEvent(event, true, false, x, y, localPoint.x, localPoint.y, dX, dY, oldX, oldY, TUIO_OBJECT, false,false,false, true, 0, TUIO_TYPE, ID, sID, angle);
 		}
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // INTERNAL METHODS
@@ -98,8 +103,12 @@
 				try
 				{
 					var localPoint:Point = TUIO_OBJECT.parent.globalToLocal(new Point(x, y));				
-					TUIO_OBJECT.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_DOWN, true, false, x, y, localPoint.x, localPoint.y, 0, 0, TUIO_OBJECT, false,false,false, true, 0, TUIO_TYPE, ID, sID, angle));									
-					TUIO_OBJECT.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_OVER, true, false, x, y, localPoint.x, localPoint.y, 0, 0, TUIO_OBJECT, false,false,false, true, 0, TUIO_TYPE, ID, sID, angle));																		
+					TUIO_OBJECT.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_DOWN, true, false, x, y, localPoint.x, localPoint.y, dX, dY, oldX, oldY, TUIO_OBJECT, false,false,false, true, 0, TUIO_TYPE, ID, sID, angle));									
+					TUIO_OBJECT.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_OVER, true, false, x, y, localPoint.x, localPoint.y, dX, dY, oldX, oldY, TUIO_OBJECT, false,false,false, true, 0, TUIO_TYPE, ID, sID, angle));																		
+				
+					downX = x;
+					downY = y;
+				
 				} catch (e:Error)
 				{
 					trace("Failed : " + e);
@@ -118,7 +127,7 @@
 			{
 				localPoint = EVENT_ARRAY[i].parent.globalToLocal(new Point(x, y));			
 				//trace("Notify moved"+ localPoint);
-				EVENT_ARRAY[i].dispatchEvent(new TouchEvent(TouchEvent.MOUSE_MOVE, true, false, x, y, localPoint.x, localPoint.y, 0, 0, EVENT_ARRAY[i], false,false,false, true, 0, TUIO_TYPE, ID, sID, angle));	
+				EVENT_ARRAY[i].dispatchEvent(new TouchEvent(TouchEvent.MOUSE_MOVE, true, false, x, y, localPoint.x, localPoint.y, dX, dY, oldX, oldY, EVENT_ARRAY[i], false,false,false, true, 0, TUIO_TYPE, ID, sID, angle));	
 			}			
 		}
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -129,15 +138,27 @@
 			if(TUIO_OBJECT && TUIO_OBJECT.parent)
 			{				
 				localPoint = TUIO_OBJECT.parent.globalToLocal(new Point(x, y));				
-				TUIO_OBJECT.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_OUT, true, false, x, y, localPoint.x, localPoint.y, 0, 0, TUIO_OBJECT, false,false,false, true, 0, TUIO_TYPE, ID, sID, angle));				
-				TUIO_OBJECT.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_UP, true, false, x, y, localPoint.x, localPoint.y, 0, 0, TUIO_OBJECT, false,false,false, true, 0, TUIO_TYPE, ID, sID, angle));									
+				TUIO_OBJECT.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_OUT, true, false, x, y, localPoint.x, localPoint.y, dX, dY, oldX, oldY, TUIO_OBJECT, false,false,false, true, 0, TUIO_TYPE, ID, sID, angle));				
+				TUIO_OBJECT.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_UP, true, false, x, y, localPoint.x, localPoint.y, dX, dY, oldX, oldY, TUIO_OBJECT, false,false,false, true, 0, TUIO_TYPE, ID, sID, angle));									
+			
+				var dist, dx, dy:Number;
+			    dx = x - downX;
+			    dy = y - downY;
+			    dist = Math.sqrt(dx*dx + dy*dy);	
+				
+				trace(dist);
+						
+			    if(dist < 20){
+				 
+					TUIO_OBJECT.dispatchEvent(new TouchEvent(TouchEvent.CLICK, true, false, x, y, localPoint.x, localPoint.y, dX, dY, oldX, oldY, TUIO_OBJECT, false,false,false, true, 0, TUIO_TYPE, ID, sID, angle));									
+			    }			
 			}			
 			for(var i:int=0; i<EVENT_ARRAY.length; i++)
 			{
 				if(EVENT_ARRAY[i] != TUIO_OBJECT)
 				{
 					localPoint = EVENT_ARRAY[i].parent.globalToLocal(new Point(x, y));				
-					EVENT_ARRAY[i].dispatchEvent(new TouchEvent(TouchEvent.MOUSE_UP, true, false, x, y, localPoint.x, localPoint.y, 0, 0, EVENT_ARRAY[i], false,false,false, true, 0, TUIO_TYPE, ID, sID, angle));								
+					EVENT_ARRAY[i].dispatchEvent(new TouchEvent(TouchEvent.MOUSE_UP, true, false, x, y, localPoint.x, localPoint.y, dX, dY, oldX, oldY, EVENT_ARRAY[i], false,false,false, true, 0, TUIO_TYPE, ID, sID, angle));								
 				}
 			}
 			
@@ -156,17 +177,17 @@
 					if(TUIO_OBJECT) 
 					{
 						localPoint = TUIO_OBJECT.parent.globalToLocal(new Point(x, y));				
-						TUIO_OBJECT.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_OVER, true, false, x, y, localPoint.x, localPoint.y, 0, 0, TUIO_OBJECT, false,false,false, true, 0, TUIO_TYPE, ID, sID, angle));					
+						TUIO_OBJECT.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_OVER, true, false, x, y, localPoint.x, localPoint.y, dX, dY, oldX, oldY, TUIO_OBJECT, false,false,false, true, 0, TUIO_TYPE, ID, sID, angle));					
 					}
 				} else if(TUIO_OBJECT != o) 
 				{
 
 					localPoint = TUIO_OBJECT.parent.globalToLocal(new Point(x, y));
-					TUIO_OBJECT.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_OUT, true, false, x, y, localPoint.x, localPoint.y, 0, 0, TUIO_OBJECT, false,false,false, true, 0, TUIO_TYPE, ID, sID, angle));
+					TUIO_OBJECT.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_OUT, true, false, x, y, localPoint.x, localPoint.y, dX, dY, oldX, oldY, TUIO_OBJECT, false,false,false, true, 0, TUIO_TYPE, ID, sID, angle));
 					if(o)
 					{
 						localPoint = TUIO_OBJECT.parent.globalToLocal(new Point(x, y));
-						o.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_OVER, true, false, x, y, localPoint.x, localPoint.y, 0, 0, TUIO_OBJECT, false,false,false, true, 0, TUIO_TYPE, ID, sID, angle));
+						o.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_OVER, true, false, x, y, localPoint.x, localPoint.y, dX, dY, oldX, oldY, TUIO_OBJECT, false,false,false, true, 0, TUIO_TYPE, ID, sID, angle));
 					}
 					TUIO_OBJECT = o;
 				}

@@ -15,6 +15,9 @@
 		public var localY:Number;
 		public var oldX:Number;
 		public var oldY:Number;
+		public var dX:Number;
+		public var dY:Number;
+		
 		public var buttonDown:Boolean;
 		public var relatedObject:DisplayObject;
 		
@@ -24,7 +27,7 @@
 		public static const MOUSE_OVER:String = "flash.events.TouchEvent.MOUSE_OVER";
 		public static const MOUSE_OUT:String = "flash.events.TouchEvent.MOUSE_OUT";
 		//
-		public static const CLICK:String = "flash.events.TouchEvent.MOUSE_UP";
+		public static const CLICK:String = "flash.events.TouchEvent.CLICK";
 	
 		public static const DOUBLE_CLICK:String = "flash.events.TouchEvent.DOUBLE_CLICK";
 	
@@ -47,7 +50,7 @@
 //---------------------------------------------------------------------------------------------------------------------------------------------	
 // CONSTRUCTOR
 //---------------------------------------------------------------------------------------------------------------------------------------------
-		public function TouchEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false, stageX:Number = 0, stageY:Number = 0, localX:Number = 0, localY:Number = 0, oldX:Number = 0, oldY:Number = 0, relatedObject:DisplayObject = null, ctrlKey:Boolean = false, altKey:Boolean = false, shiftKey:Boolean = false, buttonDown:Boolean = false, delta:int = 0, TUIO_TYPE:String = "2Dcur", ID:int = -1, sID:int = -1, angle:Number = 0.0)
+		public function TouchEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false, stageX:Number = 0, stageY:Number = 0, localX:Number = 0, localY:Number = 0, dX:Number = 0, dY:Number = 0, oldX:Number = 0, oldY:Number = 0, relatedObject:DisplayObject = null, ctrlKey:Boolean = false, altKey:Boolean = false, shiftKey:Boolean = false, buttonDown:Boolean = false, delta:int = 0, TUIO_TYPE:String = "2Dcur", ID:int = -1, sID:int = -1, angle:Number = 0.0)
 		{
 			this.TUIO_TYPE = TUIO_TYPE;
 			this.sID = sID;
@@ -59,6 +62,8 @@
 			this.localY = localY;			
 			this.oldX = oldX;
 			this.oldY = oldY;
+			this.dX = dY;
+			this.dY = dX;
 			this.buttonDown = buttonDown;
 			this.relatedObject = relatedObject;			
 			super(type, bubbles, cancelable);			

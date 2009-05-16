@@ -94,7 +94,7 @@ package flash.events {
 			{		
 				RECORDED_XML = new XML();	
 				RECORDED_XML = <OSCPackets></OSCPackets>;
-				RECORDING = false;			
+				RECORDING = false;
 			}				
 			
 			SOCKET = new XMLSocket();	
@@ -105,7 +105,7 @@ package flash.events {
 			//SOCKET.addEventListener(ProgressEvent.PROGRESS, progressHandler);
 			SOCKET.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);	
 			startSocket(null);				
-			socketStatus(null);						
+			//socketStatus(null);			http://nuigroup.com/forums/viewthread/3516/			
 		}
 //---------------------------------------------------------------------------------------------------------------------------------------------
 // PUBLIC METHODS
@@ -116,6 +116,10 @@ package flash.events {
 			EVENT_ARRAY.push(e);
 		}
 */
+		public static function returnBlobs():Array{
+			return OBJECT_ARRAY;
+		}
+
 //---------------------------------------------------------------------------------------------------------------------------------------------
 		public static function addObjectListener(id:Number, reciever:Object):void
 		{
@@ -336,8 +340,8 @@ package flash.events {
 								tuioobj.width = wd;
 								tuioobj.height = ht;
 								tuioobj.area = wd * ht;								
-								tuioobj.dX = X;
-								tuioobj.dY = Y;
+								tuioobj.dX = X * STAGE.stageWidth;
+								tuioobj.dY = Y * STAGE.stageHeight;
 								tuioobj.setObjOver(dobj);
 								
 								var d:Date = new Date();																
@@ -384,7 +388,7 @@ package flash.events {
 								if(tuioobj.TUIO_OBJECT && tuioobj.TUIO_OBJECT.parent)
 								{							
 									var localPoint:Point = tuioobj.TUIO_OBJECT.parent.globalToLocal(stagePoint);							
-									tuioobj.TUIO_OBJECT.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_MOVE, true, false, x, y, localPoint.x, localPoint.y, tuioobj.oldX, tuioobj.oldY, tuioobj.TUIO_OBJECT, false,false,false, true, m, "2Dcur", id, 0, 0));
+									tuioobj.TUIO_OBJECT.dispatchEvent(new TouchEvent(TouchEvent.MOUSE_MOVE, true, false, x, y, localPoint.x, localPoint.y, tuioobj.dX, tuioobj.dY, tuioobj.oldX, tuioobj.oldY, tuioobj.TUIO_OBJECT, false,false,false, true, m, "2Dcur", id, 0, 0));
 								}
 							} catch (e:Error)
 							{
@@ -468,6 +472,7 @@ package flash.events {
 				//STAGE.addEventListener(MouseEvent.MOUSE_MOVE, socketStatus);		
 				//STAGE.addEventListener(TouchEvent.MOUSE_MOVE, socketStatus);					
         }
+		
 //---------------------------------------------------------------------------------------------------------------------------------------------
 		private static function socketStatus(e:Event):void
 		{ 		
@@ -623,12 +628,12 @@ package flash.events {
 		private static function closeHandler(event:Event):void 
         {
             //trace("closeHandler: " + event);				
-			socketStatus(null);		
+			//socketStatus(null);		
         }
      	private static function connectHandler(event:Event):void 
      	{	
 			//trace("connectHandler: " + event);				
-			socketStatus(null);			
+			//socketStatus(null);			
         }               
 		private static function onFault(e:Event ):void
 		{
