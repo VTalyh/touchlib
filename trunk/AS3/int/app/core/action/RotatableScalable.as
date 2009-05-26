@@ -1,4 +1,4 @@
-﻿package app.core.action{
+package app.core.action{
 	import flash.events.*;
 
 	import flash.display.MovieClip;
@@ -9,7 +9,7 @@
 	import flash.utils.getTimer;
 	
 	
-	public dynamic class RotatableScalableRev extends MovieClip
+	public dynamic class RotatableScalable extends MovieClip
 	{
 		public var blobs:Array;		// blobs we are currently interacting with
 		private var GRAD_PI:Number = 180.0 / 3.14159;
@@ -46,7 +46,7 @@
 		
 		private var _rp:Point = new Point(0,0);
 		
-		public function RotatableScalableRev()
+		public function RotatableScalable()
 		{
 			state = "none";
 
@@ -302,7 +302,7 @@
 //			e.stopPropagation();			
 		}
 		
-		public function rollOutHandler(e:TouchEvent):void
+		public funcion rollOutHandler(e:TouchEvent):void
 		{
 //			e.stopPropagation();	
 		}
@@ -486,7 +486,7 @@
 				
 				var curPt1:Point = parent.globalToLocal(new Point(tuioobj1.x, tuioobj1.y));								
 				
-				var tuioobj2 = TUIO.getObjectById(blob2.id);
+				ar tuioobj2 = TUIO.getObjectById(blob2.id);
 				
 				// if not found, then it must have died..
 				if(!tuioobj2)
