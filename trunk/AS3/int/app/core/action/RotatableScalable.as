@@ -9,7 +9,7 @@
 	import flash.utils.getTimer;
 	
 	
-	public dynamic class RotatableScalable extends MovieClip
+	public dynamic class RotatableScalableRev extends MovieClip
 	{
 		public var blobs:Array;		// blobs we are currently interacting with
 		private var GRAD_PI:Number = 180.0 / 3.14159;
@@ -44,7 +44,9 @@
 		public var clickRadius:Number = 50;		
 		public var lastClick:Number = 0;
 		
-		public function RotatableScalable()
+		private var _rp:Point = new Point(0,0);
+		
+		public function RotatableScalableRev()
 		{
 			state = "none";
 
@@ -72,8 +74,49 @@
 			dAng = 0;
 		}
 		
+		public function setRegistration(x:Number=0, y:Number=0):void{
+			_rp = new Point(x, y);
+		}
+		
+		public function setProperty2(prop:String, n:Number):void{
+			var a:Point = new Point();
+			var b:Point = new Point();
+			if(this.parent != null){
+				a = this.parent.globalToLocal(this.localToGlobal(_rp));
+				this[prop] = n;
+				b = this.parent.globalToLocal(this.localToGlobal(_rp));
+			}else{
+				a = this.localToGlobal(_rp);
+				this[prop] = n;
+				b = this.localToGlobal(_rp);
+			}
+			this.x -= b.x - a.x;
+			this.y -= b.y - a.y;
+		}
+		
+		public function get x2():Number{
+			var p:Point = this.parent.globalToLocal(this.localToGlobal(_rp));
+			return p.x;
+		}
+
+		public function set x2(value:Number):void{
+			var p:Point = this.parent.globalToLocal(this.localToGlobal(_rp));
+			this.x += value - p.x;
+		}
+
+		public function get y2():Number{
+			var p:Point = this.parent.globalToLocal(this.localToGlobal(_rp));
+			return p.y;
+		}
+
+		public function set y2(value:Number):void{
+			var p:Point = this.parent.globalToLocal(this.localToGlobal(_rp));
+			this.y += value - p.y;
+		}
+		
 		function addBlob(id:Number, origX:Number, origY:Number):void
 		{
+			trace(blobs.length);
 			for(var i=0; i<blobs.length; i++)
 			{
 				if(blobs[i].id == id)
@@ -112,6 +155,11 @@
 				blob2 = blobs[1];		
 				
 				var tuioobj1 = TUIO.getObjectById(blob1.id);
+				var tuioobj2 = TUIO.getObjectById(blob2.id);
+				
+				var midPoint:Point = Point.interpolate(this.globalToLocal(new Point(tuioobj1.x, tuioobj1.y)),this.globalToLocal(new Point(tuioobj2.x, tuioobj2.y)),0.5);
+				
+				setRegistration(midPoint.x,midPoint.y);
 				
 				// if not found, then it must have died..
 				if(tuioobj1)
@@ -162,7 +210,6 @@
 					if(blobs.length >= 2) {
 						state = "rotatescale";
 						
-						//trace(state);				
 						curScale = this.scaleX;
 						curAngle = this.rotation;					
 						curPosition.x = x;
@@ -176,7 +223,7 @@
 						// if not found, then it must have died..
 						if(tuioobj1)
 						{
-							var curPt1:Point = parent.globalToLocal(new Point(tuioobj1.x, tuioobj1.y));						
+							curPt1 = parent.globalToLocal(new Point(tuioobj1.x, tuioobj1.y));						
 							blob1.origX = curPt1.x;
 							blob1.origY = curPt1.y;
 						}									
@@ -486,8 +533,8 @@
 					//var tmp = (curScale-newscale);
 					//trace(tmp);
 					//if(tmp >= 0.1 || tmp <= -0.1){
-					scaleX = newscale;
-					scaleY = newscale;	
+					setProperty2('scaleX', newscale);
+					setProperty2('scaleY', newscale);
 					//}			 
 				}
 	
@@ -508,22 +555,24 @@
 					//trace(this.rotation+'-----------------------o');	
 					//trace(curAngle-oldAngle+'-----------------------a');	
 					//if((curAngle-oldAngle)>=0.05 || (curAngle-oldAngle)<=-0.05){
-					rotation = curAngle + (ang2 - ang1);	
+					setProperty2("rotation", curAngle + (ang2 - ang1));	
 					//}	
 				}
 				
 //				x = curPt1.x - ((curLine.x / len2) * len3 * newscale);
 //				y = curPt1.y - ((curLine.y / len2) * len3 * newscale);
 
-				var oldX:Number, oldY:Number;
+				//var oldX:Number, oldY:Number;
 				oldX = x;
 				oldY = y;
 			
 				if(!noMove)
 				{	
 					//FIX THE WIGGLE
-					x = curPosition.x + (curCenter.x - centerOrig.x);	
-					y = curPosition.y + (curCenter.y - centerOrig.y);	
+					//x = curPosition.x + (curCenter.x - centerOrig.x);	
+					//y = curPosition.y + (curCenter.y - centerOrig.y);	
+					x2 = curCenter.x;
+					y2 = curCenter.y;
 				}
 			
 				
